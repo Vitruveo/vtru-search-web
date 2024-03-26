@@ -10,15 +10,15 @@ import ChildCard from '@/app/home/components/shared/ChildCard';
 
 const BCrumb = [
     {
-        to: '/',
         title: 'Home',
+        to: '/',
     },
     {
         title: 'Shop',
         to: '/apps/ecommerce/shop',
     },
     {
-        title: 'detail',
+        title: 'Detail',
     },
 ];
 
