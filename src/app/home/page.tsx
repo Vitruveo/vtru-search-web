@@ -35,7 +35,7 @@ const Ecommerce = () => {
         >
             <PageContainer title="Shop" description="this is Shop">
                 {/* breadcrumb */}
-                <Breadcrumb title="Ecom-Shop" items={BCrumb} />
+                {/* <Breadcrumb title="Ecom-Shop" items={BCrumb} /> */}
                 <AppCard>
                     {/* ------------------------------------------- */}
                     {/* Left part */}

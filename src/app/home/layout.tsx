@@ -58,10 +58,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MainWrapper>
             <title>Dashboard</title>
             {/* ------------------------------------------- */}
-            {/* Sidebar */}
-            {/* ------------------------------------------- */}
-            {customizer.isHorizontal ? '' : <Sidebar />}
-            {/* ------------------------------------------- */}
             {/* Main Wrapper */}
             {/* ------------------------------------------- */}
             <PageFooterWrapper

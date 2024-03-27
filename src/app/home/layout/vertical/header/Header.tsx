@@ -13,6 +13,7 @@ import MobileRightSidebar from './MobileRightSidebar';
 import { useDispatch } from 'react-redux';
 import { toggleMobileSidebar, toggleSidebar } from '@/features/customizer/slice';
 import { useSelector } from '@/store/hooks';
+import Logo from '../../shared/logo/Logo';
 
 const Header = () => {
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
@@ -41,15 +42,11 @@ const Header = () => {
         <AppBarStyled position="sticky" color="default">
             <ToolbarStyled>
                 {/* ------------------------------------------- */}
-                {/* Toggle Button Sidebar */}
+                {/* Logo */}
                 {/* ------------------------------------------- */}
-                <IconButton
-                    color="inherit"
-                    aria-label="menu"
-                    onClick={lgUp ? () => dispatch(toggleSidebar()) : () => dispatch(toggleMobileSidebar())}
-                >
-                    <IconMenu2 size="20" />
-                </IconButton>
+                <Box px={3}>
+                    <Logo />
+                </Box>
 
                 <Box flexGrow={1} />
                 <Stack spacing={1} direction="row" alignItems="center">
