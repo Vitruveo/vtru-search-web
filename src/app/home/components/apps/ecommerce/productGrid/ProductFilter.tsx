@@ -33,6 +33,7 @@ import {
 } from '@tabler/icons-react';
 import { Stack } from '@mui/system';
 import { ProductFiterType } from '../../../../types/apps/eCommerce';
+import sectionsJSON from '../../../../layout/shared/assetMetadata/newSections.json';
 
 const ProductFilter = () => {
     const dispatch = useDispatch();
