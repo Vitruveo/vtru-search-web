@@ -28,7 +28,7 @@ const Filters = () => {
                     <Box mb={2}>
                         {Object.entries(assetsMetadata.context.schema.properties).map(([key, value]) => {
                             return (
-                                <Box mb={1} key={key}>
+                                <Box mb={2} key={key}>
                                     <Typography fontSize="0.85rem" fontWeight="700">
                                         {key.charAt(0).toUpperCase() + key.slice(1)}
                                     </Typography>
@@ -150,13 +150,13 @@ const Filters = () => {
 
                     <Divider />
 
-                    <Typography marginBottom={2} fontSize="1.2rem" fontWeight="700">
+                    <Typography mt={3} mb={2} fontSize="1.2rem" fontWeight="700">
                         Taxonomy
                     </Typography>
                     <Box mb={2}>
                         {Object.entries(assetsMetadata.taxonomy.schema.properties).map(([key, value]) => {
                             return (
-                                <Box mb={1} key={key}>
+                                <Box mb={2} key={key}>
                                     <Typography fontSize="0.85rem" fontWeight="700">
                                         {key.charAt(0).toUpperCase() + key.slice(1)}
                                     </Typography>
@@ -259,13 +259,13 @@ const Filters = () => {
 
                     <Divider />
 
-                    <Typography marginBottom={2} fontSize="1.2rem" fontWeight="700">
+                    <Typography mt={3} mb={2} fontSize="1.2rem" fontWeight="700">
                         Creators
                     </Typography>
                     <Box mb={2}>
                         {Object.entries(assetsMetadata.creators.schema.items.properties).map(([key, value]) => {
                             return (
-                                <Box mb={1} key={key}>
+                                <Box mb={2} key={key}>
                                     <Typography fontSize="0.85rem" fontWeight="700">
                                         {key.charAt(0).toUpperCase() + key.slice(1)}
                                     </Typography>
@@ -368,13 +368,13 @@ const Filters = () => {
 
                     <Divider />
 
-                    <Typography marginBottom={2} fontSize="1.2rem" fontWeight="700">
+                    <Typography mt={3} mb={2} fontSize="1.2rem" fontWeight="700">
                         Provenance
                     </Typography>
                     <Box mb={2}>
                         {Object.entries(assetsMetadata.provenance.schema.properties).map(([key, value]) => {
                             return (
-                                <Box mb={1} key={key}>
+                                <Box mb={2} key={key}>
                                     <Typography fontSize="0.85rem" fontWeight="700">
                                         {key.charAt(0).toUpperCase() + key.slice(1)}
                                     </Typography>

@@ -27,6 +27,7 @@ import { Application } from '@/features/applications/types';
 import { Asset } from './types';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { ecoCard } from '@/mock/assets';
+import Drawer from '@mui/material/Drawer';
 
 interface Props {
     onClick: (event: React.SyntheticEvent | Event) => void;
@@ -36,6 +37,8 @@ type AssetList = { [key: string]: Asset };
 
 const ProductList = ({ onClick }: Props) => {
     const [assets, setAssets] = useState<AssetList>({});
+    const [assetView, setAssetView] = useState<any>();
+    const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
 
     const dispatch = useDispatch();
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
@@ -49,6 +52,11 @@ const ProductList = ({ onClick }: Props) => {
 
     const handleClick = () => {
         setCartalert(true);
+    };
+
+    const handleClickImage = (asset: any) => {
+        setAssetView(asset);
+        setDrawerOpen(true)
     };
 
     const handleClose = (reason: string) => {
@@ -80,12 +88,35 @@ const ProductList = ({ onClick }: Props) => {
         handleGetAssets();
     }, []);
 
-    const assetsList = Object.values(assets);
-
-    console.log(assetsList);
-
     return (
         <Box>
+            <Drawer
+                anchor="right"
+                open={drawerOpen}
+                onClose={() => setDrawerOpen(false)}
+            >
+                <Box p={4}>
+                    {assetView ?
+                        <Image
+                            src={`${assetView.formats.preview.path}`}
+                            width={300} height={300}
+                            alt="Art preview"
+                        />
+                        :
+                        <Skeleton variant="rectangular" width={300} height={300} />
+                    }
+                    
+                    <Typography variant="h4" mt={2}>
+                        {assetView.title}
+                    </Typography>
+                    <Typography mb={4}>
+                        {assetView.subheader}
+                    </Typography>
+                    <Button fullWidth variant="contained">
+                        View
+                    </Button>
+                </Box>
+            </Drawer>
             {/* ------------------------------------------- */}
             {/* Header Detail page */}
             {/* ------------------------------------------- */}
@@ -126,7 +157,10 @@ const ProductList = ({ onClick }: Props) => {
                                     </>
                                 ) : (
                                     <BlankCard className="hoverCard">
-                                        <Typography component={Link} href={`/home/shop/detail/${asset._id}`}>
+                                        <Typography
+                                            onClick={() => handleClickImage(asset)}
+                                            sx={{ cursor: "pointer" }}
+                                        >
                                             <Image
                                                 src={`${asset.formats.preview.path}`}
                                                 alt="img"
@@ -150,7 +184,11 @@ const ProductList = ({ onClick }: Props) => {
                                             </Fab>
                                         </Tooltip> */}
                                         <CardContent sx={{ p: 3, pt: 2 }}>
-                                            <Typography variant="h6">
+                                            <Typography
+                                                variant="h6"
+                                                onClick={() => handleClickImage(asset)}
+                                                sx={{ cursor: "pointer" }}
+                                            >
                                                 {asset.assetMetadata.context.formData.title}
                                             </Typography>
                                             <Stack
