@@ -11,8 +11,6 @@ import HorizontalHeader from './layout/horizontal/header/Header';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
 import webSocketService from '@/services/websocket';
-import { connectWebSocketThunk, loginWebSocketThunk } from '@/features/ws/thunks';
-// import { userActionsCreators } from '@/features/user/slice';
 
 const MainWrapper = styled('div')(() => ({
     display: 'flex',
@@ -51,7 +49,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     const dispatch = useDispatch();
     const router = useRouter();
     const customizer = useSelector((state) => state.customizer);
-    const token = useSelector((state) => state.user.token);
     const theme = useTheme();
 
     return (

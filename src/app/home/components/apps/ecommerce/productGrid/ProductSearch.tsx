@@ -18,7 +18,7 @@ export default function ProductSearch() {
             {/* ------------------------------------------- */}
             <TextField
                 id="outlined-search"
-                placeholder="Search Product"
+                placeholder="Search Asset"
                 size="small"
                 type="search"
                 variant="outlined"
