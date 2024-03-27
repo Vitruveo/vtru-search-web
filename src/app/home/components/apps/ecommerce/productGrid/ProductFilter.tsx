@@ -6,6 +6,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 
 import assetsMetadata from '@/mock/assetsMetadata.json';
 import { filtersActionsCreators } from '@/features/filters/slice';
@@ -20,12 +22,16 @@ const Filters = () => {
             <List>
                 <Divider />
                 <Box p={3}>
-                    <h4>fields - context</h4>
-                    <div>
+                    <Typography marginBottom={2} fontSize="1.2rem" fontWeight="700">
+                        Context
+                    </Typography>
+                    <Box mb={2}>
                         {Object.entries(assetsMetadata.context.schema.properties).map(([key, value]) => {
                             return (
-                                <div key={key}>
-                                    <p>{key}</p>
+                                <Box mb={1} key={key}>
+                                    <Typography fontSize="0.85rem" fontWeight="700">
+                                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                                    </Typography>
 
                                     {assetsMetadata.context.uiSchema[key]['ui:widget'] === 'radios' && (
                                         <div>
@@ -80,7 +86,9 @@ const Filters = () => {
                                     )}
 
                                     {assetsMetadata.context.uiSchema[key]['ui:widget'] === 'textarea' && (
-                                        <textarea
+                                        <TextField
+                                            fullWidth
+                                            multiline
                                             id={key}
                                             name={key}
                                             value={values.context[key]}
@@ -117,7 +125,8 @@ const Filters = () => {
                                     )}
 
                                     {assetsMetadata.context.uiSchema[key]['ui:widget'] === 'text' && (
-                                        <input
+                                        <TextField
+                                            fullWidth
                                             type="text"
                                             id={key}
                                             name={key}
@@ -134,19 +143,23 @@ const Filters = () => {
                                             }}
                                         />
                                     )}
-                                </div>
+                                </Box>
                             );
                         })}
-                    </div>
+                    </Box>
 
                     <Divider />
 
-                    <h4>fields - taxonomy</h4>
-                    <div>
+                    <Typography marginBottom={2} fontSize="1.2rem" fontWeight="700">
+                        Taxonomy
+                    </Typography>
+                    <Box mb={2}>
                         {Object.entries(assetsMetadata.taxonomy.schema.properties).map(([key, value]) => {
                             return (
-                                <div key={key}>
-                                    <p>{key}</p>
+                                <Box mb={1} key={key}>
+                                    <Typography fontSize="0.85rem" fontWeight="700">
+                                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                                    </Typography>
 
                                     {assetsMetadata.taxonomy.uiSchema[key]['ui:widget'] === 'radios' && (
                                         <div>
@@ -201,7 +214,9 @@ const Filters = () => {
                                     )}
 
                                     {assetsMetadata.taxonomy.uiSchema[key]['ui:widget'] === 'textarea' && (
-                                        <textarea
+                                        <TextField
+                                            fullWidth
+                                            multiline
                                             id={key}
                                             name={key}
                                             value={values.taxonomy[key]}
@@ -219,7 +234,8 @@ const Filters = () => {
                                     )}
 
                                     {assetsMetadata.taxonomy.uiSchema[key]['ui:widget'] === 'text' && (
-                                        <input
+                                        <TextField
+                                            fullWidth
                                             type="text"
                                             id={key}
                                             name={key}
@@ -236,19 +252,23 @@ const Filters = () => {
                                             }}
                                         />
                                     )}
-                                </div>
+                                </Box>
                             );
                         })}
-                    </div>
+                    </Box>
 
                     <Divider />
 
-                    <h4>fields - creators</h4>
-                    <div>
+                    <Typography marginBottom={2} fontSize="1.2rem" fontWeight="700">
+                        Creators
+                    </Typography>
+                    <Box mb={2}>
                         {Object.entries(assetsMetadata.creators.schema.items.properties).map(([key, value]) => {
                             return (
-                                <div key={key}>
-                                    <p>{key}</p>
+                                <Box mb={1} key={key}>
+                                    <Typography fontSize="0.85rem" fontWeight="700">
+                                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                                    </Typography>
 
                                     {assetsMetadata.creators.uiSchema.items[key]['ui:widget'] === 'radios' && (
                                         <div>
@@ -303,7 +323,9 @@ const Filters = () => {
                                     )}
 
                                     {assetsMetadata.creators.uiSchema.items[key]['ui:widget'] === 'textarea' && (
-                                        <textarea
+                                        <TextField
+                                            fullWidth
+                                            multiline
                                             id={key}
                                             name={key}
                                             value={values.creators[key]}
@@ -321,7 +343,8 @@ const Filters = () => {
                                     )}
 
                                     {assetsMetadata.creators.uiSchema.items[key]['ui:widget'] === 'text' && (
-                                        <input
+                                        <TextField
+                                            fullWidth
                                             type="text"
                                             id={key}
                                             name={key}
@@ -338,19 +361,23 @@ const Filters = () => {
                                             }}
                                         />
                                     )}
-                                </div>
+                                </Box>
                             );
                         })}
-                    </div>
+                    </Box>
 
                     <Divider />
 
-                    <h4>fields - provenance</h4>
-                    <div>
+                    <Typography marginBottom={2} fontSize="1.2rem" fontWeight="700">
+                        Provenance
+                    </Typography>
+                    <Box mb={2}>
                         {Object.entries(assetsMetadata.provenance.schema.properties).map(([key, value]) => {
                             return (
-                                <div key={key}>
-                                    <p>{key}</p>
+                                <Box mb={1} key={key}>
+                                    <Typography fontSize="0.85rem" fontWeight="700">
+                                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                                    </Typography>
 
                                     {assetsMetadata.provenance.uiSchema[key]['ui:widget'] === 'radios' && (
                                         <div>
@@ -384,7 +411,8 @@ const Filters = () => {
                                                 (option) => (
                                                     <div key={option}>
                                                         <label htmlFor={option}>{option}</label>
-                                                        <input
+                                                        <TextField
+                                                            fullWidth
                                                             type="text"
                                                             id={option}
                                                             name={option}
@@ -410,7 +438,9 @@ const Filters = () => {
                                     )}
 
                                     {assetsMetadata.provenance.uiSchema[key]['ui:widget'] === 'textarea' && (
-                                        <textarea
+                                        <TextField
+                                            fullWidth
+                                            multiline
                                             id={key}
                                             name={key}
                                             value={values.provenance[key]}
@@ -428,7 +458,8 @@ const Filters = () => {
                                     )}
 
                                     {assetsMetadata.provenance.uiSchema[key]['ui:widget'] === 'text' && (
-                                        <input
+                                        <TextField
+                                            fullWidth
                                             type="text"
                                             id={key}
                                             name={key}
@@ -445,10 +476,10 @@ const Filters = () => {
                                             }}
                                         />
                                     )}
-                                </div>
+                                </Box>
                             );
                         })}
-                    </div>
+                    </Box>
 
                     <Button variant="contained" onClick={() => dispatch(filtersActionsCreators.reset())} fullWidth>
                         Reset Filters
