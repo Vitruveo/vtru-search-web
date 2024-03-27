@@ -538,6 +538,7 @@
                 "classNames": "display-fixed"
             },
             "tags": {
+                "ui:widget": "text",
                 "items": {
                     "ui:emptyValue": "",
                     "ui:options": {
@@ -550,6 +551,7 @@
                 }
             },
             "collections": {
+                "ui:widget": "text",
                 "items": {
                     "ui:emptyValue": "",
                     "ui:options": {
@@ -586,6 +588,7 @@
                 "classNames": "display-fixed make-scrollable"
             },
             "subject": {
+                "ui:widget": "text",
                 "items": {
                     "ui:emptyValue": "",
                     "ui:options": {
@@ -2431,12 +2434,14 @@
             "items": {
                 "classNames": "my-array-item",
                 "name": {
+                    "ui:widget": "text",
                     "ui:options": {
                         "label": false,
                         "placeholder": ""
                     }
                 },
                 "roles": {
+                    "ui:widget": "text",
                     "items": {
                         "classNames": "my-array-item",
                         "ui:emptyValue": "",
@@ -2457,34 +2462,35 @@
                     }
                 },
                 "profileUrl": {
+                    "ui:widget": "text",
                     "ui:options": {
                         "label": false,
                         "placeholder": ""
                     }
                 },
                 "nationality": {
-                    "ui:widget": "select",
+                    "ui:widget": "radios",
                     "ui:options": {
                         "label": false,
                         "placeholder": ""
                     }
                 },
                 "residence": {
-                    "ui:widget": "select",
+                    "ui:widget": "radios",
                     "ui:options": {
                         "label": false,
                         "placeholder": ""
                     }
                 },
                 "ethnicity": {
-                    "ui:widget": "select",
+                    "ui:widget": "radios",
                     "ui:options": {
                         "label": false,
                         "placeholder": ""
                     }
                 },
                 "gender": {
-                    "ui:widget": "select",
+                    "ui:widget": "radios",
                     "ui:options": {
                         "label": false,
                         "placeholder": ""
@@ -3057,26 +3063,28 @@
         },
         "uiSchema": {
             "country": {
-                "ui:widget": "select",
+                "ui:widget": "radios",
                 "ui:options": {
                     "label": false,
                     "placeholder": ""
                 }
             },
             "plusCode": {
+                "ui:widget": "text",
                 "ui:options": {
                     "label": false,
                     "placeholder": ""
                 }
             },
             "blockchain": {
-                "ui:widget": "select",
+                "ui:widget": "radios",
                 "ui:options": {
                     "label": false,
                     "placeholder": "Vitruveo"
                 }
             },
             "exhibitions": {
+                "ui:widget": "tuple",
                 "ui:options": {
                     "orderable": false
                 },
@@ -3096,6 +3104,7 @@
                 }
             },
             "awards": {
+                "ui:widget": "tuple",
                 "items": {
                     "awardName": {
                         "ui:options": {
