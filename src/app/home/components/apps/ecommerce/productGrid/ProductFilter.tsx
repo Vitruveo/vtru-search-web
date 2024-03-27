@@ -1,11 +1,15 @@
 import React from 'react';
+
+import Select from 'react-select';
+
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 
 import assetsMetadata from '@/mock/assetsMetadata.json';
-import { Diversity1Sharp } from '@mui/icons-material';
 
 const Filters = () => {
     return (
@@ -13,22 +17,22 @@ const Filters = () => {
             <List>
                 <Divider />
                 <Box p={3}>
-                    <h4>fields - context</h4>
-                    <div>
+                    <Typography marginBottom={2} fontSize="1.2rem" fontWeight="700">
+                        Context
+                    </Typography>
+                    <Box mb={2}>
                         {Object.entries(assetsMetadata.context.schema.properties).map(([key, value]) => {
                             return (
-                                <div key={key}>
-                                    <p>{key}</p>
+                                <Box mb={1} key={key}>
+                                    <Typography fontSize="0.85rem" fontWeight="700">
+                                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                                    </Typography>
 
                                     {assetsMetadata.context.uiSchema[key]['ui:widget'] === 'radios' && (
-                                        <div>
-                                            {value.enum.map((option) => (
-                                                <div key={option}>
-                                                    <input type="radio" id={option} name={key} value={option} />
-                                                    <label htmlFor={option}>{option}</label>
-                                                </div>
-                                            ))}
-                                        </div>
+                                        <Select
+                                            name={key}
+                                            options={value.enum}
+                                        />
                                     )}
 
                                     {assetsMetadata.context.uiSchema[key]['ui:widget'] === 'checkboxes' && (
@@ -43,7 +47,7 @@ const Filters = () => {
                                     )}
 
                                     {assetsMetadata.context.uiSchema[key]['ui:widget'] === 'textarea' && (
-                                        <textarea id={key} name={key} />
+                                        <TextField fullWidth multiline id={key} name={key} />
                                     )}
 
                                     {assetsMetadata.context.uiSchema[key]['ui:widget'] === 'color' && (
@@ -51,27 +55,31 @@ const Filters = () => {
                                     )}
 
                                     {assetsMetadata.context.uiSchema[key]['ui:widget'] === 'text' && (
-                                        <input type="text" id={key} name={key} />
+                                        <TextField fullWidth type="text" id={key} name={key} />
                                     )}
-                                </div>
+                                </Box>
                             );
                         })}
-                    </div>
+                    </Box>
 
                     <Divider />
 
-                    <h4>fields - taxonomy</h4>
-                    <div>
+                    <Typography marginBottom={2} fontSize="1.2rem" fontWeight="700">
+                        Taxonomy
+                    </Typography>
+                    <Box mb={2}>
                         {Object.entries(assetsMetadata.taxonomy.schema.properties).map(([key, value]) => {
                             return (
-                                <div key={key}>
-                                    <p>{key}</p>
+                                <Box mb={1} key={key}>
+                                    <Typography fontSize="0.85rem" fontWeight="700">
+                                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                                    </Typography>
 
                                     {assetsMetadata.taxonomy.uiSchema[key]['ui:widget'] === 'radios' && (
                                         <div>
                                             {value.enum.map((option) => (
                                                 <div key={option}>
-                                                    <input type="radio" id={option} name={key} value={option} />
+                                                    <TextField fullWidth type="radio" id={option} name={key} value={option} />
                                                     <label htmlFor={option}>{option}</label>
                                                 </div>
                                             ))}
@@ -90,31 +98,35 @@ const Filters = () => {
                                     )}
 
                                     {assetsMetadata.taxonomy.uiSchema[key]['ui:widget'] === 'textarea' && (
-                                        <textarea id={key} name={key} />
+                                        <TextField fullWidth multiline id={key} name={key} />
                                     )}
 
                                     {assetsMetadata.taxonomy.uiSchema[key]['ui:widget'] === 'text' && (
-                                        <input type="text" id={key} name={key} />
+                                        <TextField fullWidth type="text" id={key} name={key} />
                                     )}
-                                </div>
+                                </Box>
                             )
                         })}
-                    </div>
+                    </Box>
 
                     <Divider />
 
-                    <h4>fields - creators</h4>
-                    <div>
+                    <Typography marginBottom={2} fontSize="1.2rem" fontWeight="700">
+                        Creators
+                    </Typography>
+                    <Box mb={2}>
                         {Object.entries(assetsMetadata.creators.schema.items.properties).map(([key, value]) => {
                             return (
-                                <div key={key}>
-                                    <p>{key}</p>
+                                <Box mb={1} key={key}>
+                                    <Typography fontSize="0.85rem" fontWeight="700">
+                                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                                    </Typography>
 
                                     {assetsMetadata.creators.uiSchema.items[key]['ui:widget'] === 'radios' && (
                                         <div>
                                             {value.enum.map((option) => (
                                                 <div key={option}>
-                                                    <input type="radio" id={option} name={key} value={option} />
+                                                    <TextField fullWidth type="radio" id={option} name={key} value={option} />
                                                     <label htmlFor={option}>{option}</label>
                                                 </div>
                                             ))}
@@ -133,31 +145,35 @@ const Filters = () => {
                                     )}
 
                                     {assetsMetadata.creators.uiSchema.items[key]['ui:widget'] === 'textarea' && (
-                                        <textarea id={key} name={key} />
+                                        <TextField fullWidth multiline id={key} name={key} />
                                     )}
 
                                     {assetsMetadata.creators.uiSchema.items[key]['ui:widget'] === 'text' && (
-                                        <input type="text" id={key} name={key} />
+                                        <TextField fullWidth type="text" id={key} name={key} />
                                     )}
-                                </div>
+                                </Box>
                             )
                         })}
-                    </div>
+                    </Box>
 
                     <Divider />
 
-                    <h4>fields - provenance</h4>
-                    <div>
+                    <Typography marginBottom={2} fontSize="1.2rem" fontWeight="700">
+                        Provenance
+                    </Typography>
+                    <Box mb={2}>
                         {Object.entries(assetsMetadata.provenance.schema.properties).map(([key, value]) => {
                             return (
-                                <div key={key}>
-                                    <p>{key}</p>
+                                <Box mb={1} key={key}>
+                                    <Typography fontSize="0.85rem" fontWeight="700">
+                                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                                    </Typography>
 
                                     {assetsMetadata.provenance.uiSchema[key]['ui:widget'] === 'radios' && (
                                         <div>
                                             {value.enum.map((option) => (
                                                 <div key={option}>
-                                                    <input type="radio" id={option} name={key} value={option} />
+                                                    <TextField fullWidth type="radio" id={option} name={key} value={option} />
                                                     <label htmlFor={option}>{option}</label>
                                                 </div>
                                             ))}
@@ -169,7 +185,7 @@ const Filters = () => {
                                             {Object.keys(assetsMetadata.provenance.uiSchema[key].items).map((option) => (
                                                 <div key={option}>
                                                     <label htmlFor={option}>{option}</label>
-                                                    <input type="text" id={option} name={option} />
+                                                    <TextField fullWidth type="text" id={option} name={option} />
                                                 </div>
                                             ))}
                                             
@@ -177,16 +193,16 @@ const Filters = () => {
                                     )}
 
                                     {assetsMetadata.provenance.uiSchema[key]['ui:widget'] === 'textarea' && (
-                                        <textarea id={key} name={key} />
+                                        <TextField fullWidth multiline id={key} name={key} />
                                     )}
 
                                     {assetsMetadata.provenance.uiSchema[key]['ui:widget'] === 'text' && (
-                                        <input type="text" id={key} name={key} />
+                                        <TextField fullWidth type="text" id={key} name={key} />
                                     )}
-                                </div>
+                                </Box>
                             )
                         })}
-                    </div>
+                    </Box>
 
                     <Button variant="contained" onClick={() => {}} fullWidth>
                         Reset Filters

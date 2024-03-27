@@ -17,16 +17,16 @@
                 "culture": {
                     "type": "string",
                     "enum": [
-                        "african",
-                        "centralasian",
-                        "eastasian",
-                        "islamic",
-                        "latinamerican",
-                        "nativeamerican",
-                        "oceanic",
-                        "southasian",
-                        "southeastasian",
-                        "western"
+                        { "value": "african", "label": "African" },
+                        { "value": "centralasian", "label": "Central asian" },
+                        { "value": "eastasian", "label": "Eastasian" },
+                        { "value": "islamic", "label": "Islamic" },
+                        { "value": "latinamerican", "label": "Latin american" },
+                        { "value": "nativeamerican", "label": "Native american" },
+                        { "value": "oceanic", "label": "Oceanic" },
+                        { "value": "southasian", "label": "South asian" },
+                        { "value": "southeastasian", "label": "Southeast asian" },
+                        { "value": "western", "label": "Western" }
                     ]
                 },
                 "mood": {
