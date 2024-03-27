@@ -103,6 +103,7 @@
         },
         "uiSchema": {
             "title": {
+                "ui:widget": "text",
                 "ui:options": {
                     "label": false,
                     "placeholder": ""
@@ -124,8 +125,8 @@
                 "classNames": "display-fixed make-scrollable"
             },
             "colors": {
+                "ui:widget": "color",
                 "items": {
-                    "ui:widget": "color",
                     "ui:options": {
                         "label": false
                     }
@@ -136,6 +137,7 @@
                 }
             },
             "copyright": {
+                "ui:widget": "text",
                 "ui:options": {
                     "label": false,
                     "placeholder": ""

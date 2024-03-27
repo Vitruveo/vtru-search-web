@@ -1,2 +1,2 @@
-export { userSlice } from './slice';
+export { filterSlice } from './slice';
 export { userSelector } from './selectors';

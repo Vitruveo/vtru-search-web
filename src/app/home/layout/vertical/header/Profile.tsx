@@ -9,8 +9,6 @@ import { Box, Menu, Avatar, Typography, Divider, Button, IconButton } from '@mui
 import { useDispatch } from '@/store/hooks';
 
 import * as dropdownData from './data';
-import { userActionsCreators } from '@/features/user/slice';
-import { userSelector } from '@/features/user';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useAvatar } from '@/app/home/myProfile/useAvatar';
 
@@ -38,12 +36,8 @@ const Profile = () => {
 
     const handleLogout = () => {
         router.push('/login');
-        setTimeout(() => {
-            dispatch(userActionsCreators.logout());
-        }, 1000);
+        setTimeout(() => {}, 1000);
     };
-
-    const { profile } = useSelector(userSelector(['profile']));
 
     return (
         <Box>
@@ -92,7 +86,7 @@ const Profile = () => {
                     <Avatar src={avatarSrc} alt={'ProfileImg'} sx={{ width: 95, height: 95 }} />
                     <Box>
                         <Typography variant="subtitle2" color="textPrimary" fontWeight={600}>
-                            {profile.name}
+                            username
                         </Typography>
                         <Typography variant="subtitle2" color="textSecondary">
                             User
