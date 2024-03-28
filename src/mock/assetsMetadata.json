@@ -93,7 +93,7 @@
                     }
                 },
                 "copyright": {
-                    "type": "string"
+                    "type": "hidden"
                 },
                 "orientation": {
                     "type": "string",
@@ -137,7 +137,7 @@
                 }
             },
             "copyright": {
-                "ui:widget": "text",
+                "ui:widget": "hidden",
                 "ui:options": {
                     "label": false,
                     "placeholder": ""
@@ -618,7 +618,7 @@
                         "type": "string"
                     },
                     "roles": {
-                        "type": "array",
+                        "type": "hidden",
                         "item": "collection",
                         "minItems": 1,
                         "maxItems": 10,

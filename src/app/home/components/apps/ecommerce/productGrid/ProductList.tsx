@@ -14,9 +14,11 @@ import {
     Stack,
     useMediaQuery,
     Drawer,
+    Switch,
+    Checkbox,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
-import { IconMenu2 } from '@tabler/icons-react';
+import { IconCopy, IconMenu2, IconTrash } from '@tabler/icons-react';
 
 import { fetchProducts, filterReset } from '@/features/ecommerce/slice';
 import { list } from '@/services/apiEventSource';
@@ -38,6 +40,9 @@ const ProductList = ({ onClick }: Props) => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [assetView, setAssetView] = useState<any>();
     const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
+    const [drawerSelectedOpen, setDrawerSelectedOpen] = useState<boolean>(false);
+    const [selected, setSelected] = useState<string[]>([]);
+    const [isCurated, setIsCurated] = useState<boolean>(false);
 
     const dispatch = useDispatch();
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
@@ -96,7 +101,7 @@ const ProductList = ({ onClick }: Props) => {
         handleGetAssets();
     }, []);
 
-    const perPage = 16;
+    const perPage = 24;
     const assetsList = ecoCard.slice((currentPage - 1) * perPage, currentPage * perPage);
 
     return (
@@ -145,12 +150,63 @@ const ProductList = ({ onClick }: Props) => {
                     </Button>
                 </Box>
             </Drawer>
+
+            <Drawer
+                anchor="right"
+                open={drawerSelectedOpen}
+                onClose={() => {
+                    setDrawerSelectedOpen(false);
+                }}
+            >
+                <Box width={400} p={4}>
+                    <Button fullWidth variant="contained" disabled={selected.length === 0}>
+                        Publish Stack
+                    </Button>
+
+                    <Box mt={2} display="flex" gap={2} flexWrap="wrap">
+                        {selected.length === 0 && <Typography>No selected assets</Typography>}
+                        {selected.map((asset) => (
+                            <Box position="relative" key={asset._id}>
+                                <Image src={`${asset.formats.preview.path}`} alt="img" width={160} height={160} />
+                                <Box sx={{ position: 'absolute', bottom: 0, right: 0, zIndex: 1 }}>
+                                    <IconTrash
+                                        cursor="pointer"
+                                        color="red"
+                                        width={20}
+                                        onClick={() => {
+                                            setSelected(selected.filter((item) => item._id !== asset._id));
+                                        }}
+                                    />
+                                </Box>
+                            </Box>
+                        ))}
+                    </Box>
+                </Box>
+            </Drawer>
             {/* ------------------------------------------- */}
             {/* Header Detail page */}
             {/* ------------------------------------------- */}
             <Stack direction="row" justifyContent="space-between" pb={3}>
                 {lgUp ? (
-                    <Typography variant="h5">Assets</Typography>
+                    <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
+                        <Box display="flex" alignItems="center">
+                            <Switch onChange={() => setIsCurated(!isCurated)} />
+                            <Typography variant="h4">Curate Stack</Typography>
+                        </Box>
+                        {isCurated && (
+                            <Box
+                                sx={{ cursor: 'pointer' }}
+                                display="flex"
+                                alignItems="center"
+                                gap={1}
+                                onClick={() => setDrawerSelectedOpen(true)}
+                            >
+                                <Typography variant="h4">{selected.length} selected</Typography>
+
+                                <IconCopy width={20} />
+                            </Box>
+                        )}
+                    </Box>
                 ) : (
                     <Fab onClick={onClick} color="primary" size="small">
                         <IconMenu2 width="16" />
@@ -161,7 +217,15 @@ const ProductList = ({ onClick }: Props) => {
             {/* ------------------------------------------- */}
             {/* Page Listing product */}
             {/* ------------------------------------------- */}
-            <Grid container spacing={3}>
+            <Grid
+                container
+                spacing={3}
+                paddingBlock={4}
+                sx={{
+                    overflow: 'auto',
+                    maxHeight: '85vh',
+                }}
+            >
                 {assetsList.length > 0 ? (
                     <>
                         {assetsList.map((asset) => (
@@ -187,8 +251,32 @@ const ProductList = ({ onClick }: Props) => {
                                         }}
                                     >
                                         <BlankCard className="hoverCard">
+                                            {isCurated && (
+                                                <Box sx={{ position: 'absolute', top: 0, left: 0, zIndex: 1 }}>
+                                                    <Checkbox
+                                                        checked={selected.some((item) => item._id === asset._id)}
+                                                        onChange={(e) => {
+                                                            setSelected(
+                                                                e.target.checked
+                                                                    ? [...selected, asset]
+                                                                    : selected.filter((item) => item._id !== asset._id)
+                                                            );
+                                                        }}
+                                                    />
+                                                </Box>
+                                            )}
                                             <Typography
-                                                onClick={() => handleClickImage(asset)}
+                                                onClick={() => {
+                                                    if (isCurated) {
+                                                        setSelected(
+                                                            selected.some((item) => item._id === asset._id)
+                                                                ? selected.filter((item) => item._id !== asset._id)
+                                                                : [...selected, asset]
+                                                        );
+                                                        return;
+                                                    }
+                                                    handleClickImage(asset);
+                                                }}
                                                 sx={{ cursor: 'pointer' }}
                                             >
                                                 <Image
@@ -199,20 +287,7 @@ const ProductList = ({ onClick }: Props) => {
                                                     style={{ width: '100%' }}
                                                 />
                                             </Typography>
-                                            {/* <Tooltip title="Add To Cart">
-                                            <Fab
-                                                size="small"
-                                                color="primary"
-                                                onClick={() => dispatch(addToCart(product)) && handleClick()}
-                                                sx={{
-                                                    bottom: '75px',
-                                                    right: '15px',
-                                                    position: 'absolute',
-                                                }}
-                                            >
-                                                <IconBasket size="16" />
-                                            </Fab>
-                                        </Tooltip> */}
+
                                             <CardContent sx={{ p: 3, pt: 2 }}>
                                                 <Typography
                                                     variant="h6"
@@ -231,13 +306,6 @@ const ProductList = ({ onClick }: Props) => {
                                                         <Typography variant="h6">
                                                             {asset.licenses.nft.single.editionPrice}
                                                         </Typography>
-                                                        {/* <Typography
-                                                        color="textSecondary"
-                                                        ml={1}
-                                                        sx={{ textDecoration: 'line-through' }}
-                                                    >
-                                                        ${product.salesPrice}
-                                                    </Typography> */}
                                                     </Stack>
                                                     <Rating name="read-only" size="small" value={5} readOnly />
                                                 </Stack>
@@ -268,19 +336,21 @@ const ProductList = ({ onClick }: Props) => {
                         </Grid>
                     </>
                 )}
-            </Grid>
 
-            <Pagination
-                count={
-                    ecoCard.length % perPage === 0
-                        ? Math.floor(ecoCard.length / perPage)
-                        : Math.floor(ecoCard.length / perPage) + 1
-                }
-                onChange={(event, value) => setCurrentPage(value)}
-                color="primary"
-                size="large"
-                style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}
-            />
+                <Box mt={3} display="flex" justifyContent="center" width="100%">
+                    <Pagination
+                        count={
+                            ecoCard.length % perPage === 0
+                                ? Math.floor(ecoCard.length / perPage)
+                                : Math.floor(ecoCard.length / perPage) + 1
+                        }
+                        onChange={(event, value) => setCurrentPage(value)}
+                        color="primary"
+                        size="large"
+                        style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}
+                    />
+                </Box>
+            </Grid>
         </Box>
     );
 };
