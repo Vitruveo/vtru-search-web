@@ -96,7 +96,7 @@ const ProductList = ({ onClick }: Props) => {
         handleGetAssets();
     }, []);
 
-    const perPage = 18;
+    const perPage = 16;
     const assetsList = ecoCard.slice((currentPage - 1) * perPage, currentPage * perPage);
 
     return (
@@ -117,6 +117,7 @@ const ProductList = ({ onClick }: Props) => {
                             height={300}
                             style={{
                                 borderRadius: 10,
+                                objectFit: 'cover',
                             }}
                             alt="Art preview"
                         />
@@ -164,7 +165,7 @@ const ProductList = ({ onClick }: Props) => {
                 {assetsList.length > 0 ? (
                     <>
                         {assetsList.map((asset) => (
-                            <Grid item xs={12} lg={2} md={6} sm={6} display="flex" alignItems="stretch" key={asset._id}>
+                            <Grid item xs={12} lg={3} md={6} sm={6} display="flex" alignItems="stretch" key={asset._id}>
                                 {/* ------------------------------------------- */}
                                 {/* Product Card */}
                                 {/* ------------------------------------------- */}
