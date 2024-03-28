@@ -4,7 +4,7 @@ export interface FilterSliceState {
         description: string;
         culture: string[];
         mood: string[];
-        colors: string;
+        colors: string[];
         copyright: string;
         orientation: string[];
     };

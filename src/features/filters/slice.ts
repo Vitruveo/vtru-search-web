@@ -10,7 +10,7 @@ const initialState: FilterSliceState = {
         description: '',
         culture: [],
         mood: [],
-        colors: '',
+        colors: [],
         copyright: '',
         orientation: [],
     },

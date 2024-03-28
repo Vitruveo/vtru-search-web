@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { IconMenu2, IconSearch } from '@tabler/icons-react';
+import { IconMenu2, IconSearch, IconTrash } from '@tabler/icons-react';
 import Select from 'react-select';
 import {
     Accordion,
@@ -23,6 +23,20 @@ import { countryHashMap } from '@/mock/countrydata';
 const Filters = () => {
     const dispatch = useDispatch();
     const values = useSelector((state: RootState) => state.filters);
+    const [color, setColor] = React.useState('#000000');
+
+    const handleAddColor = ({ key }: { key: string }) => {
+        if (values.context[key].includes(color)) return;
+
+        dispatch(
+            filtersActionsCreators.change({
+                key: 'context',
+                value: {
+                    [key]: [...values.context[key], color],
+                },
+            })
+        );
+    };
 
     return (
         <List>
@@ -170,22 +184,54 @@ const Filters = () => {
                                         )}
 
                                         {assetsMetadata.context.uiSchema[key]['ui:widget'] === 'color' && (
-                                            <input
-                                                type="color"
-                                                id={key}
-                                                name={key}
-                                                value={values.context[key]}
-                                                onChange={(event) => {
-                                                    dispatch(
-                                                        filtersActionsCreators.change({
-                                                            key: 'context',
-                                                            value: {
-                                                                [key]: event.target.value,
-                                                            },
-                                                        })
+                                            <Box>
+                                                <Box width="100%" display="flex" justifyContent="space-between">
+                                                    <input
+                                                        type="color"
+                                                        id={key}
+                                                        name={key}
+                                                        onChange={(event) => {
+                                                            setColor(event.target.value);
+                                                        }}
+                                                    />
+                                                    <Button onClick={() => handleAddColor({ key })}>Add Color</Button>
+                                                </Box>
+
+                                                {values.context[key]?.map((color) => {
+                                                    return (
+                                                        <Box
+                                                            key={color}
+                                                            display="flex"
+                                                            alignItems="center"
+                                                            justifyContent="space-between"
+                                                        >
+                                                            <Box
+                                                                width="1rem"
+                                                                height="1rem"
+                                                                borderRadius="50%"
+                                                                bgcolor={color}
+                                                            ></Box>
+                                                            <IconTrash
+                                                                cursor="pointer"
+                                                                color="red"
+                                                                width={20}
+                                                                onClick={() => {
+                                                                    dispatch(
+                                                                        filtersActionsCreators.change({
+                                                                            key: 'context',
+                                                                            value: {
+                                                                                [key]: values.context[key].filter(
+                                                                                    (item) => item !== color
+                                                                                ),
+                                                                            },
+                                                                        })
+                                                                    );
+                                                                }}
+                                                            />
+                                                        </Box>
                                                     );
-                                                }}
-                                            />
+                                                })}
+                                            </Box>
                                         )}
 
                                         {assetsMetadata.context.uiSchema[key]['ui:widget'] === 'text' && (
