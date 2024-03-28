@@ -30,7 +30,7 @@ const Ecommerce = () => {
             sx={{
                 overflow: 'auto',
                 maxHeight: '85vh',
-                maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
+                maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '85dvw!important',
             }}
         >
             <PageContainer title="Shop" description="this is Shop">

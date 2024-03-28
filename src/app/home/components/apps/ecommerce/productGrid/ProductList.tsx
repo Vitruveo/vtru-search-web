@@ -28,6 +28,7 @@ import { Asset } from './types';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { ecoCard } from '@/mock/assets';
 import Drawer from '@mui/material/Drawer';
+import Pagination from '@mui/material/Pagination';
 
 interface Props {
     onClick: (event: React.SyntheticEvent | Event) => void;
@@ -89,7 +90,7 @@ const ProductList = ({ onClick }: Props) => {
     }, []);
 
     return (
-        <Box>
+        <Box maxWidth="1800px">
             <Drawer
                 anchor="right"
                 open={drawerOpen}
@@ -99,11 +100,11 @@ const ProductList = ({ onClick }: Props) => {
                     {assetView ?
                         <Image
                             src={`${assetView.formats.preview.path}`}
-                            width={300} height={300}
+                            width={250} height={250}
                             alt="Art preview"
                         />
                         :
-                        <Skeleton variant="rectangular" width={300} height={300} />
+                        <Skeleton variant="rectangular" width={250} height={250} />
                     }
                     
                     <Typography variant="h4" mt={2}>
@@ -140,7 +141,7 @@ const ProductList = ({ onClick }: Props) => {
                 {ecoCard.length > 0 ? (
                     <>
                         {ecoCard.map((asset) => (
-                            <Grid item xs={12} lg={2} md={6} sm={6} display="flex" alignItems="stretch" key={asset._id}>
+                            <Grid item display="flex" alignItems="stretch" key={asset._id}>
                                 {/* ------------------------------------------- */}
                                 {/* Product Card */}
                                 {/* ------------------------------------------- */}
@@ -166,7 +167,6 @@ const ProductList = ({ onClick }: Props) => {
                                                 alt="img"
                                                 width={250}
                                                 height={250}
-                                                style={{ width: '100%' }}
                                             />
                                         </Typography>
                                         {/* <Tooltip title="Add To Cart">
@@ -238,6 +238,10 @@ const ProductList = ({ onClick }: Props) => {
                     </>
                 )}
             </Grid>
+
+            <Box display="flex" width="100%" justifyContent="center" mt={5}>
+                <Pagination count={10} shape="rounded" color="primary" />
+            </Box>
         </Box>
     );
 };
