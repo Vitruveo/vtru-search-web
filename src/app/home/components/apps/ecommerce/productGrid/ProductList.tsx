@@ -1,33 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { filter, orderBy } from 'lodash';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import CardContent from '@mui/material/CardContent';
-import Fab from '@mui/material/Fab';
-import Grid from '@mui/material/Grid';
-import Rating from '@mui/material/Rating';
-import Skeleton from '@mui/material/Skeleton';
-import Stack from '@mui/material/Stack';
+import Image from 'next/image';
+import {
+    Avatar,
+    Pagination,
+    Box,
+    Button,
+    CardContent,
+    Fab,
+    Grid,
+    Rating,
+    Skeleton,
+    Typography,
+    Stack,
+    useMediaQuery,
+    Drawer,
+} from '@mui/material';
 import { Theme } from '@mui/material/styles';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import Link from 'next/link';
-import { useSelector, useDispatch } from '@/store/hooks';
-import { fetchProducts, addToCart, filterReset } from '@/features/ecommerce/slice';
-import ProductSearch from './ProductSearch';
-import { IconBasket, IconMenu2 } from '@tabler/icons-react';
-import AlertCart from '../productCart/AlertCart';
+import { IconMenu2 } from '@tabler/icons-react';
+
+import { fetchProducts, filterReset } from '@/features/ecommerce/slice';
+import { list } from '@/services/apiEventSource';
+import { ecoCard } from '@/mock/assets';
+import { useDispatch } from '@/store/hooks';
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
 import BlankCard from '../../../shared/BlankCard';
-import { ProductType } from '../../../../types/apps/eCommerce';
-import Image from 'next/image';
-import { list } from '@/services/apiEventSource';
-import { Application } from '@/features/applications/types';
+import AlertCart from '../productCart/AlertCart';
 import { Asset } from './types';
-import { ASSET_STORAGE_URL } from '@/constants/asset';
-import { ecoCard } from '@/mock/assets';
-import Drawer from '@mui/material/Drawer';
 
 interface Props {
     onClick: (event: React.SyntheticEvent | Event) => void;
@@ -37,6 +35,7 @@ type AssetList = { [key: string]: Asset };
 
 const ProductList = ({ onClick }: Props) => {
     const [assets, setAssets] = useState<AssetList>({});
+    const [currentPage, setCurrentPage] = useState<number>(1);
     const [assetView, setAssetView] = useState<any>();
     const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
 
@@ -47,6 +46,15 @@ const ProductList = ({ onClick }: Props) => {
         dispatch(fetchProducts());
     }, [dispatch]);
 
+    useEffect(() => {
+        // scrol to top behavior
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth',
+        });
+    }, [currentPage]);
+
     const [cartalert, setCartalert] = React.useState(false);
     const [isLoading, setLoading] = React.useState(true);
 
@@ -56,7 +64,7 @@ const ProductList = ({ onClick }: Props) => {
 
     const handleClickImage = (asset: any) => {
         setAssetView(asset);
-        setDrawerOpen(true)
+        setDrawerOpen(true);
     };
 
     const handleClose = (reason: string) => {
@@ -88,30 +96,49 @@ const ProductList = ({ onClick }: Props) => {
         handleGetAssets();
     }, []);
 
+    const perPage = 18;
+    const assetsList = ecoCard.slice((currentPage - 1) * perPage, currentPage * perPage);
+
     return (
         <Box>
             <Drawer
                 anchor="right"
                 open={drawerOpen}
-                onClose={() => setDrawerOpen(false)}
+                onClose={() => {
+                    setDrawerOpen(false);
+                    setAssetView(undefined);
+                }}
             >
                 <Box p={4}>
-                    {assetView ?
+                    {assetView ? (
                         <Image
                             src={`${assetView.formats.preview.path}`}
-                            width={300} height={300}
+                            width={400}
+                            height={300}
+                            style={{
+                                borderRadius: 10,
+                            }}
                             alt="Art preview"
                         />
-                        :
+                    ) : (
                         <Skeleton variant="rectangular" width={300} height={300} />
-                    }
-                    
+                    )}
+
                     <Typography variant="h4" mt={2}>
-                        {assetView.title}
+                        {assetView?.title}
                     </Typography>
-                    <Typography mb={4}>
-                        {assetView.subheader}
-                    </Typography>
+                    <Box mt={3} mb={3} display="flex" alignItems="center" gap={1}>
+                        <Avatar />
+                        <Typography>@Loas Zarg</Typography>
+                    </Box>
+                    <Box mb={3}>
+                        <Typography variant="h6">Description</Typography>
+                        <Typography maxWidth={400}>
+                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit accusamus nesciunt vel
+                            natus. Ipsam amet consectetur, qui animi sed optio! Ducimus dignissimos odio deleniti velit
+                            eos cum molestias ad aperiam.
+                        </Typography>
+                    </Box>
                     <Button fullWidth variant="contained">
                         View
                     </Button>
@@ -128,18 +155,15 @@ const ProductList = ({ onClick }: Props) => {
                         <IconMenu2 width="16" />
                     </Fab>
                 )}
-                <Box>
-                    <ProductSearch />
-                </Box>
             </Stack>
 
             {/* ------------------------------------------- */}
             {/* Page Listing product */}
             {/* ------------------------------------------- */}
             <Grid container spacing={3}>
-                {ecoCard.length > 0 ? (
+                {assetsList.length > 0 ? (
                     <>
-                        {ecoCard.map((asset) => (
+                        {assetsList.map((asset) => (
                             <Grid item xs={12} lg={2} md={6} sm={6} display="flex" alignItems="stretch" key={asset._id}>
                                 {/* ------------------------------------------- */}
                                 {/* Product Card */}
@@ -156,20 +180,25 @@ const ProductList = ({ onClick }: Props) => {
                                         ></Skeleton>
                                     </>
                                 ) : (
-                                    <BlankCard className="hoverCard">
-                                        <Typography
-                                            onClick={() => handleClickImage(asset)}
-                                            sx={{ cursor: "pointer" }}
-                                        >
-                                            <Image
-                                                src={`${asset.formats.preview.path}`}
-                                                alt="img"
-                                                width={250}
-                                                height={250}
-                                                style={{ width: '100%' }}
-                                            />
-                                        </Typography>
-                                        {/* <Tooltip title="Add To Cart">
+                                    <Box
+                                        sx={{
+                                            border: assetView === asset ? '1px solid #3c8084' : '',
+                                        }}
+                                    >
+                                        <BlankCard className="hoverCard">
+                                            <Typography
+                                                onClick={() => handleClickImage(asset)}
+                                                sx={{ cursor: 'pointer' }}
+                                            >
+                                                <Image
+                                                    src={`${asset.formats.preview.path}`}
+                                                    alt="img"
+                                                    width={250}
+                                                    height={250}
+                                                    style={{ width: '100%' }}
+                                                />
+                                            </Typography>
+                                            {/* <Tooltip title="Add To Cart">
                                             <Fab
                                                 size="small"
                                                 color="primary"
@@ -183,36 +212,37 @@ const ProductList = ({ onClick }: Props) => {
                                                 <IconBasket size="16" />
                                             </Fab>
                                         </Tooltip> */}
-                                        <CardContent sx={{ p: 3, pt: 2 }}>
-                                            <Typography
-                                                variant="h6"
-                                                onClick={() => handleClickImage(asset)}
-                                                sx={{ cursor: "pointer" }}
-                                            >
-                                                {asset.assetMetadata.context.formData.title}
-                                            </Typography>
-                                            <Stack
-                                                direction="row"
-                                                alignItems="center"
-                                                justifyContent="space-between"
-                                                mt={1}
-                                            >
-                                                <Stack direction="row" alignItems="center">
-                                                    <Typography variant="h6">
-                                                        {asset.licenses.nft.single.editionPrice}
-                                                    </Typography>
-                                                    {/* <Typography
+                                            <CardContent sx={{ p: 3, pt: 2 }}>
+                                                <Typography
+                                                    variant="h6"
+                                                    onClick={() => handleClickImage(asset)}
+                                                    sx={{ cursor: 'pointer' }}
+                                                >
+                                                    {asset.assetMetadata.context.formData.title}
+                                                </Typography>
+                                                <Stack
+                                                    direction="row"
+                                                    alignItems="center"
+                                                    justifyContent="space-between"
+                                                    mt={1}
+                                                >
+                                                    <Stack direction="row" alignItems="center">
+                                                        <Typography variant="h6">
+                                                            {asset.licenses.nft.single.editionPrice}
+                                                        </Typography>
+                                                        {/* <Typography
                                                         color="textSecondary"
                                                         ml={1}
                                                         sx={{ textDecoration: 'line-through' }}
                                                     >
                                                         ${product.salesPrice}
                                                     </Typography> */}
+                                                    </Stack>
+                                                    <Rating name="read-only" size="small" value={5} readOnly />
                                                 </Stack>
-                                                <Rating name="read-only" size="small" value={5} readOnly />
-                                            </Stack>
-                                        </CardContent>
-                                    </BlankCard>
+                                            </CardContent>
+                                        </BlankCard>
+                                    </Box>
                                 )}
                                 <AlertCart handleClose={handleClose} openCartAlert={cartalert} />
                                 {/* ------------------------------------------- */}
@@ -238,6 +268,18 @@ const ProductList = ({ onClick }: Props) => {
                     </>
                 )}
             </Grid>
+
+            <Pagination
+                count={
+                    ecoCard.length % perPage === 0
+                        ? Math.floor(ecoCard.length / perPage)
+                        : Math.floor(ecoCard.length / perPage) + 1
+                }
+                onChange={(event, value) => setCurrentPage(value)}
+                color="primary"
+                size="large"
+                style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}
+            />
         </Box>
     );
 };

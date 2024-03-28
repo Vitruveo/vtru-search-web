@@ -12,6 +12,8 @@ import TextField from '@mui/material/TextField';
 import assetsMetadata from '@/mock/assetsMetadata.json';
 import { filtersActionsCreators } from '@/features/filters/slice';
 import { RootState } from '@/store/rootReducer';
+import { InputAdornment } from '@mui/material';
+import { IconSearch } from '@tabler/icons-react';
 
 const Filters = () => {
     const dispatch = useDispatch();
@@ -20,8 +22,26 @@ const Filters = () => {
     return (
         <>
             <List>
-                <Divider />
                 <Box p={3}>
+                    <TextField
+                        id="outlined-search"
+                        placeholder="Search Asset"
+                        size="small"
+                        type="search"
+                        variant="outlined"
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <IconSearch size="14" />
+                                </InputAdornment>
+                            ),
+                        }}
+                        fullWidth
+                        onChange={(e) => {}}
+                    />
+                </Box>
+
+                <Box p={3} pt={0}>
                     <Typography marginBottom={2} fontSize="1.2rem" fontWeight="700">
                         Context
                     </Typography>
@@ -29,14 +49,27 @@ const Filters = () => {
                         {Object.entries(assetsMetadata.context.schema.properties).map(([key, value]) => {
                             return (
                                 <Box mb={2} key={key}>
-                                    <Typography fontSize="0.85rem" fontWeight="700">
-                                        {key.charAt(0).toUpperCase() + key.slice(1)}
-                                    </Typography>
+                                    {assetsMetadata.context.schema.properties[key].type !== 'hidden' && (
+                                        <Typography fontSize="0.85rem" fontWeight="700">
+                                            {key.charAt(0).toUpperCase() + key.slice(1)}
+                                        </Typography>
+                                    )}
 
                                     {assetsMetadata.context.uiSchema[key]['ui:widget'] === 'radios' && (
                                         <div>
                                             <Select
                                                 isMulti
+                                                styles={{
+                                                    control: (base, state) => ({
+                                                        ...base,
+                                                        width: '100%',
+                                                        borderColor: state.isFocused ? '#763EBD' : '#E0E0E0',
+                                                        boxShadow: '#763EBD',
+                                                        '&:hover': {
+                                                            borderColor: '#763EBD',
+                                                        },
+                                                    }),
+                                                }}
                                                 value={values.context[key]?.map((item) => ({
                                                     value: item,
                                                     label: item,
@@ -63,6 +96,17 @@ const Filters = () => {
                                         <div>
                                             <Select
                                                 isMulti
+                                                styles={{
+                                                    control: (base, state) => ({
+                                                        ...base,
+                                                        width: '100%',
+                                                        borderColor: state.isFocused ? '#763EBD' : '#E0E0E0',
+                                                        boxShadow: '#763EBD',
+                                                        '&:hover': {
+                                                            borderColor: '#763EBD',
+                                                        },
+                                                    }),
+                                                }}
                                                 value={values.context[key]?.map((item) => ({
                                                     value: item,
                                                     label: item,
@@ -165,6 +209,17 @@ const Filters = () => {
                                         <div>
                                             <Select
                                                 isMulti
+                                                styles={{
+                                                    control: (base, state) => ({
+                                                        ...base,
+                                                        width: '100%',
+                                                        borderColor: state.isFocused ? '#763EBD' : '#E0E0E0',
+                                                        boxShadow: '#763EBD',
+                                                        '&:hover': {
+                                                            borderColor: '#763EBD',
+                                                        },
+                                                    }),
+                                                }}
                                                 value={values.taxonomy[key]?.map((item) => ({
                                                     value: item,
                                                     label: item,
@@ -191,6 +246,17 @@ const Filters = () => {
                                         <div>
                                             <Select
                                                 isMulti
+                                                styles={{
+                                                    control: (base, state) => ({
+                                                        ...base,
+                                                        width: '100%',
+                                                        borderColor: state.isFocused ? '#763EBD' : '#E0E0E0',
+                                                        boxShadow: '#763EBD',
+                                                        '&:hover': {
+                                                            borderColor: '#763EBD',
+                                                        },
+                                                    }),
+                                                }}
                                                 value={values.taxonomy[key]?.map((item) => ({
                                                     value: item,
                                                     label: item,
@@ -274,6 +340,17 @@ const Filters = () => {
                                         <div>
                                             <Select
                                                 isMulti
+                                                styles={{
+                                                    control: (base, state) => ({
+                                                        ...base,
+                                                        width: '100%',
+                                                        borderColor: state.isFocused ? '#763EBD' : '#E0E0E0',
+                                                        boxShadow: '#763EBD',
+                                                        '&:hover': {
+                                                            borderColor: '#763EBD',
+                                                        },
+                                                    }),
+                                                }}
                                                 value={values.creators[key]?.map((item) => ({
                                                     value: item,
                                                     label: item,
@@ -300,6 +377,17 @@ const Filters = () => {
                                         <div>
                                             <Select
                                                 isMulti
+                                                styles={{
+                                                    control: (base, state) => ({
+                                                        ...base,
+                                                        width: '100%',
+                                                        borderColor: state.isFocused ? '#763EBD' : '#E0E0E0',
+                                                        boxShadow: '#763EBD',
+                                                        '&:hover': {
+                                                            borderColor: '#763EBD',
+                                                        },
+                                                    }),
+                                                }}
                                                 value={values.creators[key]?.map((item) => ({
                                                     value: item,
                                                     label: item,
@@ -383,6 +471,17 @@ const Filters = () => {
                                         <div>
                                             <Select
                                                 isMulti
+                                                styles={{
+                                                    control: (base, state) => ({
+                                                        ...base,
+                                                        width: '100%',
+                                                        borderColor: state.isFocused ? '#763EBD' : '#E0E0E0',
+                                                        boxShadow: '#763EBD',
+                                                        '&:hover': {
+                                                            borderColor: '#763EBD',
+                                                        },
+                                                    }),
+                                                }}
                                                 value={values.provenance[key]?.map((item) => ({
                                                     value: item,
                                                     label: item,

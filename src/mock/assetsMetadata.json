@@ -8,10 +8,10 @@
             "required": ["title", "description", "culture", "mood", "colors", "orientation"],
             "properties": {
                 "title": {
-                    "type": "string"
+                    "type": "hidden"
                 },
                 "description": {
-                    "type": "string",
+                    "type": "hidden",
                     "format": "textarea"
                 },
                 "culture": {
@@ -103,14 +103,14 @@
         },
         "uiSchema": {
             "title": {
-                "ui:widget": "text",
+                "ui:widget": "hidden",
                 "ui:options": {
                     "label": false,
                     "placeholder": ""
                 }
             },
             "description": {
-                "ui:widget": "textarea",
+                "ui:widget": "hidden",
                 "ui:options": {
                     "label": false,
                     "placeholder": ""
