@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IconMenu2, IconSearch, IconTrash } from '@tabler/icons-react';
 import Select from 'react-select';
+import { debounce } from 'lodash';
 import {
     Accordion,
     InputAdornment,
@@ -24,6 +25,10 @@ const Filters = () => {
     const dispatch = useDispatch();
     const values = useSelector((state: RootState) => state.filters);
     const [color, setColor] = React.useState('#000000');
+
+    const debounceColor = debounce((value) => {
+        setColor(value);
+    }, 500);
 
     const handleAddColor = ({ key }: { key: string }) => {
         if (values.context[key].includes(color)) return;
@@ -190,9 +195,7 @@ const Filters = () => {
                                                         type="color"
                                                         id={key}
                                                         name={key}
-                                                        onChange={(event) => {
-                                                            setColor(event.target.value);
-                                                        }}
+                                                        onChange={(event) => debounceColor(event.target.value)}
                                                     />
                                                     <Button onClick={() => handleAddColor({ key })}>Add Color</Button>
                                                 </Box>
