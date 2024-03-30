@@ -200,13 +200,14 @@ const Filters = () => {
                                                     <Button onClick={() => handleAddColor({ key })}>Add Color</Button>
                                                 </Box>
 
-                                                {values.context[key]?.map((color) => {
+                                                {(values.context[key] ? values.context[key] : []).map((color) => {
                                                     return (
                                                         <Box
                                                             key={color}
                                                             display="flex"
                                                             alignItems="center"
                                                             justifyContent="space-between"
+                                                            mt={1}
                                                         >
                                                             <Box
                                                                 width="1rem"

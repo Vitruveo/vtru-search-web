@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Box from '@mui/material/Box';
-
 import PageContainer from '@/app/home/components/container/PageContainer';
 import AppCard from '@/app/home/components/shared/AppCard';
 import AssetsList from './components/apps/assets/assetsGrid/AssetsList';

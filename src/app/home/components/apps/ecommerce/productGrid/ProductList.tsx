@@ -101,7 +101,13 @@ const ProductList = ({ onClick }: Props) => {
     const assetsList = ecoCard.slice((currentPage - 1) * perPage, currentPage * perPage);
 
     return (
-        <Box>
+        <Box sx={{ width: {
+            xs: 283,
+            sm: 549,
+            md: 815,
+            xl: 1081
+            }
+        }}>
             <Drawer
                 anchor="right"
                 open={drawerOpen}
@@ -123,7 +129,7 @@ const ProductList = ({ onClick }: Props) => {
                             alt="Art preview"
                         />
                     ) : (
-                        <Skeleton variant="rectangular" width={300} height={300} />
+                        <Skeleton variant="rectangular" width={400} height={300} />
                     )}
 
                     <Typography variant="h4" mt={2}>
@@ -164,7 +170,7 @@ const ProductList = ({ onClick }: Props) => {
                         {selected.map((asset) => (
                             <Box position="relative" key={asset._id}>
                                 <Image src={`${asset.formats.preview.path}`} alt="img" width={160} height={160} />
-                                <Box sx={{ position: 'absolute', bottom: 0, right: 0, zIndex: 1 }}>
+                                <Box sx={{ position: 'absolute', bottom: 0, right: 0, zIndex: 1, backgroundColor: 'white' }}>
                                     <IconTrash
                                         cursor="pointer"
                                         color="red"
@@ -182,7 +188,7 @@ const ProductList = ({ onClick }: Props) => {
             {/* ------------------------------------------- */}
             {/* Header Detail page */}
             {/* ------------------------------------------- */}
-            <Stack direction="row" justifyContent="space-between" pb={3}>
+            <Stack direction="row" justifyContent="space-between" pb={4}>
                 {lgUp ? (
                     <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
                         <Box display="flex" alignItems="center">
@@ -215,17 +221,29 @@ const ProductList = ({ onClick }: Props) => {
             {/* ------------------------------------------- */}
             <Grid
                 container
-                spacing={3}
                 paddingBlock={4}
+                m={0}
                 sx={{
                     overflow: 'auto',
                     maxHeight: '85vh',
+                    width: {
+                        xs: 283,
+                        sm: 549,
+                        md: 815,
+                        xl: 1081
+                    }
                 }}
             >
                 {assetsList.length > 0 ? (
                     <>
                         {assetsList.map((asset) => (
-                            <Grid item xs={12} lg={3} md={6} sm={6} display="flex" alignItems="stretch" key={asset._id}>
+                            <Grid
+                                item
+                                display="flex"
+                                alignItems="stretch"
+                                key={asset._id}
+                                p={1}
+                            >
                                 {/* ------------------------------------------- */}
                                 {/* Product Card */}
                                 {/* ------------------------------------------- */}
@@ -243,7 +261,19 @@ const ProductList = ({ onClick }: Props) => {
                                 ) : (
                                     <Box
                                         sx={{
-                                            border: assetView === asset ? '1px solid #3c8084' : '',
+                                            position: 'relative',
+                                            '&::after': {
+                                                content: '""',
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                right: 0,
+                                                bottom: 0,
+                                                border: assetView === asset ? '1px solid #3c8084' : 'none',
+                                                pointerEvents: 'none',
+                                                zIndex: 1,
+                                                borderRadius: 1
+                                            },
                                         }}
                                     >
                                         <BlankCard className="hoverCard">
