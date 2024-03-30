@@ -1,9 +1,18 @@
 import { configureStore, type Action, type ThunkAction } from '@reduxjs/toolkit';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
-import thunkMiddleware from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
+import { all, spawn } from 'redux-saga/effects';
 import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 
 import { reducer } from './rootReducer';
+import { assetsSagas } from '@/features/assets';
+
+const sagaMiddleware = createSagaMiddleware({
+    onError: (error, errorInfo) => {
+        // eslint-disable-next-line no-console
+        console.error('Saga error', error, errorInfo);
+    },
+});
 
 const createNoopStorage = () => {
     return {
@@ -33,11 +42,19 @@ export const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
+            thunk: false,
             serializableCheck: {
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
-        }).concat(thunkMiddleware),
+        }).concat(sagaMiddleware),
 });
+
+// Run sagas
+function* rootSaga() {
+    yield all([spawn(assetsSagas)]);
+}
+
+sagaMiddleware.run(rootSaga);
 
 export type Store = typeof store;
 export type AppState = ReturnType<typeof store.getState>;

@@ -2441,7 +2441,7 @@
                     }
                 },
                 "roles": {
-                    "ui:widget": "text",
+                    "ui:widget": "hidden",
                     "items": {
                         "classNames": "my-array-item",
                         "ui:emptyValue": "",
@@ -2455,7 +2455,7 @@
                     }
                 },
                 "bio": {
-                    "ui:widget": "textarea",
+                    "ui:widget": "hidden",
                     "ui:options": {
                         "label": false,
                         "placeholder": ""

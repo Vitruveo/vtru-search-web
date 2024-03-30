@@ -29,11 +29,6 @@ const ProductDetail = () => {
 
     const getTitle: string | any = router.split('/').pop();
 
-    // Get Product
-    useEffect(() => {
-        dispatch(fetchProducts());
-    }, [dispatch]);
-
     // Get Products
     const product: ProductType | any = useSelector((state: AppState) => state.ecommerceReducer.products[getTitle - 1]);
 

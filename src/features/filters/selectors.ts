@@ -15,7 +15,7 @@ export const userSelector = <T extends keyof FilterSliceState>(fields: T[]) => {
         const selectedFields = {} as Pick<FilterSliceState, T>;
 
         fields.forEach((field) => {
-            selectedFields[field] = state.user[field];
+            selectedFields[field] = state.filters[field];
         });
 
         return selectedFields;

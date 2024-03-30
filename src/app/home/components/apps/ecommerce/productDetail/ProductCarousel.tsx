@@ -24,11 +24,6 @@ const ProductCarousel = () => {
     const searchParams = useSearchParams();
     const getTitle: string | any = pathName.split('/').pop();
 
-    // Get Product
-    useEffect(() => {
-        dispatch(fetchProducts());
-    }, [dispatch, pathName, searchParams]);
-
     // Get Products
     const product: ProductType = useSelector((stat) => stat.ecommerceReducer.products[getTitle - 1]);
     const getProductImage = product ? product.photo : '';

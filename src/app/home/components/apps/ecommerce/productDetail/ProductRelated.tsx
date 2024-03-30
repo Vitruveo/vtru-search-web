@@ -16,11 +16,6 @@ import Image from 'next/image';
 const ProductRelated = () => {
     const dispatch = useDispatch();
 
-    // Get Product
-    React.useEffect(() => {
-        dispatch(fetchProducts());
-    }, [dispatch]);
-
     const filterRelatedProduct = (products: ProductType[]) => {
         if (products) return products.filter((t) => t.related);
 
