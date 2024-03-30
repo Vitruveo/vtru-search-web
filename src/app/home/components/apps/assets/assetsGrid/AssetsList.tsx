@@ -19,6 +19,8 @@ import {
 import { Theme } from '@mui/material/styles';
 import { IconCopy, IconMenu2 } from '@tabler/icons-react';
 
+import './AssetScroll.css';
+
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
 import { filterReset } from '@/features/ecommerce/slice';
 import { useDispatch } from '@/store/hooks';
@@ -138,7 +140,7 @@ const AssetsList = ({ onClick }: Props) => {
                                 ) : (
                                     <Box
                                         sx={{
-                                            border: assetView === asset ? '1px solid #3c8084' : '',
+                                            border: assetView === asset ? '1px solid #763ebd' : '',
                                         }}
                                     >
                                         <BlankCard className="hoverCard">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IconMenu2, IconSearch } from '@tabler/icons-react';
 import {
@@ -22,6 +22,10 @@ import { ContextItem } from '../components/ContextItem';
 const Filters = () => {
     const dispatch = useDispatch();
     const values = useSelector((state: RootState) => state.filters);
+
+    const [expandedContext, setExpandedContext] = useState(true);
+    const [expandedTaxonomy, setExpandedTaxonomy] = useState(false);
+    const [expandedCreators, setExpandedCreators] = useState(false);
 
     return (
         <List>
@@ -50,14 +54,20 @@ const Filters = () => {
                 />
 
                 <Box paddingBlock={2}>
-                    <Accordion defaultExpanded>
+                    <Accordion expanded={expandedContext} onChange={() => setExpandedContext(!expandedContext)}>
                         <AccordionSummary>
                             <Box width="100%" display="flex" justifyContent="space-between">
                                 <Typography fontSize="1.2rem" fontWeight="700">
                                     Context
                                 </Typography>
 
-                                <IconMenu2 size="20" />
+                                <IconMenu2
+                                    size="20"
+                                    style={{
+                                        transform: expandedContext ? 'rotate(90deg)' : 'rotate(0deg)',
+                                        transition: 'transform 0.3s',
+                                    }}
+                                />
                             </Box>
                         </AccordionSummary>
                         <AccordionDetails>
@@ -101,14 +111,20 @@ const Filters = () => {
                 <Divider />
 
                 <Box paddingBlock={2}>
-                    <Accordion>
+                    <Accordion expanded={expandedTaxonomy} onChange={() => setExpandedTaxonomy(!expandedTaxonomy)}>
                         <AccordionSummary>
                             <Box width="100%" display="flex" justifyContent="space-between">
                                 <Typography fontSize="1.2rem" fontWeight="700">
                                     Taxonomy
                                 </Typography>
 
-                                <IconMenu2 size="20" />
+                                <IconMenu2
+                                    size="20"
+                                    style={{
+                                        transform: expandedTaxonomy ? 'rotate(90deg)' : 'rotate(0deg)',
+                                        transition: 'transform 0.3s',
+                                    }}
+                                />
                             </Box>
                         </AccordionSummary>
                         <AccordionDetails>
@@ -152,14 +168,20 @@ const Filters = () => {
                 <Divider />
 
                 <Box paddingBlock={2}>
-                    <Accordion>
+                    <Accordion expanded={expandedCreators} onChange={() => setExpandedCreators(!expandedCreators)}>
                         <AccordionSummary>
                             <Box width="100%" display="flex" justifyContent="space-between">
                                 <Typography fontSize="1.2rem" fontWeight="700">
                                     Creators
                                 </Typography>
 
-                                <IconMenu2 size="20" />
+                                <IconMenu2
+                                    size="20"
+                                    style={{
+                                        transform: expandedCreators ? 'rotate(90deg)' : 'rotate(0deg)',
+                                        transition: 'transform 0.3s',
+                                    }}
+                                />
                             </Box>
                         </AccordionSummary>
                         <AccordionDetails>
