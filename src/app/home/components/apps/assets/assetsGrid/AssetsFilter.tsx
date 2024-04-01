@@ -38,6 +38,7 @@ const Filters = () => {
                     size="small"
                     type="search"
                     variant="outlined"
+                    color="primary"
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">

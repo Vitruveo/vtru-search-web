@@ -17,7 +17,7 @@ import {
     Checkbox,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
-import { IconCopy, IconMenu2 } from '@tabler/icons-react';
+import { IconCopy } from '@tabler/icons-react';
 
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
 import { filterReset } from '@/features/ecommerce/slice';
@@ -46,6 +46,8 @@ const AssetsList = ({ onClick }: Props) => {
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const totalPage = useSelector((state: RootState) => state.assets.data.totalPage);
     const assets = useSelector((state: RootState) => state.assets.data.data);
+
+    const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -83,31 +85,25 @@ const AssetsList = ({ onClick }: Props) => {
             />
 
             <Stack direction="row" justifyContent="space-between" p={3}>
-                {lgUp ? (
-                    <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
-                        <Box display="flex" alignItems="center">
-                            <Switch onChange={() => setIsCurated(!isCurated)} />
-                            <Typography variant="h4">Curate Stack</Typography>
-                        </Box>
-                        {isCurated && (
-                            <Box
-                                sx={{ cursor: 'pointer' }}
-                                display="flex"
-                                alignItems="center"
-                                gap={1}
-                                onClick={() => setDrawerStackOpen(true)}
-                            >
-                                <Typography variant="h4">{selected.length} selected</Typography>
-
-                                <IconCopy width={20} />
-                            </Box>
-                        )}
+                <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
+                    <Box display="flex" alignItems="center">
+                        <Switch onChange={() => setIsCurated(!isCurated)} />
+                        <Typography variant={lgUp ? "h4" : "h5"}>Curate Stack</Typography>
                     </Box>
-                ) : (
-                    <Fab onClick={onClick} color="primary" size="small">
-                        <IconMenu2 width="16" />
-                    </Fab>
-                )}
+                    {isCurated && (
+                        <Box
+                            sx={{ cursor: 'pointer' }}
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            onClick={() => setDrawerStackOpen(true)}
+                        >
+                            {lgUp && <Typography variant="h4">{selected.length} selected</Typography>}
+
+                            <IconCopy width={20} color={iconColor} />
+                        </Box>
+                    )}
+                </Box>
             </Stack>
 
             <Grid
