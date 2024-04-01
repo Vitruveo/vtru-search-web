@@ -93,3 +93,11 @@ export interface ResponseAssets {
 export interface GetAssetsParams {
     page: number;
 }
+
+export interface BuidlQuery {
+    [key: string]:
+        | string
+        | {
+              $in: string[];
+          };
+}
