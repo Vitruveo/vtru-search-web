@@ -56,32 +56,21 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         });
 
         yield put(actions.setData(response.data.data));
+        yield put(actions.setTags(response.data.data.tags));
     } catch (error) {
         // Handle error
     }
     yield put(actions.finishLoading());
 }
 
-function* getTags() {
-    try {
-        const URL_ASSETS_TAGS = `${API_URL}/tags`;
-        const response: AxiosResponse<APIResponse<string[]>> = yield call(axios.get, URL_ASSETS_TAGS);
-
-        yield put(actions.setTags(response.data.data));
-    } catch (error) {
-        // Handle error
-    }
-}
-
 function* setup() {
     yield put(actions.loadAssets({ page: 1 }));
-    yield put(actions.loadTags());
 }
 
 export function* assetsSagas() {
     yield all([
         takeEvery(actions.loadAssets.type, getAssets),
-        takeEvery(actions.loadTags.type, getTags),
+
         takeEvery(filtersActionsCreators.change.type, getAssets),
         takeEvery(filtersActionsCreators.reset.type, getAssets),
         setup(),

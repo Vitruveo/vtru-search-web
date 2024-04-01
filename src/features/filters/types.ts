@@ -1,4 +1,5 @@
 export interface FilterSliceState {
+    name: string;
     context: {
         title: string;
         description: string;

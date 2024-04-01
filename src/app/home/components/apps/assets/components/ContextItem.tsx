@@ -97,8 +97,8 @@ export function ContextItem({ context, title, values, tags, hidden, type, option
                         label: item,
                     }))}
                     options={tags.map((item) => ({
-                        value: item,
-                        label: item,
+                        label: `${item.tag} - ${item.count}`,
+                        value: item.tag,
                     }))}
                     onChange={(option: Option[]) => onChange(option.map((item) => item.value))}
                 />

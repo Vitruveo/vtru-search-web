@@ -83,8 +83,14 @@ export interface Asset {
     };
 }
 
+interface Tags {
+    tag: string;
+    count: number;
+}
+
 export interface ResponseAssets {
     data: Asset[];
+    tags: Tags[];
     page: number;
     totalPage: number;
     total: number;
