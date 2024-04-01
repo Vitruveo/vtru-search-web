@@ -2,6 +2,7 @@ export interface AssetsSliceState {
     loading: boolean;
     error: string | null;
     data: ResponseAssets;
+    tags: string[];
 }
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';
@@ -82,8 +83,14 @@ export interface Asset {
     };
 }
 
+interface Tags {
+    tag: string;
+    count: number;
+}
+
 export interface ResponseAssets {
     data: Asset[];
+    tags: Tags[];
     page: number;
     totalPage: number;
     total: number;
@@ -92,4 +99,12 @@ export interface ResponseAssets {
 
 export interface GetAssetsParams {
     page: number;
+}
+
+export interface BuidlQuery {
+    [key: string]:
+        | string
+        | {
+              $in: string[];
+          };
 }

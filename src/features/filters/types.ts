@@ -1,4 +1,5 @@
 export interface FilterSliceState {
+    name: string;
     context: {
         title: string;
         description: string;
@@ -10,7 +11,7 @@ export interface FilterSliceState {
     };
     taxonomy: {
         objectType: string[];
-        tags: string;
+        tags: string[];
         collections: string;
         aiGeneration: string[];
         arenabled: string[];

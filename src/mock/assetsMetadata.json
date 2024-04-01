@@ -538,7 +538,7 @@
                 "classNames": "display-fixed"
             },
             "tags": {
-                "ui:widget": "text",
+                "ui:widget": "tags",
                 "items": {
                     "ui:emptyValue": "",
                     "ui:options": {

@@ -15,6 +15,7 @@ interface Props {
             [key: string]: any;
         };
     };
+    tags: string[];
     hidden: boolean;
     options: string[];
     onChange: (value: any) => void;
@@ -26,7 +27,7 @@ interface Option {
     label: string;
 }
 
-export function ContextItem({ context, title, values, hidden, type, options, onChange, onRemove }: Props) {
+export function ContextItem({ context, title, values, tags, hidden, type, options, onChange, onRemove }: Props) {
     const [color, setColor] = useState('#000000');
 
     const debounceColor = debounce((value) => {
@@ -87,6 +88,20 @@ export function ContextItem({ context, title, values, hidden, type, options, onC
 
                     <Colors colors={values[context][title]} onRemove={(color) => onRemove(color)} />
                 </Box>
+            )}
+
+            {type === 'tags' && (
+                <InputSelect
+                    value={values[context][title]?.map((item: string) => ({
+                        value: item,
+                        label: item,
+                    }))}
+                    options={tags.map((item) => ({
+                        label: `${item.tag} - ${item.count}`,
+                        value: item.tag,
+                    }))}
+                    onChange={(option: Option[]) => onChange(option.map((item) => item.value))}
+                />
             )}
 
             {type === 'text' && (

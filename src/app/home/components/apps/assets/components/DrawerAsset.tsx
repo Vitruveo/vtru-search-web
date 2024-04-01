@@ -36,7 +36,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                 )}
 
                 <Typography variant="h4" mt={2}>
-                    {assetView?.formats.preview.name}
+                    {assetView?.assetMetadata?.context?.formData?.title}
                 </Typography>
                 <Box mt={3} mb={3} display="flex" alignItems="center" gap={1}>
                     <Avatar />

@@ -5,6 +5,7 @@ import { FilterSliceState } from './types';
 import { DeepPartial } from '../common/types';
 
 const initialState: FilterSliceState = {
+    name: '',
     context: {
         title: '',
         description: '',
@@ -16,7 +17,7 @@ const initialState: FilterSliceState = {
     },
     taxonomy: {
         objectType: [],
-        tags: '',
+        tags: [],
         collections: '',
         aiGeneration: [],
         arenabled: [],
