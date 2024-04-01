@@ -188,7 +188,7 @@ const AssetsList = ({ onClick }: Props) => {
                                                     onClick={() => handleClickImage(asset)}
                                                     sx={{ cursor: 'pointer' }}
                                                 >
-                                                    {asset?.assetMetadata?.context?.formData?.title}
+                                                    {asset?.assetMetadata?.context?.formData?.title || 'No Title'}
                                                 </Typography>
                                                 <Stack
                                                     direction="row"
