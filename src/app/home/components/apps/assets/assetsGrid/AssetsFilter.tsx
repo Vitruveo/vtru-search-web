@@ -22,6 +22,7 @@ import { ContextItem } from '../components/ContextItem';
 const Filters = () => {
     const dispatch = useDispatch();
     const values = useSelector((state: RootState) => state.filters);
+    const tags = useSelector((state: RootState) => state.assets.tags);
 
     const [expandedContext, setExpandedContext] = useState(true);
     const [expandedTaxonomy, setExpandedTaxonomy] = useState(false);
@@ -135,6 +136,7 @@ const Filters = () => {
                                         context="taxonomy"
                                         title={key}
                                         values={values}
+                                        tags={tags || []}
                                         hidden={assetsMetadata.taxonomy.uiSchema[key]['ui:widget'] === 'hidden'}
                                         type={assetsMetadata.taxonomy.uiSchema[key]['ui:widget']}
                                         options={value?.enum || value?.items?.enum || []}

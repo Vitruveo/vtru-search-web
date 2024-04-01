@@ -13,6 +13,7 @@ const initialState: AssetsSliceState = {
         total: 0,
         totalPage: 0,
     },
+    tags: [],
 };
 
 export const assetsSlice = createSlice({
@@ -31,6 +32,10 @@ export const assetsSlice = createSlice({
         },
         setData: (state, action) => {
             state.data = action.payload;
+        },
+        loadTags: (state) => {},
+        setTags: (state, action) => {
+            state.tags = action.payload;
         },
     },
 });

@@ -2,6 +2,7 @@ export interface AssetsSliceState {
     loading: boolean;
     error: string | null;
     data: ResponseAssets;
+    tags: string[];
 }
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';

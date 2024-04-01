@@ -16,7 +16,7 @@ const initialState: FilterSliceState = {
     },
     taxonomy: {
         objectType: [],
-        tags: '',
+        tags: [],
         collections: '',
         aiGeneration: [],
         arenabled: [],

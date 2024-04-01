@@ -9,8 +9,8 @@ import { filtersActionsCreators } from '../filters/slice';
 import { RootState } from '@/store/rootReducer';
 import { FilterSliceState } from '../filters/types';
 
-const API_URL = 'https://studio-api.vtru.dev/assets/search';
-// const API_URL = 'http://localhost:5001/assets/search';
+const API_URL = 'https://studio-api.vtru.dev/assets/public';
+// const API_URL = 'http://localhost:5001/assets/public';
 
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
@@ -45,7 +45,9 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             return acc;
         }, {});
 
-        const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.get, API_URL, {
+        const URL_ASSETS_SEARCH = `${API_URL}/search`;
+
+        const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.get, URL_ASSETS_SEARCH, {
             params: {
                 limit: 24,
                 page: action.payload?.page || 1,
@@ -60,13 +62,26 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.finishLoading());
 }
 
+function* getTags() {
+    try {
+        const URL_ASSETS_TAGS = `${API_URL}/tags`;
+        const response: AxiosResponse<APIResponse<string[]>> = yield call(axios.get, URL_ASSETS_TAGS);
+
+        yield put(actions.setTags(response.data.data));
+    } catch (error) {
+        // Handle error
+    }
+}
+
 function* setup() {
     yield put(actions.loadAssets({ page: 1 }));
+    yield put(actions.loadTags());
 }
 
 export function* assetsSagas() {
     yield all([
         takeEvery(actions.loadAssets.type, getAssets),
+        takeEvery(actions.loadTags.type, getTags),
         takeEvery(filtersActionsCreators.change.type, getAssets),
         takeEvery(filtersActionsCreators.reset.type, getAssets),
         setup(),

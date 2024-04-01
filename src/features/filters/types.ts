@@ -10,7 +10,7 @@ export interface FilterSliceState {
     };
     taxonomy: {
         objectType: string[];
-        tags: string;
+        tags: string[];
         collections: string;
         aiGeneration: string[];
         arenabled: string[];
