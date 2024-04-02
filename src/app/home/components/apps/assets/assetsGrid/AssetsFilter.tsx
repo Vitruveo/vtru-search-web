@@ -51,7 +51,8 @@ const Filters = () => {
                         </InputAdornment>
                     }
                     fullWidth
-                    onChange={(e) => {}}
+                    value={values.name}
+                    onChange={(e) => dispatch(actions.changeName({ name: e.target.value }))}
                 />
 
                 <Box paddingBlock={2}>

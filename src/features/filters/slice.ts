@@ -56,6 +56,14 @@ export const filterSlice = createSlice({
     name: 'filters',
     initialState,
     reducers: {
+        changeName: (
+            state,
+            action: PayloadAction<{
+                name: string;
+            }>
+        ) => {
+            state.name = action.payload.name;
+        },
         change: (
             state,
             action: PayloadAction<{

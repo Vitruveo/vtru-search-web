@@ -13,6 +13,7 @@ import { actions as actionsFilter } from '../filters/slice';
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
     try {
+        const name: string = yield select((state: RootState) => state.filters.name);
         const filtersContext: FilterSliceState['context'] = yield select((state: RootState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state) => state.filters.taxonomy);
         const filtersCreators: FilterSliceState['creators'] = yield select((state) => state.filters.creators);
@@ -42,6 +43,13 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
 
             return acc;
         }, {});
+
+        if (name.trim()) {
+            buildQuery['$or'] = [
+                { 'assetMetadata.context.formData.title': { $regex: name, $options: 'i' } },
+                { 'assetMetadata.context.formData.description': { $regex: name, $options: 'i' } },
+            ];
+        }
 
         const URL_ASSETS_SEARCH = `${API_BASE_URL}/assets/public/search`;
 
@@ -77,6 +85,7 @@ export function* assetsSagas() {
     yield all([
         takeEvery(actions.loadAssets.type, getAssets),
         takeEvery(actionsFilter.change.type, getAssets),
+        takeEvery(actionsFilter.changeName.type, getAssets),
         takeEvery(actionsFilter.reset.type, getAssets),
         setup(),
     ]);

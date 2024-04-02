@@ -114,5 +114,11 @@ export interface BuidlQuery {
         | string
         | {
               $in: string[];
-          };
+          }
+        | {
+              [key: string]: {
+                  $regex: string;
+                  $options: string;
+              };
+          }[];
 }
