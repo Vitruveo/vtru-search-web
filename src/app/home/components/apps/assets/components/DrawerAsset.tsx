@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Avatar, Box, Button, Skeleton, Typography, Drawer, useMediaQuery } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
+import { AWS_BASE_URL_S3 } from '@/constants/aws';
 
 interface Props {
     drawerOpen: boolean;
@@ -12,13 +13,13 @@ interface Props {
 export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
-    
+
     return (
         <Drawer anchor="right" open={drawerOpen} onClose={onClose}>
             <Box p={4}>
                 {assetView ? (
                     <Image
-                        src={`https://vitruveo-studio-qa-assets.s3.amazonaws.com/${assetView?.formats?.preview?.path}`}
+                        src={`${AWS_BASE_URL_S3}/${assetView?.formats?.preview?.path}`}
                         width={lgUp ? 400 : mdUp ? 300 : 200}
                         height={lgUp ? 300 : mdUp ? 225 : 150}
                         style={{

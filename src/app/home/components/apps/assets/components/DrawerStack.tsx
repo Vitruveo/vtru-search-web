@@ -1,8 +1,10 @@
-import Image from 'next/image';
-import { Box, Button, Typography, Drawer, Modal, Select, TextField } from '@mui/material';
-import { IconTrash } from '@tabler/icons-react';
-import { Asset } from '@/features/assets/types';
 import { useState } from 'react';
+import { Box, Button, Typography, Drawer, Modal, Select, TextField } from '@mui/material';
+import Image from 'next/image';
+import { IconTrash } from '@tabler/icons-react';
+
+import { Asset } from '@/features/assets/types';
+import { AWS_BASE_URL_S3 } from '@/constants/aws';
 
 interface Props {
     drawerStackOpen: boolean;
@@ -31,32 +33,21 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                         width: 400,
                         backgroundColor: 'background.paper',
                         boxShadow: 24,
-                        p: 4
+                        p: 4,
                     }}
                 >
                     <Box width="100%" display="flex" justifyContent="center" mb={4}>
-                        <Typography variant="h4">
-                            Publish Stack
-                        </Typography>
+                        <Typography variant="h4">Publish Stack</Typography>
                     </Box>
-                    
 
                     <Box display="flex" mb={2}>
-                        <Typography width={120}>
-                            Destination
-                        </Typography>
+                        <Typography width={120}>Destination</Typography>
                         <Select fullWidth />
                     </Box>
 
                     <Box display="flex" mb={3}>
-                        <Typography width={120}>
-                            Options
-                        </Typography>
-                        <TextField
-                            multiline
-                            rows={4}
-                            fullWidth
-                        />
+                        <Typography width={120}>Options</Typography>
+                        <TextField multiline rows={4} fullWidth />
                     </Box>
 
                     <Button variant="contained" fullWidth>
@@ -81,13 +72,18 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                         {selected.map((asset) => (
                             <Box position="relative" key={asset._id}>
                                 <Image
-                                    src={`https://vitruveo-studio-qa-assets.s3.amazonaws.com/${asset?.formats?.preview?.path}`}
+                                    src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
                                     alt="img"
                                     width={160}
                                     height={160}
                                 />
                                 <Box sx={{ position: 'absolute', bottom: 0, right: 0, zIndex: 1 }}>
-                                    <IconTrash cursor="pointer" color="red" width={20} onClick={() => onRemove(asset)} />
+                                    <IconTrash
+                                        cursor="pointer"
+                                        color="red"
+                                        width={20}
+                                        onClick={() => onRemove(asset)}
+                                    />
                                 </Box>
                             </Box>
                         ))}

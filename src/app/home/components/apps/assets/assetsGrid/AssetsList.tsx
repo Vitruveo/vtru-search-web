@@ -31,6 +31,7 @@ import { Asset } from '@/features/assets/types';
 import BlankCard from '@/app/home/components/shared/BlankCard';
 import { DrawerAsset } from '../components/DrawerAsset';
 import { DrawerStack } from '../components/DrawerStack';
+import { AWS_BASE_URL_S3 } from '@/constants/aws';
 
 interface Props {
     onClick: (event: React.SyntheticEvent | Event) => void;
@@ -196,7 +197,7 @@ const AssetsList = ({ onClick }: Props) => {
                                                 sx={{ cursor: 'pointer' }}
                                             >
                                                 <Image
-                                                    src={`https://vitruveo-studio-qa-assets.s3.amazonaws.com/${asset?.formats?.preview?.path}`}
+                                                    src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
                                                     alt="img"
                                                     width={250}
                                                     height={250}

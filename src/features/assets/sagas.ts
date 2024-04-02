@@ -3,7 +3,7 @@ import { all, call, put, takeEvery, select } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
 
 import { RootState } from '@/store/rootReducer';
-import { BASE_URL_API } from '@/constants/api';
+import { API_BASE_URL } from '@/constants/api';
 import type { APIResponse } from '../types';
 import type { FilterSliceState } from '../filters/types';
 import type { BuidlQuery, GetAssetsParams, ResponseAssets } from './types';
@@ -43,7 +43,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             return acc;
         }, {});
 
-        const URL_ASSETS_SEARCH = `${BASE_URL_API}/assets/public/search`;
+        const URL_ASSETS_SEARCH = `${API_BASE_URL}/assets/public/search`;
 
         const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.get, URL_ASSETS_SEARCH, {
             params: {
