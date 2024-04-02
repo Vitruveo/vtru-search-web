@@ -15,9 +15,10 @@ import {
     useMediaQuery,
     Switch,
     Checkbox,
+    Badge,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
-import { IconCopy, IconMenu2 } from '@tabler/icons-react';
+import { IconCopy } from '@tabler/icons-react';
 
 import './AssetScroll.css';
 
@@ -48,6 +49,8 @@ const AssetsList = ({ onClick }: Props) => {
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const totalPage = useSelector((state: RootState) => state.assets.data.totalPage);
     const assets = useSelector((state: RootState) => state.assets.data.data);
+
+    const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -85,31 +88,34 @@ const AssetsList = ({ onClick }: Props) => {
             />
 
             <Stack direction="row" justifyContent="space-between" p={3}>
-                {lgUp ? (
-                    <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
-                        <Box display="flex" alignItems="center">
-                            <Switch onChange={() => setIsCurated(!isCurated)} />
-                            <Typography variant="h4">Curate Stack</Typography>
-                        </Box>
-                        {isCurated && (
-                            <Box
-                                sx={{ cursor: 'pointer' }}
-                                display="flex"
-                                alignItems="center"
-                                gap={1}
-                                onClick={() => setDrawerStackOpen(true)}
-                            >
-                                <Typography variant="h4">{selected.length} selected</Typography>
-
-                                <IconCopy width={20} />
-                            </Box>
-                        )}
+                <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
+                    <Box display="flex" alignItems="center">
+                        <Switch onChange={() => setIsCurated(!isCurated)} />
+                        <Typography variant={lgUp ? 'h4' : 'h5'}>Curate Stack</Typography>
                     </Box>
-                ) : (
-                    <Fab onClick={onClick} color="primary" size="small">
-                        <IconMenu2 width="16" />
-                    </Fab>
-                )}
+                    {isCurated && (
+                        <Box
+                            sx={{ cursor: 'pointer' }}
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            onClick={() => setDrawerStackOpen(true)}
+                        >
+                            {lgUp && (
+                                <>
+                                    <Typography variant="h4">{selected.length} selected</Typography>
+                                    <IconCopy width={20} />
+                                </>
+                            )}
+
+                            {!lgUp && (
+                                <Badge badgeContent={selected.length} color="primary">
+                                    <IconCopy width={20} color={iconColor} />
+                                </Badge>
+                            )}
+                        </Box>
+                    )}
+                </Box>
             </Stack>
 
             <Grid
@@ -125,7 +131,22 @@ const AssetsList = ({ onClick }: Props) => {
                 {assets.length > 0 ? (
                     <>
                         {assets.map((asset) => (
-                            <Grid item xs={12} lg={3} md={6} sm={6} display="flex" alignItems="stretch" key={asset._id}>
+                            <Grid
+                                item
+                                xl={3}
+                                lg={4}
+                                md={4}
+                                sm={6}
+                                xs={12}
+                                display="flex"
+                                alignItems="stretch"
+                                key={asset._id}
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
                                 {isLoading ? (
                                     <>
                                         <Skeleton
@@ -225,7 +246,7 @@ const AssetsList = ({ onClick }: Props) => {
                     </>
                 )}
 
-                <Box mt={3} display="flex" justifyContent="center" width="100%">
+                <Box mt={3} mb={4} display="flex" justifyContent="center" width="100%">
                     <Pagination
                         count={totalPage}
                         onChange={(event, value) => handleChangePage({ page: value })}

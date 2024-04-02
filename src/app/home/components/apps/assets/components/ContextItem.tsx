@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Avatar, Box, Typography } from '@mui/material';
 import { InputSelect } from './InputSelect';
 import { InputText } from './InputText';
 import { InputColor } from './InputColor';
@@ -92,12 +92,24 @@ export function ContextItem({ context, title, values, tags, hidden, type, option
 
             {type === 'tags' && (
                 <InputSelect
-                    value={values[context][title]?.map((item: string) => ({
+                    value={(values[context][title] ? values[context][title] : []).map((item: string) => ({
                         value: item,
                         label: item,
                     }))}
                     options={tags.map((item) => ({
-                        label: `${item.tag} - ${item.count}`,
+                        label: (
+                            <Box display="flex" alignItems="center" justifyContent="space-between">
+                                <Typography>{item.tag}</Typography>{' '}
+                                <Avatar
+                                    sx={{
+                                        width: 30,
+                                        height: 30,
+                                    }}
+                                >
+                                    {item.count}
+                                </Avatar>
+                            </Box>
+                        ),
                         value: item.tag,
                     }))}
                     onChange={(option: Option[]) => onChange(option.map((item) => item.value))}

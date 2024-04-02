@@ -364,8 +364,11 @@ const components: any = (theme: Theme) => {
             borderColor:
               theme.palette.mode === 'dark' ? theme.palette.grey[200] : theme.palette.grey[300],
           },
+          '&:focus .MuiOutlinedInput-notchedOutline': {
+            borderColor: theme.palette.primary.main,
+          },
           '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.grey[300],
+            borderColor: theme.palette.primary.main,
           },
         },
         input: {

@@ -1,5 +1,6 @@
 import Image from 'next/image';
-import { Avatar, Box, Button, Skeleton, Typography, Drawer } from '@mui/material';
+import { Avatar, Box, Button, Skeleton, Typography, Drawer, useMediaQuery } from '@mui/material';
+import { Theme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
 
 interface Props {
@@ -9,14 +10,17 @@ interface Props {
 }
 
 export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
+    const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
+    const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
+    
     return (
         <Drawer anchor="right" open={drawerOpen} onClose={onClose}>
             <Box p={4}>
                 {assetView ? (
                     <Image
                         src={`https://vitruveo-studio-qa-assets.s3.amazonaws.com/${assetView?.formats?.preview?.path}`}
-                        width={400}
-                        height={300}
+                        width={lgUp ? 400 : mdUp ? 300 : 200}
+                        height={lgUp ? 300 : mdUp ? 225 : 150}
                         style={{
                             borderRadius: 10,
                             objectFit: 'cover',
@@ -24,7 +28,11 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                         alt="Art preview"
                     />
                 ) : (
-                    <Skeleton variant="rectangular" width={300} height={300} />
+                    <Skeleton
+                        variant="rectangular"
+                        width={lgUp ? 400 : mdUp ? 300 : 200}
+                        height={lgUp ? 300 : mdUp ? 225 : 150}
+                    />
                 )}
 
                 <Typography variant="h4" mt={2}>
@@ -36,7 +44,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                 </Box>
                 <Box mb={3}>
                     <Typography variant="h6">Description</Typography>
-                    <Typography maxWidth={400}>
+                    <Typography maxWidth={lgUp ? 400 : mdUp ? 300 : 200}>
                         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit accusamus nesciunt vel natus.
                         Ipsam amet consectetur, qui animi sed optio! Ducimus dignissimos odio deleniti velit eos cum
                         molestias ad aperiam.
