@@ -5,10 +5,7 @@ interface Props {
         value: string;
         label: string;
     }[];
-    options: {
-        value: string;
-        label: string;
-    }[];
+    options: any[];
     onChange(option: any): void;
 }
 

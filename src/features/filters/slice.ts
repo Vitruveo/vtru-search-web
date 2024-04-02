@@ -56,6 +56,14 @@ export const filterSlice = createSlice({
     name: 'filters',
     initialState,
     reducers: {
+        changeName: (
+            state,
+            action: PayloadAction<{
+                name: string;
+            }>
+        ) => {
+            state.name = action.payload.name;
+        },
         change: (
             state,
             action: PayloadAction<{
@@ -64,16 +72,19 @@ export const filterSlice = createSlice({
             }>
         ) => {
             state[action.payload.key] = {
-                ...state[action.payload.key],
-                ...action.payload.value,
+                ...(state[action.payload.key] as any),
+                ...(action.payload.value as any),
             };
         },
         reset: (state) => {
-            Object.keys(initialState).forEach((key) => {
-                state[key] = initialState[key];
-            });
+            state.name = '';
+            state.context = initialState.context;
+            state.taxonomy = initialState.taxonomy;
+            state.creators = initialState.creators;
+            state.provenance = initialState.provenance;
         },
     },
 });
 
-export const filtersActionsCreators = filterSlice.actions;
+export const { actions } = filterSlice;
+export default filterSlice.reducer;

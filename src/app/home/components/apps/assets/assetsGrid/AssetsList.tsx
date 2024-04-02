@@ -18,7 +18,7 @@ import {
     Badge,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
-import { IconCopy } from '@tabler/icons-react';
+import { IconCopy, IconMenu2 } from '@tabler/icons-react';
 
 import './AssetScroll.css';
 
@@ -31,6 +31,7 @@ import { Asset } from '@/features/assets/types';
 import BlankCard from '@/app/home/components/shared/BlankCard';
 import { DrawerAsset } from '../components/DrawerAsset';
 import { DrawerStack } from '../components/DrawerStack';
+import { AWS_BASE_URL_S3 } from '@/constants/aws';
 
 interface Props {
     onClick: (event: React.SyntheticEvent | Event) => void;
@@ -87,11 +88,16 @@ const AssetsList = ({ onClick }: Props) => {
                 onClose={() => setDrawerStackOpen(false)}
             />
 
-            <Stack direction="row" justifyContent="space-between" p={3}>
+            <Stack direction="row" justifyContent="space-between" alignItems="center" p={3}>
+                {!lgUp &&
+                    <Fab onClick={onClick} color="primary" size="small">
+                        <IconMenu2 width="16" />
+                    </Fab>
+                }
                 <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
                     <Box display="flex" alignItems="center">
                         <Switch onChange={() => setIsCurated(!isCurated)} />
-                        <Typography variant={lgUp ? "h4" : "h5"}>Curate Stack</Typography>
+                        <Typography variant={lgUp ? 'h4' : 'h5'}>Curate Stack</Typography>
                     </Box>
                     {isCurated && (
                         <Box
@@ -101,14 +107,18 @@ const AssetsList = ({ onClick }: Props) => {
                             gap={1}
                             onClick={() => setDrawerStackOpen(true)}
                         >
-                            {lgUp && <>
-                                <Typography variant="h4">{selected.length} selected</Typography>
-                                <IconCopy width={20} />
-                            </>}
+                            {lgUp && (
+                                <>
+                                    <Typography variant="h4">{selected.length} selected</Typography>
+                                    <IconCopy width={20} />
+                                </>
+                            )}
 
-                            {!lgUp && <Badge badgeContent={selected.length} color="primary">
-                                <IconCopy width={20} color={iconColor} />
-                            </Badge>}
+                            {!lgUp && (
+                                <Badge badgeContent={selected.length} color="primary">
+                                    <IconCopy width={20} color={iconColor} />
+                                </Badge>
+                            )}
                         </Box>
                     )}
                 </Box>
@@ -127,7 +137,22 @@ const AssetsList = ({ onClick }: Props) => {
                 {assets.length > 0 ? (
                     <>
                         {assets.map((asset) => (
-                            <Grid item xs={12} lg={3} md={6} sm={6} display="flex" alignItems="stretch" key={asset._id}>
+                            <Grid
+                                item
+                                xl={3}
+                                lg={4}
+                                md={4}
+                                sm={6}
+                                xs={12}
+                                display="flex"
+                                alignItems="stretch"
+                                key={asset._id}
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
                                 {isLoading ? (
                                     <>
                                         <Skeleton
@@ -177,7 +202,7 @@ const AssetsList = ({ onClick }: Props) => {
                                                 sx={{ cursor: 'pointer' }}
                                             >
                                                 <Image
-                                                    src={`https://vitruveo-studio-qa-assets.s3.amazonaws.com/${asset?.formats?.preview?.path}`}
+                                                    src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
                                                     alt="img"
                                                     width={250}
                                                     height={250}
@@ -227,7 +252,7 @@ const AssetsList = ({ onClick }: Props) => {
                     </>
                 )}
 
-                <Box mt={3} display="flex" justifyContent="center" width="100%">
+                <Box mt={3} mb={4} display="flex" justifyContent="center" width="100%">
                     <Pagination
                         count={totalPage}
                         onChange={(event, value) => handleChangePage({ page: value })}

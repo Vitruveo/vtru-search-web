@@ -1,5 +1,5 @@
 'use client';
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import { AssetsSliceState } from './types';
 
@@ -20,7 +20,7 @@ export const assetsSlice = createSlice({
     name: 'assets',
     initialState,
     reducers: {
-        loadAssets: (state, action) => {},
+        loadAssets: (state, action: PayloadAction<{ page: number }>) => {},
         startLoading: (state) => {
             state.loading = true;
         },
@@ -30,11 +30,10 @@ export const assetsSlice = createSlice({
         setError: (state, action) => {
             state.error = action.payload;
         },
-        setData: (state, action) => {
+        setData: (state, action: PayloadAction<AssetsSliceState['data']>) => {
             state.data = action.payload;
         },
-        loadTags: (state) => {},
-        setTags: (state, action) => {
+        setTags: (state, action: PayloadAction<AssetsSliceState['tags']>) => {
             state.tags = action.payload;
         },
     },

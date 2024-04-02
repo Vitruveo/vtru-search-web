@@ -10,7 +10,6 @@ import { styled } from '@mui/material/styles';
 import { IconMenu2 } from '@tabler/icons-react';
 import Notifications from '../../vertical/header/Notification';
 import Cart from '../../vertical/header/Cart';
-import Profile from '../../vertical/header/Profile';
 import Search from '../../vertical/header/Search';
 import Language from '../../vertical/header/Language';
 import Navigation from '../../vertical/header/Navigation';
@@ -81,7 +80,6 @@ const Header = () => {
                     {/* End Ecommerce Dropdown */}
                     {/* ------------------------------------------- */}
                     <Notifications />
-                    <Profile />
                 </Stack>
             </ToolbarStyled>
         </AppBarStyled>

@@ -1,8 +1,10 @@
+import { AssetsMetadata } from '@/app/home/components/apps/assets/assetsGrid/types';
+
 export interface AssetsSliceState {
     loading: boolean;
     error: string | null;
-    data: ResponseAssets;
-    tags: string[];
+    data: AssetData;
+    tags: Tags[];
 }
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';
@@ -72,7 +74,7 @@ export interface Asset {
     generatedArtworkAI: boolean;
     notMintedOtherBlockchain: boolean;
     contract: boolean;
-    assetMetadata?: unknown;
+    assetMetadata?: AssetsMetadata;
     licenses: LicensesFormValues;
     status: AssetStatus;
     framework: {
@@ -83,7 +85,7 @@ export interface Asset {
     };
 }
 
-interface Tags {
+export interface Tags {
     tag: string;
     count: number;
 }
@@ -91,6 +93,14 @@ interface Tags {
 export interface ResponseAssets {
     data: Asset[];
     tags: Tags[];
+    page: number;
+    totalPage: number;
+    total: number;
+    limit: number;
+}
+
+export interface AssetData {
+    data: Asset[];
     page: number;
     totalPage: number;
     total: number;
@@ -106,5 +116,11 @@ export interface BuidlQuery {
         | string
         | {
               $in: string[];
-          };
+          }
+        | {
+              [key: string]: {
+                  $regex: string;
+                  $options: string;
+              };
+          }[];
 }

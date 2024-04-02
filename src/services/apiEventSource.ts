@@ -1,5 +1,5 @@
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { BASE_URL_API } from '@/constants/api';
+import { API_BASE_URL } from '@/constants/api';
 import store from '@/store';
 
 interface FetchEventSourceParams<T> {
@@ -12,7 +12,7 @@ export const list = async <T = undefined>({ callback, path, query }: FetchEventS
     const state = store.getState();
     const token = '';
 
-    let url = `${BASE_URL_API}/${path}`;
+    let url = `${API_BASE_URL}/${path}`;
 
     if (query) url = `${url}?${new URLSearchParams(query).toString()}`;
 

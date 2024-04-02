@@ -2,19 +2,18 @@ import axios, { AxiosResponse } from 'axios';
 import { all, call, put, takeEvery, select } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
 
+import { RootState } from '@/store/rootReducer';
+import { API_BASE_URL } from '@/constants/api';
 import type { APIResponse } from '../types';
+import type { FilterSliceState } from '../filters/types';
 import type { BuidlQuery, GetAssetsParams, ResponseAssets } from './types';
 import { actions } from './slice';
-import { filtersActionsCreators } from '../filters/slice';
-import { RootState } from '@/store/rootReducer';
-import { FilterSliceState } from '../filters/types';
-
-const API_URL = 'https://studio-api.vtru.dev/assets/public';
-// const API_URL = 'http://localhost:5001/assets/public';
+import { actions as actionsFilter } from '../filters/slice';
 
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
     try {
+        const name: string = yield select((state: RootState) => state.filters.name);
         const filtersContext: FilterSliceState['context'] = yield select((state: RootState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state) => state.filters.taxonomy);
         const filtersCreators: FilterSliceState['creators'] = yield select((state) => state.filters.creators);
@@ -45,7 +44,14 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             return acc;
         }, {});
 
-        const URL_ASSETS_SEARCH = `${API_URL}/search`;
+        if (name.trim()) {
+            buildQuery['$or'] = [
+                { 'assetMetadata.context.formData.title': { $regex: name, $options: 'i' } },
+                { 'assetMetadata.context.formData.description': { $regex: name, $options: 'i' } },
+            ];
+        }
+
+        const URL_ASSETS_SEARCH = `${API_BASE_URL}/assets/public/search`;
 
         const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.get, URL_ASSETS_SEARCH, {
             params: {
@@ -55,7 +61,15 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             },
         });
 
-        yield put(actions.setData(response.data.data));
+        yield put(
+            actions.setData({
+                data: response.data.data.data,
+                limit: response.data.data.limit,
+                page: response.data.data.page,
+                total: response.data.data.total,
+                totalPage: response.data.data.totalPage,
+            })
+        );
         yield put(actions.setTags(response.data.data.tags));
     } catch (error) {
         // Handle error
@@ -70,9 +84,9 @@ function* setup() {
 export function* assetsSagas() {
     yield all([
         takeEvery(actions.loadAssets.type, getAssets),
-
-        takeEvery(filtersActionsCreators.change.type, getAssets),
-        takeEvery(filtersActionsCreators.reset.type, getAssets),
+        takeEvery(actionsFilter.change.type, getAssets),
+        takeEvery(actionsFilter.changeName.type, getAssets),
+        takeEvery(actionsFilter.reset.type, getAssets),
         setup(),
     ]);
 }

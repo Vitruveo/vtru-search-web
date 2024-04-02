@@ -6,7 +6,6 @@ import Toolbar from '@mui/material/Toolbar';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled } from '@mui/material/styles';
 import { IconMenu2 } from '@tabler/icons-react';
-import Profile from './Profile';
 import Language from './Language';
 
 import MobileRightSidebar from './MobileRightSidebar';
@@ -61,8 +60,6 @@ const Header = () => {
                     {/* ------------------------------------------- */}
                     {/* Toggle Right Sidebar for mobile */}
                     {/* ------------------------------------------- */}
-
-                    <Profile />
                 </Stack>
             </ToolbarStyled>
         </AppBarStyled>
