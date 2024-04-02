@@ -104,6 +104,7 @@ export function ContextItem({ context, title, values, tags, hidden, type, option
                                     sx={{
                                         width: 30,
                                         height: 30,
+                                        backgroundColor: '#763ebd',
                                     }}
                                 >
                                     {item.count}

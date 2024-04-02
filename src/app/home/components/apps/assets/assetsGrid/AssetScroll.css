@@ -1,7 +1,7 @@
 /* custom style scroll bar */
 
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 5px;
     background-color: transparent;
     border-radius: 10px;
 }
