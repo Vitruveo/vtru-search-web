@@ -15,6 +15,7 @@ import {
     useMediaQuery,
     Switch,
     Checkbox,
+    Badge,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { IconCopy } from '@tabler/icons-react';
@@ -100,9 +101,14 @@ const AssetsList = ({ onClick }: Props) => {
                             gap={1}
                             onClick={() => setDrawerStackOpen(true)}
                         >
-                            {lgUp && <Typography variant="h4">{selected.length} selected</Typography>}
+                            {lgUp && <>
+                                <Typography variant="h4">{selected.length} selected</Typography>
+                                <IconCopy width={20} />
+                            </>}
 
-                            <IconCopy width={20} color={iconColor} />
+                            {!lgUp && <Badge badgeContent={selected.length} color="primary">
+                                <IconCopy width={20} color={iconColor} />
+                            </Badge>}
                         </Box>
                     )}
                 </Box>

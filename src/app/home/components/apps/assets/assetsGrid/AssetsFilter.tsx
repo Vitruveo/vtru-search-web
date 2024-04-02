@@ -12,6 +12,7 @@ import {
     List,
     Typography,
     TextField,
+    OutlinedInput,
 } from '@mui/material';
 
 import assetsMetadata from '@/mock/assetsMetadata.json';
@@ -37,20 +38,18 @@ const Filters = () => {
                     maxHeight: '92vh',
                 }}
             >
-                <TextField
+                <OutlinedInput
                     id="outlined-search"
                     placeholder="Search Asset"
                     size="small"
                     type="search"
-                    variant="outlined"
                     color="primary"
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <IconSearch size="14" />
-                            </InputAdornment>
-                        ),
-                    }}
+                    notched
+                    startAdornment={
+                        <InputAdornment position="start">
+                            <IconSearch size="14" />
+                        </InputAdornment>
+                    }
                     fullWidth
                     onChange={(e) => {}}
                 />

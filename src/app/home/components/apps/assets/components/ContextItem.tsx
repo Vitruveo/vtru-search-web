@@ -92,7 +92,7 @@ export function ContextItem({ context, title, values, tags, hidden, type, option
 
             {type === 'tags' && (
                 <InputSelect
-                    value={values[context][title]?.map((item: string) => ({
+                    value={(values[context][title] ? values[context][title] : []).map((item: string) => ({
                         value: item,
                         label: item,
                     }))}
