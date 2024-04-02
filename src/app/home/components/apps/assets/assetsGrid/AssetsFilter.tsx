@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 
 import assetsMetadata from '@/mock/assetsMetadata.json';
-import { filtersActionsCreators } from '@/features/filters/slice';
+import { filtersActions } from '@/features/filters/slice';
 import { RootState } from '@/store/rootReducer';
 import { ContextItem } from '../components/ContextItem';
 
@@ -84,7 +84,7 @@ const Filters = () => {
                                         options={value?.enum || value?.items?.enum || []}
                                         onChange={(changeValue) =>
                                             dispatch(
-                                                filtersActionsCreators.change({
+                                                filtersActions.change({
                                                     key: 'context',
                                                     value: {
                                                         [key]: changeValue,
@@ -94,7 +94,7 @@ const Filters = () => {
                                         }
                                         onRemove={(color) =>
                                             dispatch(
-                                                filtersActionsCreators.change({
+                                                filtersActions.change({
                                                     key: 'context',
                                                     value: {
                                                         [key]: values.context[key].filter((item) => item !== color),
@@ -142,7 +142,7 @@ const Filters = () => {
                                         options={value?.enum || value?.items?.enum || []}
                                         onChange={(changeValue) =>
                                             dispatch(
-                                                filtersActionsCreators.change({
+                                                filtersActions.change({
                                                     key: 'taxonomy',
                                                     value: {
                                                         [key]: changeValue,
@@ -152,7 +152,7 @@ const Filters = () => {
                                         }
                                         onRemove={(color) =>
                                             dispatch(
-                                                filtersActionsCreators.change({
+                                                filtersActions.change({
                                                     key: 'taxonomy',
                                                     value: {
                                                         [key]: values.taxonomy[key].filter((item) => item !== color),
@@ -199,7 +199,7 @@ const Filters = () => {
                                         options={value?.enum || value?.items?.enum || []}
                                         onChange={(changeValue) =>
                                             dispatch(
-                                                filtersActionsCreators.change({
+                                                filtersActions.change({
                                                     key: 'creators',
                                                     value: {
                                                         [key]: changeValue,
@@ -209,7 +209,7 @@ const Filters = () => {
                                         }
                                         onRemove={(color) =>
                                             dispatch(
-                                                filtersActionsCreators.change({
+                                                filtersActions.change({
                                                     key: 'creators',
                                                     value: {
                                                         [key]: values.creators[key].filter((item) => item !== color),
@@ -224,7 +224,7 @@ const Filters = () => {
                     </Accordion>
                 </Box>
 
-                <Button variant="contained" onClick={() => dispatch(filtersActionsCreators.reset())} fullWidth>
+                <Button variant="contained" onClick={() => dispatch(filtersActions.reset())} fullWidth>
                     Reset Filters
                 </Button>
             </Box>

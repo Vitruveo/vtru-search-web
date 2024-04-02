@@ -2,15 +2,13 @@ import axios, { AxiosResponse } from 'axios';
 import { all, call, put, takeEvery, select } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
 
+import { RootState } from '@/store/rootReducer';
+import { BASE_URL_API } from '@/constants/api';
 import type { APIResponse } from '../types';
 import type { BuidlQuery, GetAssetsParams, ResponseAssets } from './types';
 import { actions } from './slice';
-import { filtersActionsCreators } from '../filters/slice';
-import { RootState } from '@/store/rootReducer';
+import { filtersActions } from '../filters/slice';
 import { FilterSliceState } from '../filters/types';
-
-const API_URL = 'https://studio-api.vtru.dev/assets/public';
-// const API_URL = 'http://localhost:5001/assets/public';
 
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
@@ -45,7 +43,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             return acc;
         }, {});
 
-        const URL_ASSETS_SEARCH = `${API_URL}/search`;
+        const URL_ASSETS_SEARCH = `${BASE_URL_API}/assets/public/search`;
 
         const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.get, URL_ASSETS_SEARCH, {
             params: {
@@ -70,9 +68,8 @@ function* setup() {
 export function* assetsSagas() {
     yield all([
         takeEvery(actions.loadAssets.type, getAssets),
-
-        takeEvery(filtersActionsCreators.change.type, getAssets),
-        takeEvery(filtersActionsCreators.reset.type, getAssets),
+        takeEvery(filtersActions.change.type, getAssets),
+        takeEvery(filtersActions.reset.type, getAssets),
         setup(),
     ]);
 }
