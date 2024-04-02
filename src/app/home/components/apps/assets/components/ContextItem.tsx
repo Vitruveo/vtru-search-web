@@ -7,15 +7,11 @@ import { debounce } from 'lodash';
 import { useState } from 'react';
 
 interface Props {
-    context: string;
-    title: string;
+    context: any;
+    title: any;
     type: string;
-    values: {
-        context: {
-            [key: string]: any;
-        };
-    };
-    tags: string[];
+    values: any;
+    tags: any[];
     hidden: boolean;
     options: string[];
     onChange: (value: any) => void;
@@ -44,7 +40,7 @@ export function ContextItem({ context, title, values, tags, hidden, type, option
 
             {type === 'radios' && (
                 <InputSelect
-                    value={values[context][title]?.map((item: string) => ({
+                    value={(values[context][title] as string[]).map((item) => ({
                         value: item,
                         label: item,
                     }))}
@@ -58,7 +54,7 @@ export function ContextItem({ context, title, values, tags, hidden, type, option
 
             {type === 'checkboxes' && (
                 <InputSelect
-                    value={values[context][title]?.map((item: string) => ({
+                    value={(values[context][title] as unknown as string[])?.map((item) => ({
                         value: item,
                         label: item,
                     }))}
@@ -86,7 +82,7 @@ export function ContextItem({ context, title, values, tags, hidden, type, option
                         onClick={() => onChange([...values[context][title], color])}
                     />
 
-                    <Colors colors={values[context][title]} onRemove={(color) => onRemove(color)} />
+                    <Colors colors={values[context][title]} onRemove={(item) => onRemove(item)} />
                 </Box>
             )}
 

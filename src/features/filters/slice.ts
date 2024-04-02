@@ -72,14 +72,16 @@ export const filterSlice = createSlice({
             }>
         ) => {
             state[action.payload.key] = {
-                ...state[action.payload.key],
-                ...action.payload.value,
+                ...(state[action.payload.key] as any),
+                ...(action.payload.value as any),
             };
         },
         reset: (state) => {
-            Object.keys(initialState).forEach((key) => {
-                state[key] = initialState[key];
-            });
+            state.name = '';
+            state.context = initialState.context;
+            state.taxonomy = initialState.taxonomy;
+            state.creators = initialState.creators;
+            state.provenance = initialState.provenance;
         },
     },
 });

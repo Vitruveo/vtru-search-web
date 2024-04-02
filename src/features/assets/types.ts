@@ -1,3 +1,5 @@
+import { AssetsMetadata } from '@/app/home/components/apps/assets/assetsGrid/types';
+
 export interface AssetsSliceState {
     loading: boolean;
     error: string | null;
@@ -72,7 +74,7 @@ export interface Asset {
     generatedArtworkAI: boolean;
     notMintedOtherBlockchain: boolean;
     contract: boolean;
-    assetMetadata?: unknown;
+    assetMetadata?: AssetsMetadata;
     licenses: LicensesFormValues;
     status: AssetStatus;
     framework: {
@@ -83,7 +85,7 @@ export interface Asset {
     };
 }
 
-interface Tags {
+export interface Tags {
     tag: string;
     count: number;
 }
