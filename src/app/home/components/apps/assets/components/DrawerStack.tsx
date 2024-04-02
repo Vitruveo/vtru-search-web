@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Box, Button, Typography, Drawer, Modal, Select, TextField } from '@mui/material';
+import { Box, Button, Typography, Drawer, Modal, Select, TextField, useMediaQuery, Theme } from '@mui/material';
 import { IconTrash } from '@tabler/icons-react';
 import { Asset } from '@/features/assets/types';
 import { useState } from 'react';
@@ -13,6 +13,7 @@ interface Props {
 
 export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Props) {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
     return (
         <>
@@ -66,7 +67,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
             </Modal>
 
             <Drawer anchor="right" open={drawerStackOpen} onClose={onClose}>
-                <Box width={400} p={4}>
+                <Box width={mdUp ? 400 : 224} p={4}>
                     <Button
                         fullWidth
                         variant="contained"
@@ -86,7 +87,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                                     width={160}
                                     height={160}
                                 />
-                                <Box sx={{ position: 'absolute', bottom: 0, right: 0, zIndex: 1 }}>
+                                <Box bgcolor="white" sx={{ position: 'absolute', bottom: 0, right: 0, zIndex: 1 }}>
                                     <IconTrash cursor="pointer" color="red" width={20} onClick={() => onRemove(asset)} />
                                 </Box>
                             </Box>
