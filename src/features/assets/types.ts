@@ -1,8 +1,8 @@
 export interface AssetsSliceState {
     loading: boolean;
     error: string | null;
-    data: ResponseAssets;
-    tags: string[];
+    data: AssetData;
+    tags: Tags[];
 }
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';
@@ -91,6 +91,14 @@ interface Tags {
 export interface ResponseAssets {
     data: Asset[];
     tags: Tags[];
+    page: number;
+    totalPage: number;
+    total: number;
+    limit: number;
+}
+
+export interface AssetData {
+    data: Asset[];
     page: number;
     totalPage: number;
     total: number;

@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 
 import assetsMetadata from '@/mock/assetsMetadata.json';
-import { filtersActions } from '@/features/filters/slice';
+import { actions } from '@/features/filters/slice';
 import { RootState } from '@/store/rootReducer';
 import { countryHashMap } from '@/mock/countrydata';
 
@@ -34,7 +34,7 @@ const Filters = () => {
         if (values.context[key].includes(color)) return;
 
         dispatch(
-            filtersActions.change({
+            actions.change({
                 key: 'context',
                 value: {
                     [key]: [...values.context[key], color],
@@ -119,7 +119,7 @@ const Filters = () => {
                                                     }))}
                                                     onChange={(option) => {
                                                         dispatch(
-                                                            filtersActions.change({
+                                                            actions.change({
                                                                 key: 'context',
                                                                 value: {
                                                                     [key]: option.map((item) => item.value),
@@ -156,7 +156,7 @@ const Filters = () => {
                                                     }))}
                                                     onChange={(option) => {
                                                         dispatch(
-                                                            filtersActions.change({
+                                                            actions.change({
                                                                 key: 'context',
                                                                 value: {
                                                                     [key]: option.map((item) => item.value),
@@ -177,7 +177,7 @@ const Filters = () => {
                                                 value={values.context[key]}
                                                 onChange={(event) => {
                                                     dispatch(
-                                                        filtersActions.change({
+                                                        actions.change({
                                                             key: 'context',
                                                             value: {
                                                                 [key]: event.target.value,
@@ -221,7 +221,7 @@ const Filters = () => {
                                                                 width={20}
                                                                 onClick={() => {
                                                                     dispatch(
-                                                                        filtersActions.change({
+                                                                        actions.change({
                                                                             key: 'context',
                                                                             value: {
                                                                                 [key]: values.context[key].filter(
@@ -247,7 +247,7 @@ const Filters = () => {
                                                 value={values.context[key]}
                                                 onChange={(event) => {
                                                     dispatch(
-                                                        filtersActions.change({
+                                                        actions.change({
                                                             key: 'context',
                                                             value: {
                                                                 [key]: event.target.value,
@@ -310,7 +310,7 @@ const Filters = () => {
                                                     }))}
                                                     onChange={(option) => {
                                                         dispatch(
-                                                            filtersActions.change({
+                                                            actions.change({
                                                                 key: 'taxonomy',
                                                                 value: {
                                                                     [key]: option.map((item) => item.value),
@@ -347,7 +347,7 @@ const Filters = () => {
                                                     }))}
                                                     onChange={(option) => {
                                                         dispatch(
-                                                            filtersActions.change({
+                                                            actions.change({
                                                                 key: 'taxonomy',
                                                                 value: {
                                                                     [key]: option.map((item) => item.value),
@@ -368,7 +368,7 @@ const Filters = () => {
                                                 value={values.taxonomy[key]}
                                                 onChange={(event) => {
                                                     dispatch(
-                                                        filtersActions.change({
+                                                        actions.change({
                                                             key: 'taxonomy',
                                                             value: {
                                                                 [key]: event.target.value,
@@ -388,7 +388,7 @@ const Filters = () => {
                                                 value={values.taxonomy[key]}
                                                 onChange={(event) => {
                                                     dispatch(
-                                                        filtersActions.change({
+                                                        actions.change({
                                                             key: 'taxonomy',
                                                             value: {
                                                                 [key]: event.target.value,
@@ -451,7 +451,7 @@ const Filters = () => {
                                                     }))}
                                                     onChange={(option) => {
                                                         dispatch(
-                                                            filtersActions.change({
+                                                            actions.change({
                                                                 key: 'creators',
                                                                 value: {
                                                                     [key]: option.map((item) => item.value),
@@ -488,7 +488,7 @@ const Filters = () => {
                                                     }))}
                                                     onChange={(option) => {
                                                         dispatch(
-                                                            filtersActions.change({
+                                                            actions.change({
                                                                 key: 'creators',
                                                                 value: {
                                                                     [key]: option.map((item) => item.value),
@@ -509,7 +509,7 @@ const Filters = () => {
                                                 value={values.creators[key]}
                                                 onChange={(event) => {
                                                     dispatch(
-                                                        filtersActions.change({
+                                                        actions.change({
                                                             key: 'creators',
                                                             value: {
                                                                 [key]: event.target.value,
@@ -529,7 +529,7 @@ const Filters = () => {
                                                 value={values.creators[key]}
                                                 onChange={(event) => {
                                                     dispatch(
-                                                        filtersActions.change({
+                                                        actions.change({
                                                             key: 'creators',
                                                             value: {
                                                                 [key]: event.target.value,
@@ -592,7 +592,7 @@ const Filters = () => {
                                                     }))}
                                                     onChange={(option) => {
                                                         dispatch(
-                                                            filtersActionsCreators.change({
+                                                            actionsCreators.change({
                                                                 key: 'provenance',
                                                                 value: {
                                                                     [key]: option.map((item) => item.value),
@@ -618,7 +618,7 @@ const Filters = () => {
                                                                 value={values.provenance[key][option]}
                                                                 onChange={(event) => {
                                                                     dispatch(
-                                                                        filtersActionsCreators.change({
+                                                                        actionsCreators.change({
                                                                             key: 'provenance',
                                                                             value: {
                                                                                 [key]: {
@@ -645,7 +645,7 @@ const Filters = () => {
                                                 value={values.provenance[key]}
                                                 onChange={(event) => {
                                                     dispatch(
-                                                        filtersActionsCreators.change({
+                                                        actionsCreators.change({
                                                             key: 'provenance',
                                                             value: {
                                                                 [key]: event.target.value,
@@ -665,7 +665,7 @@ const Filters = () => {
                                                 value={values.provenance[key]}
                                                 onChange={(event) => {
                                                     dispatch(
-                                                        filtersActionsCreators.change({
+                                                        actionsCreators.change({
                                                             key: 'provenance',
                                                             value: {
                                                                 [key]: event.target.value,
@@ -682,7 +682,7 @@ const Filters = () => {
                     </AccordionDetails>
                 </Accordion> */}
 
-                <Button variant="contained" onClick={() => dispatch(filtersActions.reset())} fullWidth>
+                <Button variant="contained" onClick={() => dispatch(actions.reset())} fullWidth>
                     Reset Filters
                 </Button>
             </Box>

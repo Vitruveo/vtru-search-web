@@ -76,4 +76,5 @@ export const filterSlice = createSlice({
     },
 });
 
-export const filtersActions = filterSlice.actions;
+export const { actions } = filterSlice;
+export default filterSlice.reducer;

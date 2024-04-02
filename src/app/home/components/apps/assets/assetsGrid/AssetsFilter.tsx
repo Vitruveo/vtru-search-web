@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 
 import assetsMetadata from '@/mock/assetsMetadata.json';
-import { filtersActions } from '@/features/filters/slice';
+import { actions } from '@/features/filters/slice';
 import { RootState } from '@/store/rootReducer';
 import { ContextItem } from '../components/ContextItem';
 
@@ -84,7 +84,7 @@ const Filters = () => {
                                         options={value?.enum || value?.items?.enum || []}
                                         onChange={(changeValue) =>
                                             dispatch(
-                                                filtersActions.change({
+                                                actions.change({
                                                     key: 'context',
                                                     value: {
                                                         [key]: changeValue,
@@ -94,7 +94,7 @@ const Filters = () => {
                                         }
                                         onRemove={(color) =>
                                             dispatch(
-                                                filtersActions.change({
+                                                actions.change({
                                                     key: 'context',
                                                     value: {
                                                         [key]: values.context[key].filter((item) => item !== color),
@@ -142,7 +142,7 @@ const Filters = () => {
                                         options={value?.enum || value?.items?.enum || []}
                                         onChange={(changeValue) =>
                                             dispatch(
-                                                filtersActions.change({
+                                                actions.change({
                                                     key: 'taxonomy',
                                                     value: {
                                                         [key]: changeValue,
@@ -152,7 +152,7 @@ const Filters = () => {
                                         }
                                         onRemove={(color) =>
                                             dispatch(
-                                                filtersActions.change({
+                                                actions.change({
                                                     key: 'taxonomy',
                                                     value: {
                                                         [key]: values.taxonomy[key].filter((item) => item !== color),
@@ -199,7 +199,7 @@ const Filters = () => {
                                         options={value?.enum || value?.items?.enum || []}
                                         onChange={(changeValue) =>
                                             dispatch(
-                                                filtersActions.change({
+                                                actions.change({
                                                     key: 'creators',
                                                     value: {
                                                         [key]: changeValue,
@@ -209,7 +209,7 @@ const Filters = () => {
                                         }
                                         onRemove={(color) =>
                                             dispatch(
-                                                filtersActions.change({
+                                                actions.change({
                                                     key: 'creators',
                                                     value: {
                                                         [key]: values.creators[key].filter((item) => item !== color),
@@ -225,7 +225,7 @@ const Filters = () => {
                 </Box>
 
                 <Box mb={4}>
-                    <Button variant="contained" onClick={() => dispatch(filtersActions.reset())} fullWidth>
+                    <Button variant="contained" onClick={() => dispatch(actions.reset())} fullWidth>
                         Reset Filters
                     </Button>
                 </Box>

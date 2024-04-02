@@ -5,10 +5,10 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '@/store/rootReducer';
 import { BASE_URL_API } from '@/constants/api';
 import type { APIResponse } from '../types';
+import type { FilterSliceState } from '../filters/types';
 import type { BuidlQuery, GetAssetsParams, ResponseAssets } from './types';
 import { actions } from './slice';
-import { filtersActions } from '../filters/slice';
-import { FilterSliceState } from '../filters/types';
+import { actions as actionsFilter } from '../filters/slice';
 
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
@@ -53,7 +53,15 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             },
         });
 
-        yield put(actions.setData(response.data.data));
+        yield put(
+            actions.setData({
+                data: response.data.data.data,
+                limit: response.data.data.limit,
+                page: response.data.data.page,
+                total: response.data.data.total,
+                totalPage: response.data.data.totalPage,
+            })
+        );
         yield put(actions.setTags(response.data.data.tags));
     } catch (error) {
         // Handle error
@@ -68,8 +76,8 @@ function* setup() {
 export function* assetsSagas() {
     yield all([
         takeEvery(actions.loadAssets.type, getAssets),
-        takeEvery(filtersActions.change.type, getAssets),
-        takeEvery(filtersActions.reset.type, getAssets),
+        takeEvery(actionsFilter.change.type, getAssets),
+        takeEvery(actionsFilter.reset.type, getAssets),
         setup(),
     ]);
 }
