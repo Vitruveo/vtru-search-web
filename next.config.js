@@ -29,7 +29,6 @@ const nextConfig = {
         //   transform: '@mui/material/{{member}}',
         // },
     },
-    transpilePackages: ['@pqina/pintura', '@pqina/react-pintura'],
 };
 
 module.exports = nextConfig;
