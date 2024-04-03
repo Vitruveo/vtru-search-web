@@ -10,7 +10,6 @@ import Navigation from './layout/horizontal/navbar/Navigation';
 import HorizontalHeader from './layout/horizontal/header/Header';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
-import webSocketService from '@/services/websocket';
 
 const MainWrapper = styled('div')(() => ({
     display: 'flex',
