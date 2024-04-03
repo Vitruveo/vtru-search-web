@@ -7,7 +7,7 @@ import AppCard from '@/app/home/components/shared/AppCard';
 import AssetsList from './components/apps/assets/assetsGrid/AssetsList';
 import AssetsSidebar from './components/apps/assets/assetsGrid/AssetsSidebar';
 
-const Ecommerce = () => {
+const Store = () => {
     const [isMobileSidebarOpen, setMobileSidebarOpen] = React.useState(true);
 
     return (
@@ -26,4 +26,4 @@ const Ecommerce = () => {
     );
 };
 
-export default Ecommerce;
+export default Store;

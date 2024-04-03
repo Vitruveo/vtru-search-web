@@ -4,7 +4,7 @@ Vtru Search
 
 ## Pending tasks
 
--   [ ] Remove feature ecommerce
+-   [x] Remove feature ecommerce
 -   [ ] Remove feature customizer
 -   [ ] Remove from app `app/common/axios.js` and `utils/axios.js`
 -   [ ] Deduplicate `app/common/` with `utils/`

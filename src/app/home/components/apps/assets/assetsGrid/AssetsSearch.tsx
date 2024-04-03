@@ -5,7 +5,6 @@ import { IconSearch } from '@tabler/icons-react';
 
 // redux
 import { useDispatch } from '@/store/hooks';
-import { SearchProduct } from '@/features/ecommerce/slice';
 
 // ----------------------------------------------------------------------
 export default function ProductSearch() {
@@ -26,7 +25,6 @@ export default function ProductSearch() {
                 ),
             }}
             fullWidth
-            onChange={(e) => dispatch(SearchProduct(e.target.value))}
         />
     );
 }

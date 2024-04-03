@@ -23,7 +23,6 @@ import { IconCopy, IconMenu2 } from '@tabler/icons-react';
 import './AssetScroll.css';
 
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
-import { filterReset } from '@/features/ecommerce/slice';
 import { useDispatch } from '@/store/hooks';
 import { RootState } from '@/store/rootReducer';
 import { actions } from '@/features/assets';
@@ -89,11 +88,11 @@ const AssetsList = ({ onClick }: Props) => {
             />
 
             <Stack direction="row" justifyContent="space-between" alignItems="center" p={3}>
-                {!lgUp &&
+                {!lgUp && (
                     <Fab onClick={onClick} color="primary" size="small">
                         <IconMenu2 width="16" />
                     </Fab>
-                }
+                )}
                 <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
                     <Box display="flex" alignItems="center">
                         <Switch onChange={() => setIsCurated(!isCurated)} />
@@ -244,9 +243,6 @@ const AssetsList = ({ onClick }: Props) => {
                                 <Typography variant="h6" mb={3}>
                                     The Asset you are searching is no longer available.
                                 </Typography>
-                                <Button variant="contained" onClick={() => dispatch(filterReset())}>
-                                    Try Again
-                                </Button>
                             </Box>
                         </Grid>
                     </>
