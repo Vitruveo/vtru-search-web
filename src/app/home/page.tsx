@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import PageContainer from '@/app/home/components/container/PageContainer';
 import AppCard from '@/app/home/components/shared/AppCard';
 import AssetsList from './components/apps/assets/assetsGrid/AssetsList';
-import AssetsSidebar from './components/apps/assets/assetsGrid/AssetsSidebar';
+import AssetsSidebar from './components/apps/assets/assetsFilter/AssetsSidebar';
 
 const Ecommerce = () => {
     const [isMobileSidebarOpen, setMobileSidebarOpen] = React.useState(true);

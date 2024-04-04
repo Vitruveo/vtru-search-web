@@ -365,6 +365,56 @@ const language: Translation = {
     'studio.footer.of': 'из',
     'studio.footer.save': 'Сохранить',
     'studio.footer.back': 'Назад',
+
+    /* Asset Filter */
+    'studio.assetFilter.search.placeholder': 'Поиск актива',
+
+    'studio.assetFilter.context': 'Контекст',
+    'studio.assetFilter.context.title': 'Заголовок',
+    'studio.assetFilter.context.title.culture': 'Культура',
+    'studio.assetFilter.context.title.mood': 'Настроение',
+    'studio.assetFilter.context.title.colors': 'Цвета',
+    'studio.assetFilter.context.title.orientation': 'Ориентация',
+
+    'studio.assetFilter.context.culture.african': 'Африканский',
+    'studio.assetFilter.context.culture.centralasian': 'Центральноазиатский',
+    'studio.assetFilter.context.culture.eastasian': 'Восточноазиатский',
+    'studio.assetFilter.context.culture.islamic': 'Исламский',
+    'studio.assetFilter.context.culture.latinamerican': 'Латиноамериканский',
+    'studio.assetFilter.context.culture.nativeamerican': 'Автохтонный американец',
+    'studio.assetFilter.context.culture.oceanic': 'Океанический',
+    'studio.assetFilter.context.culture.southasian': 'Южноазиатский',
+    'studio.assetFilter.context.culture.southeastasian': 'Юго-восточноазиатский',
+    'studio.assetFilter.context.culture.western': 'Западный',
+
+    'studio.assetFilter.taxonomy': 'Таксономия',
+    'studio.assetFilter.taxonomy.title': 'Заголовок',
+    'studio.assetFilter.taxonomy.title.objectType': 'Тип объекта',
+    'studio.assetFilter.taxonomy.title.tags': 'Теги',
+    'studio.assetFilter.taxonomy.title.collections': 'Коллекции',
+    'studio.assetFilter.taxonomy.title.aiGeneration': 'Генерация искусственного интеллекта',
+    'studio.assetFilter.taxonomy.title.arenabled': 'Включено для дополненной реальности',
+    'studio.assetFilter.taxonomy.title.nudity': 'Обнаженность',
+    'studio.assetFilter.taxonomy.title.category': 'Категория',
+    'studio.assetFilter.taxonomy.title.medium': 'Средство',
+    'studio.assetFilter.taxonomy.title.style': 'Стиль',
+    'studio.assetFilter.taxonomy.title.subject': 'Тема',
+
+    'studio.assetFilter.creators': 'Создатели',
+    'studio.assetFilter.creators.title': 'Заголовок',
+    'studio.assetFilter.creators.title.name': 'Имя',
+    'studio.assetFilter.creators.title.profileUrl': 'URL профиля',
+    'studio.assetFilter.creators.title.nationality': 'Национальность',
+    'studio.assetFilter.creators.title.residence': 'Проживание',
+    'studio.assetFilter.creators.title.ethnicity': 'Этническая принадлежность',
+    'studio.assetFilter.creators.title.gender': 'Пол',
+
+    /* Asset List */
+    'studio.assetList.curateStack': 'Стек Куратора',
+    'studio.assetList.curateStack.selected': 'Выбранный/Выбранная',
+
+    'studio.assetList.visualization.description': 'Описание',
+    'studio.assetList.visualization.view': 'Просмотр',
 };
 
 export default language;

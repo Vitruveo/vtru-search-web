@@ -367,6 +367,56 @@ const language: Translation = {
     'studio.footer.of': 'de',
     'studio.footer.save': 'Guardar',
     'studio.footer.back': 'Atrás',
+
+    /* Asset Filter */
+    'studio.assetFilter.search.placeholder': 'Búsqueda de Activos',
+
+    'studio.assetFilter.context': 'Contexto',
+    'studio.assetFilter.context.title': 'Título',
+    'studio.assetFilter.context.title.culture': 'Cultura',
+    'studio.assetFilter.context.title.mood': 'Estado de ánimo',
+    'studio.assetFilter.context.title.colors': 'Colores',
+    'studio.assetFilter.context.title.orientation': 'Orientación',
+
+    'studio.assetFilter.context.culture.african': 'Africana',
+    'studio.assetFilter.context.culture.centralasian': 'Asiática central',
+    'studio.assetFilter.context.culture.eastasian': 'Asiática oriental',
+    'studio.assetFilter.context.culture.islamic': 'Islámica',
+    'studio.assetFilter.context.culture.latinamerican': 'Latinoamericana',
+    'studio.assetFilter.context.culture.nativeamerican': 'Nativo americana',
+    'studio.assetFilter.context.culture.oceanic': 'Oceánica',
+    'studio.assetFilter.context.culture.southasian': 'Asiática del sur',
+    'studio.assetFilter.context.culture.southeastasian': 'Asiática del sudeste',
+    'studio.assetFilter.context.culture.western': 'Occidental',
+
+    'studio.assetFilter.taxonomy': 'Taxonomía',
+    'studio.assetFilter.taxonomy.title': 'Título',
+    'studio.assetFilter.taxonomy.title.objectType': 'Tipo de objeto',
+    'studio.assetFilter.taxonomy.title.tags': 'Etiquetas',
+    'studio.assetFilter.taxonomy.title.collections': 'Colecciones',
+    'studio.assetFilter.taxonomy.title.aiGeneration': 'Generación de IA',
+    'studio.assetFilter.taxonomy.title.arenabled': 'Activado para RA',
+    'studio.assetFilter.taxonomy.title.nudity': 'Desnudez',
+    'studio.assetFilter.taxonomy.title.category': 'Categoría',
+    'studio.assetFilter.taxonomy.title.medium': 'Medio',
+    'studio.assetFilter.taxonomy.title.style': 'Estilo',
+    'studio.assetFilter.taxonomy.title.subject': 'Tema',
+
+    'studio.assetFilter.creators': 'Creadores',
+    'studio.assetFilter.creators.title': 'Título',
+    'studio.assetFilter.creators.title.name': 'Nombre',
+    'studio.assetFilter.creators.title.profileUrl': 'URL del perfil',
+    'studio.assetFilter.creators.title.nationality': 'Nacionalidad',
+    'studio.assetFilter.creators.title.residence': 'Residencia',
+    'studio.assetFilter.creators.title.ethnicity': 'Etnicidad',
+    'studio.assetFilter.creators.title.gender': 'Género',
+
+    /* Asset List */
+    'studio.assetList.curateStack': 'Pila de curación',
+    'studio.assetList.curateStack.selected': 'Seleccionados',
+
+    'studio.assetList.visualization.description': 'Descripción',
+    'studio.assetList.visualization.view': 'Ver',
 };
 
 export default language;

@@ -362,6 +362,56 @@ const language: Translation = {
     'studio.footer.of': 'از',
     'studio.footer.save': 'ذخیره',
     'studio.footer.back': 'بازگشت',
+
+    /* Asset Filter */
+    'studio.assetFilter.search.placeholder': 'جستجوی دارایی',
+
+    'studio.assetFilter.context': 'زمینه',
+    'studio.assetFilter.context.title': 'عنوان',
+    'studio.assetFilter.context.title.culture': 'فرهنگ',
+    'studio.assetFilter.context.title.mood': 'حالت روحی',
+    'studio.assetFilter.context.title.colors': 'رنگ‌ها',
+    'studio.assetFilter.context.title.orientation': 'جهت‌گیری',
+
+    'studio.assetFilter.context.culture.african': 'آفریقایی',
+    'studio.assetFilter.context.culture.centralasian': 'مرکزی آسیایی',
+    'studio.assetFilter.context.culture.eastasian': 'شرق آسیایی',
+    'studio.assetFilter.context.culture.islamic': 'اسلامی',
+    'studio.assetFilter.context.culture.latinamerican': 'لاتین آمریکایی',
+    'studio.assetFilter.context.culture.nativeamerican': 'سرزمینی آمریکایی',
+    'studio.assetFilter.context.culture.oceanic': 'اقیانوسی',
+    'studio.assetFilter.context.culture.southasian': 'جنوب آسیایی',
+    'studio.assetFilter.context.culture.southeastasian': 'جنوب شرق آسیایی',
+    'studio.assetFilter.context.culture.western': 'غربی',
+
+    'studio.assetFilter.taxonomy': 'طبقه‌بندی',
+    'studio.assetFilter.taxonomy.title': 'عنوان',
+    'studio.assetFilter.taxonomy.title.objectType': 'نوع شیء',
+    'studio.assetFilter.taxonomy.title.tags': 'برچسب‌ها',
+    'studio.assetFilter.taxonomy.title.collections': 'مجموعه‌ها',
+    'studio.assetFilter.taxonomy.title.aiGeneration': 'تولید هوش مصنوعی',
+    'studio.assetFilter.taxonomy.title.arenabled': 'فعال شده برای واقعیت افزوده',
+    'studio.assetFilter.taxonomy.title.nudity': 'عریانی',
+    'studio.assetFilter.taxonomy.title.category': 'دسته‌بندی',
+    'studio.assetFilter.taxonomy.title.medium': 'میانه',
+    'studio.assetFilter.taxonomy.title.style': 'سبک',
+    'studio.assetFilter.taxonomy.title.subject': 'موضوع',
+
+    'studio.assetFilter.creators': 'خالقان',
+    'studio.assetFilter.creators.title': 'عنوان',
+    'studio.assetFilter.creators.title.name': 'نام',
+    'studio.assetFilter.creators.title.profileUrl': 'آدرس اینترنتی پروفایل',
+    'studio.assetFilter.creators.title.nationality': 'ملیت',
+    'studio.assetFilter.creators.title.residence': 'اقامت',
+    'studio.assetFilter.creators.title.ethnicity': 'نژاد',
+    'studio.assetFilter.creators.title.gender': 'جنسیت',
+
+    /* Asset List */
+    'studio.assetList.curateStack': 'پشته نگهداری',
+    'studio.assetList.curateStack.selected': 'انتخاب شده',
+
+    'studio.assetList.visualization.description': 'توضیحات',
+    'studio.assetList.visualization.view': 'دیدن',
 };
 
 export default language;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
 import {
@@ -27,11 +27,12 @@ import { filterReset } from '@/features/ecommerce/slice';
 import { useDispatch } from '@/store/hooks';
 import { RootState } from '@/store/rootReducer';
 import { actions } from '@/features/assets';
-import { Asset } from '@/features/assets/types';
+import { Asset, AssetView } from '@/features/assets/types';
 import BlankCard from '@/app/home/components/shared/BlankCard';
 import { DrawerAsset } from '../components/DrawerAsset';
 import { DrawerStack } from '../components/DrawerStack';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import { useI18n } from '@/app/hooks/useI18n';
 
 interface Props {
     onClick: (event: React.SyntheticEvent | Event) => void;
@@ -39,8 +40,9 @@ interface Props {
 
 const AssetsList = ({ onClick }: Props) => {
     const dispatch = useDispatch();
+    const { language } = useI18n();
 
-    const [assetView, setAssetView] = useState<any>();
+    const [assetView, setAssetView] = useState<AssetView>();
     const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
     const [drawerStackOpen, setDrawerStackOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<Asset[]>([]);
@@ -61,7 +63,7 @@ const AssetsList = ({ onClick }: Props) => {
         return () => clearTimeout(timer);
     }, []);
 
-    const handleClickImage = (asset: any) => {
+    const handleClickImage = (asset: AssetView) => {
         setAssetView(asset);
         setDrawerOpen(true);
     };
@@ -97,7 +99,9 @@ const AssetsList = ({ onClick }: Props) => {
                 <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
                     <Box display="flex" alignItems="center">
                         <Switch onChange={() => setIsCurated(!isCurated)} />
-                        <Typography variant={lgUp ? 'h4' : 'h5'}>Curate Stack</Typography>
+                        <Typography variant={lgUp ? 'h4' : 'h5'}>
+                            {language['studio.assetList.curateStack'] as ReactNode}
+                        </Typography>
                     </Box>
                     {isCurated && (
                         <Box
@@ -109,7 +113,9 @@ const AssetsList = ({ onClick }: Props) => {
                         >
                             {lgUp && (
                                 <>
-                                    <Typography variant="h4">{selected.length} selected</Typography>
+                                    <Typography variant="h4">
+                                        {selected.length} {language['studio.assetList.curateStack.selected'] as ReactNode}
+                                    </Typography>
                                     <IconCopy width={20} />
                                 </>
                             )}
@@ -167,7 +173,7 @@ const AssetsList = ({ onClick }: Props) => {
                                 ) : (
                                     <Box
                                         sx={{
-                                            border: assetView === asset ? '1px solid #763ebd' : '',
+                                            border: assetView?._id === asset._id ? '1px solid #763ebd' : '',
                                         }}
                                     >
                                         <BlankCard className="hoverCard">
@@ -189,15 +195,18 @@ const AssetsList = ({ onClick }: Props) => {
                                             )}
                                             <Typography
                                                 onClick={() => {
+                                                    console.log(asset)
                                                     if (isCurated) {
                                                         setSelected(
                                                             selected.some((item) => item._id === asset._id)
                                                                 ? selected.filter((item) => item._id !== asset._id)
                                                                 : [...selected, asset]
                                                         );
+                                                        
                                                         return;
                                                     }
-                                                    handleClickImage(asset);
+
+                                                    handleClickImage(asset as unknown as AssetView);
                                                 }}
                                                 sx={{ cursor: 'pointer' }}
                                             >
@@ -212,7 +221,7 @@ const AssetsList = ({ onClick }: Props) => {
                                             <CardContent sx={{ p: 3, pt: 2 }}>
                                                 <Typography
                                                     variant="h6"
-                                                    onClick={() => handleClickImage(asset)}
+                                                    onClick={() => handleClickImage(asset as unknown as AssetView)}
                                                     sx={{ cursor: 'pointer' }}
                                                 >
                                                     {asset?.assetMetadata?.context?.formData?.title || 'No Title'}

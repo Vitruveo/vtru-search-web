@@ -404,6 +404,56 @@ const language: Translation = {
     'studio.footer.of': 'of',
     'studio.footer.save': 'Save',
     'studio.footer.back': 'Back',
+
+    /* Asset Filter */
+    'studio.assetFilter.search.placeholder': 'Search Asset',
+
+    'studio.assetFilter.context': 'Context',
+    'studio.assetFilter.context.title': 'Title',
+    'studio.assetFilter.context.title.culture': 'Culture',
+    'studio.assetFilter.context.title.mood': 'Mood',
+    'studio.assetFilter.context.title.colors': 'Colors',
+    'studio.assetFilter.context.title.orientation': 'Orientation',
+
+    'studio.assetFilter.context.culture.african': 'African',
+    'studio.assetFilter.context.culture.centralasian': 'Central asian',
+    'studio.assetFilter.context.culture.eastasian': 'East asian',
+    'studio.assetFilter.context.culture.islamic': 'Islamic',
+    'studio.assetFilter.context.culture.latinamerican': 'Latin american',
+    'studio.assetFilter.context.culture.nativeamerican': 'Native american',
+    'studio.assetFilter.context.culture.oceanic': 'Oceanic',
+    'studio.assetFilter.context.culture.southasian': 'South asian',
+    'studio.assetFilter.context.culture.southeastasian': 'Southeast asian',
+    'studio.assetFilter.context.culture.western': 'Western',
+
+    'studio.assetFilter.taxonomy': 'Taxonomy',
+    'studio.assetFilter.taxonomy.title': 'Title',
+    'studio.assetFilter.taxonomy.title.objectType': 'Object type',
+    'studio.assetFilter.taxonomy.title.tags': 'Tags',
+    'studio.assetFilter.taxonomy.title.collections': 'Collections',
+    'studio.assetFilter.taxonomy.title.aiGeneration': 'AI generation',
+    'studio.assetFilter.taxonomy.title.arenabled': 'AR enabled',
+    'studio.assetFilter.taxonomy.title.nudity': 'Nudity',
+    'studio.assetFilter.taxonomy.title.category': 'Category',
+    'studio.assetFilter.taxonomy.title.medium': 'Medium',
+    'studio.assetFilter.taxonomy.title.style': 'Style',
+    'studio.assetFilter.taxonomy.title.subject': 'Subject',
+
+    'studio.assetFilter.creators': 'Creators',
+    'studio.assetFilter.creators.title': 'Title',
+    'studio.assetFilter.creators.title.name': 'Name',
+    'studio.assetFilter.creators.title.profileUrl': 'Profile URL',
+    'studio.assetFilter.creators.title.nationality': 'Nationality',
+    'studio.assetFilter.creators.title.residence': 'Residence',
+    'studio.assetFilter.creators.title.ethnicity': 'Ethnicity',
+    'studio.assetFilter.creators.title.gender': 'Gender',
+
+    /* Asset List */
+    'studio.assetList.curateStack': 'Curate stack',
+    'studio.assetList.curateStack.selected': 'Selected',
+
+    'studio.assetList.visualization.description': 'Description',
+    'studio.assetList.visualization.view': 'View',
 };
 
 export default language;

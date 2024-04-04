@@ -85,6 +85,58 @@ export interface Asset {
     };
 }
 
+interface Definitions {
+    auto: {
+        nameTargetFieldValue: string;
+        selectedOptions: {
+            labelOptionField: string[];
+            valueOptionField: string[];
+        }
+    };
+    domain: string;
+    name: string;
+    options: [];
+    order: number;
+    required: boolean;
+    title: string;
+    type: string;
+    validation: string;
+    value: string;
+}
+
+interface Domain {
+    value: string;
+    label: string;
+}
+
+export interface AssetView {
+    _id: string;
+    assetMetadata: {
+        assetMetadataDefinitions: Definitions[];
+        assetMetadataDomains: Domain[];
+    };
+    consignArtwork: {
+        artworkListing: Date | null;
+        creatorContract: Date | null;
+        creatorCredits: Date | null;
+        creatorWallet: Date | null;
+        status: string;
+    };
+    formats: {
+        display: Format;
+        exhibition: Format;
+        original: Format;
+        preview: Format;
+        print: Format | null;
+    };
+    framework: {
+        createdAt: Date;
+        createdBy: string | null;
+        updatedAt: Date | null;
+        updatedBy: string | null;
+    };
+}
+
 export interface Tags {
     tag: string;
     count: number;

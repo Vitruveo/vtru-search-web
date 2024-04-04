@@ -361,6 +361,56 @@ const language: Translation = {
     'studio.footer.of': 'de',
     'studio.footer.save': 'Salvar',
     'studio.footer.back': 'Voltar',
+
+    /* Asset Filter */
+    'studio.assetFilter.search.placeholder': 'Buscar Asset',
+
+    'studio.assetFilter.context': 'Contexto',
+    'studio.assetFilter.context.title': 'Título',
+    'studio.assetFilter.context.title.culture': 'Cultura',
+    'studio.assetFilter.context.title.mood': 'Humor',
+    'studio.assetFilter.context.title.colors': 'Cores',
+    'studio.assetFilter.context.title.orientation': 'Orientação',
+
+    'studio.assetFilter.context.culture.african': 'Africana',
+    'studio.assetFilter.context.culture.centralasian': 'Centro-asiática',
+    'studio.assetFilter.context.culture.eastasian': 'Leste-asiática',
+    'studio.assetFilter.context.culture.islamic': 'Islâmica',
+    'studio.assetFilter.context.culture.latinamerican': 'Latino americana',
+    'studio.assetFilter.context.culture.nativeamerican': 'Nativo americana',
+    'studio.assetFilter.context.culture.oceanic': 'Oceânica',
+    'studio.assetFilter.context.culture.southasian': 'Sul-asiática',
+    'studio.assetFilter.context.culture.southeastasian': 'Sudeste-asiática',
+    'studio.assetFilter.context.culture.western': 'Ocidental',
+
+    'studio.assetFilter.taxonomy': 'Taxonomia',
+    'studio.assetFilter.taxonomy.title': 'Título',
+    'studio.assetFilter.taxonomy.title.objectType': 'Tipo do objeto',
+    'studio.assetFilter.taxonomy.title.tags': 'Tags',
+    'studio.assetFilter.taxonomy.title.collections': 'Coleções',
+    'studio.assetFilter.taxonomy.title.aiGeneration': 'Geração de IA',
+    'studio.assetFilter.taxonomy.title.arenabled': 'RA habilitada',
+    'studio.assetFilter.taxonomy.title.nudity': 'Nudez',
+    'studio.assetFilter.taxonomy.title.category': 'Categoria',
+    'studio.assetFilter.taxonomy.title.medium': 'Técnica',
+    'studio.assetFilter.taxonomy.title.style': 'Estilo',
+    'studio.assetFilter.taxonomy.title.subject': 'Tema',
+
+    'studio.assetFilter.creators': 'Criadores',
+    'studio.assetFilter.creators.title': 'Título',
+    'studio.assetFilter.creators.title.name': 'Nome',
+    'studio.assetFilter.creators.title.profileUrl': 'URL do perfil',
+    'studio.assetFilter.creators.title.nationality': 'Nacionalidade',
+    'studio.assetFilter.creators.title.residence': 'Residência',
+    'studio.assetFilter.creators.title.ethnicity': 'Etnicidade',
+    'studio.assetFilter.creators.title.gender': 'Gênero',
+
+    /* Asset List */
+    'studio.assetList.curateStack': 'Seleção',
+    'studio.assetList.curateStack.selected': 'Selecionados',
+
+    'studio.assetList.visualization.description': 'Descrição',
+    'studio.assetList.visualization.view': 'Visualizar',
 };
 
 export default language;

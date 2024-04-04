@@ -1,15 +1,7 @@
 import Select from 'react-select';
+import { InputSelect } from '../assetsFilter/types';
 
-interface Props {
-    value: {
-        value: string;
-        label: string;
-    }[];
-    options: any[];
-    onChange(option: any): void;
-}
-
-export function InputSelect({ value, options, onChange }: Props) {
+export function InputSelect({ value, options, onChange }: InputSelect) {
     return (
         <Select
             isMulti
