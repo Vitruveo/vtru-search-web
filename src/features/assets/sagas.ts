@@ -2,19 +2,19 @@ import axios, { AxiosResponse } from 'axios';
 import { all, call, put, takeEvery, select } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
 
-import { RootState } from '@/store/rootReducer';
 import { API_BASE_URL } from '@/constants/api';
-import type { APIResponse } from '../types';
 import type { FilterSliceState } from '../filters/types';
 import type { BuidlQuery, GetAssetsParams, ResponseAssets } from './types';
 import { actions } from './slice';
 import { actions as actionsFilter } from '../filters/slice';
+import { APIResponse } from '../common/types';
+import { AppState } from '@/store';
 
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
     try {
-        const name: string = yield select((state: RootState) => state.filters.name);
-        const filtersContext: FilterSliceState['context'] = yield select((state: RootState) => state.filters.context);
+        const name: string = yield select((state: AppState) => state.filters.name);
+        const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state) => state.filters.taxonomy);
         const filtersCreators: FilterSliceState['creators'] = yield select((state) => state.filters.creators);
 

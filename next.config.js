@@ -13,11 +13,11 @@ const nextConfig = {
     reactStrictMode: false,
     async redirects() {
         return [
-            {
-                source: '/',
-                destination: '/home',
-                permanent: true,
-            },
+            // {
+            //     source: '/',
+            //     destination: '/',
+            //     permanent: true,
+            // },
         ];
     },
     modularizeImports: {

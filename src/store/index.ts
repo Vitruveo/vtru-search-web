@@ -1,11 +1,16 @@
-import { configureStore, type Action, type ThunkAction } from '@reduxjs/toolkit';
+import { configureStore, type Action, type ThunkAction, combineReducers } from '@reduxjs/toolkit';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import createSagaMiddleware from 'redux-saga';
 import { all, spawn } from 'redux-saga/effects';
 import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 
-import { reducer } from './rootReducer';
+// sagas
 import { assetsSagas } from '@/features/assets';
+
+// slices
+import { filterSlice } from '@/features/filters';
+import { customizerSlice } from '@/features/customizer';
+import { assetsSlice } from '@/features/assets/slice';
 
 const sagaMiddleware = createSagaMiddleware({
     onError: (error, errorInfo) => {
@@ -36,7 +41,13 @@ const persistConfig = {
     storage,
 };
 
-const persistedReducer = persistReducer(persistConfig, reducer);
+const rootReducer = combineReducers({
+    filters: filterSlice.reducer,
+    customizer: customizerSlice.reducer,
+    assets: assetsSlice.reducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
     reducer: persistedReducer,
