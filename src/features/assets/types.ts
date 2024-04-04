@@ -1,3 +1,5 @@
+import { AssetsMetadata } from '@/app/components/Assets/assetsGrid/types';
+
 export interface AssetsSliceState {
     loading: boolean;
     error: string | null;
