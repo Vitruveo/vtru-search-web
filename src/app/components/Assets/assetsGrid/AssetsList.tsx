@@ -27,7 +27,7 @@ import { AppState } from '@/store';
 import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/assets';
 import { Asset } from '@/features/assets/types';
-import BlankCard from '../../shared/BlankCard';
+import BlankCard from '../../Shared/BlankCard';
 import { DrawerAsset } from '../components/DrawerAsset';
 import { DrawerStack } from '../components/DrawerStack';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
