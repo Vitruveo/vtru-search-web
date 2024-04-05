@@ -11,6 +11,7 @@ import {
     Theme,
     MenuItem,
 } from '@mui/material';
+import { useI18n } from '@/app/hooks/useI18n';
 import Image from 'next/image';
 import { IconTrash } from '@tabler/icons-react';
 
@@ -25,6 +26,8 @@ interface Props {
 }
 
 export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Props) {
+    const { language } = useI18n();
+
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
@@ -49,25 +52,27 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                     }}
                 >
                     <Box width="100%" display="flex" justifyContent="center" mb={4}>
-                        <Typography variant="h4">Publish Stack</Typography>
+                        <Typography variant="h4">{language['search.drawer.stack.publishStack'] as string}</Typography>
                     </Box>
 
                     <Box display="flex" mb={2}>
-                        <Typography width={120}>Destination</Typography>
+                        <Typography width={120}>{language['search.drawer.stack.description'] as string}</Typography>
                         <Select fullWidth>
-                            <MenuItem value={10}>Image Grid</MenuItem>
-                            <MenuItem value={20}>Interactive Gallery (published to IPFS)</MenuItem>
-                            <MenuItem value={30}>Video Gallery</MenuItem>
+                            <MenuItem value={10}>{language['search.drawer.stack.imageGrid'] as string}</MenuItem>
+                            <MenuItem value={20}>
+                                {language['search.drawer.stack.interactiveGallery'] as string}
+                            </MenuItem>
+                            <MenuItem value={30}>{language['search.drawer.stack.videoGallery'] as string}</MenuItem>
                         </Select>
                     </Box>
 
                     <Box display="flex" mb={3}>
-                        <Typography width={120}>Title</Typography>
+                        <Typography width={120}>{language['search.drawer.stack.title'] as string}</Typography>
                         <TextField rows={4} fullWidth />
                     </Box>
 
                     <Button variant="contained" fullWidth>
-                        Publish
+                        {language['search.drawer.stack.button.publish'] as string}
                     </Button>
                 </Box>
             </Modal>
@@ -80,11 +85,13 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                         disabled={selected.length === 0}
                         onClick={() => setModalOpen(true)}
                     >
-                        Publish Stack
+                        {language['search.drawer.stack.publishStack'] as string}
                     </Button>
 
                     <Box mt={2} display="flex" gap={2} flexWrap="wrap">
-                        {selected.length === 0 && <Typography>No selected assets</Typography>}
+                        {selected.length === 0 && (
+                            <Typography>{language['search.drawer.stack.noSelectedAssets'] as string}</Typography>
+                        )}
                         {selected.map((asset) => (
                             <Box position="relative" key={asset._id}>
                                 <Image

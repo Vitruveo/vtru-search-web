@@ -11,6 +11,17 @@ const language: Translation = {
     /* Asset Filter */
     'search.assetFilter.search.placeholder': 'Поиск актива',
 
+    'search.assetFilter.resetFilters': 'Сбросить фильтры',
+
+    'search.drawer.stack.publishStack': 'Опубликовать стек',
+    'search.drawer.stack.noSelectedAssets': 'Нет выбранных активов',
+    'search.drawer.stack.description': 'Описание',
+    'search.drawer.stack.imageGrid': 'Сетка изображений',
+    'search.drawer.stack.interactiveGallery': 'Интерактивная галерея (опубликована в IPFS)',
+    'search.drawer.stack.videoGallery': 'Видео галерея',
+    'search.drawer.stack.title': 'Заголовок',
+    'search.drawer.stack.button.publish': 'Опубликовать',
+
     'search.assetFilter.context': 'Контекст',
     'search.assetFilter.context.title': 'Заголовок',
     'search.assetFilter.context.title.culture': 'Культура',

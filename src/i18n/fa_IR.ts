@@ -11,6 +11,17 @@ const language: Translation = {
     /* Asset Filter */
     'search.assetFilter.search.placeholder': 'جستجوی دارایی',
 
+    'search.assetFilter.resetFilters': 'بازنشانی فیلترها',
+
+    'search.drawer.stack.publishStack': 'انتشار پشته',
+    'search.drawer.stack.noSelectedAssets': 'هیچ دارایی انتخاب نشده‌ای وجود ندارد',
+    'search.drawer.stack.description': 'توضیح',
+    'search.drawer.stack.imageGrid': 'شبکه تصویر',
+    'search.drawer.stack.interactiveGallery': 'گالری تعاملی (انتشار شده در IPFS)',
+    'search.drawer.stack.videoGallery': 'گالری ویدیو',
+    'search.drawer.stack.title': 'عنوان',
+    'search.drawer.stack.button.publish': 'انتشار',
+
     'search.assetFilter.context': 'زمینه',
     'search.assetFilter.context.title': 'عنوان',
     'search.assetFilter.context.title.culture': 'فرهنگ',

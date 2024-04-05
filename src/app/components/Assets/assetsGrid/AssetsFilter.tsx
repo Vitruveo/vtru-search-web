@@ -298,7 +298,7 @@ const Filters = () => {
 
                 <Box mb={4}>
                     <Button variant="contained" onClick={() => dispatch(actions.reset())} fullWidth>
-                        Reset Filters
+                        {language['search.assetFilter.resetFilters'] as string}
                     </Button>
                 </Box>
             </Box>

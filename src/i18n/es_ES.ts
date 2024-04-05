@@ -11,6 +11,17 @@ const language: Translation = {
     /* Asset Filter */
     'search.assetFilter.search.placeholder': 'Búsqueda de Activos',
 
+    'search.assetFilter.resetFilters': 'Restablecer filtros',
+
+    'search.drawer.stack.publishStack': 'Publicar pila',
+    'search.drawer.stack.noSelectedAssets': 'No hay activos seleccionados',
+    'search.drawer.stack.description': 'Descripción',
+    'search.drawer.stack.imageGrid': 'Cuadrícula de imágenes',
+    'search.drawer.stack.interactiveGallery': 'Galería interactiva (publicada en IPFS)',
+    'search.drawer.stack.videoGallery': 'Galería de video',
+    'search.drawer.stack.title': 'Título',
+    'search.drawer.stack.button.publish': 'Publicar',
+
     'search.assetFilter.context': 'Contexto',
     'search.assetFilter.context.title': 'Título',
     'search.assetFilter.context.title.culture': 'Cultura',
