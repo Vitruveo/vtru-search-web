@@ -67,15 +67,13 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                 </Typography>
                 <Box mt={3} mb={3} display="flex" alignItems="center" gap={1}>
                     <Avatar />
-                    {assetView?.assetMetadata?.creators?.formData?.map((creatorItem) => (
-                        <Typography key={creatorItem.name} variant="body1"></Typography>
-                    ))}
+                    {creator}
                 </Box>
                 <Box mb={3}>
                     <Typography variant="h6">
                         {language['search.assetList.visualization.description'] as string}
                     </Typography>
-                    <Typography maxWidth={lgUp ? 400 : mdUp ? 300 : 200}>
+                    <Typography style={{ overflowWrap: 'break-word' }} maxWidth={lgUp ? 400 : mdUp ? 300 : 200}>
                         {assetView?.assetMetadata?.context?.formData?.description}
                     </Typography>
                 </Box>

@@ -3,6 +3,7 @@ import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import createSagaMiddleware from 'redux-saga';
 import { all, spawn } from 'redux-saga/effects';
 import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
+import { PERSIST_KEY, PERSIST_VERSION } from '@/constants/store';
 
 // sagas
 import { assetsSagas } from '@/features/assets';
@@ -36,8 +37,8 @@ const createNoopStorage = () => {
 const storage = typeof window !== 'undefined' ? createWebStorage('local') : createNoopStorage();
 
 const persistConfig = {
-    key: 'root',
-    version: 1,
+    key: PERSIST_KEY,
+    version: PERSIST_VERSION,
     storage,
 };
 

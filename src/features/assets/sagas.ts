@@ -4,7 +4,14 @@ import { PayloadAction } from '@reduxjs/toolkit';
 
 import { API_BASE_URL } from '@/constants/api';
 import type { FilterSliceState } from '../filters/types';
-import type { BuidlQuery, GetAssetsParams, GetCreatorParams, ResponseAsserCreator, ResponseAssets } from './types';
+import type {
+    AssetsSliceState,
+    BuidlQuery,
+    GetAssetsParams,
+    GetCreatorParams,
+    ResponseAsserCreator,
+    ResponseAssets,
+} from './types';
 import { actions } from './slice';
 import { actions as actionsFilter } from '../filters/slice';
 import { APIResponse } from '../common/types';
@@ -13,6 +20,9 @@ import { AppState } from '@/store';
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
     try {
+        const assetData: AssetsSliceState['data'] = yield select((state: AppState) => state.assets.data);
+        yield put(actions.setData({ ...assetData, data: [] }));
+
         const name: string = yield select((state: AppState) => state.filters.name);
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state) => state.filters.taxonomy);

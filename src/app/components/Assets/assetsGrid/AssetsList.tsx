@@ -30,21 +30,13 @@ const AssetsList = ({ onClick }: Props) => {
     const [drawerStackOpen, setDrawerStackOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<Asset[]>([]);
     const [isCurated, setIsCurated] = useState<boolean>(false);
-    const [isLoading, setLoading] = React.useState(true);
 
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const totalPage = useSelector((state: AppState) => state.assets.data.totalPage);
     const assets = useSelector((state: AppState) => state.assets.data.data);
+    const isLoading = useSelector((state: AppState) => state.assets.loading);
 
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setLoading(false);
-        }, 1000);
-
-        return () => clearTimeout(timer);
-    }, []);
 
     const handleClickImage = (asset: any) => {
         setAssetView(asset);
@@ -143,46 +135,54 @@ const AssetsList = ({ onClick }: Props) => {
                                     justifyContent: 'center',
                                 }}
                             >
-                                {isLoading ? (
-                                    <>
-                                        <Skeleton
-                                            variant="rectangular"
-                                            width={270}
-                                            height={300}
-                                            sx={{
-                                                borderRadius: (theme) => theme.shape.borderRadius / 5,
-                                            }}
-                                        ></Skeleton>
-                                    </>
-                                ) : (
-                                    <AssetItem
-                                        assetView={assetView}
-                                        asset={asset}
-                                        isCurated={isCurated}
-                                        checkedCurate={selected.some((item) => item._id === asset._id)}
-                                        handleChangeCurate={(e) => {
+                                <AssetItem
+                                    assetView={assetView}
+                                    asset={asset}
+                                    isCurated={isCurated}
+                                    checkedCurate={selected.some((item) => item._id === asset._id)}
+                                    handleChangeCurate={(e) => {
+                                        setSelected(
+                                            e.target.checked
+                                                ? [...selected, asset]
+                                                : selected.filter((item) => item._id !== asset._id)
+                                        );
+                                    }}
+                                    handleClickImage={() => {
+                                        if (isCurated) {
                                             setSelected(
-                                                e.target.checked
-                                                    ? [...selected, asset]
-                                                    : selected.filter((item) => item._id !== asset._id)
+                                                selected.some((item) => item._id === asset._id)
+                                                    ? selected.filter((item) => item._id !== asset._id)
+                                                    : [...selected, asset]
                                             );
-                                        }}
-                                        handleClickImage={() => {
-                                            if (isCurated) {
-                                                setSelected(
-                                                    selected.some((item) => item._id === asset._id)
-                                                        ? selected.filter((item) => item._id !== asset._id)
-                                                        : [...selected, asset]
-                                                );
-                                                return;
-                                            }
-                                            handleClickImage(asset);
-                                        }}
-                                    />
-                                )}
+                                            return;
+                                        }
+                                        handleClickImage(asset);
+                                    }}
+                                />
                             </Grid>
                         ))}
                     </>
+                ) : isLoading ? (
+                    [...Array(3)].map((_, index) => (
+                        <Grid
+                            key={index}
+                            item
+                            xl={3}
+                            lg={4}
+                            md={4}
+                            sm={6}
+                            xs={12}
+                            display="flex"
+                            alignItems="stretch"
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <Skeleton variant="rectangular" width={250} height={250} />
+                        </Grid>
+                    ))
                 ) : (
                     <>
                         <Grid item xs={12} lg={12} md={12} sm={12}>
