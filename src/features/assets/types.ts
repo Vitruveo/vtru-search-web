@@ -1,10 +1,14 @@
 import { AssetsMetadata } from '@/app/components/Assets/assetsGrid/types';
 
+export interface Creator {
+    username: string;
+}
 export interface AssetsSliceState {
     loading: boolean;
     error: string | null;
     data: AssetData;
     tags: Tags[];
+    creator: Creator;
 }
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';
@@ -99,6 +103,10 @@ export interface ResponseAssets {
     limit: number;
 }
 
+export interface ResponseAsserCreator {
+    username: string;
+}
+
 export interface AssetData {
     data: Asset[];
     page: number;
@@ -109,6 +117,10 @@ export interface AssetData {
 
 export interface GetAssetsParams {
     page: number;
+}
+
+export interface GetCreatorParams {
+    assetId: string;
 }
 
 export interface BuidlQuery {

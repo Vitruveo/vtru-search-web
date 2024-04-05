@@ -65,6 +65,7 @@ const AssetsList = ({ onClick }: Props) => {
     const handleClickImage = (asset: any) => {
         setAssetView(asset);
         setDrawerOpen(true);
+        dispatch(actions.loadCreator({ assetId: asset._id }));
     };
 
     const handleChangePage = ({ page }: { page: number }) => {

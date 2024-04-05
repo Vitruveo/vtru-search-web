@@ -4,7 +4,7 @@ import { PayloadAction } from '@reduxjs/toolkit';
 
 import { API_BASE_URL } from '@/constants/api';
 import type { FilterSliceState } from '../filters/types';
-import type { BuidlQuery, GetAssetsParams, ResponseAssets } from './types';
+import type { BuidlQuery, GetAssetsParams, GetCreatorParams, ResponseAsserCreator, ResponseAssets } from './types';
 import { actions } from './slice';
 import { actions as actionsFilter } from '../filters/slice';
 import { APIResponse } from '../common/types';
@@ -76,6 +76,21 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
     }
     yield put(actions.finishLoading());
 }
+function* getCreator(action: PayloadAction<GetCreatorParams>) {
+    try {
+        yield put(actions.setCreator(''));
+
+        const URL_ASSET_CREATOR = `${API_BASE_URL}/assets/public/${action.payload.assetId}`;
+
+        const response: AxiosResponse<APIResponse<ResponseAsserCreator>> = yield call(axios.get, URL_ASSET_CREATOR, {});
+
+        if (response.status == 200) {
+            yield put(actions.setCreator(response.data.data.username));
+        }
+    } catch (error) {
+        // Handle error
+    }
+}
 
 function* setup() {
     yield put(actions.loadAssets({ page: 1 }));
@@ -84,6 +99,7 @@ function* setup() {
 export function* assetsSagas() {
     yield all([
         takeEvery(actions.loadAssets.type, getAssets),
+        takeEvery(actions.loadCreator.type, getCreator),
         takeEvery(actionsFilter.change.type, getAssets),
         takeEvery(actionsFilter.changeName.type, getAssets),
         takeEvery(actionsFilter.reset.type, getAssets),

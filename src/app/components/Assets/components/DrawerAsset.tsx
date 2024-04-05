@@ -4,6 +4,7 @@ import { Avatar, Box, Button, Skeleton, Typography, Drawer, useMediaQuery } from
 import { Theme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import { useSelector } from '@/store/hooks';
 
 interface Props {
     drawerOpen: boolean;
@@ -16,6 +17,12 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
 
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
+
+    const creator = useSelector((state) => state.assets.creator.username);
+
+    const handleClickView = () => {
+        window.open(`https://store.vtru.dev/${creator}/${assetView?._id}/${Date.now()}`);
+    };
 
     return (
         <Drawer anchor="right" open={drawerOpen} onClose={onClose}>
@@ -56,7 +63,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                         molestias ad aperiam.
                     </Typography>
                 </Box>
-                <Button fullWidth variant="contained">
+                <Button disabled={!creator} fullWidth variant="contained" onClick={handleClickView}>
                     {language['search.assetList.visualization.view'] as string}
                 </Button>
             </Box>
