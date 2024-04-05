@@ -174,6 +174,7 @@ const AssetsList = ({ onClick }: Props) => {
                                     <Box
                                         sx={{
                                             border: assetView === asset ? '1px solid #00d6f4' : '',
+                                            maxWidth: 250,
                                         }}
                                     >
                                         <BlankCard className="hoverCard">
@@ -207,12 +208,21 @@ const AssetsList = ({ onClick }: Props) => {
                                                 }}
                                                 sx={{ cursor: 'pointer' }}
                                             >
-                                                <Image
-                                                    src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
-                                                    alt="img"
-                                                    width={250}
-                                                    height={250}
-                                                />
+                                                {asset?.formats?.preview?.path.includes('mp4') ? (
+                                                    <video width="250" height="250" autoPlay muted loop>
+                                                        <source
+                                                            src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
+                                                            type="video/mp4"
+                                                        />
+                                                    </video>
+                                                ) : (
+                                                    <Image
+                                                        src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
+                                                        alt="img"
+                                                        width={250}
+                                                        height={250}
+                                                    />
+                                                )}
                                             </Typography>
 
                                             <CardContent sx={{ p: 3, pt: 2 }}>

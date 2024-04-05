@@ -28,16 +28,32 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
         <Drawer anchor="right" open={drawerOpen} onClose={onClose}>
             <Box p={4}>
                 {assetView ? (
-                    <Image
-                        src={`${AWS_BASE_URL_S3}/${assetView?.formats?.preview?.path}`}
-                        width={lgUp ? 400 : mdUp ? 300 : 200}
-                        height={lgUp ? 300 : mdUp ? 225 : 150}
-                        style={{
-                            borderRadius: 10,
-                            objectFit: 'cover',
-                        }}
-                        alt="Art preview"
-                    />
+                    assetView?.formats?.preview?.path.includes('mp4') ? (
+                        <video
+                            style={{
+                                borderRadius: 10,
+                                objectFit: 'cover',
+                            }}
+                            width={lgUp ? 400 : mdUp ? 300 : 200}
+                            height={lgUp ? 300 : mdUp ? 225 : 150}
+                            autoPlay
+                            muted
+                            loop
+                        >
+                            <source src={`${AWS_BASE_URL_S3}/${assetView?.formats?.preview?.path}`} type="video/mp4" />
+                        </video>
+                    ) : (
+                        <Image
+                            src={`${AWS_BASE_URL_S3}/${assetView?.formats?.preview?.path}`}
+                            width={lgUp ? 400 : mdUp ? 300 : 200}
+                            height={lgUp ? 300 : mdUp ? 225 : 150}
+                            style={{
+                                borderRadius: 10,
+                                objectFit: 'cover',
+                            }}
+                            alt="Art preview"
+                        />
+                    )
                 ) : (
                     <Skeleton
                         variant="rectangular"
