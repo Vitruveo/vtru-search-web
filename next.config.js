@@ -8,6 +8,7 @@ const nextConfig = {
             'vitruveo-studio-qa-general.s3.amazonaws.com',
             'vitruveo-studio-production-assets.s3.amazonaws.com',
             'vitruveo-studio-production-general.s3.amazonaws.com',
+            'via.placeholder.com',
         ],
     },
     reactStrictMode: false,

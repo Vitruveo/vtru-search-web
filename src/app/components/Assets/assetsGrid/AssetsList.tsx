@@ -1,22 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
-import {
-    Pagination,
-    Box,
-    Button,
-    CardContent,
-    Fab,
-    Grid,
-    Rating,
-    Skeleton,
-    Typography,
-    Stack,
-    useMediaQuery,
-    Switch,
-    Checkbox,
-    Badge,
-} from '@mui/material';
+import { Pagination, Box, Fab, Grid, Skeleton, Typography, Stack, useMediaQuery, Switch, Badge } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { IconCopy, IconMenu2 } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -28,10 +13,9 @@ import { AppState } from '@/store';
 import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/assets';
 import { Asset } from '@/features/assets/types';
-import BlankCard from '../../Shared/BlankCard';
 import { DrawerAsset } from '../components/DrawerAsset';
 import { DrawerStack } from '../components/DrawerStack';
-import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import AssetItem from './AssetItem';
 
 interface Props {
     onClick: (event: React.SyntheticEvent | Event) => void;
@@ -171,82 +155,30 @@ const AssetsList = ({ onClick }: Props) => {
                                         ></Skeleton>
                                     </>
                                 ) : (
-                                    <Box
-                                        sx={{
-                                            border: assetView === asset ? '1px solid #00d6f4' : '',
-                                            maxWidth: 250,
+                                    <AssetItem
+                                        assetView={assetView}
+                                        asset={asset}
+                                        isCurated={isCurated}
+                                        checkedCurate={selected.some((item) => item._id === asset._id)}
+                                        handleChangeCurate={(e) => {
+                                            setSelected(
+                                                e.target.checked
+                                                    ? [...selected, asset]
+                                                    : selected.filter((item) => item._id !== asset._id)
+                                            );
                                         }}
-                                    >
-                                        <BlankCard className="hoverCard">
-                                            {isCurated ? (
-                                                <Box sx={{ position: 'absolute', top: 0, left: 0, zIndex: 1 }}>
-                                                    <Checkbox
-                                                        checked={selected.some((item) => item._id === asset._id)}
-                                                        onChange={(e) => {
-                                                            setSelected(
-                                                                e.target.checked
-                                                                    ? [...selected, asset]
-                                                                    : selected.filter((item) => item._id !== asset._id)
-                                                            );
-                                                        }}
-                                                    />
-                                                </Box>
-                                            ) : (
-                                                <></>
-                                            )}
-                                            <Typography
-                                                onClick={() => {
-                                                    if (isCurated) {
-                                                        setSelected(
-                                                            selected.some((item) => item._id === asset._id)
-                                                                ? selected.filter((item) => item._id !== asset._id)
-                                                                : [...selected, asset]
-                                                        );
-                                                        return;
-                                                    }
-                                                    handleClickImage(asset);
-                                                }}
-                                                sx={{ cursor: 'pointer' }}
-                                            >
-                                                {asset?.formats?.preview?.path.includes('mp4') ? (
-                                                    <video width="250" height="250" autoPlay muted loop>
-                                                        <source
-                                                            src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
-                                                            type="video/mp4"
-                                                        />
-                                                    </video>
-                                                ) : (
-                                                    <Image
-                                                        src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
-                                                        alt="img"
-                                                        width={250}
-                                                        height={250}
-                                                    />
-                                                )}
-                                            </Typography>
-
-                                            <CardContent sx={{ p: 3, pt: 2 }}>
-                                                <Typography
-                                                    variant="h6"
-                                                    onClick={() => handleClickImage(asset)}
-                                                    sx={{ cursor: 'pointer' }}
-                                                >
-                                                    {asset?.assetMetadata?.context?.formData?.title || 'No Title'}
-                                                </Typography>
-                                                <Stack
-                                                    direction="row"
-                                                    alignItems="center"
-                                                    justifyContent="space-between"
-                                                    mt={1}
-                                                >
-                                                    <Stack direction="row" alignItems="center">
-                                                        <Typography variant="h6">$ 0.00</Typography>
-                                                    </Stack>
-                                                    <Rating name="read-only" size="small" value={5} readOnly />
-                                                </Stack>
-                                            </CardContent>
-                                        </BlankCard>
-                                    </Box>
+                                        handleClickImage={() => {
+                                            if (isCurated) {
+                                                setSelected(
+                                                    selected.some((item) => item._id === asset._id)
+                                                        ? selected.filter((item) => item._id !== asset._id)
+                                                        : [...selected, asset]
+                                                );
+                                                return;
+                                            }
+                                            handleClickImage(asset);
+                                        }}
+                                    />
                                 )}
                             </Grid>
                         ))}
