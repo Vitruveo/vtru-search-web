@@ -70,7 +70,7 @@ const AssetItem = ({ assetView, asset, isCurated, checkedCurate, handleChangeCur
                     </Typography>
                     <Stack direction="row" alignItems="center" justifyContent="space-between" mt={1}>
                         <Stack direction="row" alignItems="center">
-                            <Typography variant="h6">$ 0.00</Typography>
+                            <Typography variant="h6">$ 150</Typography>
                         </Stack>
                         <Rating name="read-only" size="small" value={5} readOnly />
                     </Stack>
