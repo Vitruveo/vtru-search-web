@@ -67,16 +67,16 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                 </Typography>
                 <Box mt={3} mb={3} display="flex" alignItems="center" gap={1}>
                     <Avatar />
-                    <Typography>@Loas Zarg</Typography>
+                    {assetView?.assetMetadata?.creators?.formData?.map((creatorItem) => (
+                        <Typography key={creatorItem.name} variant="body1"></Typography>
+                    ))}
                 </Box>
                 <Box mb={3}>
                     <Typography variant="h6">
                         {language['search.assetList.visualization.description'] as string}
                     </Typography>
                     <Typography maxWidth={lgUp ? 400 : mdUp ? 300 : 200}>
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit accusamus nesciunt vel natus.
-                        Ipsam amet consectetur, qui animi sed optio! Ducimus dignissimos odio deleniti velit eos cum
-                        molestias ad aperiam.
+                        {assetView?.assetMetadata?.context?.formData?.description}
                     </Typography>
                 </Box>
                 <Button disabled={!creator} fullWidth variant="contained" onClick={handleClickView}>

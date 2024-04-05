@@ -12,6 +12,7 @@ export interface Context {
 export interface FormData {
     colors?: string[] | null;
     title?: string;
+    description?: string;
 }
 export interface Schema {
     type: string;
