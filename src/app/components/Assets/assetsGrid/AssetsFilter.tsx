@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IconMenu2, IconSearch } from '@tabler/icons-react';
+import { useI18n } from '@/app/hooks/useI18n';
 import {
     Accordion,
     InputAdornment,
@@ -29,6 +30,8 @@ import type { Context, Taxonomy, Creators } from '../types';
 
 const Filters = () => {
     const dispatch = useDispatch();
+    const { language } = useI18n();
+
     const values = useSelector((state: AppState) => state.filters);
     const tags = useSelector((state: AppState) => state.assets.tags);
 
@@ -47,7 +50,7 @@ const Filters = () => {
             >
                 <OutlinedInput
                     id="outlined-search"
-                    placeholder="Search Asset"
+                    placeholder={language['search.assetFilter.search.placeholder'] as string}
                     size="small"
                     type="search"
                     color="primary"
@@ -67,7 +70,7 @@ const Filters = () => {
                         <AccordionSummary>
                             <Box width="100%" display="flex" justifyContent="space-between">
                                 <Typography fontSize="1.2rem" fontWeight="700">
-                                    Context
+                                    {language['search.assetFilter.context'] as string}
                                 </Typography>
 
                                 <IconMenu2
@@ -144,7 +147,7 @@ const Filters = () => {
                         <AccordionSummary>
                             <Box width="100%" display="flex" justifyContent="space-between">
                                 <Typography fontSize="1.2rem" fontWeight="700">
-                                    Taxonomy
+                                    {language['search.assetFilter.taxonomy'] as string}
                                 </Typography>
 
                                 <IconMenu2
@@ -223,7 +226,7 @@ const Filters = () => {
                         <AccordionSummary>
                             <Box width="100%" display="flex" justifyContent="space-between">
                                 <Typography fontSize="1.2rem" fontWeight="700">
-                                    Creators
+                                    {language['search.assetFilter.creators'] as string}
                                 </Typography>
 
                                 <IconMenu2

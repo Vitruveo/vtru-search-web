@@ -13,11 +13,11 @@ const Language = () => {
     const { language } = useI18n();
 
     const texts = {
-        portuguesePTBR: language['studio.languages.portuguesePTBR'],
-        englishUS: language['studio.languages.englishUS'],
-        spanish: language['studio.languages.spanishES'],
-        farsi: language['studio.languages.farsiFA'],
-        russian: language['studio.languages.russianRU'],
+        portuguesePTBR: language['search.languages.portuguesePTBR'],
+        englishUS: language['search.languages.englishUS'],
+        spanish: language['search.languages.spanishES'],
+        farsi: language['search.languages.farsiFA'],
+        russian: language['search.languages.russianRU'],
     } as { [key: string]: string };
 
     const Languages = [

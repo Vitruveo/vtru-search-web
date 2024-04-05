@@ -8,7 +8,7 @@ import type { TaxonomyItem, Option } from '../types';
 
 export function TaxonomyItem({ title, values, tags, hidden, type, options, onChange }: TaxonomyItem) {
     const { language } = useI18n();
-    const taxonomy = 'studio.assetFilter.taxonomy';
+    const taxonomy = 'search.assetFilter.taxonomy';
 
     return (
         <Box mb={2}>

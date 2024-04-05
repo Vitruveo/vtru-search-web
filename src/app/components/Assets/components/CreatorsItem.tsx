@@ -8,7 +8,7 @@ import type { CreatorsItem, Option } from '../types';
 
 export function CreatorsItem({ title, values, hidden, type, options, onChange }: CreatorsItem) {
     const { language } = useI18n();
-    const creators = 'studio.assetFilter.creators';
+    const creators = 'search.assetFilter.creators';
 
     return (
         <Box mb={2}>

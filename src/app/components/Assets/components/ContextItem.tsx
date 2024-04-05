@@ -11,7 +11,7 @@ import type { ContextItem, Option } from '../types';
 
 export function ContextItem({ title, values, hidden, type, options, onChange, onRemove }: ContextItem) {
     const { language } = useI18n();
-    const context = 'studio.assetFilter.context';
+    const context = 'search.assetFilter.context';
 
     const [color, setColor] = useState('#000000');
 

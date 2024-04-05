@@ -19,6 +19,7 @@ import {
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { IconCopy, IconMenu2 } from '@tabler/icons-react';
+import { useI18n } from '@/app/hooks/useI18n';
 
 import './AssetScroll.css';
 
@@ -38,6 +39,7 @@ interface Props {
 
 const AssetsList = ({ onClick }: Props) => {
     const dispatch = useDispatch();
+    const { language } = useI18n();
 
     const [assetView, setAssetView] = useState<any>();
     const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
@@ -96,7 +98,9 @@ const AssetsList = ({ onClick }: Props) => {
                 <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
                     <Box display="flex" alignItems="center">
                         <Switch onChange={() => setIsCurated(!isCurated)} />
-                        <Typography variant={lgUp ? 'h4' : 'h5'}>Curate Stack</Typography>
+                        <Typography variant={lgUp ? 'h4' : 'h5'}>
+                            {language['search.assetList.curateStack'] as string}
+                        </Typography>
                     </Box>
                     {isCurated && (
                         <Box
@@ -108,7 +112,9 @@ const AssetsList = ({ onClick }: Props) => {
                         >
                             {lgUp && (
                                 <>
-                                    <Typography variant="h4">{selected.length} selected</Typography>
+                                    <Typography variant="h4">
+                                        {selected.length} {language['search.assetList.curateStack.selected'] as string}
+                                    </Typography>
                                     <IconCopy width={20} />
                                 </>
                             )}
@@ -166,7 +172,7 @@ const AssetsList = ({ onClick }: Props) => {
                                 ) : (
                                     <Box
                                         sx={{
-                                            border: assetView === asset ? '1px solid #763ebd' : '',
+                                            border: assetView === asset ? '1px solid #00d6f4' : '',
                                         }}
                                     >
                                         <BlankCard className="hoverCard">

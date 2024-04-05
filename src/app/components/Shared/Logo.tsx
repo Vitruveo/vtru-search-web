@@ -10,7 +10,7 @@ const LogoNormalDark = () => (
     <Box display="flex" marginTop={2} alignItems="center">
         <Image
             style={{ marginRight: '5px' }}
-            src={'/images/logos/newlogo.png'}
+            src={'/images/logos/VTRU_Search.png'}
             alt="logo"
             height={35}
             width={100}
@@ -31,7 +31,7 @@ const LogoNormalLight = () => (
     <Box display="flex" marginTop={2} alignItems="center">
         <Image
             style={{ marginRight: '5px' }}
-            src={'/images/logos/newlogo.png'}
+            src={'/images/logos/VTRU_Search.png'}
             alt="logo"
             height={35}
             width={100}
@@ -52,7 +52,7 @@ const LogoLtrDark = () => (
     <Box display="flex" marginTop={2} alignItems="center">
         <Image
             style={{ marginRight: '5px' }}
-            src={'/images/logos/newlogo.png'}
+            src={'/images/logos/VTRU_Search.png'}
             alt="logo"
             height={35}
             width={100}
@@ -63,7 +63,7 @@ const LogoLtrDark = () => (
 
 const LogoLtrLight = () => (
     <Box display="flex" marginTop={2} alignItems="center">
-        <Image src={'/images/logos/newlogo.png'} alt="logo" height={35} width={35} priority />
+        <Image src={'/images/logos/VTRU_Search.png'} alt="logo" height={35} width={35} priority />
         <Box marginLeft={1}>
             <VtruTitle vtruRem="1.2rem" studioRem="1.2rem" />
         </Box>

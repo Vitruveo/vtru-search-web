@@ -17,10 +17,10 @@ export function InputSelect({ value, options, onChange }: Props) {
                 control: (base, state) => ({
                     ...base,
                     width: '100%',
-                    borderColor: state.isFocused ? '#763EBD' : '#E0E0E0',
-                    boxShadow: '#763EBD',
+                    borderColor: state.isFocused ? '#00d6f4' : '#E0E0E0',
+                    boxShadow: '#00d6f4',
                     '&:hover': {
-                        borderColor: '#763EBD',
+                        borderColor: '#00d6f4',
                     },
                 }),
             }}

@@ -6,9 +6,9 @@ export const themeConfig = (theme: Theme) => ({
     direction: theme.direction as Direction,
     palette: {
         primary: {
-            main: '#763EBD',
+            main: '#00d6f4',
             light: '#F2ECF9',
-            dark: '#6E35B7',
+            dark: '#149cb0',
             contrastText: '#ffffff',
         },
         secondary: {

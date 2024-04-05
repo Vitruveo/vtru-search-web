@@ -1,6 +1,16 @@
 import { useState } from 'react';
-import { Box, Button, Typography, Drawer, Modal,
-    Select, TextField, useMediaQuery, Theme } from '@mui/material';
+import {
+    Box,
+    Button,
+    Typography,
+    Drawer,
+    Modal,
+    Select,
+    TextField,
+    useMediaQuery,
+    Theme,
+    MenuItem,
+} from '@mui/material';
 import Image from 'next/image';
 import { IconTrash } from '@tabler/icons-react';
 
@@ -32,7 +42,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
-                        width: 400,
+                        width: 500,
                         backgroundColor: 'background.paper',
                         boxShadow: 24,
                         p: 4,
@@ -44,12 +54,16 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
 
                     <Box display="flex" mb={2}>
                         <Typography width={120}>Destination</Typography>
-                        <Select fullWidth />
+                        <Select fullWidth>
+                            <MenuItem value={10}>Image Grid</MenuItem>
+                            <MenuItem value={20}>Interactive Gallery (published to IPFS)</MenuItem>
+                            <MenuItem value={30}>Video Gallery</MenuItem>
+                        </Select>
                     </Box>
 
                     <Box display="flex" mb={3}>
-                        <Typography width={120}>Options</Typography>
-                        <TextField multiline rows={4} fullWidth />
+                        <Typography width={120}>Title</Typography>
+                        <TextField rows={4} fullWidth />
                     </Box>
 
                     <Button variant="contained" fullWidth>

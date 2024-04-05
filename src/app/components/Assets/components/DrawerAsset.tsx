@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useI18n } from '@/app/hooks/useI18n';
 import { Avatar, Box, Button, Skeleton, Typography, Drawer, useMediaQuery } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
@@ -11,6 +12,8 @@ interface Props {
 }
 
 export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
+    const { language } = useI18n();
+
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
@@ -44,7 +47,9 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                     <Typography>@Loas Zarg</Typography>
                 </Box>
                 <Box mb={3}>
-                    <Typography variant="h6">Description</Typography>
+                    <Typography variant="h6">
+                        {language['search.assetList.visualization.description'] as string}
+                    </Typography>
                     <Typography maxWidth={lgUp ? 400 : mdUp ? 300 : 200}>
                         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit accusamus nesciunt vel natus.
                         Ipsam amet consectetur, qui animi sed optio! Ducimus dignissimos odio deleniti velit eos cum
@@ -52,7 +57,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                     </Typography>
                 </Box>
                 <Button fullWidth variant="contained">
-                    View
+                    {language['search.assetList.visualization.view'] as string}
                 </Button>
             </Box>
         </Drawer>
