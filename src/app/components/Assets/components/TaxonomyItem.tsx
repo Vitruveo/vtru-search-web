@@ -1,35 +1,26 @@
-import { ReactNode, useState } from 'react';
-import { Box, Typography } from '@mui/material';
-import { debounce } from 'lodash';
+import { ReactNode } from 'react';
+import { Badge, Box, Typography } from '@mui/material';
 
 import { useI18n } from '@/app/hooks/useI18n';
 import { InputSelect } from './InputSelect';
 import { InputText } from './InputText';
-import { InputColor } from './InputColor';
-import { Colors } from './Colors';
-import type { ContextItem, Option } from '../types';
+import type { TaxonomyItem, Option } from '../types';
 
-export function ContextItem({ title, values, hidden, type, options, onChange, onRemove }: ContextItem) {
+export function TaxonomyItem({ title, values, tags, hidden, type, options, onChange }: TaxonomyItem) {
     const { language } = useI18n();
-    const context = 'studio.assetFilter.context';
-
-    const [color, setColor] = useState('#000000');
-
-    const debounceColor = debounce((value) => {
-        setColor(value);
-    }, 500);
+    const taxonomy = 'studio.assetFilter.taxonomy';
 
     return (
         <Box mb={2}>
             {!hidden && (
                 <Typography fontSize="0.85rem" fontWeight="700" mb={1}>
-                    {language[`${context}.title.${title}`] as ReactNode}
+                    {language[`${taxonomy}.title.${title}`] as ReactNode}
                 </Typography>
             )}
 
             {type === 'radios' && (
                 <InputSelect
-                    value={(values['context'][title] as string[]).map((item) => ({
+                    value={(values['taxonomy'][title] as string[]).map((item) => ({
                         value: item,
                         label: item,
                     }))}
@@ -43,7 +34,7 @@ export function ContextItem({ title, values, hidden, type, options, onChange, on
 
             {type === 'checkboxes' && (
                 <InputSelect
-                    value={(values['context'][title] as string[]).map((item) => ({
+                    value={(values['taxonomy'][title] as string[]).map((item) => ({
                         value: item,
                         label: item,
                     }))}
@@ -58,27 +49,36 @@ export function ContextItem({ title, values, hidden, type, options, onChange, on
             {type === 'textarea' && (
                 <InputText
                     name={title}
-                    value={values['context'][title] as string}
+                    value={values['taxonomy'][title] as string}
                     onChange={(event) => onChange(event.target.value)}
                 />
             )}
 
-            {type === 'color' && (
-                <Box>
-                    <InputColor
-                        name={title}
-                        onChange={(event) => debounceColor(event.target.value)}
-                        onClick={() => onChange([...(values['context'][title] as string[]), color])}
-                    />
-
-                    <Colors colors={values['context'][title] as string[]} onRemove={(item) => onRemove(item)} />
-                </Box>
+            {type === 'tags' && (
+                <InputSelect
+                    value={(values['taxonomy'][title] ? (values['taxonomy'][title] as string[]) : []).map(
+                        (item: string) => ({
+                            value: item,
+                            label: item,
+                        })
+                    )}
+                    options={tags.map((item) => ({
+                        label: (
+                            <Box display="flex" alignItems="center" justifyContent="space-between">
+                                <Typography>{item.tag}</Typography>{' '}
+                                <Badge badgeContent={item.count} color="primary" sx={{ mr: 1 }} />
+                            </Box>
+                        ),
+                        value: item.tag,
+                    }))}
+                    onChange={(option: Option[]) => onChange(option.map((item) => item.value))}
+                />
             )}
 
             {type === 'text' && (
                 <InputText
                     name={title}
-                    value={values['context'][title] as string}
+                    value={values['taxonomy'][title] as string}
                     onChange={(event) => onChange(event.target.value)}
                 />
             )}

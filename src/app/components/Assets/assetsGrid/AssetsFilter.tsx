@@ -11,19 +11,21 @@ import {
     Divider,
     List,
     Typography,
-    TextField,
     OutlinedInput,
 } from '@mui/material';
 
+import { AppState } from '@/store';
 import assetsMetadata from '@/mock/assetsMetadata.json';
 import { actions } from '@/features/filters/slice';
 import { ContextItem } from '../components/ContextItem';
-import {
+import { TaxonomyItem } from '../components/TaxonomyItem';
+import { CreatorsItem } from '../components/CreatorsItem';
+import type {
     AssetsMetadata,
     ItemsOrCultureOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrEthnicityOrGenderOrBlockchain,
     MoodOrMediumOrStyle,
 } from './types';
-import { AppState } from '@/store';
+import type { Context, Taxonomy, Creators } from '../types';
 
 const Filters = () => {
     const dispatch = useDispatch();
@@ -84,9 +86,7 @@ const Filters = () => {
                                     return (
                                         <ContextItem
                                             key={key}
-                                            tags={[]}
-                                            context="context"
-                                            title={key}
+                                            title={key as keyof Context}
                                             values={values}
                                             hidden={
                                                 assetsMetadata.context.uiSchema[
@@ -101,7 +101,7 @@ const Filters = () => {
                                             options={
                                                 (
                                                     value as ItemsOrCultureOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrEthnicityOrGenderOrBlockchain
-                                                )?.enum ||
+                                                ).enum ||
                                                 (value as MoodOrMediumOrStyle)?.items?.enum ||
                                                 []
                                             }
@@ -162,10 +162,9 @@ const Filters = () => {
                                     const [key, value] = item;
 
                                     return (
-                                        <ContextItem
+                                        <TaxonomyItem
                                             key={key}
-                                            context="taxonomy"
-                                            title={key}
+                                            title={key as keyof Taxonomy}
                                             values={values}
                                             tags={tags || []}
                                             hidden={
@@ -241,12 +240,10 @@ const Filters = () => {
                                 {Object.entries(assetsMetadata.creators.schema.items.properties).map((item) => {
                                     const [key, value] = item;
                                     return (
-                                        <ContextItem
+                                        <CreatorsItem
                                             key={key}
-                                            context="creators"
-                                            title={key}
+                                            title={key as keyof Creators}
                                             values={values}
-                                            tags={[]}
                                             hidden={
                                                 assetsMetadata.creators.uiSchema.items[
                                                     key as keyof AssetsMetadata['creators']['schema']['items']['properties']
