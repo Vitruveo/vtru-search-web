@@ -1,10 +1,10 @@
 import { Box, Typography } from '@mui/material';
-import { version } from '../../../../package.json';
+import packageInfo from '../../../../package.json';
 
 const Version = () => {
     return (
         <Box>
-            <Typography>Version: {version}</Typography>
+            <Typography>Version: {packageInfo.version}</Typography>
         </Box>
     );
 };
