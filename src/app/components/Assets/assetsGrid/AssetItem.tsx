@@ -1,4 +1,4 @@
-import { Box, CardContent, Checkbox, Rating, Stack, Typography } from '@mui/material';
+import { Box, CardContent, Checkbox, Stack, Typography } from '@mui/material';
 import BlankCard from '../../Shared/BlankCard';
 import Image from 'next/image';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
@@ -27,13 +27,6 @@ const AssetItem = ({ assetView, asset, isCurated, checkedCurate, handleChangeCur
             onClick={handleClickImage}
         >
             <BlankCard className="hoverCard">
-                {isCurated ? (
-                    <Box sx={{ position: 'absolute', top: 0, left: 0, zIndex: 1 }}>
-                        <Checkbox checked={checkedCurate} onChange={handleChangeCurate} />
-                    </Box>
-                ) : (
-                    <></>
-                )}
                 <Typography>
                     {asset?.formats?.preview?.path.includes('mp4') ? (
                         <video
@@ -69,10 +62,12 @@ const AssetItem = ({ assetView, asset, isCurated, checkedCurate, handleChangeCur
                         {asset?.assetMetadata?.context?.formData?.title || 'No Title'}
                     </Typography>
                     <Stack direction="row" alignItems="center" justifyContent="space-between" mt={1}>
-                        <Stack direction="row" alignItems="center">
-                            <Typography variant="h6">$ 150</Typography>
-                        </Stack>
-                        <Rating name="read-only" size="small" value={5} readOnly />
+                        <Typography variant="h6" height={25}>
+                            $ 150
+                        </Typography>
+                        {isCurated && (
+                            <Checkbox style={{ padding: 0 }} checked={checkedCurate} onChange={handleChangeCurate} />
+                        )}
                     </Stack>
                 </CardContent>
             </BlankCard>
