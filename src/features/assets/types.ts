@@ -9,6 +9,8 @@ export interface AssetsSliceState {
     data: AssetData;
     tags: Tags[];
     creator: Creator;
+    video: string;
+    loadingVideo: boolean;
 }
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';
@@ -135,4 +137,8 @@ export interface BuidlQuery {
                   $options: string;
               };
           }[];
+}
+
+export interface MakeVideoResponse {
+    url: string;
 }

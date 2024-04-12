@@ -10,6 +10,7 @@ import {
     useMediaQuery,
     Theme,
     MenuItem,
+    CircularProgress,
 } from '@mui/material';
 import { useI18n } from '@/app/hooks/useI18n';
 import Image from 'next/image';
@@ -20,6 +21,7 @@ import { Asset } from '@/features/assets/types';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { useSelector } from '@/store/hooks';
 import { actions as actionsCreator } from '@/features/creator';
+import { actions as actionsAssets } from '@/features/assets';
 
 interface Props {
     drawerStackOpen: boolean;
@@ -32,6 +34,10 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     const dispatch = useDispatch();
     const { language } = useI18n();
 
+    const hasVideo = useSelector((state) => state.assets.video !== '');
+    const loadingVideo = useSelector((state) => state.assets.loadingVideo);
+    const video = useSelector((state) => state.assets.video);
+
     const isLogged = useSelector((state) => state.creator.token !== '');
     const email = useSelector((state) => state.creator.email);
     const code = useSelector((state) => state.creator.code);
@@ -41,6 +47,11 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     const [modalOpen, setModalOpen] = useState(false);
     const [statedLogin, setStatedLogin] = useState(false);
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
+
+    const handleDispatchMakeVideo = () => {
+        const data = selected.map((asset) => `${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`);
+        dispatch(actionsAssets.makeVideo(data));
+    };
 
     return (
         <>
@@ -86,9 +97,24 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                         <TextField rows={4} fullWidth />
                     </Box>
 
-                    <Button variant="contained" fullWidth>
+                    <Button disabled={loadingVideo} variant="contained" fullWidth onClick={handleDispatchMakeVideo}>
                         {language['search.drawer.stack.button.publish'] as string}
                     </Button>
+
+                    {loadingVideo && (
+                        <Box display="flex" justifyContent="center" mt={3}>
+                            <CircularProgress />
+                        </Box>
+                    )}
+
+                    {hasVideo && (
+                        <Box mt={2}>
+                            <video width="100%" controls>
+                                <source src={video} type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+                        </Box>
+                    )}
                 </Box>
             </Modal>
 

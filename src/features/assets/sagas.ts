@@ -9,6 +9,7 @@ import type {
     BuidlQuery,
     GetAssetsParams,
     GetCreatorParams,
+    MakeVideoResponse,
     ResponseAsserCreator,
     ResponseAssets,
 } from './types';
@@ -102,6 +103,28 @@ function* getCreator(action: PayloadAction<GetCreatorParams>) {
     }
 }
 
+function* makeVideo(action: PayloadAction<string[]>) {
+    try {
+        yield put(actions.setVideo(''));
+        yield put(actions.setLoadingVideo(true));
+
+        const response: AxiosResponse<APIResponse<MakeVideoResponse>> = yield call(
+            axios.post,
+            `${API_BASE_URL}/assets/makeVideo`,
+            { artworks: action.payload },
+            {
+                onUploadProgress: (progressEvent: any) => {
+                    console.log('progressEvent', progressEvent);
+                },
+            }
+        );
+        yield put(actions.setVideo(response.data.data.url));
+    } catch (error) {
+        // somenthing
+    }
+    yield put(actions.setLoadingVideo(false));
+}
+
 function* setup() {
     yield put(actions.loadAssets({ page: 1 }));
 }
@@ -110,6 +133,7 @@ export function* assetsSagas() {
     yield all([
         takeEvery(actions.loadAssets.type, getAssets),
         takeEvery(actions.loadCreator.type, getCreator),
+        takeEvery(actions.makeVideo.type, makeVideo),
         takeEvery(actionsFilter.change.type, getAssets),
         takeEvery(actionsFilter.changeName.type, getAssets),
         takeEvery(actionsFilter.reset.type, getAssets),

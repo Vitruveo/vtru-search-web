@@ -17,6 +17,8 @@ const initialState: AssetsSliceState = {
     creator: {
         username: '',
     },
+    video: '',
+    loadingVideo: false,
 };
 
 export const assetsSlice = createSlice({
@@ -34,9 +36,16 @@ export const assetsSlice = createSlice({
         setError: (state, action) => {
             state.error = action.payload;
         },
+        setVideo: (state, action: PayloadAction<string>) => {
+            state.video = action.payload;
+        },
         setData: (state, action: PayloadAction<AssetsSliceState['data']>) => {
             state.data = action.payload;
         },
+        setLoadingVideo: (state, action: PayloadAction<boolean>) => {
+            state.loadingVideo = action.payload;
+        },
+        makeVideo: (state, payload) => {},
         setTags: (state, action: PayloadAction<AssetsSliceState['tags']>) => {
             state.tags = action.payload;
         },
