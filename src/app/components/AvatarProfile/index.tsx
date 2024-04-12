@@ -26,7 +26,7 @@ export const AvatarProfile = () => {
                 aria-haspopup="true"
                 onClick={handleClick}
             >
-                <Avatar sx={{ width: 35, height: 35 }} />
+                <Avatar src="/images/profile/default.png" sx={{ width: 35, height: 35 }} />
             </IconButton>
             <Menu
                 id="long-menu"

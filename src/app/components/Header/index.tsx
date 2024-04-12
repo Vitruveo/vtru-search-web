@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux';
 import { toggleMobileSidebar } from '@/features/customizer/slice';
 import Logo from '../Shared/Logo';
 import Language from '../Language';
-import { AvatarProfile } from '../Avatat';
+import { AvatarProfile } from '../AvatarProfile';
 
 const Header = () => {
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
