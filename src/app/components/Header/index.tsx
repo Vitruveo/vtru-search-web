@@ -13,12 +13,13 @@ import { useDispatch } from 'react-redux';
 import { toggleMobileSidebar } from '@/features/customizer/slice';
 import Logo from '../Shared/Logo';
 import Language from '../Language';
-import Version from '../Version';
+import { AvatarProfile } from '../Avatat';
 
 const Header = () => {
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
     const customizer = useSelector((state) => state.customizer);
+    const isLogged = useSelector((state) => state.creator.token !== '');
     const dispatch = useDispatch();
 
     const AppBarStyled = styled(AppBar)(({ theme }) => ({
@@ -57,8 +58,8 @@ const Header = () => {
 
                 <Box flexGrow={1} />
                 <Stack spacing={1} direction="row" alignItems="center">
-                    <Version />
                     <Language />
+                    {isLogged && <AvatarProfile />}
                 </Stack>
             </ToolbarStyled>
         </AppBarStyled>

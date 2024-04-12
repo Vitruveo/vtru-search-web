@@ -27,6 +27,7 @@ import type {
     MoodOrMediumOrStyle,
 } from './types';
 import type { Context, Taxonomy, Creators } from '../types';
+import Version from '../../Version';
 
 const Filters = () => {
     const dispatch = useDispatch();
@@ -300,6 +301,9 @@ const Filters = () => {
                     <Button variant="contained" onClick={() => dispatch(actions.reset())} fullWidth>
                         {language['search.assetFilter.resetFilters'] as string}
                     </Button>
+                </Box>
+                <Box display="flex" justifyContent="center" mt={4} mb={4}>
+                    <Version />
                 </Box>
             </Box>
         </List>

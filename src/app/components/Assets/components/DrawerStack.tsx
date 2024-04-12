@@ -14,9 +14,12 @@ import {
 import { useI18n } from '@/app/hooks/useI18n';
 import Image from 'next/image';
 import { IconTrash } from '@tabler/icons-react';
+import { useDispatch } from 'react-redux';
 
 import { Asset } from '@/features/assets/types';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import { useSelector } from '@/store/hooks';
+import { actions as actionsCreator } from '@/features/creator';
 
 interface Props {
     drawerStackOpen: boolean;
@@ -26,9 +29,17 @@ interface Props {
 }
 
 export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Props) {
+    const dispatch = useDispatch();
     const { language } = useI18n();
 
-    const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const isLogged = useSelector((state) => state.creator.token !== '');
+    const email = useSelector((state) => state.creator.email);
+    const code = useSelector((state) => state.creator.code);
+    const loading = useSelector((state) => state.creator.loading);
+    const wasSended = useSelector((state) => state.creator.wasSended);
+
+    const [modalOpen, setModalOpen] = useState(false);
+    const [statedLogin, setStatedLogin] = useState(false);
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
     return (
@@ -57,12 +68,16 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
 
                     <Box display="flex" mb={2}>
                         <Typography width={120}>{language['search.drawer.stack.description'] as string}</Typography>
-                        <Select fullWidth>
-                            <MenuItem value={10}>{language['search.drawer.stack.imageGrid'] as string}</MenuItem>
-                            <MenuItem value={20}>
-                                {language['search.drawer.stack.interactiveGallery'] as string}
+                        <Select defaultValue={30} fullWidth>
+                            <MenuItem selected value={30}>
+                                {language['search.drawer.stack.videoGallery'] as string}
                             </MenuItem>
-                            <MenuItem value={30}>{language['search.drawer.stack.videoGallery'] as string}</MenuItem>
+                            <MenuItem disabled value={10}>
+                                {language['search.drawer.stack.slideshow'] as string}
+                            </MenuItem>
+                            <MenuItem disabled value={20}>
+                                {language['search.drawer.stack.webGallery'] as string}
+                            </MenuItem>
                         </Select>
                     </Box>
 
@@ -79,14 +94,100 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
 
             <Drawer anchor="right" open={drawerStackOpen} onClose={onClose}>
                 <Box width={mdUp ? 400 : 224} p={4}>
+                    {!isLogged && (
+                        <Box display="flex" justifyContent="center">
+                            <Typography variant="caption" color="Highlight" textAlign="center">
+                                Studio login required
+                            </Typography>
+                        </Box>
+                    )}
                     <Button
                         fullWidth
                         variant="contained"
-                        disabled={selected.length === 0}
+                        disabled={!isLogged || selected.length === 0}
                         onClick={() => setModalOpen(true)}
                     >
                         {language['search.drawer.stack.publishStack'] as string}
                     </Button>
+
+                    {!isLogged && (
+                        <>
+                            {!statedLogin && (
+                                <>
+                                    <Box mt={2}>
+                                        <Typography>
+                                            Login to create a stack and publish your selected assets
+                                        </Typography>
+                                    </Box>
+                                    <Button fullWidth variant="contained" onClick={() => setStatedLogin(true)}>
+                                        Login with your account from Studio
+                                    </Button>
+                                </>
+                            )}
+
+                            {statedLogin && !wasSended && (
+                                <Box mt={2}>
+                                    <TextField
+                                        onChange={(event) => dispatch(actionsCreator.changeEmail(event.target.value))}
+                                        label="Email"
+                                        fullWidth
+                                    />
+
+                                    <Button
+                                        onClick={() => dispatch(actionsCreator.sendCode())}
+                                        fullWidth
+                                        variant="outlined"
+                                        sx={{ marginTop: 2 }}
+                                        disabled={!email.length || loading}
+                                    >
+                                        Send Code
+                                    </Button>
+                                </Box>
+                            )}
+
+                            {statedLogin && wasSended && (
+                                <Box mt={2}>
+                                    <TextField
+                                        onChange={(event) => dispatch(actionsCreator.changeCode(event.target.value))}
+                                        label="Code"
+                                        fullWidth
+                                    />
+
+                                    <Button
+                                        onClick={() => dispatch(actionsCreator.verifyCode())}
+                                        fullWidth
+                                        variant="outlined"
+                                        sx={{ marginTop: 2 }}
+                                        disabled={!code.length || loading}
+                                    >
+                                        Verify code
+                                    </Button>
+                                    <Box mt={1} display="flex" justifyContent="space-between">
+                                        <Button
+                                            size="small"
+                                            variant="text"
+                                            sx={{
+                                                backgroundColor: 'transparent',
+                                            }}
+                                            onClick={() => dispatch(actionsCreator.resendCode())}
+                                        >
+                                            Resend code
+                                        </Button>
+                                        <Button
+                                            size="small"
+                                            variant="text"
+                                            sx={{
+                                                backgroundColor: 'transparent',
+                                            }}
+                                            onClick={() => dispatch(actionsCreator.resetEmail())}
+                                        >
+                                            Change email
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            )}
+                        </>
+                    )}
 
                     <Box mt={2} display="flex" gap={2} flexWrap="wrap">
                         {selected.length === 0 && (

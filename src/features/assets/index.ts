@@ -1,2 +1,2 @@
-export { default as eventsReducer, actions } from './slice';
+export { default as assetsReducer, actions } from './slice';
 export { assetsSagas } from './sagas';

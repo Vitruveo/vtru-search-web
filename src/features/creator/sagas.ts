@@ -1,0 +1,48 @@
+import { all, takeLatest, put, call, select } from 'redux-saga/effects';
+import axios, { AxiosResponse } from 'axios';
+
+import { API_BASE_URL } from '@/constants/api';
+import { APIResponse } from '../common/types';
+import { actions as actionsCreator } from './slice';
+
+function* sendCode() {
+    yield put(actionsCreator.setLoading(true));
+    try {
+        const email: string = yield select((state) => state.creator.email);
+        yield call(axios.post, `${API_BASE_URL}/creators/login`, {
+            email,
+        });
+        yield put(actionsCreator.wasSended());
+    } catch (error) {
+        // something went wrong
+    }
+    yield put(actionsCreator.setLoading(false));
+}
+function* verifyCode() {
+    yield put(actionsCreator.setLoading(true));
+    try {
+        const code: string = yield select((state) => state.creator.code);
+        const email: string = yield select((state) => state.creator.email);
+
+        const response: AxiosResponse<APIResponse<{ token: string }>> = yield call(
+            axios.post,
+            `${API_BASE_URL}/creators/login/otpConfirm`,
+            {
+                email,
+                code,
+            }
+        );
+        yield put(actionsCreator.setToken(response.data.data.token));
+    } catch (error) {
+        // something went wrong
+    }
+    yield put(actionsCreator.setLoading(false));
+}
+
+export function* creatorSagas() {
+    yield all([
+        takeLatest(actionsCreator.sendCode, sendCode),
+        takeLatest(actionsCreator.resendCode, sendCode),
+        takeLatest(actionsCreator.verifyCode, verifyCode),
+    ]);
+}
