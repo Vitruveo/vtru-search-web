@@ -4,6 +4,7 @@ import axios, { AxiosResponse } from 'axios';
 import { API_BASE_URL } from '@/constants/api';
 import { APIResponse } from '../common/types';
 import { actions as actionsCreator } from './slice';
+import { OptConfirmResponse } from './types';
 
 function* sendCode() {
     yield put(actionsCreator.setLoading(true));
@@ -24,7 +25,7 @@ function* verifyCode() {
         const code: string = yield select((state) => state.creator.code);
         const email: string = yield select((state) => state.creator.email);
 
-        const response: AxiosResponse<APIResponse<{ token: string }>> = yield call(
+        const response: AxiosResponse<APIResponse<OptConfirmResponse>> = yield call(
             axios.post,
             `${API_BASE_URL}/creators/login/otpConfirm`,
             {
@@ -32,7 +33,12 @@ function* verifyCode() {
                 code,
             }
         );
-        yield put(actionsCreator.setToken(response.data.data.token));
+        yield put(
+            actionsCreator.setLogged({
+                username: response.data.data.creator.username,
+                token: response.data.data.token,
+            })
+        );
     } catch (error) {
         // something went wrong
     }

@@ -2,6 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { InitialState } from './types';
 
 const initialState: InitialState = {
+    username: '',
     token: '',
     email: '',
     code: '',
@@ -25,8 +26,15 @@ export const creatorSlice = createSlice({
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload;
         },
-        setToken: (state, action: PayloadAction<string>) => {
-            state.token = action.payload;
+        setLogged: (
+            state,
+            action: PayloadAction<{
+                token: string;
+                username: string;
+            }>
+        ) => {
+            state.token = action.payload.token;
+            state.username = action.payload.username;
         },
         wasSended: (state) => {
             state.wasSended = true;

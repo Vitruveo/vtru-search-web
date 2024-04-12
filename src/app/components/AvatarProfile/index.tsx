@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Avatar, IconButton, Menu, MenuItem, Typography } from '@mui/material';
-import { useDispatch } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { actions as actionsCreator } from '@/features/creator';
 
 export const AvatarProfile = () => {
     const dispatch = useDispatch();
+
+    const username = useSelector((state) => state.creator.username);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -39,8 +41,11 @@ export const AvatarProfile = () => {
                     },
                 }}
             >
+                <MenuItem sx={{ py: 2, px: 3 }}>
+                    <Typography>{username || ''}</Typography>
+                </MenuItem>
                 <MenuItem sx={{ py: 2, px: 3 }} onClick={() => dispatch(actionsCreator.logout())}>
-                    <Typography>Logout</Typography>
+                    <Typography color="#00d6f4">Logout</Typography>
                 </MenuItem>
             </Menu>
         </>
