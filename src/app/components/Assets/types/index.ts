@@ -82,6 +82,7 @@ export interface TaxonomyItem {
     options: string[];
     onChange: (value: any) => void;
     onRemove: (color: string) => void;
+    loadOptionsEndpoint?: string;
 }
 
 interface Tag {

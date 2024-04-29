@@ -68,6 +68,7 @@ export interface TitleOrDescriptionOrCopyrightOrNameOrBioOrProfileUrlOrNationali
 export interface Uioptions {
     label: boolean;
     placeholder: string;
+    
 }
 export interface CultureOrMoodOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrMediumOrStyle {
     ['ui:widget']: string;
@@ -127,9 +128,9 @@ export interface UiSchema1 {
     subject: TagsOrCollectionsOrSubject;
 }
 export interface TagsOrCollectionsOrSubject {
-    ['ui:widget']: string;
+    'ui:widget': string;
     items: Items1;
-    ['ui:options']: Uioptions1;
+    'ui:options': Uioptions1;
 }
 export interface Items1 {
     ['ui:emptyValue']: string;

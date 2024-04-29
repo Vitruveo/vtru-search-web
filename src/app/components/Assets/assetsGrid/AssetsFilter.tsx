@@ -167,6 +167,11 @@ const Filters = () => {
 
                                     return (
                                         <TaxonomyItem
+                                            loadOptionsEndpoint={
+                                                assetsMetadata.taxonomy.uiSchema[
+                                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                                ]['ui:options']?.loadOptionsEndpoint
+                                            }
                                             key={key}
                                             title={key as keyof Taxonomy}
                                             values={values}
