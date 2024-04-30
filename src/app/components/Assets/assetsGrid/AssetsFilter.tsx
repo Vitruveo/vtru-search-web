@@ -165,8 +165,14 @@ const Filters = () => {
                                 {Object.entries(assetsMetadata.taxonomy.schema.properties).map((item) => {
                                     const [key, value] = item;
 
+                                    // TODO: CORRIGIR TIPAGEM
                                     return (
                                         <TaxonomyItem
+                                            loadOptionsEndpoint={
+                                                (assetsMetadata.taxonomy.uiSchema[
+                                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                                ] as any)['ui:options']?.loadOptionsEndpoint
+                                            }
                                             key={key}
                                             title={key as keyof Taxonomy}
                                             values={values}
