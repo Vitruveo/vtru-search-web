@@ -1,10 +1,11 @@
 import Async from 'react-select/async';
-import { ActionMeta, GroupBase, StylesConfig } from 'react-select';
+import { ActionMeta, GroupBase, OptionProps, StylesConfig } from 'react-select';
 import { api } from '@/services/api';
 import { CountOptionLabel } from './CountOptionLabel';
 import { Option } from '../types';
-import { MultiValue, Props } from 'react-select';
+import { MultiValue } from 'react-select';
 import { debounce } from 'lodash';
+import { CSSProperties } from 'react';
 
 interface CollectionItem {
     count: number;
@@ -54,14 +55,16 @@ export const AsyncSelect = ({ onChange, defaultValue, endpoint }: AsyncSelectPro
             if ((data[0] as CollectionItem)?.collection) {
                 const collectionItems = (data as CollectionItem[]).map((item) => ({
                     value: item.collection,
-                    label: <CountOptionLabel count={item.count} label={item.collection} />,
+                    label: item.collection,
+                    count: item.count,
                 }));
                 return collectionItems;
             }
 
             const subjectItems = (data as SubjectItem[]).map((item) => ({
                 value: item.subject,
-                label: <CountOptionLabel count={item.count} label={item.subject} />,
+                label: item.subject,
+                count: item.count,
             }));
             return subjectItems;
         } catch (error) {
@@ -70,7 +73,7 @@ export const AsyncSelect = ({ onChange, defaultValue, endpoint }: AsyncSelectPro
     };
 
     // implentação foi feita usando callback para que o debounce funcione corretamente.
-    const loadOptions = (inputValue: string, callback: any) => {
+    const loadOptions = (inputValue: string, callback: (options: Option[]) => void) => {
         fetchOptions(inputValue).then((options) => {
             callback(options);
         });
@@ -80,6 +83,7 @@ export const AsyncSelect = ({ onChange, defaultValue, endpoint }: AsyncSelectPro
 
     return (
         <Async
+            components={{ Option: AsyncSelectOption }}
             onChange={onChange}
             defaultValue={defaultValue}
             styles={styles}
@@ -87,5 +91,15 @@ export const AsyncSelect = ({ onChange, defaultValue, endpoint }: AsyncSelectPro
             defaultOptions
             loadOptions={endpoint ? debouncedLoadOptions : undefined}
         />
+    );
+};
+
+const AsyncSelectOption = (props: OptionProps<Option>) => {
+    const { data, getStyles, innerRef, innerProps } = props;
+
+    return (
+        <div style={getStyles('option', props) as CSSProperties}>
+            <CountOptionLabel ref={innerRef} count={data.count} label={data.label as string} {...innerProps} />
+        </div>
     );
 };

@@ -1,11 +1,8 @@
 import { ReactNode } from 'react';
 import { Box, Typography } from '@mui/material';
-import Async from 'react-select/async';
 import { useI18n } from '@/app/hooks/useI18n';
 import { InputSelect } from './InputSelect';
 import { InputText } from './InputText';
-import { api } from '@/services/api';
-import { debounce } from 'lodash';
 import { CountOptionLabel } from './CountOptionLabel';
 import type { TaxonomyItem, Option } from '../types';
 import { AsyncSelect } from './AsyncSelect';

@@ -1,14 +1,20 @@
+import React, { forwardRef } from 'react';
 import { Box, Typography, Badge } from '@mui/material';
 
-export interface CountOptionLabelProps {
+export interface CountOptionLabelProps extends React.HTMLAttributes<HTMLDivElement> {
     label: string;
-    count: number;
+    count?: number;
+    styles?: any;
 }
 
-export const CountOptionLabel = ({ label, count }: CountOptionLabelProps) => {
+export const CountOptionLabel = forwardRef<HTMLDivElement, CountOptionLabelProps>((props, ref) => {
+    const { label, count } = props;
+
     return (
-        <Box display="flex" alignItems="center" justifyContent="space-between">
+        <Box ref={ref} display="flex" alignItems="center" justifyContent="space-between" {...props}>
             <Typography>{label.toLowerCase()}</Typography> <Badge badgeContent={count} color="primary" sx={{ mr: 1 }} />
         </Box>
     );
-};
+});
+
+CountOptionLabel.displayName = 'CountOptionLabel';
