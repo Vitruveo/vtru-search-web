@@ -82,6 +82,7 @@ export interface TaxonomyItem {
     options: string[];
     onChange: (value: any) => void;
     onRemove: (color: string) => void;
+    loadOptionsEndpoint?: string;
 }
 
 interface Tag {
@@ -92,6 +93,7 @@ interface Tag {
 export interface Option {
     value: string;
     label: Element | JSX.Element | string;
+    count?: number;
 }
 
 export interface InputSelect {

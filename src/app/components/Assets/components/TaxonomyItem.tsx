@@ -1,12 +1,22 @@
 import { ReactNode } from 'react';
-import { Badge, Box, Typography } from '@mui/material';
-
+import { Box, Typography } from '@mui/material';
 import { useI18n } from '@/app/hooks/useI18n';
 import { InputSelect } from './InputSelect';
 import { InputText } from './InputText';
+import { CountOptionLabel } from './CountOptionLabel';
 import type { TaxonomyItem, Option } from '../types';
+import { AsyncSelect } from './AsyncSelect';
 
-export function TaxonomyItem({ title, values, tags, hidden, type, options, onChange }: TaxonomyItem) {
+export function TaxonomyItem({
+    title,
+    values,
+    tags,
+    hidden,
+    type,
+    options,
+    onChange,
+    loadOptionsEndpoint,
+}: TaxonomyItem) {
     const { language } = useI18n();
     const taxonomy = 'search.assetFilter.taxonomy';
 
@@ -63,12 +73,7 @@ export function TaxonomyItem({ title, values, tags, hidden, type, options, onCha
                         })
                     )}
                     options={tags.map((item) => ({
-                        label: (
-                            <Box display="flex" alignItems="center" justifyContent="space-between">
-                                <Typography>{item.tag}</Typography>{' '}
-                                <Badge badgeContent={item.count} color="primary" sx={{ mr: 1 }} />
-                            </Box>
-                        ),
+                        label: <CountOptionLabel count={item.count} label={item.tag} />,
                         value: item.tag,
                     }))}
                     onChange={(option: Option[]) => onChange(option.map((item) => item.value))}
@@ -80,6 +85,21 @@ export function TaxonomyItem({ title, values, tags, hidden, type, options, onCha
                     name={title}
                     value={values['taxonomy'][title] as string}
                     onChange={(event) => onChange(event.target.value)}
+                />
+            )}
+
+            {type === 'async-select' && (
+                <AsyncSelect
+                    endpoint={loadOptionsEndpoint}
+                    onChange={(items) => {
+                        onChange(items.map((item) => item.value));
+                    }}
+                    defaultValue={(values['taxonomy'][title] ? (values['taxonomy'][title] as string[]) : []).map(
+                        (item: string) => ({
+                            value: item,
+                            label: item,
+                        })
+                    )}
                 />
             )}
         </Box>

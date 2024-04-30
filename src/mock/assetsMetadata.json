@@ -551,7 +551,7 @@
                 }
             },
             "collections": {
-                "ui:widget": "text",
+                "ui:widget": "async-select",
                 "items": {
                     "ui:emptyValue": "",
                     "ui:options": {
@@ -560,7 +560,8 @@
                 },
                 "ui:options": {
                     "label": false,
-                    "orderable": false
+                    "orderable": false,
+                    "loadOptionsEndpoint": "/assets/public/collections"
                 }
             },
             "aiGeneration": {
@@ -588,7 +589,7 @@
                 "classNames": "display-fixed make-scrollable"
             },
             "subject": {
-                "ui:widget": "text",
+                "ui:widget": "async-select",
                 "items": {
                     "ui:emptyValue": "",
                     "ui:options": {
@@ -597,7 +598,8 @@
                 },
                 "ui:options": {
                     "label": false,
-                    "orderable": false
+                    "orderable": false,
+                    "loadOptionsEndpoint": "/assets/public/subjects"
                 }
             }
         }
