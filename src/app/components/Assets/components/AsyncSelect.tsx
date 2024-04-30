@@ -1,8 +1,9 @@
 import Async from 'react-select/async';
+import { ActionMeta, GroupBase, StylesConfig } from 'react-select';
 import { api } from '@/services/api';
 import { CountOptionLabel } from './CountOptionLabel';
 import { Option } from '../types';
-import { MultiValue } from 'react-select';
+import { MultiValue, Props } from 'react-select';
 import { debounce } from 'lodash';
 
 interface CollectionItem {
@@ -20,14 +21,24 @@ interface LoadItemResponse {
 }
 
 interface AsyncSelectProps {
-    onChange: (option: MultiValue<Option>) => void;
+    onChange: (newValue: MultiValue<Option>, actionMeta: ActionMeta<Option>) => void;
     endpoint?: string;
     defaultValue?: Option[];
 }
 
-export const AsyncSelect = (props: AsyncSelectProps) => {
-    const { endpoint } = props;
+const styles: StylesConfig<Option, true, GroupBase<Option>> = {
+    control: (base, state) => ({
+        ...base,
+        width: '100%',
+        borderColor: state.isFocused ? '#00d6f4' : '#E0E0E0',
+        boxShadow: '#00d6f4',
+        '&:hover': {
+            borderColor: '#00d6f4',
+        },
+    }),
+};
 
+export const AsyncSelect = ({ onChange, defaultValue, endpoint }: AsyncSelectProps) => {
     const fetchOptions = async (inputValue: string): Promise<Option[]> => {
         if (inputValue.length < 3 || !endpoint) {
             return [];
@@ -58,6 +69,7 @@ export const AsyncSelect = (props: AsyncSelectProps) => {
         }
     };
 
+    // implentação foi feita usando callback para que o debounce funcione corretamente.
     const loadOptions = (inputValue: string, callback: any) => {
         fetchOptions(inputValue).then((options) => {
             callback(options);
@@ -66,5 +78,14 @@ export const AsyncSelect = (props: AsyncSelectProps) => {
 
     const debouncedLoadOptions = debounce(loadOptions, 500);
 
-    return <Async {...props} isMulti defaultOptions loadOptions={props.endpoint ? debouncedLoadOptions : undefined} />;
+    return (
+        <Async
+            onChange={onChange}
+            defaultValue={defaultValue}
+            styles={styles}
+            isMulti
+            defaultOptions
+            loadOptions={endpoint ? debouncedLoadOptions : undefined}
+        />
+    );
 };
