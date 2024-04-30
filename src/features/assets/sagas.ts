@@ -108,11 +108,16 @@ function* makeVideo(action: PayloadAction<string[]>) {
         yield put(actions.setVideo(''));
         yield put(actions.setLoadingVideo(true));
 
+        const token: string = yield select((state: AppState) => state.creator.token);
+
         const response: AxiosResponse<APIResponse<MakeVideoResponse>> = yield call(
             axios.post,
             `${API_BASE_URL}/assets/makeVideo`,
             { artworks: action.payload },
             {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
                 onUploadProgress: (progressEvent: any) => {
                     console.log('progressEvent', progressEvent);
                 },
