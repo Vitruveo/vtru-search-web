@@ -11,6 +11,7 @@ import {
     Theme,
     MenuItem,
     CircularProgress,
+    Link,
 } from '@mui/material';
 import { useI18n } from '@/app/hooks/useI18n';
 import Image from 'next/image';
@@ -22,6 +23,9 @@ import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { useSelector } from '@/store/hooks';
 import { actions as actionsCreator } from '@/features/creator';
 import { actions as actionsAssets } from '@/features/assets';
+import { createTwitterIntent } from '@/utils/twitter';
+import { API_BASE_URL } from '@/constants/api';
+import TwitterIcon from '@mui/icons-material/Twitter';
 
 interface Props {
     drawerStackOpen: boolean;
@@ -47,10 +51,20 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     const [modalOpen, setModalOpen] = useState(false);
     const [statedLogin, setStatedLogin] = useState(false);
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
+    const creatorId = useSelector((state) => state.creator.id);
 
     const handleDispatchMakeVideo = () => {
         const data = selected.map((asset) => `${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`);
         dispatch(actionsAssets.makeVideo(data));
+    };
+
+    const onShareClick = () => {
+        const url = createTwitterIntent({
+            url: `${API_BASE_URL}/creators/search/${creatorId}/html`,
+            hashtags: 'Vitruveo,VTRUSuite',
+        });
+
+        window.open(url, '_blank');
     };
 
     return (
@@ -114,6 +128,12 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                                 Your browser does not support the video tag.
                             </video>
                         </Box>
+                    )}
+
+                    {hasVideo && (
+                        <Button onClick={onShareClick} variant="outlined" startIcon={<TwitterIcon />}>
+                            Share on Twitter
+                        </Button>
                     )}
                 </Box>
             </Modal>

@@ -37,6 +37,7 @@ function* verifyCode() {
             actionsCreator.setLogged({
                 username: response.data.data.creator.username,
                 token: response.data.data.token,
+                id: response.data.data.creator._id,
             })
         );
     } catch (error) {
