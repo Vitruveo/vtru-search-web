@@ -16,7 +16,6 @@ import { useI18n } from '@/app/hooks/useI18n';
 import Image from 'next/image';
 import { IconTrash } from '@tabler/icons-react';
 import { useDispatch } from 'react-redux';
-
 import { Asset } from '@/features/assets/types';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { useSelector } from '@/store/hooks';
@@ -25,6 +24,7 @@ import { actions as actionsAssets } from '@/features/assets';
 import { createTwitterIntent } from '@/utils/twitter';
 import { API_BASE_URL } from '@/constants/api';
 import XIcon from '@mui/icons-material/X';
+import { useToggle } from '@/app/hooks/useToggle';
 
 interface Props {
     drawerStackOpen: boolean;
@@ -36,24 +36,21 @@ interface Props {
 export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Props) {
     const dispatch = useDispatch();
     const { language } = useI18n();
-
-    const hasVideo = useSelector((state) => state.assets.video !== '');
+    
+    const modalSwitch = useToggle();
+    const title = useRef('');
+    
     const loadingVideo = useSelector((state) => state.assets.loadingVideo);
     const video = useSelector((state) => state.assets.video);
-
     const isLogged = useSelector((state) => state.creator.token !== '');
     const email = useSelector((state) => state.creator.email);
     const code = useSelector((state) => state.creator.code);
     const loading = useSelector((state) => state.creator.loading);
     const wasSended = useSelector((state) => state.creator.wasSended);
-
-    const [modalOpen, setModalOpen] = useState(false);
     const [statedLogin, setStatedLogin] = useState(false);
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const creatorId = useSelector((state) => state.creator.id);
-
-    const title = useRef('');
-
+    
     const onTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         title.current = event.target.value;
     }
@@ -68,11 +65,13 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
         hashtags: 'Vitruveo,VTRUSuite',
     })
 
+    const hasVideo = video !== '';
+
     return (
         <>
             <Modal
-                open={modalOpen}
-                onClose={() => setModalOpen(false)}
+                open={modalSwitch.isActive}
+                onClose={modalSwitch.toggle}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
@@ -152,7 +151,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                         fullWidth
                         variant="contained"
                         disabled={!isLogged || selected.length === 0}
-                        onClick={() => setModalOpen(true)}
+                        onClick={modalSwitch.activate}
                     >
                         {language['search.drawer.stack.publishStack'] as string}
                     </Button>
