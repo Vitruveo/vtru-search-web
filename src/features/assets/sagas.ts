@@ -18,6 +18,7 @@ import { actions } from './slice';
 import { actions as actionsFilter } from '../filters/slice';
 import { APIResponse } from '../common/types';
 import { AppState } from '@/store';
+import { getAssetsIdsFromURL } from '@/app/components/Assets/assetsGrid/AssetsList';
 
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
@@ -52,6 +53,14 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 }
                 acc[`assetMetadata.${key}.formData.${keyFilter}`] = valueFilter;
             });
+
+            const assetsIds = getAssetsIdsFromURL();
+
+            if (assetsIds && assetsIds?.length > 0 && assetsIds[0] != '') {
+                acc['_id'] = {
+                    $in: assetsIds,
+                };
+            }
 
             return acc;
         }, {});

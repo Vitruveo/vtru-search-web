@@ -29,7 +29,7 @@ const addAssetsToURL = (assets: Asset[]) => {
     window.history.pushState({}, '', url.toString());
 };
 
-const getAssetsIdsFromURL = () => {
+export const getAssetsIdsFromURL = () => {
     const url = new URL(window.location.href);
     const assetIds = url.searchParams.get('assets')?.split(',');
     return assetIds;
@@ -52,8 +52,13 @@ const AssetsList = ({ onClick }: Props) => {
 
     useEffect(() => {
         const idsFromURL = getAssetsIdsFromURL();
+        
+        if (idsFromURL?.length && idsFromURL[0] == '') {
+            return;
+        }
+
         if (idsFromURL) {
-            checkCurateStack;
+            checkCurateStack();
             setSelected(assets.filter((asset) => idsFromURL.includes(asset._id)));
         }
     }, []);
