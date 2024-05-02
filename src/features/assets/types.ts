@@ -142,3 +142,8 @@ export interface BuidlQuery {
 export interface MakeVideoResponse {
     url: string;
 }
+
+export interface MakeVideoParams {
+    artworks: string[];
+    title: string;
+}

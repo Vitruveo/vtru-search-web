@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
     Box,
     Button,
@@ -11,7 +11,6 @@ import {
     Theme,
     MenuItem,
     CircularProgress,
-    Link,
 } from '@mui/material';
 import { useI18n } from '@/app/hooks/useI18n';
 import Image from 'next/image';
@@ -25,7 +24,7 @@ import { actions as actionsCreator } from '@/features/creator';
 import { actions as actionsAssets } from '@/features/assets';
 import { createTwitterIntent } from '@/utils/twitter';
 import { API_BASE_URL } from '@/constants/api';
-import TwitterIcon from '@mui/icons-material/Twitter';
+import XIcon from '@mui/icons-material/X';
 
 interface Props {
     drawerStackOpen: boolean;
@@ -53,19 +52,21 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const creatorId = useSelector((state) => state.creator.id);
 
+    const title = useRef('');
+
+    const onTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        title.current = event.target.value;
+    }
+
     const handleDispatchMakeVideo = () => {
         const data = selected.map((asset) => `${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`);
-        dispatch(actionsAssets.makeVideo(data));
+        dispatch(actionsAssets.makeVideo({ artworks: data, title: title.current }));
     };
 
-    const onShareClick = () => {
-        const url = createTwitterIntent({
-            url: `${API_BASE_URL}/creators/search/${creatorId}/html`,
-            hashtags: 'Vitruveo,VTRUSuite',
-        });
-
-        window.open(url, '_blank');
-    };
+    const twitterShareURL = createTwitterIntent({
+        url: `${API_BASE_URL}/creators/search/${creatorId}/html`,
+        hashtags: 'Vitruveo,VTRUSuite',
+    })
 
     return (
         <>
@@ -108,7 +109,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
 
                     <Box display="flex" mb={3}>
                         <Typography width={120}>{language['search.drawer.stack.title'] as string}</Typography>
-                        <TextField rows={4} fullWidth />
+                        <TextField rows={4} fullWidth onChange={onTitleChange} />
                     </Box>
 
                     <Button disabled={loadingVideo} variant="contained" fullWidth onClick={handleDispatchMakeVideo}>
@@ -131,7 +132,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                     )}
 
                     {hasVideo && (
-                        <Button onClick={onShareClick} variant="outlined" startIcon={<TwitterIcon />}>
+                        <Button href={twitterShareURL} target='_blank' variant="outlined" startIcon={<XIcon />}>
                             Share on Twitter
                         </Button>
                     )}

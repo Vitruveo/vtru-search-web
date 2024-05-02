@@ -9,6 +9,7 @@ import type {
     BuidlQuery,
     GetAssetsParams,
     GetCreatorParams,
+    MakeVideoParams,
     MakeVideoResponse,
     ResponseAsserCreator,
     ResponseAssets,
@@ -103,7 +104,7 @@ function* getCreator(action: PayloadAction<GetCreatorParams>) {
     }
 }
 
-function* makeVideo(action: PayloadAction<string[]>) {
+function* makeVideo(action: PayloadAction<MakeVideoParams>) {
     try {
         yield put(actions.setVideo(''));
         yield put(actions.setLoadingVideo(true));
@@ -113,7 +114,7 @@ function* makeVideo(action: PayloadAction<string[]>) {
         const response: AxiosResponse<APIResponse<MakeVideoResponse>> = yield call(
             axios.post,
             `${API_BASE_URL}/assets/makeVideo`,
-            { artworks: action.payload },
+            { artworks: action.payload.artworks, title: action.payload.title},
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
