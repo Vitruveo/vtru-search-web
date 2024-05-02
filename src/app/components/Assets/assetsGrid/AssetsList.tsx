@@ -41,7 +41,7 @@ const AssetsList = ({ onClick }: Props) => {
     const [assetView, setAssetView] = useState<any>();
     const [selected, setSelected] = useState<Asset[]>([]);
 
-    const { isActive: isDrawerOpen, activate: openDrawer } = useToggle();
+    const { isActive: isDrawerOpen, activate: openDrawer, deactivate: closeDrawer } = useToggle();
     const { isActive: isCurateChecked, activate: checkCurateStack, toggle: toggleCurateStack } = useToggle();
     const { isActive: isDrawerStackOpen, activate: openDrawerStack, deactivate: closeDrawerStack } = useToggle();
 
@@ -103,7 +103,7 @@ const AssetsList = ({ onClick }: Props) => {
                 assetView={assetView}
                 drawerOpen={isDrawerOpen}
                 onClose={() => {
-                    openDrawer();
+                    closeDrawer();
                     setAssetView(undefined);
                 }}
             />

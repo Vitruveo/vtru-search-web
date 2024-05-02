@@ -39,7 +39,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     
     const modalSwitch = useToggle();
     const title = useRef('');
-    
+
     const loadingVideo = useSelector((state) => state.assets.loadingVideo);
     const video = useSelector((state) => state.assets.video);
     const isLogged = useSelector((state) => state.creator.token !== '');
@@ -63,6 +63,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     const twitterShareURL = createTwitterIntent({
         url: `${API_BASE_URL}/creators/search/${creatorId}/html`,
         hashtags: 'Vitruveo,VTRUSuite',
+        text: `Check out my new video stack on Vitruveo! ${window.location.href}`
     })
 
     const hasVideo = video !== '';
