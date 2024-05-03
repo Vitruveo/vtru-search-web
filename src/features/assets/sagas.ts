@@ -123,7 +123,7 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
         const response: AxiosResponse<APIResponse<MakeVideoResponse>> = yield call(
             axios.post,
             `${API_BASE_URL}/assets/videoGallery`,
-            { artworks: action.payload.artworks, title: action.payload.title },
+            { artworks: action.payload.artworks, title: action.payload.title, sound: action.payload.sound },
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
