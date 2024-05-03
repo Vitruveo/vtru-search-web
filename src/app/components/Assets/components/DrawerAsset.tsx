@@ -30,7 +30,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
     return (
         <Drawer anchor="right" open={drawerOpen} onClose={onClose}>
             <Box p={4}>
-                <Box width={width} height={height}>
+                <Box width={width} height={height} borderRadius={'8px'}>
                     <MediaRenderer
                         src={`${AWS_BASE_URL_S3}/${assetView?.formats?.preview?.path}`}
                         fallbackSrc={'https://via.placeholder.com/' + width + 'x' + height}

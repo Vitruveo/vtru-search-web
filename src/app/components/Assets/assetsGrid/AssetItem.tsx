@@ -1,9 +1,7 @@
 import { Box, CardContent, Checkbox, Stack, Typography } from '@mui/material';
 import BlankCard from '../../Shared/BlankCard';
-import Image from 'next/image';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { Asset } from '@/features/assets/types';
-import { useState } from 'react';
 import { MediaRenderer } from '../components/MediaRenderer';
 
 interface Props {
@@ -25,7 +23,7 @@ const AssetItem = ({ assetView, asset, isCurated, checkedCurate, handleChangeCur
             }}
         >
             <BlankCard className="hoverCard">
-                <Box width={250} height={250} onClick={handleClickImage}>
+                <Box width={250} height={250} onClick={handleClickImage} borderRadius='8px 8px 0 0'>
                     <MediaRenderer
                         src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
                         fallbackSrc={'https://via.placeholder.com/250'}

@@ -17,23 +17,11 @@ import { DrawerAsset } from '../components/DrawerAsset';
 import { DrawerStack } from '../components/DrawerStack';
 import AssetItem from './AssetItem';
 import { useToggle } from '@/app/hooks/useToggle';
+import { addAssetsToURL, getAssetsIdsFromURL } from '@/utils/url-assets';
 
 interface Props {
     onClick: (event: React.SyntheticEvent | Event) => void;
 }
-
-const addAssetsToURL = (assets: Asset[]) => {
-    const assetIds = assets.map((asset) => asset._id).join(',');
-    const url = new URL(window.location.href);
-    url.searchParams.set('assets', assetIds);
-    window.history.pushState({}, '', url.toString());
-};
-
-export const getAssetsIdsFromURL = () => {
-    const url = new URL(window.location.href);
-    const assetIds = url.searchParams.get('assets')?.split(',');
-    return assetIds;
-};
 
 const AssetsList = ({ onClick }: Props) => {
     const dispatch = useDispatch();
