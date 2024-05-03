@@ -25,7 +25,7 @@ const AssetItem = ({ assetView, asset, isCurated, checkedCurate, handleChangeCur
             }}
         >
             <BlankCard className="hoverCard">
-                <Box width={250} height={250}>
+                <Box width={250} height={250} onClick={handleClickImage}>
                     <MediaRenderer
                         src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
                         fallbackSrc={'https://via.placeholder.com/250'}
