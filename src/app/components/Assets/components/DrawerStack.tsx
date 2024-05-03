@@ -248,26 +248,28 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                             <Typography>{language['search.drawer.stack.noSelectedAssets'] as string}</Typography>
                         )}
                         {selected.map((asset) => (
-                            <>
-                                <Box key={asset._id}>
-                                    <Box width={160} height={160} borderRadius="8px" position="relative">
-                                        <MediaRenderer
-                                            src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
-                                            fallbackSrc={`https://via.placeholder.com/${160}`}
-                                        />
-                                        <Box position="absolute" bottom={0} right={0} zIndex={1} m={1} bgcolor='#fff'>
-                                            <IconButton style={{ color: 'red'}} size='small' onClick={() => handleRemove(asset)}>
-                                                <DeleteIcon fontSize='small'/>
-                                            </IconButton>
-                                        </Box>
+                            <Box key={asset._id}>
+                                <Box width={160} height={160} borderRadius="8px" position="relative">
+                                    <MediaRenderer
+                                        src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
+                                        fallbackSrc={`https://via.placeholder.com/${160}`}
+                                    />
+                                    <Box position="absolute" bottom={0} right={0} zIndex={1} m={1} bgcolor="#fff">
+                                        <IconButton
+                                            style={{ color: 'red' }}
+                                            size="small"
+                                            onClick={() => handleRemove(asset)}
+                                        >
+                                            <DeleteIcon fontSize="small" />
+                                        </IconButton>
                                     </Box>
-                                    {asset.assetMetadata?.context?.formData?.title && (
-                                        <Typography zIndex={100}>
-                                            {asset.assetMetadata?.context?.formData?.title}
-                                        </Typography>
-                                    )}
                                 </Box>
-                            </>
+                                {asset.assetMetadata?.context?.formData?.title && (
+                                    <Typography zIndex={100}>
+                                        {asset.assetMetadata?.context?.formData?.title}
+                                    </Typography>
+                                )}
+                            </Box>
                         ))}
                     </Box>
                 </Box>
