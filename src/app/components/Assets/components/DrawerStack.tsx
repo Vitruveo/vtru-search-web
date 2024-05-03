@@ -25,6 +25,7 @@ import { createTwitterIntent } from '@/utils/twitter';
 import { API_BASE_URL } from '@/constants/api';
 import XIcon from '@mui/icons-material/X';
 import { useToggle } from '@/app/hooks/useToggle';
+import { MediaRenderer } from './MediaRenderer';
 
 interface Props {
     drawerStackOpen: boolean;
@@ -36,7 +37,7 @@ interface Props {
 export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Props) {
     const dispatch = useDispatch();
     const { language } = useI18n();
-    
+
     const modalSwitch = useToggle();
     const title = useRef('');
 
@@ -50,10 +51,10 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     const [statedLogin, setStatedLogin] = useState(false);
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const creatorId = useSelector((state) => state.creator.id);
-    
+
     const onTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         title.current = event.target.value;
-    }
+    };
 
     const handleDispatchMakeVideo = () => {
         const data = selected.map((asset) => `${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`);
@@ -63,8 +64,8 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     const twitterShareURL = createTwitterIntent({
         url: `${API_BASE_URL}/creators/search/${creatorId}/html`,
         hashtags: 'Vitruveo,VTRUSuite',
-        text: `${language['search.checkoutMyNewVideo']} ${window.location.href}`
-    })
+        text: `${language['search.checkoutMyNewVideo']} ${window.location.href}`,
+    });
 
     const hasVideo = video !== '';
 
@@ -132,8 +133,8 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                     )}
 
                     {hasVideo && (
-                        <Button href={twitterShareURL} target='_blank' variant="outlined" startIcon={<XIcon />}>
-                            { language['search.shareOnTwitter'] as string }
+                        <Button href={twitterShareURL} target="_blank" variant="outlined" startIcon={<XIcon />}>
+                            {language['search.shareOnTwitter'] as string}
                         </Button>
                     )}
                 </Box>
@@ -242,12 +243,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                         )}
                         {selected.map((asset) => (
                             <Box position="relative" key={asset._id}>
-                                <Image
-                                    src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
-                                    alt="img"
-                                    width={160}
-                                    height={160}
-                                />
+                                <MediaRenderer src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`} />
                                 <Box bgcolor="white" sx={{ position: 'absolute', bottom: 0, right: 0, zIndex: 1 }}>
                                     <IconTrash
                                         cursor="pointer"
