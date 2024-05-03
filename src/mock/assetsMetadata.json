@@ -529,6 +529,9 @@
                     "items": {
                         "type": "string"
                     }
+                },
+                "price": {
+                    "type": "string"
                 }
             }
         },
@@ -601,6 +604,9 @@
                     "orderable": false,
                     "loadOptionsEndpoint": "/assets/public/subjects"
                 }
+            },
+            "price": {
+                "ui:widget": "range"
             }
         }
     },
