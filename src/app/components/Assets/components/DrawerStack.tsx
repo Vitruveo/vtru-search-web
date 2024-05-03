@@ -26,6 +26,7 @@ import { API_BASE_URL } from '@/constants/api';
 import XIcon from '@mui/icons-material/X';
 import { useToggle } from '@/app/hooks/useToggle';
 import { MediaRenderer } from './MediaRenderer';
+import { removeAssetFromURL } from '@/utils/url-assets';
 
 interface Props {
     drawerStackOpen: boolean;
@@ -68,6 +69,11 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     });
 
     const hasVideo = video !== '';
+
+    const handleRemove = (asset: Asset) => {
+        removeAssetFromURL(asset._id);
+        onRemove(asset);
+    }
 
     return (
         <>
@@ -243,18 +249,20 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                         )}
                         {selected.map((asset) => (
                             <Box position="relative" key={asset._id}>
-                                <Box width={160} height={160}>
-                                    <MediaRenderer
-                                        src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
-                                        fallbackSrc={`'https://via.placeholder.com/` + 160}
-                                    />
+                                <Box width={160} height={160} borderRadius='8px'>
+                                    <MediaRenderer src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`} fallbackSrc={`https://via.placeholder.com/${160}`} />
+                                    {
+                                        asset.assetMetadata?.context?.formData?.title && (
+                                            <Typography>{asset.assetMetadata?.context?.formData?.title}</Typography>
+                                        )
+                                    }
                                 </Box>
                                 <Box bgcolor="white" sx={{ position: 'absolute', bottom: 0, right: 0, zIndex: 1 }}>
                                     <IconTrash
                                         cursor="pointer"
                                         color="red"
                                         width={20}
-                                        onClick={() => onRemove(asset)}
+                                        onClick={() => handleRemove(asset)}
                                     />
                                 </Box>
                             </Box>

@@ -19,7 +19,7 @@ export const MediaRenderer = (props: MediaRendererProps) => {
 
     if (isVideo) {
         return (
-            <video autoPlay muted loop style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={onError}>
+            <video autoPlay muted loop style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} onError={onError}>
                 <source src={src} type="video/mp4" />
             </video>
         );
@@ -33,7 +33,7 @@ export const MediaRenderer = (props: MediaRendererProps) => {
                 width={160}
                 height={160}
                 onError={onError}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }}
             />
         );
     }
