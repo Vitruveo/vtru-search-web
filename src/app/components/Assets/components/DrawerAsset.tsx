@@ -1,10 +1,10 @@
-import Image from 'next/image';
 import { useI18n } from '@/app/hooks/useI18n';
-import { Avatar, Box, Button, Skeleton, Typography, Drawer, useMediaQuery } from '@mui/material';
+import { Avatar, Box, Button, Typography, Drawer, useMediaQuery } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { useSelector } from '@/store/hooks';
+import { MediaRenderer } from './MediaRenderer';
 
 interface Props {
     drawerOpen: boolean;
@@ -24,43 +24,18 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
         window.open(`https://store.vtru.dev/${creator}/${assetView?._id}/${Date.now()}`);
     };
 
+    const width = lgUp ? 400 : mdUp ? 300 : 200;
+    const height = lgUp ? 300 : mdUp ? 225 : 150;
+
     return (
         <Drawer anchor="right" open={drawerOpen} onClose={onClose}>
             <Box p={4}>
-                {assetView ? (
-                    assetView?.formats?.preview?.path.includes('mp4') ? (
-                        <video
-                            style={{
-                                borderRadius: 10,
-                                objectFit: 'cover',
-                            }}
-                            width={lgUp ? 400 : mdUp ? 300 : 200}
-                            height={lgUp ? 300 : mdUp ? 225 : 150}
-                            autoPlay
-                            muted
-                            loop
-                        >
-                            <source src={`${AWS_BASE_URL_S3}/${assetView?.formats?.preview?.path}`} type="video/mp4" />
-                        </video>
-                    ) : (
-                        <Image
-                            src={`${AWS_BASE_URL_S3}/${assetView?.formats?.preview?.path}`}
-                            width={lgUp ? 400 : mdUp ? 300 : 200}
-                            height={lgUp ? 300 : mdUp ? 225 : 150}
-                            style={{
-                                borderRadius: 10,
-                                objectFit: 'cover',
-                            }}
-                            alt="Art preview"
-                        />
-                    )
-                ) : (
-                    <Skeleton
-                        variant="rectangular"
-                        width={lgUp ? 400 : mdUp ? 300 : 200}
-                        height={lgUp ? 300 : mdUp ? 225 : 150}
+                <Box width={width} height={height}>
+                    <MediaRenderer
+                        src={`${AWS_BASE_URL_S3}/${assetView?.formats?.preview?.path}`}
+                        fallbackSrc={'https://via.placeholder.com/' + width + 'x' + height}
                     />
-                )}
+                </Box>
 
                 <Typography variant="h4" mt={2}>
                     {assetView?.assetMetadata?.context?.formData?.title}
