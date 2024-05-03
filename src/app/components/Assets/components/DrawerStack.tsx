@@ -251,6 +251,11 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                             <Box position="relative" key={asset._id}>
                                 <Box width={160} height={160} borderRadius='8px'>
                                     <MediaRenderer src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`} fallbackSrc={`https://via.placeholder.com/${160}`} />
+                                    {
+                                        asset.assetMetadata?.context?.formData?.title && (
+                                            <Typography>{asset.assetMetadata?.context?.formData?.title}</Typography>
+                                        )
+                                    }
                                 </Box>
                                 <Box bgcolor="white" sx={{ position: 'absolute', bottom: 0, right: 0, zIndex: 1 }}>
                                     <IconTrash

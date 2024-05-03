@@ -18,7 +18,7 @@ import { actions } from './slice';
 import { actions as actionsFilter } from '../filters/slice';
 import { APIResponse } from '../common/types';
 import { AppState } from '@/store';
-import { getAssetsIdsFromURL } from '@/app/components/Assets/assetsGrid/AssetsList';
+import { getAssetsIdsFromURL } from '@/utils/url-assets';
 
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
