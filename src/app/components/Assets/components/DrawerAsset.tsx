@@ -32,7 +32,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
             <Box p={4}>
                 <Box width={width} height={height}>
                     <MediaRenderer
-                        src={'https://aaaasdadsaw321.png'}
+                        src={`${AWS_BASE_URL_S3}/${assetView?.formats?.preview?.path}`}
                         fallbackSrc={'https://via.placeholder.com/' + width + 'x' + height}
                     />
                 </Box>
