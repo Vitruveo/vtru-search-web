@@ -25,3 +25,10 @@ export const removeAssetFromURL = (assetId: string) => {
   url.searchParams.set('assets', updatedAssetIds.join(','));
   window.history.pushState({}, '', url.toString());
 }
+
+export const createBackLink = (assets: Asset[]) => {
+  const selectedIds = assets.map((asset) => asset._id);
+  const url = new URL(window.location.href);
+  url.searchParams.set('assets', selectedIds.join(','));
+  return url.toString();
+}
