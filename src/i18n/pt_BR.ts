@@ -8,6 +8,10 @@ const language: Translation = {
     'search.languages.farsiFA': 'Farsi (fa-IR)',
     'search.languages.russianRU': 'Russo (ru-RU)',
 
+    /** General */
+    'search.shareOnTwitter': 'Compartilhar no Twitter',
+    'search.checkoutMyNewVideo': 'Confira minha nova pilha de vídeos no Vitruveo!',
+
     /* Asset Filter */
     'search.assetFilter.search.placeholder': 'Buscar Asset',
 

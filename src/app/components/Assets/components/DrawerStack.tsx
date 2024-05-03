@@ -63,7 +63,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     const twitterShareURL = createTwitterIntent({
         url: `${API_BASE_URL}/creators/search/${creatorId}/html`,
         hashtags: 'Vitruveo,VTRUSuite',
-        text: `Check out my new video stack on Vitruveo! ${window.location.href}`
+        text: `${language['search.checkoutMyNewVideo']} ${window.location.href}`
     })
 
     const hasVideo = video !== '';
@@ -133,7 +133,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
 
                     {hasVideo && (
                         <Button href={twitterShareURL} target='_blank' variant="outlined" startIcon={<XIcon />}>
-                            Share on Twitter
+                            { language['search.shareOnTwitter'] as string }
                         </Button>
                     )}
                 </Box>
