@@ -58,7 +58,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     };
 
     const handleDispatchMakeVideo = () => {
-        const data = selected.map((asset) => `${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`);
+        const data = selected.map((asset) => asset?.formats?.preview?.path);
         dispatch(actionsAssets.makeVideo({ artworks: data, title: title.current }));
     };
 

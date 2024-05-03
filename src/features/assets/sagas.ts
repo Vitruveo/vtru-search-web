@@ -122,8 +122,8 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
 
         const response: AxiosResponse<APIResponse<MakeVideoResponse>> = yield call(
             axios.post,
-            `${API_BASE_URL}/assets/makeVideo`,
-            { artworks: action.payload.artworks, title: action.payload.title},
+            `${API_BASE_URL}/assets/videoGallery`,
+            { artworks: action.payload.artworks, title: action.payload.title },
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
