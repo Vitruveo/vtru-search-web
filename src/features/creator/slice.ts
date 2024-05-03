@@ -8,6 +8,7 @@ const initialState: InitialState = {
     code: '',
     wasSended: false,
     loading: false,
+    id: '',
 };
 
 export const creatorSlice = createSlice({
@@ -31,10 +32,12 @@ export const creatorSlice = createSlice({
             action: PayloadAction<{
                 token: string;
                 username: string;
+                id: string;
             }>
         ) => {
             state.token = action.payload.token;
             state.username = action.payload.username;
+            state.id = action.payload.id;
         },
         wasSended: (state) => {
             state.wasSended = true;

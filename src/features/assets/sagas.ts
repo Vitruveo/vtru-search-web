@@ -9,6 +9,7 @@ import type {
     BuidlQuery,
     GetAssetsParams,
     GetCreatorParams,
+    MakeVideoParams,
     MakeVideoResponse,
     ResponseAsserCreator,
     ResponseAssets,
@@ -17,6 +18,7 @@ import { actions } from './slice';
 import { actions as actionsFilter } from '../filters/slice';
 import { APIResponse } from '../common/types';
 import { AppState } from '@/store';
+import { getAssetsIdsFromURL } from '@/app/components/Assets/assetsGrid/AssetsList';
 
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
@@ -51,6 +53,14 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 }
                 acc[`assetMetadata.${key}.formData.${keyFilter}`] = valueFilter;
             });
+
+            const assetsIds = getAssetsIdsFromURL();
+
+            if (assetsIds && assetsIds?.length > 0 && assetsIds[0] != '') {
+                acc['_id'] = {
+                    $in: assetsIds,
+                };
+            }
 
             return acc;
         }, {});
@@ -103,7 +113,7 @@ function* getCreator(action: PayloadAction<GetCreatorParams>) {
     }
 }
 
-function* makeVideo(action: PayloadAction<string[]>) {
+function* makeVideo(action: PayloadAction<MakeVideoParams>) {
     try {
         yield put(actions.setVideo(''));
         yield put(actions.setLoadingVideo(true));
@@ -113,7 +123,7 @@ function* makeVideo(action: PayloadAction<string[]>) {
         const response: AxiosResponse<APIResponse<MakeVideoResponse>> = yield call(
             axios.post,
             `${API_BASE_URL}/assets/makeVideo`,
-            { artworks: action.payload },
+            { artworks: action.payload.artworks, title: action.payload.title},
             {
                 headers: {
                     Authorization: `Bearer ${token}`,

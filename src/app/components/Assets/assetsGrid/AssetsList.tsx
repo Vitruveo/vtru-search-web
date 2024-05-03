@@ -16,31 +16,65 @@ import { Asset } from '@/features/assets/types';
 import { DrawerAsset } from '../components/DrawerAsset';
 import { DrawerStack } from '../components/DrawerStack';
 import AssetItem from './AssetItem';
+import { useToggle } from '@/app/hooks/useToggle';
 
 interface Props {
     onClick: (event: React.SyntheticEvent | Event) => void;
 }
 
+const addAssetsToURL = (assets: Asset[]) => {
+    const assetIds = assets.map((asset) => asset._id).join(',');
+    const url = new URL(window.location.href);
+    url.searchParams.set('assets', assetIds);
+    window.history.pushState({}, '', url.toString());
+};
+
+export const getAssetsIdsFromURL = () => {
+    const url = new URL(window.location.href);
+    const assetIds = url.searchParams.get('assets')?.split(',');
+    return assetIds;
+};
+
 const AssetsList = ({ onClick }: Props) => {
     const dispatch = useDispatch();
     const { language } = useI18n();
-
     const [assetView, setAssetView] = useState<any>();
-    const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
-    const [drawerStackOpen, setDrawerStackOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<Asset[]>([]);
-    const [isCurated, setIsCurated] = useState<boolean>(false);
+
+    const { isActive: isDrawerOpen, activate: openDrawer, deactivate: closeDrawer } = useToggle();
+    const { isActive: isCurateChecked, activate: checkCurateStack, toggle: toggleCurateStack } = useToggle();
+    const { isActive: isDrawerStackOpen, activate: openDrawerStack, deactivate: closeDrawerStack } = useToggle();
 
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const totalPage = useSelector((state: AppState) => state.assets.data.totalPage);
     const assets = useSelector((state: AppState) => state.assets.data.data);
     const isLoading = useSelector((state: AppState) => state.assets.loading);
 
-    const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
+    useEffect(() => {
+        const idsFromURL = getAssetsIdsFromURL();
+        
+        if (idsFromURL?.length && idsFromURL[0] == '') {
+            return;
+        }
 
-    const handleClickImage = (asset: any) => {
+        if (idsFromURL) {
+            checkCurateStack();
+            setSelected(assets.filter((asset) => idsFromURL.includes(asset._id)));
+        }
+    }, []);
+
+    const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
-        setDrawerOpen(true);
+        openDrawer();
+    };
+
+    const handleAssetImageClick = (asset: Asset) => {
+        if (isCurateChecked) {
+            handleCheckCurate(asset);
+            return;
+        }
+
+        openAssetDrawer(asset);
         dispatch(actions.loadCreator({ assetId: asset._id }));
     };
 
@@ -48,22 +82,42 @@ const AssetsList = ({ onClick }: Props) => {
         dispatch(actions.loadAssets({ page }));
     };
 
+    const handleCheckCurate = (asset: Asset) => {
+        const isSelected = selected.some((item) => item._id === asset._id);
+
+        if (isSelected) {
+            setSelected((prevSelected) => {
+                const updatedSelection = prevSelected.filter((item) => item._id !== asset._id);
+                addAssetsToURL(updatedSelection);
+                return updatedSelection;
+            });
+        } else {
+            setSelected((prevSelected) => {
+                const updatedSelection = [...prevSelected, asset];
+                addAssetsToURL(updatedSelection);
+                return updatedSelection;
+            });
+        }
+    };
+
+    const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
+
     return (
         <Box>
             <DrawerAsset
                 assetView={assetView}
-                drawerOpen={drawerOpen}
+                drawerOpen={isDrawerOpen}
                 onClose={() => {
-                    setDrawerOpen(false);
+                    closeDrawer();
                     setAssetView(undefined);
                 }}
             />
 
             <DrawerStack
                 selected={selected}
-                drawerStackOpen={drawerStackOpen}
+                drawerStackOpen={isDrawerStackOpen}
                 onRemove={(asset) => setSelected(selected.filter((item) => item._id !== asset._id))}
-                onClose={() => setDrawerStackOpen(false)}
+                onClose={closeDrawerStack}
             />
 
             <Stack direction="row" justifyContent="space-between" alignItems="center" p={3}>
@@ -74,18 +128,18 @@ const AssetsList = ({ onClick }: Props) => {
                 )}
                 <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
                     <Box display="flex" alignItems="center">
-                        <Switch onChange={() => setIsCurated(!isCurated)} />
+                        <Switch onChange={toggleCurateStack} checked={isCurateChecked} />
                         <Typography variant={lgUp ? 'h4' : 'h5'}>
                             {language['search.assetList.curateStack'] as string}
                         </Typography>
                     </Box>
-                    {isCurated && (
+                    {isCurateChecked && (
                         <Box
                             sx={{ cursor: 'pointer' }}
                             display="flex"
                             alignItems="center"
                             gap={1}
-                            onClick={() => setDrawerStackOpen(true)}
+                            onClick={openDrawerStack}
                         >
                             {lgUp && (
                                 <>
@@ -138,25 +192,13 @@ const AssetsList = ({ onClick }: Props) => {
                                 <AssetItem
                                     assetView={assetView}
                                     asset={asset}
-                                    isCurated={isCurated}
+                                    isCurated={isCurateChecked}
                                     checkedCurate={selected.some((item) => item._id === asset._id)}
-                                    handleChangeCurate={(e) => {
-                                        setSelected(
-                                            e.target.checked
-                                                ? [...selected, asset]
-                                                : selected.filter((item) => item._id !== asset._id)
-                                        );
+                                    handleChangeCurate={() => {
+                                        handleCheckCurate(asset);
                                     }}
                                     handleClickImage={() => {
-                                        if (isCurated) {
-                                            setSelected(
-                                                selected.some((item) => item._id === asset._id)
-                                                    ? selected.filter((item) => item._id !== asset._id)
-                                                    : [...selected, asset]
-                                            );
-                                            return;
-                                        }
-                                        handleClickImage(asset);
+                                        handleAssetImageClick(asset);
                                     }}
                                 />
                             </Grid>

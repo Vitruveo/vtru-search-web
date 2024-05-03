@@ -24,7 +24,6 @@ const AssetItem = ({ assetView, asset, isCurated, checkedCurate, handleChangeCur
                 maxWidth: 250,
                 cursor: 'pointer',
             }}
-            onClick={handleClickImage}
         >
             <BlankCard className="hoverCard">
                 <Typography>
@@ -43,6 +42,7 @@ const AssetItem = ({ assetView, asset, isCurated, checkedCurate, handleChangeCur
                         </video>
                     ) : (
                         <Image
+                            onClick={handleClickImage}
                             src={file}
                             alt="img"
                             style={{
