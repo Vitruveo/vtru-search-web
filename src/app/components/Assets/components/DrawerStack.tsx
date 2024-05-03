@@ -11,10 +11,9 @@ import {
     Theme,
     MenuItem,
     CircularProgress,
+    IconButton,
 } from '@mui/material';
 import { useI18n } from '@/app/hooks/useI18n';
-import Image from 'next/image';
-import { IconTrash } from '@tabler/icons-react';
 import { useDispatch } from 'react-redux';
 import { Asset } from '@/features/assets/types';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
@@ -27,6 +26,7 @@ import XIcon from '@mui/icons-material/X';
 import { useToggle } from '@/app/hooks/useToggle';
 import { MediaRenderer } from './MediaRenderer';
 import { removeAssetFromURL } from '@/utils/url-assets';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Props {
     drawerStackOpen: boolean;
@@ -73,7 +73,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     const handleRemove = (asset: Asset) => {
         removeAssetFromURL(asset._id);
         onRemove(asset);
-    }
+    };
 
     return (
         <>
@@ -248,24 +248,26 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                             <Typography>{language['search.drawer.stack.noSelectedAssets'] as string}</Typography>
                         )}
                         {selected.map((asset) => (
-                            <Box position="relative" key={asset._id}>
-                                <Box width={160} height={160} borderRadius='8px'>
-                                    <MediaRenderer src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`} fallbackSrc={`https://via.placeholder.com/${160}`} />
-                                    {
-                                        asset.assetMetadata?.context?.formData?.title && (
-                                            <Typography>{asset.assetMetadata?.context?.formData?.title}</Typography>
-                                        )
-                                    }
+                            <>
+                                <Box key={asset._id}>
+                                    <Box width={160} height={160} borderRadius="8px" position="relative">
+                                        <MediaRenderer
+                                            src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
+                                            fallbackSrc={`https://via.placeholder.com/${160}`}
+                                        />
+                                        <Box position="absolute" bottom={0} right={0} zIndex={1} m={1} bgcolor='#fff'>
+                                            <IconButton style={{ color: 'red'}} size='small' onClick={() => handleRemove(asset)}>
+                                                <DeleteIcon fontSize='small'/>
+                                            </IconButton>
+                                        </Box>
+                                    </Box>
+                                    {asset.assetMetadata?.context?.formData?.title && (
+                                        <Typography zIndex={100}>
+                                            {asset.assetMetadata?.context?.formData?.title}
+                                        </Typography>
+                                    )}
                                 </Box>
-                                <Box bgcolor="white" sx={{ position: 'absolute', bottom: 0, right: 0, zIndex: 1 }}>
-                                    <IconTrash
-                                        cursor="pointer"
-                                        color="red"
-                                        width={20}
-                                        onClick={() => handleRemove(asset)}
-                                    />
-                                </Box>
-                            </Box>
+                            </>
                         ))}
                     </Box>
                 </Box>
