@@ -71,6 +71,7 @@ export interface CreatorsItem {
     options: string[];
     onChange: (value: any) => void;
     onRemove: (color: string) => void;
+    loadOptionsEndpoint?: string;
 }
 
 export interface TaxonomyItem {

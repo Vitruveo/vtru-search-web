@@ -1653,10 +1653,17 @@
             "items": {
                 "classNames": "my-array-item",
                 "name": {
-                    "ui:widget": "text",
+                    "ui:widget": "async-select",
+                    "items": {
+                        "ui:emptyValue": "",
+                        "ui:options": {
+                            "label": false
+                        }
+                    },
                     "ui:options": {
                         "label": false,
-                        "placeholder": ""
+                        "orderable": false,
+                        "loadOptionsEndpoint": "/assets/public/creators"
                     }
                 },
                 "roles": {

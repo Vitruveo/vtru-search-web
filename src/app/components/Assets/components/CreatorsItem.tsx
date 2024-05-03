@@ -5,8 +5,9 @@ import { useI18n } from '@/app/hooks/useI18n';
 import { InputSelect } from './InputSelect';
 import { InputText } from './InputText';
 import type { CreatorsItem, Option } from '../types';
+import { AsyncSelect } from './AsyncSelect';
 
-export function CreatorsItem({ title, values, hidden, type, options, onChange }: CreatorsItem) {
+export function CreatorsItem({ title, values, hidden, type, options, onChange, loadOptionsEndpoint }: CreatorsItem) {
     const { language } = useI18n();
     const creators = 'search.assetFilter.creators';
 
@@ -59,6 +60,21 @@ export function CreatorsItem({ title, values, hidden, type, options, onChange }:
                     name={title}
                     value={values['creators'][title] as string}
                     onChange={(event) => onChange(event.target.value)}
+                />
+            )}
+
+            {type === 'async-select' && (
+                <AsyncSelect
+                    endpoint={loadOptionsEndpoint}
+                    onChange={(items) => {
+                        onChange(items.map((item) => item.value));
+                    }}
+                    defaultValue={(values['creators'][title] ? (values['creators'][title] as string[]) : []).map(
+                        (item: string) => ({
+                            value: item,
+                            label: item,
+                        })
+                    )}
                 />
             )}
         </Box>

@@ -169,9 +169,11 @@ const Filters = () => {
                                     return (
                                         <TaxonomyItem
                                             loadOptionsEndpoint={
-                                                (assetsMetadata.taxonomy.uiSchema[
-                                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
-                                                ] as any)['ui:options']?.loadOptionsEndpoint
+                                                (
+                                                    assetsMetadata.taxonomy.uiSchema[
+                                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                                    ] as any
+                                                )['ui:options']?.loadOptionsEndpoint
                                             }
                                             key={key}
                                             title={key as keyof Taxonomy}
@@ -251,6 +253,13 @@ const Filters = () => {
                                     const [key, value] = item;
                                     return (
                                         <CreatorsItem
+                                            loadOptionsEndpoint={
+                                                (
+                                                    assetsMetadata.creators.uiSchema.items[
+                                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                                    ] as any
+                                                )['ui:options']?.loadOptionsEndpoint
+                                            }
                                             key={key}
                                             title={key as keyof Creators}
                                             values={values}

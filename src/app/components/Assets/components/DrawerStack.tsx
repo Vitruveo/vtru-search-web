@@ -26,7 +26,7 @@ import { API_BASE_URL } from '@/constants/api';
 import XIcon from '@mui/icons-material/X';
 import { useToggle } from '@/app/hooks/useToggle';
 import { MediaRenderer } from './MediaRenderer';
-import { removeAssetFromURL } from '@/utils/url-assets';
+import { createBackLink } from '@/utils/url-assets';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Props {
@@ -109,7 +109,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     const twitterShareURL = createTwitterIntent({
         url: `${API_BASE_URL}/creators/search/${creatorId}/html`,
         hashtags: 'Vitruveo,VTRUSuite',
-        text: `${language['search.checkoutMyNewVideo']} ${window.location.href}`,
+        text: `${language['search.checkoutMyNewVideo']} ${createBackLink(selected)}`,
     });
 
     const hasVideo = video !== '';
@@ -346,7 +346,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                                         <IconButton
                                             style={{ color: 'red' }}
                                             size="small"
-                                            onClick={() => handleRemove(asset)}
+                                            onClick={() => onRemove(asset)}
                                         >
                                             <DeleteIcon fontSize="small" />
                                         </IconButton>
