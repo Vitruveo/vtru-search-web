@@ -244,7 +244,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                         {selected.map((asset) => (
                             <Box position="relative" key={asset._id}>
                                 <Box width={160} height={160}>
-                                    <MediaRenderer src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`} />
+                                    <MediaRenderer src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`} fallbackSrc={`'https://via.placeholder.com/` + 160} />
                                 </Box>
                                 <Box bgcolor="white" sx={{ position: 'absolute', bottom: 0, right: 0, zIndex: 1 }}>
                                     <IconTrash
