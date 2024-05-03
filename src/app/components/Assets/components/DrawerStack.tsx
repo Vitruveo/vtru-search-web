@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
     Box,
     Button,
@@ -14,6 +14,7 @@ import {
     IconButton,
 } from '@mui/material';
 import { useI18n } from '@/app/hooks/useI18n';
+import { IconPlayerPlay, IconPlayerPause } from '@tabler/icons-react';
 import { useDispatch } from 'react-redux';
 import { Asset } from '@/features/assets/types';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
@@ -35,23 +36,60 @@ interface Props {
     onClose(): void;
 }
 
+const audios = [
+    {
+        name: 'ambisax',
+        value: 'ambisax.mp3',
+        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/ambisax.mp3',
+    },
+    {
+        name: 'disco',
+        value: 'disco.mp3',
+        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/disco.mp3',
+    },
+    {
+        name: 'freeflow',
+        value: 'freeflow.mp3',
+        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/freeflow.mp3',
+    },
+    {
+        name: 'gangsta',
+        value: 'gangsta.mp3',
+        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/gangsta.mp3',
+    },
+    {
+        name: 'lit',
+        value: 'lit.mp3',
+        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/lit.mp3',
+    },
+    {
+        name: 'melodic',
+        value: 'melodic.mp3',
+        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/melodic.mp3',
+    },
+    {
+        name: 'palmtrees',
+        value: 'palmtrees.mp3',
+        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/palmtrees.mp3',
+    },
+];
+
 export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Props) {
     const dispatch = useDispatch();
     const { language } = useI18n();
 
     const modalSwitch = useToggle();
     const title = useRef('');
+    const [statedLogin, setStatedLogin] = useState(false);
+    const [selectedAudio, setSelectedAudio] = useState(audios[0].value);
+    const [isPlaying, setIsPlaying] = useState(false);
 
     const loadingVideo = useSelector((state) => state.assets.loadingVideo);
     const video = useSelector((state) => state.assets.video);
     const isLogged = useSelector((state) => state.creator.token !== '');
-    const email = useSelector((state) => state.creator.email);
-    const code = useSelector((state) => state.creator.code);
-    const loading = useSelector((state) => state.creator.loading);
-    const wasSended = useSelector((state) => state.creator.wasSended);
-    const [statedLogin, setStatedLogin] = useState(false);
+    const { email, code, loading, wasSended, id: creatorId } = useSelector((state) => state.creator);
+
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
-    const creatorId = useSelector((state) => state.creator.id);
 
     const onTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         title.current = event.target.value;
@@ -59,7 +97,13 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
 
     const handleDispatchMakeVideo = () => {
         const data = selected.map((asset) => asset?.formats?.preview?.path);
-        dispatch(actionsAssets.makeVideo({ artworks: data, title: title.current }));
+        dispatch(
+            actionsAssets.makeVideo({
+                artworks: data,
+                title: title.current,
+                sound: audios.find((audio) => audio.value === selectedAudio)?.url,
+            })
+        );
     };
 
     const twitterShareURL = createTwitterIntent({
@@ -74,6 +118,23 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
         removeAssetFromURL(asset._id);
         onRemove(asset);
     };
+
+    const audio = useMemo(() => new Audio(`/audios/${selectedAudio}`), [selectedAudio]);
+
+    useEffect(() => {
+        if (isPlaying) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    }, [isPlaying]);
+
+    useEffect(() => {
+        if (!modalSwitch.isActive) {
+            audio.pause();
+            setIsPlaying(false);
+        }
+    }, [modalSwitch.isActive]);
 
     return (
         <>
@@ -112,6 +173,33 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                                 {language['search.drawer.stack.webGallery'] as string}
                             </MenuItem>
                         </Select>
+                    </Box>
+
+                    <Box display="flex" mb={2}>
+                        <Typography width={150}>{language['search.drawer.stack.sound'] as string}</Typography>
+                        <Select
+                            defaultValue={audios[0].value}
+                            onChange={(event) => {
+                                audio.pause();
+                                setIsPlaying(false);
+                                setSelectedAudio(event.target.value);
+                            }}
+                            fullWidth
+                        >
+                            {audios.map((item) => (
+                                <MenuItem key={item.value} value={item.value}>
+                                    {item.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        <Button
+                            sx={{ marginLeft: 1 }}
+                            size="small"
+                            variant="outlined"
+                            onClick={() => setIsPlaying(!isPlaying)}
+                        >
+                            {isPlaying ? <IconPlayerPause /> : <IconPlayerPlay />}
+                        </Button>
                     </Box>
 
                     <Box display="flex" mb={3}>

@@ -25,6 +25,7 @@ const language: Translation = {
     'search.drawer.stack.videoGallery': 'Video Gallery',
     'search.drawer.stack.title': 'Title',
     'search.drawer.stack.button.publish': 'Publish',
+    'search.drawer.stack.sound': 'Sound',
 
     'search.assetFilter.context': 'Context',
     'search.assetFilter.context.title': 'Title',

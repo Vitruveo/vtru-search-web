@@ -146,4 +146,5 @@ export interface MakeVideoResponse {
 export interface MakeVideoParams {
     artworks: string[];
     title: string;
+    sound: string;
 }
