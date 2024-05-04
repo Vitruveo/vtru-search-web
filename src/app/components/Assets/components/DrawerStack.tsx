@@ -234,7 +234,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                     <Button
                         fullWidth
                         variant="contained"
-                        disabled={!isLogged || selected.length === 0}
+                        disabled={!isLogged || selected.length === 0 || selected.length > 15}
                         onClick={modalSwitch.activate}
                     >
                         {language['search.drawer.stack.publishStack'] as string}
