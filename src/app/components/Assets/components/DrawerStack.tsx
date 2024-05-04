@@ -40,37 +40,30 @@ const audios = [
     {
         name: 'ambisax',
         value: 'ambisax.mp3',
-        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/ambisax.mp3',
     },
     {
         name: 'disco',
         value: 'disco.mp3',
-        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/disco.mp3',
     },
     {
         name: 'freeflow',
         value: 'freeflow.mp3',
-        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/freeflow.mp3',
     },
     {
         name: 'gangsta',
         value: 'gangsta.mp3',
-        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/gangsta.mp3',
     },
     {
         name: 'lit',
         value: 'lit.mp3',
-        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/lit.mp3',
     },
     {
         name: 'melodic',
         value: 'melodic.mp3',
-        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/melodic.mp3',
     },
     {
         name: 'palmtrees',
         value: 'palmtrees.mp3',
-        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/palmtrees.mp3',
     },
 ];
 
@@ -101,7 +94,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
             actionsAssets.makeVideo({
                 artworks: data,
                 title: title.current,
-                sound: audios.find((audio) => audio.value === selectedAudio)?.url,
+                sound: audios.find((audio) => audio.value === selectedAudio)?.value,
             })
         );
     };
@@ -113,11 +106,6 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     });
 
     const hasVideo = video !== '';
-
-    const handleRemove = (asset: Asset) => {
-        removeAssetFromURL(asset._id);
-        onRemove(asset);
-    };
 
     const audio = useMemo(() => new Audio(`/audios/${selectedAudio}`), [selectedAudio]);
 
