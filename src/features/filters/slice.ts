@@ -53,7 +53,7 @@ const initialState: FilterSliceState = {
     },
     price: {
         min: 0,
-        max: 0,
+        max: 1000,
     },
 };
 
@@ -87,6 +87,7 @@ export const filterSlice = createSlice({
             state.taxonomy = initialState.taxonomy;
             state.creators = initialState.creators;
             state.provenance = initialState.provenance;
+            state.price = initialState.price;
             clearAssetsFromURL();
         },
         changePrice: (state, action: PayloadAction<{ min: number, max: number }>) => {

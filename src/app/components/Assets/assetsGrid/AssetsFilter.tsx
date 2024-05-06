@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { IconSearch } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
 import { InputAdornment, Box, Button, Divider, Typography, OutlinedInput, Stack } from '@mui/material';
@@ -18,13 +18,15 @@ import type { Context, Taxonomy, Creators } from '../types';
 import Version from '../../Version';
 import { AssetFilterAccordion } from './AssetFilterAccordion';
 import { Range } from '../components/Range';
+import { useSelector } from '@/store/hooks';
 
 const Filters = () => {
     const dispatch = useDispatch();
     const { language } = useI18n();
 
-    const values = useSelector((state: AppState) => state.filters);
-    const tags = useSelector((state: AppState) => state.assets.tags);
+    const values = useSelector((state) => state.filters);
+    const tags = useSelector((state) => state.assets.tags);
+    const price = useSelector(state => state.filters.price)
 
     const afterPriceChange = (min: number, max: number) => {
         dispatch(
@@ -36,7 +38,7 @@ const Filters = () => {
     };
 
     return (
-        <Stack gap={2} p={1} pb={4} mt={1} height="92vh" overflow="auto">
+        <Stack gap={2} p={1} pb={2} mt={1} height="92vh" overflow="auto">
             <OutlinedInput
                 id="outlined-search"
                 placeholder={language['search.assetFilter.search.placeholder'] as string}
@@ -245,7 +247,7 @@ const Filters = () => {
                         Price
                     </Typography>
                     <Box mx={1}>
-                        <Range afterChange={afterPriceChange} />
+                        <Range afterChange={afterPriceChange}/>
                     </Box>
                 </Box>
             </AssetFilterAccordion>
