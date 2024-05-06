@@ -44,4 +44,8 @@ export interface FilterSliceState {
             awardUrl: string;
         };
     };
+    price: {
+        min: number;
+        max: number;
+    }
 }

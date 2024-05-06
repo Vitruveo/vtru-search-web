@@ -30,6 +30,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state) => state.filters.taxonomy);
         const filtersCreators: FilterSliceState['creators'] = yield select((state) => state.filters.creators);
+        const price: FilterSliceState['price'] = yield select((state) => state.filters.price);
 
         const buildFilters = {
             context: filtersContext,
@@ -71,6 +72,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 { 'assetMetadata.context.formData.description': { $regex: name, $options: 'i' } },
             ];
         }
+
 
         const URL_ASSETS_SEARCH = `${API_BASE_URL}/assets/public/search`;
 
@@ -151,6 +153,7 @@ export function* assetsSagas() {
         takeEvery(actions.makeVideo.type, makeVideo),
         takeEvery(actionsFilter.change.type, getAssets),
         takeEvery(actionsFilter.changeName.type, getAssets),
+        takeEvery(actionsFilter.changePrice.type, getAssets),
         takeEvery(actionsFilter.reset.type, getAssets),
         setup(),
     ]);

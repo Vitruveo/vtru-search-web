@@ -6,7 +6,6 @@ import { InputText } from './InputText';
 import { CountOptionLabel } from './CountOptionLabel';
 import type { TaxonomyItem, Option } from '../types';
 import { AsyncSelect } from './AsyncSelect';
-import { Range } from './Range';
 
 export function TaxonomyItem({
     title,
@@ -103,13 +102,6 @@ export function TaxonomyItem({
                     )}
                 />
             )}
-
-            {
-                type === 'range' && (
-                    <Range afterChange={(min, max) => onChange([min, max])}/>
-                )
-            }
-
         </Box>
     );
 }

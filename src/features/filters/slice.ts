@@ -51,6 +51,10 @@ const initialState: FilterSliceState = {
             awardUrl: '',
         },
     },
+    price: {
+        min: 0,
+        max: 0,
+    },
 };
 
 export const filterSlice = createSlice({
@@ -85,6 +89,12 @@ export const filterSlice = createSlice({
             state.provenance = initialState.provenance;
             clearAssetsFromURL();
         },
+        changePrice: (state, action: PayloadAction<{ min: number, max: number }>) => {
+            state.price = {
+                min: action.payload.min,
+                max: action.payload.max,
+            };
+        }
     },
 });
 
