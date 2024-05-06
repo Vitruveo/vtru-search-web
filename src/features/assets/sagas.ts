@@ -73,7 +73,6 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             ];
         }
 
-
         const URL_ASSETS_SEARCH = `${API_BASE_URL}/assets/public/search`;
 
         const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.get, URL_ASSETS_SEARCH, {
@@ -130,9 +129,7 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                onUploadProgress: (progressEvent: any) => {
-                    console.log('progressEvent', progressEvent);
-                },
+                onUploadProgress: (progressEvent: any) => {},
             }
         );
         yield put(actions.setVideo(response.data.data.url));

@@ -47,5 +47,6 @@ export interface FilterSliceState {
     price: {
         min: number;
         max: number;
-    }
+    };
+    showOnlyAvailableArts: boolean;
 }

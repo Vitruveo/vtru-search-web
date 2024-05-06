@@ -55,6 +55,7 @@ const initialState: FilterSliceState = {
         min: 0,
         max: 1000,
     },
+    showOnlyAvailableArts: true
 };
 
 export const filterSlice = createSlice({
@@ -95,6 +96,9 @@ export const filterSlice = createSlice({
                 min: action.payload.min,
                 max: action.payload.max,
             };
+        },
+        changeShowOnlyAvailableArts: (state, action: PayloadAction<boolean>) => {
+            state.showOnlyAvailableArts = action.payload;
         }
     },
 });

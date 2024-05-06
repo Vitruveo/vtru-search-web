@@ -23,6 +23,21 @@ interface Props {
     onClick: (event: React.SyntheticEvent | Event) => void;
 }
 
+const isAssetAvailable = (asset: Asset) => {
+    const { nft } = asset.licenses;
+
+    switch (nft.editionOption) {
+        case 'elastic':
+            return nft.elastic.numberOfEditions > 0
+        case 'single':
+            return true;
+        case 'unlimited':
+            return true;
+        default:
+            return false;
+    }
+}
+
 const AssetsList = ({ onClick }: Props) => {
     const dispatch = useDispatch();
     const { language } = useI18n();
@@ -176,6 +191,7 @@ const AssetsList = ({ onClick }: Props) => {
                                 }}
                             >
                                 <AssetItem
+                                    isAvailable={isAssetAvailable(asset)}
                                     assetView={assetView}
                                     asset={asset}
                                     isCurated={isCurateChecked}

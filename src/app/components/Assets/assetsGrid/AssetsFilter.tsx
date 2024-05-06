@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { IconSearch } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
-import { InputAdornment, Box, Button, Divider, Typography, OutlinedInput, Stack } from '@mui/material';
+import { InputAdornment, Box, Button, Divider, Typography, OutlinedInput, Stack, Checkbox } from '@mui/material';
 
 import { AppState } from '@/store';
 import assetsMetadata from '@/mock/assetsMetadata.json';
@@ -26,7 +26,7 @@ const Filters = () => {
 
     const values = useSelector((state) => state.filters);
     const tags = useSelector((state) => state.assets.tags);
-    const price = useSelector(state => state.filters.price)
+    const showOnlyAvailableArts = useSelector((state) => state.filters.showOnlyAvailableArts)
 
     const afterPriceChange = (min: number, max: number) => {
         dispatch(
@@ -36,6 +36,10 @@ const Filters = () => {
             })
         );
     };
+
+    const onShowOnlyAvailableArtsChange = () => {
+        dispatch(actions.changeShowOnlyAvailableArts(!showOnlyAvailableArts))
+    }
 
     return (
         <Stack gap={2} p={1} pb={2} mt={1} height="92vh" overflow="auto">
@@ -242,12 +246,18 @@ const Filters = () => {
             <Divider />
 
             <AssetFilterAccordion title="Licenses">
+                <Stack flexDirection="row" alignItems="center" justifyContent="space-between" mb={2}>
+                    <Typography fontSize="0.85rem" fontWeight="700">
+                        Show only available arts
+                    </Typography>
+                    <Checkbox size="small" style={{ padding: 0 }} checked={showOnlyAvailableArts} onChange={onShowOnlyAvailableArtsChange}/>
+                </Stack>
                 <Box>
                     <Typography fontSize="0.85rem" fontWeight="700" mb={1}>
                         Price
                     </Typography>
                     <Box mx={1}>
-                        <Range afterChange={afterPriceChange}/>
+                        <Range afterChange={afterPriceChange} />
                     </Box>
                 </Box>
             </AssetFilterAccordion>
