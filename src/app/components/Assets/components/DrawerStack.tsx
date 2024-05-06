@@ -26,7 +26,7 @@ import { API_BASE_URL } from '@/constants/api';
 import XIcon from '@mui/icons-material/X';
 import { useToggle } from '@/app/hooks/useToggle';
 import { MediaRenderer } from './MediaRenderer';
-import { removeAssetFromURL } from '@/utils/url-assets';
+import { createBackLink } from '@/utils/url-assets';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Props {
@@ -40,37 +40,30 @@ const audios = [
     {
         name: 'ambisax',
         value: 'ambisax.mp3',
-        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/ambisax.mp3',
     },
     {
         name: 'disco',
         value: 'disco.mp3',
-        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/disco.mp3',
     },
     {
         name: 'freeflow',
         value: 'freeflow.mp3',
-        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/freeflow.mp3',
     },
     {
         name: 'gangsta',
         value: 'gangsta.mp3',
-        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/gangsta.mp3',
     },
     {
         name: 'lit',
         value: 'lit.mp3',
-        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/lit.mp3',
     },
     {
         name: 'melodic',
         value: 'melodic.mp3',
-        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/melodic.mp3',
     },
     {
         name: 'palmtrees',
         value: 'palmtrees.mp3',
-        url: 'https://bafybeib5uz5hrfnigvy5ah3lufmz3i4bk66iebub6kq6yn4lvjzzvzueaa.ipfs.nftstorage.link/palmtrees.mp3',
     },
 ];
 
@@ -101,7 +94,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
             actionsAssets.makeVideo({
                 artworks: data,
                 title: title.current,
-                sound: audios.find((audio) => audio.value === selectedAudio)?.url,
+                sound: audios.find((audio) => audio.value === selectedAudio)?.value,
             })
         );
     };
@@ -109,15 +102,10 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     const twitterShareURL = createTwitterIntent({
         url: `${API_BASE_URL}/creators/search/${creatorId}/html`,
         hashtags: 'Vitruveo,VTRUSuite',
-        text: `${language['search.checkoutMyNewVideo']} ${window.location.href}`,
+        text: `${language['search.checkoutMyNewVideo']} ${createBackLink(selected)}`,
     });
 
     const hasVideo = video !== '';
-
-    const handleRemove = (asset: Asset) => {
-        removeAssetFromURL(asset._id);
-        onRemove(asset);
-    };
 
     const audio = useMemo(() => new Audio(`/audios/${selectedAudio}`), [selectedAudio]);
 
@@ -246,7 +234,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                     <Button
                         fullWidth
                         variant="contained"
-                        disabled={!isLogged || selected.length === 0}
+                        disabled={!isLogged || selected.length === 0 || selected.length > 15}
                         onClick={modalSwitch.activate}
                     >
                         {language['search.drawer.stack.publishStack'] as string}
@@ -346,7 +334,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                                         <IconButton
                                             style={{ color: 'red' }}
                                             size="small"
-                                            onClick={() => handleRemove(asset)}
+                                            onClick={() => onRemove(asset)}
                                         >
                                             <DeleteIcon fontSize="small" />
                                         </IconButton>

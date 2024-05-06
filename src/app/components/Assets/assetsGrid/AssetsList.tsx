@@ -17,7 +17,7 @@ import { DrawerAsset } from '../components/DrawerAsset';
 import { DrawerStack } from '../components/DrawerStack';
 import AssetItem from './AssetItem';
 import { useToggle } from '@/app/hooks/useToggle';
-import { addAssetsToURL, getAssetsIdsFromURL } from '@/utils/url-assets';
+import { getAssetsIdsFromURL } from '@/utils/url-assets';
 
 interface Props {
     onClick: (event: React.SyntheticEvent | Event) => void;
@@ -76,13 +76,11 @@ const AssetsList = ({ onClick }: Props) => {
         if (isSelected) {
             setSelected((prevSelected) => {
                 const updatedSelection = prevSelected.filter((item) => item._id !== asset._id);
-                addAssetsToURL(updatedSelection);
                 return updatedSelection;
             });
         } else {
             setSelected((prevSelected) => {
                 const updatedSelection = [...prevSelected, asset];
-                addAssetsToURL(updatedSelection);
                 return updatedSelection;
             });
         }

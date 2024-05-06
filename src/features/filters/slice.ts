@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { FilterSliceState } from './types';
 import { DeepPartial } from '../common/types';
+import { clearAssetsFromURL } from '@/utils/url-assets';
 
 const initialState: FilterSliceState = {
     name: '',
@@ -82,6 +83,7 @@ export const filterSlice = createSlice({
             state.taxonomy = initialState.taxonomy;
             state.creators = initialState.creators;
             state.provenance = initialState.provenance;
+            clearAssetsFromURL();
         },
     },
 });

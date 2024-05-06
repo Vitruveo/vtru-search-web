@@ -13,15 +13,15 @@ export const getAssetsIdsFromURL = () => {
   return assetIds;
 };
 
-export const removeAssetFromURL = (assetId: string) => {
+export const createBackLink = (assets: Asset[]) => {
+  const selectedIds = assets.map((asset) => asset._id);
   const url = new URL(window.location.href);
-  const assetIds = getAssetsIdsFromURL();
+  url.searchParams.set('assets', selectedIds.join(','));
+  return url.toString();
+}
 
-  if (!assetIds) {
-    return;
-  }
-
-  const updatedAssetIds = assetIds.filter((id) => id !== assetId);
-  url.searchParams.set('assets', updatedAssetIds.join(','));
+export const clearAssetsFromURL = () => {
+  const url = new URL(window.location.href);
+  url.searchParams.delete('assets');
   window.history.pushState({}, '', url.toString());
 }
