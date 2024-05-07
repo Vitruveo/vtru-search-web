@@ -33,10 +33,6 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         const filtersCreators: FilterSliceState['creators'] = yield select((state: AppState) => state.filters.creators);
         const price: FilterSliceState['price'] = yield select((state: AppState) => state.filters.price);
 
-        const showOnlyAvailableArts: FilterSliceState['showOnlyAvailableArts'] = yield select(
-            (state: AppState) => state.filters.showOnlyAvailableArts
-        );
-
         const buildFilters = {
             context: filtersContext,
             taxonomy: filtersTaxonomy,
@@ -71,11 +67,6 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             return acc;
         }, {});
 
-        if (!showOnlyAvailableArts) {
-            buildQuery['licenses.nft.editionOption'] = 'elastic';
-            buildQuery['licenses.nft.elastic.numberOfEditions'] = '0';
-        }
-
         const URL_ASSETS_SEARCH = `${API_BASE_URL}/assets/public/search`;
 
         const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.get, URL_ASSETS_SEARCH, {
@@ -88,6 +79,8 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 name: name.trim() ? name : null,
             },
         });
+
+        yield put(actions.setMaxPrice(response.data.data.maxPrice))
 
         yield put(
             actions.setData({
@@ -163,7 +156,6 @@ export function* assetsSagas() {
         takeEvery(actionsFilter.change.type, getAssets),
         debounce(1000, actionsFilter.changeName.type, getAssets), 
         takeEvery(actionsFilter.changePrice.type, getAssets),
-        debounce(500, actionsFilter.changeShowOnlyAvailableArts.type, getAssets),
         setup(),
     ]);
 }

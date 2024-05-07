@@ -48,5 +48,4 @@ export interface FilterSliceState {
         min: number;
         max: number;
     };
-    showOnlyAvailableArts: boolean;
 }

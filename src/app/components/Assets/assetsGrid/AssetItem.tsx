@@ -79,9 +79,11 @@ const AssetItem = ({
                                     {asset?.assetMetadata?.creators?.formData[0].name || 'No creator'}
                                 </a>
                             )}
-                        <Typography variant="h6" minWidth={42} height={25}>
-                            $ 150
-                        </Typography>
+                        {isAvailable && (
+                            <Typography variant="h6" minWidth={42} height={25}>
+                                {price}
+                            </Typography>
+                        )}
                     </Stack>
                 </CardContent>
             </BlankCard>

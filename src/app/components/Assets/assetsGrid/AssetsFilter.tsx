@@ -24,7 +24,6 @@ const Filters = () => {
 
     const values = useSelector((state) => state.filters);
     const tags = useSelector((state) => state.assets.tags);
-    const showOnlyAvailableArts = useSelector((state) => state.filters.showOnlyAvailableArts);
 
     const afterPriceChange = (min: number, max: number) => {
         dispatch(
@@ -33,10 +32,6 @@ const Filters = () => {
                 max,
             })
         );
-    };
-
-    const onShowOnlyAvailableArtsChange = () => {
-        dispatch(actions.changeShowOnlyAvailableArts(!showOnlyAvailableArts));
     };
 
     return (
@@ -59,17 +54,6 @@ const Filters = () => {
             />
 
             <AssetFilterAccordion title="Licenses">
-                <Stack flexDirection="row" alignItems="center" justifyContent="space-between" mb={2}>
-                    <Typography fontSize="0.85rem" fontWeight="700">
-                        Show only available arts
-                    </Typography>
-                    <Checkbox
-                        size="small"
-                        style={{ padding: 0 }}
-                        checked={showOnlyAvailableArts}
-                        onChange={onShowOnlyAvailableArtsChange}
-                    />
-                </Stack>
                 <Box>
                     <Typography fontSize="0.85rem" fontWeight="700" mb={1}>
                         Price

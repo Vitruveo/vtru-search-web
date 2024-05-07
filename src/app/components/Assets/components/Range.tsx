@@ -1,12 +1,13 @@
 import { useSelector } from '@/store/hooks';
 import { Slider } from '@mui/material';
 import { useRef } from 'react';
+import { store } from '@/store';
 
 interface RangeProps {
     afterChange?: (minValue: number, maxValue: number) => void;
 }
 
-const max = 1000;
+const max = store.getState().assets.maxPrice;
 const min = 0;
 const half = max / 2;
 const step = 10;
@@ -14,16 +15,16 @@ const step = 10;
 const marks = [
     {
         value: min,
-        label: `${min}`,
+        label: `$ ${min}`,
     },
     {
         value: half,
-        label: `${half}`,
+        label: `$ ${half}`,
     },
 
     {
         value: max,
-        label: `${max}`,
+        label: `$ ${max}`,
     },
 ];
 

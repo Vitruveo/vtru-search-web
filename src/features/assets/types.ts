@@ -11,6 +11,7 @@ export interface AssetsSliceState {
     creator: Creator;
     video: string;
     loadingVideo: boolean;
+    maxPrice: number;
 }
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';
@@ -103,6 +104,7 @@ export interface ResponseAssets {
     totalPage: number;
     total: number;
     limit: number;
+    maxPrice: number;
 }
 
 export interface ResponseAsserCreator {
