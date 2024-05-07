@@ -39,8 +39,8 @@ const AssetItem = ({
             <BlankCard className="hoverCard">
                 <Box width={250} height={250} onClick={handleClickImage} borderRadius="8px 8px 0 0" position='relative'>
                     {!isAvailable && (
-                        <Box position='absolute' pl={4} pt={2}>
-                            <Typography fontWeight={900} fontSize={16} textAlign='center' color='white'>NOT AVAILABLE</Typography>
+                        <Box position='absolute' pl={4} pt={2} maxWidth='50%'>
+                            <Typography fontWeight={900} fontSize={16} color='white'>NOT AVAILABLE</Typography>
                         </Box>
                     )}
                     <MediaRenderer

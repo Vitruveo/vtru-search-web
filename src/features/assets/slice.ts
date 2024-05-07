@@ -25,7 +25,7 @@ export const assetsSlice = createSlice({
     name: 'assets',
     initialState,
     reducers: {
-        loadAssets: (state, action: PayloadAction<GetAssetsParams>) => {},
+        loadAssets: (state, action: PayloadAction<GetAssetsParams | null>) => {},
         startLoading: (state) => {
             state.loading = true;
         },

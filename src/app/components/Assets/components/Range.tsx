@@ -1,5 +1,6 @@
+import { useSelector } from '@/store/hooks';
 import { Slider } from '@mui/material';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 interface RangeProps {
     afterChange?: (minValue: number, maxValue: number) => void;
@@ -27,23 +28,30 @@ const marks = [
 ];
 
 export const Range = ({ afterChange }: RangeProps) => {
-    const [minValue, setMinValue] = useState(300);
-    const [maxValue, setMaxValue] = useState(700);
-
+    const price = useSelector((state) => state.filters.price);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const onChange = (event: Event, newValue: number | number[]) => {
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
-        if (Array.isArray(newValue)) {
-            setMinValue(newValue[0]);
-            setMaxValue(newValue[1]);
+        if (newValue instanceof Array) {
             timeoutRef.current = setTimeout(() => {
-              afterChange?.(newValue[0], newValue[1]);
-            }, 1000)
+                afterChange?.(newValue[0], newValue[1]);
+            }, 1000);
         }
     };
 
-    return <Slider value={[minValue, maxValue]} step={step} onChange={onChange} valueLabelDisplay='auto' min={min} max={max} marks={marks} />;
+    return (
+        <Slider
+            key={Date.now()} // Remontando o componente para que ele utilize o defaulValue como se fosse um value
+            defaultValue={[price.min, price.max]}
+            step={step}
+            onChange={onChange}
+            valueLabelDisplay="auto"
+            min={min}
+            max={max}
+            marks={marks}
+        />
+    );
 };

@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { all, call, put, takeEvery, select } from 'redux-saga/effects';
+import { all, call, put, takeEvery, select, debounce } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
 
 import { API_BASE_URL } from '@/constants/api';
@@ -161,9 +161,9 @@ export function* assetsSagas() {
         takeEvery(actions.loadCreator.type, getCreator),
         takeEvery(actions.makeVideo.type, makeVideo),
         takeEvery(actionsFilter.change.type, getAssets),
-        takeEvery(actionsFilter.changeName.type, getAssets),
+        debounce(1000, actionsFilter.changeName.type, getAssets), 
         takeEvery(actionsFilter.changePrice.type, getAssets),
-        takeEvery(actionsFilter.changeShowOnlyAvailableArts.type, getAssets),
+        debounce(1000, actionsFilter.changeShowOnlyAvailableArts.type, getAssets),
         setup(),
     ]);
 }
