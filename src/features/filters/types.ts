@@ -22,7 +22,7 @@ export interface FilterSliceState {
         subject: string;
     };
     creators: {
-        name: string;
+        name: string[];
         roles: string;
         bio: string;
         profileUrl: string;

@@ -85,7 +85,8 @@ export const AsyncSelect = ({ onChange, defaultValue, endpoint }: AsyncSelectPro
         <Async
             components={{ Option: AsyncSelectOption }}
             onChange={onChange}
-            defaultValue={defaultValue}
+            // defaultValue={defaultValue}
+            value={defaultValue}
             styles={styles}
             isMulti
             defaultOptions

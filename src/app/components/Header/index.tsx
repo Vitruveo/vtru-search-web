@@ -15,7 +15,7 @@ import { toggleMobileSidebar } from '@/features/customizer/slice';
 import Logo from '../Shared/Logo';
 import Language from '../Language';
 import { AvatarProfile } from '../AvatarProfile';
-import { GENERAL_STORAGE_URL } from '@/constants/aws';
+import { Rss } from '../Rss';
 
 const Header = () => {
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
@@ -60,23 +60,7 @@ const Header = () => {
 
                 <Box flexGrow={1} />
                 <Stack spacing={1} direction="row" alignItems="center">
-                    <IconButton
-                        aria-label="more"
-                        id="long-button"
-                        aria-haspopup="true"
-                        onClick={() => {
-                            window.open(`${GENERAL_STORAGE_URL}/rss.xml`, '_blank');
-                        }}
-                    >
-                        <Image
-                            src="/images/icons/rss.png"
-                            width={30}
-                            height={30}
-                            alt=""
-                            style={{ borderRadius: 30, cursor: 'pointer' }}
-                        />
-                    </IconButton>
-
+                    <Rss />
                     <Language />
                     {isLogged && <AvatarProfile />}
                 </Stack>

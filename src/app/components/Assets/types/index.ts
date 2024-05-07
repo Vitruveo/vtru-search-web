@@ -12,7 +12,7 @@ export interface Creators {
     bio: string;
     ethnicity: string[];
     gender: string[];
-    name: string;
+    name: string[];
     nationality: string[];
     profileUrl: string;
     residence: string[];

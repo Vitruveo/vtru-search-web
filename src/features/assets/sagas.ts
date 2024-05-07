@@ -154,7 +154,7 @@ export function* assetsSagas() {
         takeEvery(actions.loadCreator.type, getCreator),
         takeEvery(actions.makeVideo.type, makeVideo),
         takeEvery(actionsFilter.change.type, getAssets),
-        debounce(1000, actionsFilter.changeName.type, getAssets), 
+        debounce(1000, actionsFilter.changeName.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),
         setup(),
     ]);

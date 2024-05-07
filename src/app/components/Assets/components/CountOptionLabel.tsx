@@ -10,9 +10,11 @@ export interface CountOptionLabelProps extends React.HTMLAttributes<HTMLDivEleme
 export const CountOptionLabel = forwardRef<HTMLDivElement, CountOptionLabelProps>((props, ref) => {
     const { label, count } = props;
 
+    const name = Array.isArray(label) ? label[0] : label;
+
     return (
         <Box ref={ref} display="flex" alignItems="center" justifyContent="space-between" {...props}>
-            <Typography>{label.toLowerCase()}</Typography> <Badge badgeContent={count} color="primary" sx={{ mr: 1 }} />
+            <Typography>{name.toLowerCase()}</Typography> <Badge badgeContent={count} color="primary" sx={{ mr: 1 }} />
         </Box>
     );
 });
