@@ -1,7 +1,8 @@
 import { useSelector } from '@/store/hooks';
-import { Slider } from '@mui/material';
+import { Box, Slider, Stack, Typography } from '@mui/material';
 import { useRef } from 'react';
 import { store } from '@/store';
+import { formatPrice } from '@/utils/assets';
 
 interface RangeProps {
     afterChange?: (minValue: number, maxValue: number) => void;
@@ -9,22 +10,16 @@ interface RangeProps {
 
 const max = store.getState().assets.maxPrice;
 const min = 0;
-const half = max / 2;
 const step = 10;
 
 const marks = [
     {
         value: min,
-        label: `$ ${min}`,
+        label: '',
     },
-    {
-        value: half,
-        label: `$ ${half}`,
-    },
-
     {
         value: max,
-        label: `$ ${max}`,
+        label: '',
     },
 ];
 
@@ -44,15 +39,21 @@ export const Range = ({ afterChange }: RangeProps) => {
     };
 
     return (
-        <Slider
-            key={Date.now()} // Remontando o componente para que ele utilize o defaulValue como se fosse um value
-            defaultValue={[price.min, price.max]}
-            step={step}
-            onChange={onChange}
-            valueLabelDisplay="auto"
-            min={min}
-            max={max}
-            marks={marks}
-        />
+        <Box>
+            <Slider
+                key={Date.now()} // Remontando o componente para que ele utilize o defaulValue como se fosse um value
+                defaultValue={[price.min, price.max]}
+                step={step}
+                onChange={onChange}
+                valueLabelDisplay="auto"
+                min={min}
+                max={max}
+                marks={marks}
+            />
+            <Stack direction="row" justifyContent="space-between" p={0}>
+                <Typography fontSize={11}>{formatPrice(min)}</Typography>
+                <Typography fontSize={11}>{formatPrice(max)}</Typography>
+            </Stack>
+        </Box>
     );
 };
