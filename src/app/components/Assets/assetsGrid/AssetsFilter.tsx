@@ -58,6 +58,30 @@ const Filters = () => {
                 onChange={(e) => dispatch(actions.changeName({ name: e.target.value }))}
             />
 
+            <AssetFilterAccordion title="Licenses">
+                <Stack flexDirection="row" alignItems="center" justifyContent="space-between" mb={2}>
+                    <Typography fontSize="0.85rem" fontWeight="700">
+                        Show only available arts
+                    </Typography>
+                    <Checkbox
+                        size="small"
+                        style={{ padding: 0 }}
+                        checked={showOnlyAvailableArts}
+                        onChange={onShowOnlyAvailableArtsChange}
+                    />
+                </Stack>
+                <Box>
+                    <Typography fontSize="0.85rem" fontWeight="700" mb={1}>
+                        Price
+                    </Typography>
+                    <Box mx={1}>
+                        <Range afterChange={afterPriceChange} />
+                    </Box>
+                </Box>
+            </AssetFilterAccordion>
+
+            <Divider />
+
             <AssetFilterAccordion title={language['search.assetFilter.context'] as string}>
                 {Object.entries(assetsMetadata.context.schema.properties).map((item) => {
                     const [key, value] = item;
@@ -239,30 +263,6 @@ const Filters = () => {
                         />
                     );
                 })}
-            </AssetFilterAccordion>
-
-            <Divider />
-
-            <AssetFilterAccordion title="Licenses">
-                <Stack flexDirection="row" alignItems="center" justifyContent="space-between" mb={2}>
-                    <Typography fontSize="0.85rem" fontWeight="700">
-                        Show only available arts
-                    </Typography>
-                    <Checkbox
-                        size="small"
-                        style={{ padding: 0 }}
-                        checked={showOnlyAvailableArts}
-                        onChange={onShowOnlyAvailableArtsChange}
-                    />
-                </Stack>
-                <Box>
-                    <Typography fontSize="0.85rem" fontWeight="700" mb={1}>
-                        Price
-                    </Typography>
-                    <Box mx={1}>
-                        <Range afterChange={afterPriceChange} />
-                    </Box>
-                </Box>
             </AssetFilterAccordion>
 
             <Box>

@@ -81,7 +81,7 @@ const AssetsList = ({ onClick }: Props) => {
 
     useEffect(() => {
         const idsFromURL = getAssetsIdsFromURL();
-        
+
         if (idsFromURL?.length && idsFromURL[0] == '') {
             return;
         }
@@ -98,10 +98,7 @@ const AssetsList = ({ onClick }: Props) => {
     };
 
     const handleAssetImageClick = (asset: Asset) => {
-        if (isCurateChecked) {
-            handleCheckCurate(asset);
-            return;
-        }
+        if (isCurateChecked) return;
 
         openAssetDrawer(asset);
         dispatch(actions.loadCreator({ assetId: asset._id }));

@@ -42,7 +42,12 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                 </Typography>
                 <Box mt={3} mb={3} display="flex" alignItems="center" gap={1}>
                     <Avatar />
-                    {creator}
+                    {Array.isArray(assetView?.assetMetadata?.creators?.formData) &&
+                        assetView?.assetMetadata?.creators?.formData?.length > 0 && (
+                            <Typography variant="h6">
+                                {assetView?.assetMetadata?.creators?.formData[0].name || 'No creator'}
+                            </Typography>
+                        )}
                 </Box>
                 <Box mb={3}>
                     <Typography variant="h6">

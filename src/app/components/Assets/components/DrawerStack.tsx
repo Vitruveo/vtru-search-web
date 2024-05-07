@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     Box,
     Button,
@@ -72,7 +72,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     const { language } = useI18n();
 
     const modalSwitch = useToggle();
-    const title = useRef('');
+    const [title, setTitle] = useState('');
     const [statedLogin, setStatedLogin] = useState(false);
     const [selectedAudio, setSelectedAudio] = useState(audios[0].value);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -84,8 +84,10 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
 
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
+    const audio = useMemo(() => new Audio(`/audios/${selectedAudio}`), [selectedAudio]);
+
     const onTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        title.current = event.target.value;
+        setTitle(event.target.value);
     };
 
     const handleDispatchMakeVideo = () => {
@@ -93,10 +95,12 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
         dispatch(
             actionsAssets.makeVideo({
                 artworks: data,
-                title: title.current,
-                sound: audios.find((audio) => audio.value === selectedAudio)?.value,
+                title: title,
+                sound: audios.find((item) => item.value === selectedAudio)?.value,
             })
         );
+        audio.play();
+        setIsPlaying(true);
     };
 
     const twitterShareURL = createTwitterIntent({
@@ -106,8 +110,6 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     });
 
     const hasVideo = video !== '';
-
-    const audio = useMemo(() => new Audio(`/audios/${selectedAudio}`), [selectedAudio]);
 
     useEffect(() => {
         if (isPlaying) {
@@ -123,6 +125,13 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
             setIsPlaying(false);
         }
     }, [modalSwitch.isActive]);
+
+    useEffect(() => {
+        if (hasVideo) {
+            audio.pause();
+            setIsPlaying(false);
+        }
+    }, [hasVideo]);
 
     return (
         <>
@@ -148,7 +157,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                         <Typography variant="h4">{language['search.drawer.stack.publishStack'] as string}</Typography>
                     </Box>
 
-                    <Box display="flex" mb={2}>
+                    <Box display="flex" alignItems="center" mb={2}>
                         <Typography width={120}>{language['search.drawer.stack.description'] as string}</Typography>
                         <Select defaultValue={30} fullWidth>
                             <MenuItem selected value={30}>
@@ -163,7 +172,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                         </Select>
                     </Box>
 
-                    <Box display="flex" mb={2}>
+                    <Box display="flex" alignItems="center" mb={2}>
                         <Typography width={150}>{language['search.drawer.stack.sound'] as string}</Typography>
                         <Select
                             defaultValue={audios[0].value}
@@ -190,12 +199,20 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                         </Button>
                     </Box>
 
-                    <Box display="flex" mb={3}>
-                        <Typography width={120}>{language['search.drawer.stack.title'] as string}</Typography>
-                        <TextField rows={4} fullWidth onChange={onTitleChange} />
+                    <Box display="flex" alignItems="center" mb={3}>
+                        <Typography width={120}>
+                            {language['search.drawer.stack.title'] as string}
+                            <span style={{ color: 'red' }}>*</span>
+                        </Typography>
+                        <TextField rows={4} value={title} fullWidth onChange={onTitleChange} />
                     </Box>
 
-                    <Button disabled={loadingVideo} variant="contained" fullWidth onClick={handleDispatchMakeVideo}>
+                    <Button
+                        disabled={loadingVideo || selected.length === 0 || selected.length > 15 || title.length === 0}
+                        variant="contained"
+                        fullWidth
+                        onClick={handleDispatchMakeVideo}
+                    >
                         {language['search.drawer.stack.button.publish'] as string}
                     </Button>
 
@@ -215,9 +232,11 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                     )}
 
                     {hasVideo && (
-                        <Button href={twitterShareURL} target="_blank" variant="outlined" startIcon={<XIcon />}>
-                            {language['search.shareOnTwitter'] as string}
-                        </Button>
+                        <Box display="flex" justifyContent="center">
+                            <Button href={twitterShareURL} target="_blank" variant="outlined" startIcon={<XIcon />}>
+                                {language['search.shareOnTwitter'] as string}
+                            </Button>
+                        </Box>
                     )}
                 </Box>
             </Modal>
@@ -231,12 +250,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                             </Typography>
                         </Box>
                     )}
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        disabled={!isLogged || selected.length === 0 || selected.length > 15}
-                        onClick={modalSwitch.activate}
-                    >
+                    <Button fullWidth variant="contained" disabled={!isLogged} onClick={modalSwitch.activate}>
                         {language['search.drawer.stack.publishStack'] as string}
                     </Button>
 

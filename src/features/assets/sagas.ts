@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { all, call, put, takeEvery, select, debounce } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
+import { confetti } from '@tsparticles/confetti';
 
 import { API_BASE_URL } from '@/constants/api';
 import type { FilterSliceState } from '../filters/types';
@@ -138,6 +139,11 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
             }
         );
         yield put(actions.setVideo(response.data.data.url));
+        yield call(confetti, {
+            particleCount: 500,
+            spread: 250,
+            origin: { x: 0.5, y: 0.5 },
+        });
     } catch (error) {
         // somenthing
     }
