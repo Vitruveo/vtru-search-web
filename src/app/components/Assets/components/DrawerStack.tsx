@@ -253,29 +253,26 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                     {!isLogged && (
                         <Box display="flex" justifyContent="center">
                             <Typography variant="caption" color="Highlight" textAlign="center">
-                                Studio login required
+                                Login required
                             </Typography>
                         </Box>
                     )}
-                    <Button fullWidth variant="contained" disabled={!isLogged} onClick={modalSwitch.activate}>
-                        {language['search.drawer.stack.publishStack'] as string}
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        onClick={() => {
+                            if (isLogged) {
+                                modalSwitch.toggle();
+                            } else {
+                                setStatedLogin(true);
+                            }
+                        }}
+                    >
+                        {!isLogged ? 'Login with your e-mail' : 'Publish Stack'}
                     </Button>
 
                     {!isLogged && (
                         <>
-                            {!statedLogin && (
-                                <>
-                                    <Box mt={2}>
-                                        <Typography>
-                                            Login to create a stack and publish your selected assets
-                                        </Typography>
-                                    </Box>
-                                    <Button fullWidth variant="contained" onClick={() => setStatedLogin(true)}>
-                                        Login with your account from Studio
-                                    </Button>
-                                </>
-                            )}
-
                             {statedLogin && !wasSended && (
                                 <Box mt={2}>
                                     <TextField
@@ -289,7 +286,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                                         fullWidth
                                         variant="outlined"
                                         sx={{ marginTop: 2 }}
-                                        disabled={!email.length || loading}
+                                        disabled={loading}
                                     >
                                         Send Code
                                     </Button>
@@ -309,7 +306,7 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                                         fullWidth
                                         variant="outlined"
                                         sx={{ marginTop: 2 }}
-                                        disabled={!code.length || loading}
+                                        disabled={loading}
                                     >
                                         Verify code
                                     </Button>
