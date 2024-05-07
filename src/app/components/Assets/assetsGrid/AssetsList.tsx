@@ -18,50 +18,10 @@ import { DrawerStack } from '../components/DrawerStack';
 import AssetItem from './AssetItem';
 import { useToggle } from '@/app/hooks/useToggle';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
+import { getAssetPrice, isAssetAvailable, sortAssetsByAvailability } from '@/utils/assets';
 
 interface Props {
     onClick: (event: React.SyntheticEvent | Event) => void;
-}
-
-const isAssetAvailable = (asset: Asset) => {
-    const { nft } = asset.licenses;
-
-    switch (nft.editionOption) {
-        case 'elastic':
-            return nft.elastic.numberOfEditions > 0
-        case 'single':
-            return true;
-        case 'unlimited':
-            return true;
-        default:
-            return false;
-    }
-}
-
-const getAssetPrice = (asset: Asset) => {
-    const { nft } = asset.licenses;
-
-    switch (nft.editionOption) {
-        case 'elastic':
-            return '$' + nft.elastic.editionPrice;
-        case 'single':
-            return '$' + nft.single.editionPrice;
-        case 'unlimited':
-            return '$' + nft.unlimited.editionPrice;
-        default:
-            return 'N/A';
-    }
-}
-
-const sortAssetsByAvailability = (a: Asset, b: Asset) => {
-    if (isAssetAvailable(a) && !isAssetAvailable(b)) {
-        return -1;
-    }
-    if (!isAssetAvailable(a) && isAssetAvailable(b)) {
-        return 1;
-    }
-    return 0;
-
 }
 
 const AssetsList = ({ onClick }: Props) => {

@@ -19,6 +19,7 @@ const initialState: AssetsSliceState = {
     },
     video: '',
     loadingVideo: false,
+    maxPrice: 0, // this is used to mark the max price of the price range slider
 };
 
 export const assetsSlice = createSlice({
@@ -52,6 +53,9 @@ export const assetsSlice = createSlice({
         setCreator: (state, action) => {
             state.creator.username = action.payload;
         },
+        setMaxPrice: (state, action: PayloadAction<number>) => {
+            state.maxPrice = action.payload;
+        }
     },
 });
 

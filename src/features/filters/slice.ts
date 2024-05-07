@@ -55,7 +55,6 @@ const initialState: FilterSliceState = {
         min: 0,
         max: 1000,
     },
-    showOnlyAvailableArts: true,
 };
 
 export const filterSlice = createSlice({
@@ -77,7 +76,6 @@ export const filterSlice = createSlice({
                 value: DeepPartial<FilterSliceState[keyof FilterSliceState]>;
             }>
         ) => {
-            // @ts-expect-error - TODO: VERIFICAR TIPAGEM
             state[action.payload.key] = {
                 ...(state[action.payload.key] as any),
                 ...(action.payload.value as any),
@@ -90,7 +88,6 @@ export const filterSlice = createSlice({
             state.creators = initialState.creators;
             state.provenance = initialState.provenance;
             state.price = initialState.price;
-            state.showOnlyAvailableArts = initialState.showOnlyAvailableArts;
             clearAssetsFromURL();
         },
         changePrice: (state, action: PayloadAction<{ min: number; max: number }>) => {
@@ -98,9 +95,6 @@ export const filterSlice = createSlice({
                 min: action.payload.min,
                 max: action.payload.max,
             };
-        },
-        changeShowOnlyAvailableArts: (state, action: PayloadAction<boolean>) => {
-            state.showOnlyAvailableArts = action.payload;
         },
     },
 });
