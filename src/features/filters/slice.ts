@@ -29,7 +29,7 @@ const initialState: FilterSliceState = {
         subject: '',
     },
     creators: {
-        name: '',
+        name: [],
         roles: '',
         bio: '',
         profileUrl: '',
