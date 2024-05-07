@@ -40,8 +40,8 @@ export const sortAssetsByAvailability = (a: Asset, b: Asset) => {
     return 0;
 };
 
-export const formatPrice = (price: number) => {
-    return price
+export const formatPrice = (price = 0) =>
+    price
         .toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
@@ -51,4 +51,3 @@ export const formatPrice = (price: number) => {
             maximumFractionDigits: 2,
         })
         .replace(/\$/, 'US$ ');
-};
