@@ -215,6 +215,13 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                     >
                         {language['search.drawer.stack.button.publish'] as string}
                     </Button>
+                    {selected.length > 15 && (
+                        <Box display="flex" justifyContent="center">
+                            <span style={{ color: 'red', textAlign: 'center' }}>
+                                assets selected exceed the limit of 15, please remove some assets.
+                            </span>
+                        </Box>
+                    )}
 
                     {loadingVideo && (
                         <Box display="flex" justifyContent="center" mt={3}>
