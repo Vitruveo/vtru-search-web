@@ -157,7 +157,7 @@ export function* assetsSagas() {
         takeEvery(actionsFilter.change.type, getAssets),
         debounce(1000, actionsFilter.changeName.type, getAssets), 
         takeEvery(actionsFilter.changePrice.type, getAssets),
-        debounce(1000, actionsFilter.changeShowOnlyAvailableArts.type, getAssets),
+        debounce(500, actionsFilter.changeShowOnlyAvailableArts.type, getAssets),
         setup(),
     ]);
 }

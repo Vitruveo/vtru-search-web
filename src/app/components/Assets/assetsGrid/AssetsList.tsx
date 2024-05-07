@@ -53,6 +53,17 @@ const getAssetPrice = (asset: Asset) => {
     }
 }
 
+const sortAssetsByAvailability = (a: Asset, b: Asset) => {
+    if (isAssetAvailable(a) && !isAssetAvailable(b)) {
+        return -1;
+    }
+    if (!isAssetAvailable(a) && isAssetAvailable(b)) {
+        return 1;
+    }
+    return 0;
+
+}
+
 const AssetsList = ({ onClick }: Props) => {
     const dispatch = useDispatch();
     const { language } = useI18n();
@@ -188,7 +199,7 @@ const AssetsList = ({ onClick }: Props) => {
             >
                 {assets.length > 0 ? (
                     <>
-                        {assets.map((asset) => (
+                        {[...assets].sort(sortAssetsByAvailability).map((asset) => (
                             <Grid
                                 item
                                 xl={3}
