@@ -1,6 +1,5 @@
 import { all, takeLatest, put, call, select } from 'redux-saga/effects';
 import axios, { AxiosResponse } from 'axios';
-import toastr from 'toastr';
 
 import { API_BASE_URL } from '@/constants/api';
 import { APIResponse } from '../common/types';
@@ -43,13 +42,6 @@ function* verifyCode() {
         );
     } catch (error) {
         // something went wrong
-        if (error instanceof axios.AxiosError) {
-            if (error.response?.status === 401) {
-                yield call(toastr.error, 'Invalid code', 'Error');
-            } else {
-                yield call(toastr.error, 'Something went wrong', 'Error');
-            }
-        }
     }
     yield put(actionsCreator.setLoading(false));
 }
