@@ -3,6 +3,8 @@ import BlankCard from '../../Shared/BlankCard';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { Asset } from '@/features/assets/types';
 import { MediaRenderer } from '../components/MediaRenderer';
+import { useDispatch } from '@/store/hooks';
+import { actions } from '@/features/filters/slice';
 
 interface Props {
     assetView: Asset;
@@ -25,6 +27,8 @@ const AssetItem = ({
     isAvailable = true,
     price,
 }: Props) => {
+    const dispatch = useDispatch();
+
     return (
         <Box
             sx={{
@@ -73,6 +77,16 @@ const AssetItem = ({
                                     href="#"
                                     onClick={(event) => {
                                         event.stopPropagation();
+                                        if (Array.isArray(asset?.assetMetadata?.creators?.formData)) {
+                                            dispatch(
+                                                actions.change({
+                                                    key: 'creators',
+                                                    value: {
+                                                        name: [asset?.assetMetadata?.creators?.formData[0].name],
+                                                    },
+                                                })
+                                            );
+                                        }
                                     }}
                                     style={{ textDecoration: 'underline', padding: 5, paddingLeft: 0 }}
                                 >
