@@ -70,13 +70,6 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             return acc;
         }, {});
 
-        if (name.trim()) {
-            buildQuery['$or'] = [
-                { 'assetMetadata.name': { $regex: name, $options: 'i' } },
-                { 'assetMetadata.description': { $regex: name, $options: 'i' } },
-            ]
-        }
-
         if (!showOnlyAvailableArts) {
             buildQuery['licenses.nft.editionOption'] = 'elastic';
             buildQuery['licenses.nft.elastic.numberOfEditions'] = '0';
@@ -91,6 +84,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 query: buildQuery,
                 minPrice: price.min,
                 maxPrice: price.max,
+                name: name.trim() ? name : null,
             },
         });
 
