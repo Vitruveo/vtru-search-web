@@ -1,21 +1,7 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { IconMenu2, IconSearch } from '@tabler/icons-react';
+import { useDispatch } from 'react-redux';
+import { IconSearch } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
-import {
-    Accordion,
-    InputAdornment,
-    AccordionSummary,
-    AccordionDetails,
-    Box,
-    Button,
-    Divider,
-    List,
-    Typography,
-    OutlinedInput,
-} from '@mui/material';
-
-import { AppState } from '@/store';
+import { InputAdornment, Box, Button, Divider, Typography, OutlinedInput, Stack, Checkbox } from '@mui/material';
 import assetsMetadata from '@/mock/assetsMetadata.json';
 import { actions } from '@/features/filters/slice';
 import { ContextItem } from '../components/ContextItem';
@@ -28,300 +14,266 @@ import type {
 } from './types';
 import type { Context, Taxonomy, Creators } from '../types';
 import Version from '../../Version';
+import { AssetFilterAccordion } from './AssetFilterAccordion';
+import { Range } from '../components/Range';
+import { useSelector } from '@/store/hooks';
 
 const Filters = () => {
     const dispatch = useDispatch();
     const { language } = useI18n();
 
-    const values = useSelector((state: AppState) => state.filters);
-    const tags = useSelector((state: AppState) => state.assets.tags);
+    const values = useSelector((state) => state.filters);
+    const tags = useSelector((state) => state.assets.tags);
+    const showOnlyAvailableArts = useSelector((state) => state.filters.showOnlyAvailableArts);
 
-    const [expandedContext, setExpandedContext] = useState(true);
-    const [expandedTaxonomy, setExpandedTaxonomy] = useState(false);
-    const [expandedCreators, setExpandedCreators] = useState(false);
+    const afterPriceChange = (min: number, max: number) => {
+        dispatch(
+            actions.changePrice({
+                min,
+                max,
+            })
+        );
+    };
+
+    const onShowOnlyAvailableArtsChange = () => {
+        dispatch(actions.changeShowOnlyAvailableArts(!showOnlyAvailableArts));
+    };
 
     return (
-        <List>
-            <Box
-                p={1}
-                sx={{
-                    overflow: 'auto',
-                    maxHeight: '92vh',
-                }}
-            >
-                <OutlinedInput
-                    id="outlined-search"
-                    placeholder={language['search.assetFilter.search.placeholder'] as string}
-                    size="small"
-                    type="search"
-                    color="primary"
-                    notched
-                    startAdornment={
-                        <InputAdornment position="start">
-                            <IconSearch size="14" />
-                        </InputAdornment>
-                    }
-                    fullWidth
-                    value={values.name}
-                    onChange={(e) => dispatch(actions.changeName({ name: e.target.value }))}
-                />
+        <Stack gap={2} p={1} pb={2} mt={1} height="92vh" overflow="auto">
+            <OutlinedInput
+                id="outlined-search"
+                placeholder={language['search.assetFilter.search.placeholder'] as string}
+                size="small"
+                type="search"
+                color="primary"
+                notched
+                startAdornment={
+                    <InputAdornment position="start">
+                        <IconSearch size="14" />
+                    </InputAdornment>
+                }
+                fullWidth
+                value={values.name}
+                onChange={(e) => dispatch(actions.changeName({ name: e.target.value }))}
+            />
 
-                <Box paddingBlock={2}>
-                    <Accordion expanded={expandedContext} onChange={() => setExpandedContext(!expandedContext)}>
-                        <AccordionSummary>
-                            <Box width="100%" display="flex" justifyContent="space-between">
-                                <Typography fontSize="1.2rem" fontWeight="700">
-                                    {language['search.assetFilter.context'] as string}
-                                </Typography>
+            <AssetFilterAccordion title="Licenses">
+                <Stack flexDirection="row" alignItems="center" justifyContent="space-between" mb={2}>
+                    <Typography fontSize="0.85rem" fontWeight="700">
+                        Show only available arts
+                    </Typography>
+                    <Checkbox
+                        size="small"
+                        style={{ padding: 0 }}
+                        checked={showOnlyAvailableArts}
+                        onChange={onShowOnlyAvailableArtsChange}
+                    />
+                </Stack>
+                <Box>
+                    <Typography fontSize="0.85rem" fontWeight="700" mb={1}>
+                        Price
+                    </Typography>
+                    <Box mx={1}>
+                        <Range afterChange={afterPriceChange} />
+                    </Box>
+                </Box>
+            </AssetFilterAccordion>
 
-                                <IconMenu2
-                                    size="20"
-                                    style={{
-                                        transform: expandedContext ? 'rotate(90deg)' : 'rotate(0deg)',
-                                        transition: 'transform 0.3s',
-                                    }}
-                                />
-                            </Box>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Box mb={2}>
-                                {Object.entries(assetsMetadata.context.schema.properties).map((item) => {
-                                    const [key, value] = item;
-                                    return (
-                                        <ContextItem
-                                            key={key}
-                                            title={key as keyof Context}
-                                            values={values}
-                                            hidden={
-                                                assetsMetadata.context.uiSchema[
+            <Divider />
+
+            <AssetFilterAccordion title={language['search.assetFilter.context'] as string}>
+                {Object.entries(assetsMetadata.context.schema.properties).map((item) => {
+                    const [key, value] = item;
+                    return (
+                        <ContextItem
+                            key={key}
+                            title={key as keyof Context}
+                            values={values}
+                            hidden={
+                                assetsMetadata.context.uiSchema[
+                                    key as keyof AssetsMetadata['context']['schema']['properties']
+                                ]['ui:widget'] === 'hidden'
+                            }
+                            type={
+                                assetsMetadata.context.uiSchema[
+                                    key as keyof AssetsMetadata['context']['schema']['properties']
+                                ]['ui:widget']
+                            }
+                            options={
+                                (
+                                    value as ItemsOrCultureOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrEthnicityOrGenderOrBlockchain
+                                ).enum ||
+                                (value as MoodOrMediumOrStyle)?.items?.enum ||
+                                []
+                            }
+                            onChange={(changeValue) =>
+                                dispatch(
+                                    actions.change({
+                                        key: 'context',
+                                        value: {
+                                            [key]: changeValue,
+                                        },
+                                    })
+                                )
+                            }
+                            onRemove={(color) =>
+                                dispatch(
+                                    actions.change({
+                                        key: 'context',
+                                        value: {
+                                            [key]: (
+                                                values.context[
                                                     key as keyof AssetsMetadata['context']['schema']['properties']
-                                                ]['ui:widget'] === 'hidden'
-                                            }
-                                            type={
-                                                assetsMetadata.context.uiSchema[
-                                                    key as keyof AssetsMetadata['context']['schema']['properties']
-                                                ]['ui:widget']
-                                            }
-                                            options={
-                                                (
-                                                    value as ItemsOrCultureOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrEthnicityOrGenderOrBlockchain
-                                                ).enum ||
-                                                (value as MoodOrMediumOrStyle)?.items?.enum ||
-                                                []
-                                            }
-                                            onChange={(changeValue) =>
-                                                dispatch(
-                                                    actions.change({
-                                                        key: 'context',
-                                                        value: {
-                                                            [key]: changeValue,
-                                                        },
-                                                    })
-                                                )
-                                            }
-                                            onRemove={(color) =>
-                                                dispatch(
-                                                    actions.change({
-                                                        key: 'context',
-                                                        value: {
-                                                            [key]: (
-                                                                values.context[
-                                                                    key as keyof AssetsMetadata['context']['schema']['properties']
-                                                                ] as string[]
-                                                            ).filter((itemColor) => itemColor !== color),
-                                                        },
-                                                    })
-                                                )
-                                            }
-                                        />
-                                    );
-                                })}
-                            </Box>
-                        </AccordionDetails>
-                    </Accordion>
-                </Box>
+                                                ] as string[]
+                                            ).filter((itemColor) => itemColor !== color),
+                                        },
+                                    })
+                                )
+                            }
+                        />
+                    );
+                })}
+            </AssetFilterAccordion>
 
-                <Divider />
+            <Divider />
 
-                <Box paddingBlock={2}>
-                    <Accordion expanded={expandedTaxonomy} onChange={() => setExpandedTaxonomy(!expandedTaxonomy)}>
-                        <AccordionSummary>
-                            <Box width="100%" display="flex" justifyContent="space-between">
-                                <Typography fontSize="1.2rem" fontWeight="700">
-                                    {language['search.assetFilter.taxonomy'] as string}
-                                </Typography>
+            <AssetFilterAccordion title={language['search.assetFilter.taxonomy'] as string}>
+                {Object.entries(assetsMetadata.taxonomy.schema.properties).map((item) => {
+                    const [key, value] = item;
 
-                                <IconMenu2
-                                    size="20"
-                                    style={{
-                                        transform: expandedTaxonomy ? 'rotate(90deg)' : 'rotate(0deg)',
-                                        transition: 'transform 0.3s',
-                                    }}
-                                />
-                            </Box>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Box mb={2}>
-                                {Object.entries(assetsMetadata.taxonomy.schema.properties).map((item) => {
-                                    const [key, value] = item;
-
-                                    // TODO: CORRIGIR TIPAGEM
-                                    return (
-                                        <TaxonomyItem
-                                            loadOptionsEndpoint={
-                                                (
-                                                    assetsMetadata.taxonomy.uiSchema[
-                                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
-                                                    ] as any
-                                                )['ui:options']?.loadOptionsEndpoint
-                                            }
-                                            key={key}
-                                            title={key as keyof Taxonomy}
-                                            values={values}
-                                            tags={tags || []}
-                                            hidden={
-                                                assetsMetadata.taxonomy.uiSchema[
+                    // TODO: CORRIGIR TIPAGEM
+                    return (
+                        <TaxonomyItem
+                            loadOptionsEndpoint={
+                                (
+                                    assetsMetadata.taxonomy.uiSchema[
+                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                    ] as any
+                                )['ui:options']?.loadOptionsEndpoint
+                            }
+                            key={key}
+                            title={key as keyof Taxonomy}
+                            values={values}
+                            tags={tags || []}
+                            hidden={
+                                assetsMetadata.taxonomy.uiSchema[
+                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                ]['ui:widget'] === 'hidden'
+                            }
+                            type={
+                                assetsMetadata.taxonomy.uiSchema[
+                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                ]['ui:widget']
+                            }
+                            options={
+                                (
+                                    value as ItemsOrCultureOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrEthnicityOrGenderOrBlockchain
+                                )?.enum ||
+                                (value as MoodOrMediumOrStyle)?.items?.enum ||
+                                []
+                            }
+                            onChange={(changeValue) =>
+                                dispatch(
+                                    actions.change({
+                                        key: 'taxonomy',
+                                        value: {
+                                            [key]: changeValue,
+                                        },
+                                    })
+                                )
+                            }
+                            onRemove={(color) =>
+                                dispatch(
+                                    actions.change({
+                                        key: 'taxonomy',
+                                        value: {
+                                            [key]: (
+                                                values.taxonomy[
                                                     key as keyof AssetsMetadata['taxonomy']['schema']['properties']
-                                                ]['ui:widget'] === 'hidden'
-                                            }
-                                            type={
-                                                assetsMetadata.taxonomy.uiSchema[
-                                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
-                                                ]['ui:widget']
-                                            }
-                                            options={
-                                                (
-                                                    value as ItemsOrCultureOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrEthnicityOrGenderOrBlockchain
-                                                )?.enum ||
-                                                (value as MoodOrMediumOrStyle)?.items?.enum ||
-                                                []
-                                            }
-                                            onChange={(changeValue) =>
-                                                dispatch(
-                                                    actions.change({
-                                                        key: 'taxonomy',
-                                                        value: {
-                                                            [key]: changeValue,
-                                                        },
-                                                    })
-                                                )
-                                            }
-                                            onRemove={(color) =>
-                                                dispatch(
-                                                    actions.change({
-                                                        key: 'taxonomy',
-                                                        value: {
-                                                            [key]: (
-                                                                values.taxonomy[
-                                                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
-                                                                ] as string[]
-                                                            ).filter((itemColor) => itemColor !== color),
-                                                        },
-                                                    })
-                                                )
-                                            }
-                                        />
-                                    );
-                                })}
-                            </Box>
-                        </AccordionDetails>
-                    </Accordion>
-                </Box>
+                                                ] as string[]
+                                            ).filter((itemColor) => itemColor !== color),
+                                        },
+                                    })
+                                )
+                            }
+                        />
+                    );
+                })}
+            </AssetFilterAccordion>
 
-                <Divider />
+            <Divider />
 
-                <Box paddingBlock={2}>
-                    <Accordion expanded={expandedCreators} onChange={() => setExpandedCreators(!expandedCreators)}>
-                        <AccordionSummary>
-                            <Box width="100%" display="flex" justifyContent="space-between">
-                                <Typography fontSize="1.2rem" fontWeight="700">
-                                    {language['search.assetFilter.creators'] as string}
-                                </Typography>
-
-                                <IconMenu2
-                                    size="20"
-                                    style={{
-                                        transform: expandedCreators ? 'rotate(90deg)' : 'rotate(0deg)',
-                                        transition: 'transform 0.3s',
-                                    }}
-                                />
-                            </Box>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Box mb={2}>
-                                {Object.entries(assetsMetadata.creators.schema.items.properties).map((item) => {
-                                    const [key, value] = item;
-                                    return (
-                                        <CreatorsItem
-                                            loadOptionsEndpoint={
-                                                (
-                                                    assetsMetadata.creators.uiSchema.items[
-                                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
-                                                    ] as any
-                                                )['ui:options']?.loadOptionsEndpoint
-                                            }
-                                            key={key}
-                                            title={key as keyof Creators}
-                                            values={values}
-                                            hidden={
-                                                assetsMetadata.creators.uiSchema.items[
+            <AssetFilterAccordion title={language['search.assetFilter.creators'] as string}>
+                {Object.entries(assetsMetadata.creators.schema.items.properties).map((item) => {
+                    const [key, value] = item;
+                    return (
+                        <CreatorsItem
+                            loadOptionsEndpoint={
+                                (
+                                    assetsMetadata.creators.uiSchema.items[
+                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                    ] as any
+                                )['ui:options']?.loadOptionsEndpoint
+                            }
+                            key={key}
+                            title={key as keyof Creators}
+                            values={values}
+                            hidden={
+                                assetsMetadata.creators.uiSchema.items[
+                                    key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                ]['ui:widget'] === 'hidden'
+                            }
+                            type={
+                                assetsMetadata.creators.uiSchema.items[
+                                    key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                ]['ui:widget']
+                            }
+                            options={
+                                (
+                                    value as ItemsOrCultureOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrEthnicityOrGenderOrBlockchain
+                                )?.enum ||
+                                (value as MoodOrMediumOrStyle)?.items?.enum ||
+                                []
+                            }
+                            onChange={(changeValue) =>
+                                dispatch(
+                                    actions.change({
+                                        key: 'creators',
+                                        value: {
+                                            [key]: changeValue,
+                                        },
+                                    })
+                                )
+                            }
+                            onRemove={(color) =>
+                                dispatch(
+                                    actions.change({
+                                        key: 'creators',
+                                        value: {
+                                            [key]: (
+                                                values.creators[
                                                     key as keyof AssetsMetadata['creators']['schema']['items']['properties']
-                                                ]['ui:widget'] === 'hidden'
-                                            }
-                                            type={
-                                                assetsMetadata.creators.uiSchema.items[
-                                                    key as keyof AssetsMetadata['creators']['schema']['items']['properties']
-                                                ]['ui:widget']
-                                            }
-                                            options={
-                                                (
-                                                    value as ItemsOrCultureOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrEthnicityOrGenderOrBlockchain
-                                                )?.enum ||
-                                                (value as MoodOrMediumOrStyle)?.items?.enum ||
-                                                []
-                                            }
-                                            onChange={(changeValue) =>
-                                                dispatch(
-                                                    actions.change({
-                                                        key: 'creators',
-                                                        value: {
-                                                            [key]: changeValue,
-                                                        },
-                                                    })
-                                                )
-                                            }
-                                            onRemove={(color) =>
-                                                dispatch(
-                                                    actions.change({
-                                                        key: 'creators',
-                                                        value: {
-                                                            [key]: (
-                                                                values.creators[
-                                                                    key as keyof AssetsMetadata['creators']['schema']['items']['properties']
-                                                                ] as string[]
-                                                            ).filter((itemColor) => itemColor !== color),
-                                                        },
-                                                    })
-                                                )
-                                            }
-                                        />
-                                    );
-                                })}
-                            </Box>
-                        </AccordionDetails>
-                    </Accordion>
-                </Box>
+                                                ] as string[]
+                                            ).filter((itemColor) => itemColor !== color),
+                                        },
+                                    })
+                                )
+                            }
+                        />
+                    );
+                })}
+            </AssetFilterAccordion>
 
-                <Box mb={4}>
-                    <Button variant="contained" onClick={() => dispatch(actions.reset())} fullWidth>
-                        {language['search.assetFilter.resetFilters'] as string}
-                    </Button>
-                </Box>
-                <Box display="flex" justifyContent="center" mt={4} mb={4}>
-                    <Version />
-                </Box>
+            <Box>
+                <Button variant="contained" onClick={() => dispatch(actions.reset())} fullWidth>
+                    {language['search.assetFilter.resetFilters'] as string}
+                </Button>
             </Box>
-        </List>
+            <Box display="flex" justifyContent="center">
+                <Version />
+            </Box>
+        </Stack>
     );
 };
 

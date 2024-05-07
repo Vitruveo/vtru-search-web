@@ -23,6 +23,47 @@ interface Props {
     onClick: (event: React.SyntheticEvent | Event) => void;
 }
 
+const isAssetAvailable = (asset: Asset) => {
+    const { nft } = asset.licenses;
+
+    switch (nft.editionOption) {
+        case 'elastic':
+            return nft.elastic.numberOfEditions > 0
+        case 'single':
+            return true;
+        case 'unlimited':
+            return true;
+        default:
+            return false;
+    }
+}
+
+const getAssetPrice = (asset: Asset) => {
+    const { nft } = asset.licenses;
+
+    switch (nft.editionOption) {
+        case 'elastic':
+            return '$' + nft.elastic.editionPrice;
+        case 'single':
+            return '$' + nft.single.editionPrice;
+        case 'unlimited':
+            return '$' + nft.unlimited.editionPrice;
+        default:
+            return 'N/A';
+    }
+}
+
+const sortAssetsByAvailability = (a: Asset, b: Asset) => {
+    if (isAssetAvailable(a) && !isAssetAvailable(b)) {
+        return -1;
+    }
+    if (!isAssetAvailable(a) && isAssetAvailable(b)) {
+        return 1;
+    }
+    return 0;
+
+}
+
 const AssetsList = ({ onClick }: Props) => {
     const dispatch = useDispatch();
     const { language } = useI18n();
@@ -155,7 +196,7 @@ const AssetsList = ({ onClick }: Props) => {
             >
                 {assets.length > 0 ? (
                     <>
-                        {assets.map((asset) => (
+                        {[...assets].sort(sortAssetsByAvailability).map((asset) => (
                             <Grid
                                 item
                                 xl={3}
@@ -173,6 +214,7 @@ const AssetsList = ({ onClick }: Props) => {
                                 }}
                             >
                                 <AssetItem
+                                    isAvailable={isAssetAvailable(asset)}
                                     assetView={assetView}
                                     asset={asset}
                                     isCurated={isCurateChecked}
@@ -183,6 +225,7 @@ const AssetsList = ({ onClick }: Props) => {
                                     handleClickImage={() => {
                                         handleAssetImageClick(asset);
                                     }}
+                                    price={getAssetPrice(asset)}
                                 />
                             </Grid>
                         ))}

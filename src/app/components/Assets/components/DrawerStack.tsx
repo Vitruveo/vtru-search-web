@@ -338,8 +338,8 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                             <Typography>{language['search.drawer.stack.noSelectedAssets'] as string}</Typography>
                         )}
                         {selected.map((asset) => (
-                            <Box key={asset._id}>
-                                <Box width={160} height={160} borderRadius="8px" position="relative">
+                            <Box key={asset._id} width={160}>
+                                <Box height={160} borderRadius="8px" position="relative">
                                     <MediaRenderer
                                         src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
                                         fallbackSrc={`https://via.placeholder.com/${160}`}
@@ -355,7 +355,12 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                                     </Box>
                                 </Box>
                                 {asset.assetMetadata?.context?.formData?.title && (
-                                    <Typography width={160} zIndex={100}>
+                                    <Typography
+                                        zIndex={100}
+                                        textOverflow="ellipsis"
+                                        overflow="hidden"
+                                        whiteSpace="nowrap"
+                                    >
                                         {asset.assetMetadata?.context?.formData?.title}
                                     </Typography>
                                 )}

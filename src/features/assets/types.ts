@@ -32,7 +32,7 @@ export interface LicensesFormValues {
         unlimited: {
             editionPrice: number;
         };
-        editionOption: 'elastic' | 'single' | 'unlimited' | string;
+        editionOption: 'elastic' | 'single' | 'unlimited';
     };
     stream: {
         version: string;
