@@ -12,6 +12,7 @@ interface Props {
     handleChangeCurate(event: React.ChangeEvent<HTMLInputElement>): void;
     handleClickImage(): void;
     isAvailable?: boolean;
+    price?: string;
 }
 
 const AssetItem = ({
@@ -22,6 +23,7 @@ const AssetItem = ({
     handleChangeCurate,
     handleClickImage,
     isAvailable = true,
+    price
 }: Props) => {
     return (
         <Box
@@ -57,7 +59,7 @@ const AssetItem = ({
                     </Typography>
                     <Stack direction="row" alignItems="center" justifyContent="space-between" mt={1}>
                         <Typography variant="h6" height={25}>
-                            $ 150
+                            { price }
                         </Typography>
                         {isCurated && (
                             <Checkbox style={{ padding: 0 }} checked={checkedCurate} onChange={handleChangeCurate} />

@@ -2,8 +2,6 @@ import { useDispatch } from 'react-redux';
 import { IconSearch } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
 import { InputAdornment, Box, Button, Divider, Typography, OutlinedInput, Stack, Checkbox } from '@mui/material';
-
-import { AppState } from '@/store';
 import assetsMetadata from '@/mock/assetsMetadata.json';
 import { actions } from '@/features/filters/slice';
 import { ContextItem } from '../components/ContextItem';
@@ -26,7 +24,7 @@ const Filters = () => {
 
     const values = useSelector((state) => state.filters);
     const tags = useSelector((state) => state.assets.tags);
-    const showOnlyAvailableArts = useSelector((state) => state.filters.showOnlyAvailableArts)
+    const showOnlyAvailableArts = useSelector((state) => state.filters.showOnlyAvailableArts);
 
     const afterPriceChange = (min: number, max: number) => {
         dispatch(
@@ -38,8 +36,8 @@ const Filters = () => {
     };
 
     const onShowOnlyAvailableArtsChange = () => {
-        dispatch(actions.changeShowOnlyAvailableArts(!showOnlyAvailableArts))
-    }
+        dispatch(actions.changeShowOnlyAvailableArts(!showOnlyAvailableArts));
+    };
 
     return (
         <Stack gap={2} p={1} pb={2} mt={1} height="92vh" overflow="auto">
@@ -250,7 +248,12 @@ const Filters = () => {
                     <Typography fontSize="0.85rem" fontWeight="700">
                         Show only available arts
                     </Typography>
-                    <Checkbox size="small" style={{ padding: 0 }} checked={showOnlyAvailableArts} onChange={onShowOnlyAvailableArtsChange}/>
+                    <Checkbox
+                        size="small"
+                        style={{ padding: 0 }}
+                        checked={showOnlyAvailableArts}
+                        onChange={onShowOnlyAvailableArtsChange}
+                    />
                 </Stack>
                 <Box>
                     <Typography fontSize="0.85rem" fontWeight="700" mb={1}>

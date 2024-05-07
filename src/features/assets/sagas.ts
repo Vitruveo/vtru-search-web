@@ -28,9 +28,13 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
 
         const name: string = yield select((state: AppState) => state.filters.name);
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
-        const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state) => state.filters.taxonomy);
-        const filtersCreators: FilterSliceState['creators'] = yield select((state) => state.filters.creators);
-        const price: FilterSliceState['price'] = yield select((state) => state.filters.price);
+        const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
+        const filtersCreators: FilterSliceState['creators'] = yield select((state: AppState) => state.filters.creators);
+        const price: FilterSliceState['price'] = yield select((state: AppState) => state.filters.price);
+
+        const showOnlyAvailableArts: FilterSliceState['showOnlyAvailableArts'] = yield select(
+            (state: AppState) => state.filters.showOnlyAvailableArts
+        );
 
         const buildFilters = {
             context: filtersContext,
@@ -68,9 +72,14 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
 
         if (name.trim()) {
             buildQuery['$or'] = [
-                { 'assetMetadata.context.formData.title': { $regex: name, $options: 'i' } },
-                { 'assetMetadata.context.formData.description': { $regex: name, $options: 'i' } },
-            ];
+                { 'assetMetadata.name': { $regex: name, $options: 'i' } },
+                { 'assetMetadata.description': { $regex: name, $options: 'i' } },
+            ]
+        }
+
+        if (!showOnlyAvailableArts) {
+            buildQuery['licenses.nft.editionOption'] = 'elastic';
+            buildQuery['licenses.nft.elastic.numberOfEditions'] = '0';
         }
 
         const URL_ASSETS_SEARCH = `${API_BASE_URL}/assets/public/search`;
@@ -80,6 +89,8 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 limit: 24,
                 page: action.payload?.page || 1,
                 query: buildQuery,
+                minPrice: price.min,
+                maxPrice: price.max,
             },
         });
 
@@ -145,13 +156,14 @@ function* setup() {
 
 export function* assetsSagas() {
     yield all([
+        takeEvery(actionsFilter.reset.type, getAssets),
         takeEvery(actions.loadAssets.type, getAssets),
         takeEvery(actions.loadCreator.type, getCreator),
         takeEvery(actions.makeVideo.type, makeVideo),
         takeEvery(actionsFilter.change.type, getAssets),
         takeEvery(actionsFilter.changeName.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),
-        takeEvery(actionsFilter.reset.type, getAssets),
+        takeEvery(actionsFilter.changeShowOnlyAvailableArts.type, getAssets),
         setup(),
     ]);
 }

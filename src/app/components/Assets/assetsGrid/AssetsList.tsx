@@ -38,6 +38,21 @@ const isAssetAvailable = (asset: Asset) => {
     }
 }
 
+const getAssetPrice = (asset: Asset) => {
+    const { nft } = asset.licenses;
+
+    switch (nft.editionOption) {
+        case 'elastic':
+            return '$' + nft.elastic.editionPrice;
+        case 'single':
+            return '$' + nft.single.editionPrice;
+        case 'unlimited':
+            return '$' + nft.unlimited.editionPrice;
+        default:
+            return 'N/A';
+    }
+}
+
 const AssetsList = ({ onClick }: Props) => {
     const dispatch = useDispatch();
     const { language } = useI18n();
@@ -202,6 +217,7 @@ const AssetsList = ({ onClick }: Props) => {
                                     handleClickImage={() => {
                                         handleAssetImageClick(asset);
                                     }}
+                                    price={getAssetPrice(asset)}
                                 />
                             </Grid>
                         ))}
