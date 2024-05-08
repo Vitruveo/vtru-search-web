@@ -28,6 +28,7 @@ import { useToggle } from '@/app/hooks/useToggle';
 import { MediaRenderer } from './MediaRenderer';
 import { createBackLink } from '@/utils/url-assets';
 import DeleteIcon from '@mui/icons-material/Delete';
+import audios from '../../../../../public/data/sounds.json';
 
 interface Props {
     drawerStackOpen: boolean;
@@ -35,37 +36,6 @@ interface Props {
     onRemove(asset: Asset): void;
     onClose(): void;
 }
-
-const audios = [
-    {
-        name: 'ambisax',
-        value: 'ambisax.mp3',
-    },
-    {
-        name: 'disco',
-        value: 'disco.mp3',
-    },
-    {
-        name: 'freeflow',
-        value: 'freeflow.mp3',
-    },
-    {
-        name: 'gangsta',
-        value: 'gangsta.mp3',
-    },
-    {
-        name: 'lit',
-        value: 'lit.mp3',
-    },
-    {
-        name: 'melodic',
-        value: 'melodic.mp3',
-    },
-    {
-        name: 'palmtrees',
-        value: 'palmtrees.mp3',
-    },
-];
 
 export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Props) {
     const dispatch = useDispatch();
@@ -77,10 +47,9 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
     const [selectedAudio, setSelectedAudio] = useState(audios[0].value);
     const [isPlaying, setIsPlaying] = useState(false);
 
-    const loadingVideo = useSelector((state) => state.assets.loadingVideo);
-    const video = useSelector((state) => state.assets.video);
     const isLogged = useSelector((state) => state.creator.token !== '');
-    const { email, code, loading, wasSended, id: creatorId } = useSelector((state) => state.creator);
+    const { loadingVideo, video } = useSelector((state) => state.assets);
+    const { loading, wasSended, id: creatorId } = useSelector((state) => state.creator);
 
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
@@ -123,6 +92,8 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
         if (!modalSwitch.isActive) {
             audio.pause();
             setIsPlaying(false);
+            dispatch(actionsAssets.setVideo(''));
+            setTitle('');
         }
     }, [modalSwitch.isActive]);
 
@@ -132,6 +103,12 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
             setIsPlaying(false);
         }
     }, [hasVideo]);
+
+    useEffect(() => {
+        if (isLogged) {
+            setStatedLogin(false);
+        }
+    }, [isLogged]);
 
     return (
         <>
@@ -250,13 +227,6 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
 
             <Drawer anchor="right" open={drawerStackOpen} onClose={onClose}>
                 <Box width={mdUp ? 400 : 224} p={4}>
-                    {!isLogged && (
-                        <Box display="flex" justifyContent="center">
-                            <Typography variant="caption" color="Highlight" textAlign="center">
-                                Login required
-                            </Typography>
-                        </Box>
-                    )}
                     <Button
                         fullWidth
                         variant="contained"
@@ -267,8 +237,9 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                                 setStatedLogin(true);
                             }
                         }}
+                        disabled={statedLogin && !isLogged}
                     >
-                        {!isLogged ? 'Login with your e-mail' : 'Publish Stack'}
+                        {!isLogged ? 'Login with your email' : 'Publish Stack'}
                     </Button>
 
                     {!isLogged && (
