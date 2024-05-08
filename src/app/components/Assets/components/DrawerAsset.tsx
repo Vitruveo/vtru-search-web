@@ -5,6 +5,7 @@ import { Asset } from '@/features/assets/types';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { useSelector } from '@/store/hooks';
 import { MediaRenderer } from './MediaRenderer';
+import { STORE_BASE_URL } from '@/constants/api';
 
 interface Props {
     drawerOpen: boolean;
@@ -21,7 +22,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
     const creator = useSelector((state) => state.assets.creator.username);
 
     const handleClickView = () => {
-        window.open(`https://store.vtru.dev/${creator}/${assetView?._id}/${Date.now()}`);
+        window.open(`${STORE_BASE_URL}/${creator}/${assetView?._id}/${Date.now()}`);
     };
 
     const width = lgUp ? 400 : mdUp ? 300 : 200;
