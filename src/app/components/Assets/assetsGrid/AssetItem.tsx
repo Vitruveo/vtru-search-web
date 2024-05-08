@@ -29,25 +29,27 @@ const AssetItem = ({
 }: Props) => {
     const dispatch = useDispatch();
 
-    const onCreatorNameClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-        event.stopPropagation();
-        dispatch(
-            actions.change({
-                key: 'creators',
-                value: {
-                    name: [asset!.assetMetadata!.creators!.formData![0].name],
-                },
-            })
-        );
-    };
-
-    const hasCreatorName =
+    const hasCreator =
         asset?.assetMetadata?.creators?.formData instanceof Array &&
         asset?.assetMetadata?.creators?.formData?.length > 0;
 
     const assetTitle = asset?.assetMetadata?.context?.formData?.title || 'No Title';
 
-    const creatorName = hasCreatorName ? asset!.assetMetadata!.creators!.formData![0]!.name : 'No creator';
+    const creatorName = hasCreator ? asset!.assetMetadata!.creators!.formData![0]!.name : 'No creator';
+
+    const onCreatorNameClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        event.stopPropagation();
+        if (hasCreator) {
+            dispatch(
+                actions.change({
+                    key: 'creators',
+                    value: {
+                        name: [asset!.assetMetadata!.creators!.formData![0].name],
+                    },
+                })
+            );
+        }
+    };
 
     return (
         <Box
