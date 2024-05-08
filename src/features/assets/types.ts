@@ -34,6 +34,7 @@ export interface LicensesFormValues {
             editionPrice: number;
         };
         editionOption: 'elastic' | 'single' | 'unlimited';
+        availableLicenses: number;
     };
     stream: {
         version: string;

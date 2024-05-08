@@ -18,7 +18,7 @@ import { DrawerStack } from '../components/DrawerStack';
 import AssetItem from './AssetItem';
 import { useToggle } from '@/app/hooks/useToggle';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
-import { getAssetPrice, isAssetAvailable, sortAssetsByAvailability } from '@/utils/assets';
+import { getAssetPrice, isAssetAvailable } from '@/utils/assets';
 
 interface Props {
     onClick: (event: React.SyntheticEvent | Event) => void;
@@ -156,7 +156,7 @@ const AssetsList = ({ onClick }: Props) => {
             >
                 {assets.length > 0 ? (
                     <>
-                        {[...assets].sort(sortAssetsByAvailability).map((asset) => (
+                        {assets.map((asset) => (
                             <Grid
                                 item
                                 xl={3}
