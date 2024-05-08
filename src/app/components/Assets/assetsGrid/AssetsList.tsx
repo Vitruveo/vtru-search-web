@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
-import { Pagination, Box, Fab, Grid, Skeleton, Typography, Stack, useMediaQuery, Switch, Badge } from '@mui/material';
+import { Pagination, Box, Grid, Skeleton, Typography, Stack, useMediaQuery, Switch, Badge } from '@mui/material';
 import { Theme } from '@mui/material/styles';
-import { IconCopy, IconMenu2 } from '@tabler/icons-react';
+import { IconCopy } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
 
 import './AssetScroll.css';
@@ -20,19 +20,15 @@ import { useToggle } from '@/app/hooks/useToggle';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
 import { getAssetPrice, isAssetAvailable } from '@/utils/assets';
 
-interface Props {
-    onClick: (event: React.SyntheticEvent | Event) => void;
-}
-
-const AssetsList = ({ onClick }: Props) => {
+const AssetsList = () => {
     const dispatch = useDispatch();
     const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
     const [selected, setSelected] = useState<Asset[]>([]);
 
-    const { isActive: isDrawerOpen, activate: openDrawer, deactivate: closeDrawer } = useToggle();
-    const { isActive: isCurateChecked, activate: checkCurateStack, toggle: toggleCurateStack } = useToggle();
-    const { isActive: isDrawerStackOpen, activate: openDrawerStack, deactivate: closeDrawerStack } = useToggle();
+    const assetDrawer = useToggle();
+    const curateStack = useToggle();
+    const drawerStack = useToggle();
 
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const totalPage = useSelector((state: AppState) => state.assets.data.totalPage);
@@ -47,18 +43,18 @@ const AssetsList = ({ onClick }: Props) => {
         }
 
         if (idsFromURL) {
-            checkCurateStack();
+            curateStack.activate();
             setSelected(assets.filter((asset) => idsFromURL.includes(asset._id)));
         }
     }, []);
 
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
-        openDrawer();
+        assetDrawer.activate();
     };
 
     const handleAssetImageClick = (asset: Asset) => {
-        if (isCurateChecked) return;
+        if (curateStack.isActive) return;
 
         openAssetDrawer(asset);
         dispatch(actions.loadCreator({ assetId: asset._id }));
@@ -86,44 +82,37 @@ const AssetsList = ({ onClick }: Props) => {
 
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
 
+    const onAssetDrawerClose = () => {
+        assetDrawer.deactivate();
+        setAssetView(undefined);
+    };
+
     return (
         <Box>
-            <DrawerAsset
-                assetView={assetView}
-                drawerOpen={isDrawerOpen}
-                onClose={() => {
-                    closeDrawer();
-                    setAssetView(undefined);
-                }}
-            />
+            <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
 
             <DrawerStack
                 selected={selected}
-                drawerStackOpen={isDrawerStackOpen}
+                drawerStackOpen={drawerStack.isActive}
                 onRemove={(asset) => setSelected(selected.filter((item) => item._id !== asset._id))}
-                onClose={closeDrawerStack}
+                onClose={drawerStack.deactivate}
             />
 
             <Stack direction="row" justifyContent="space-between" alignItems="center" p={3}>
-                {!lgUp && (
-                    <Fab onClick={onClick} color="primary" size="small">
-                        <IconMenu2 width="16" />
-                    </Fab>
-                )}
                 <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
                     <Box display="flex" alignItems="center">
-                        <Switch onChange={toggleCurateStack} checked={isCurateChecked} />
+                        <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
                         <Typography variant={lgUp ? 'h4' : 'h5'}>
                             {language['search.assetList.curateStack'] as string}
                         </Typography>
                     </Box>
-                    {isCurateChecked && (
+                    {curateStack.isActive && (
                         <Box
                             sx={{ cursor: 'pointer' }}
                             display="flex"
                             alignItems="center"
                             gap={1}
-                            onClick={openDrawerStack}
+                            onClick={drawerStack.activate}
                         >
                             {lgUp && (
                                 <>
@@ -177,7 +166,7 @@ const AssetsList = ({ onClick }: Props) => {
                                     isAvailable={isAssetAvailable(asset)}
                                     assetView={assetView}
                                     asset={asset}
-                                    isCurated={isCurateChecked}
+                                    isCurated={curateStack.isActive}
                                     checkedCurate={selected.some((item) => item._id === asset._id)}
                                     handleChangeCurate={() => {
                                         handleCheckCurate(asset);

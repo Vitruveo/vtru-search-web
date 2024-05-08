@@ -3,20 +3,25 @@ import Drawer from '@mui/material/Drawer';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import AssetsFilter from './AssetsFilter';
+import { Box } from '@mui/material';
+import { useSelector } from '@/store/hooks';
+import { useDispatch } from 'react-redux';
+import { actions } from '@/features/layout';
 
 const drawerWidth = 300;
 
-interface Props {
-    isMobileSidebarOpen: boolean;
-    onSidebarClose: (event: React.SyntheticEvent | Event) => void;
-}
-
-const AssetsSidebar = ({ isMobileSidebarOpen, onSidebarClose }: Props) => {
+const AssetsSidebar = () => {
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
+    const isSidebarOpen = useSelector(state => state.layout.isSidebarOpen)
+    const dispatch = useDispatch();
+
+    const onSidebarClose = () => {
+        dispatch(actions.closeSidebar())
+    };
 
     return (
         <Drawer
-            open={isMobileSidebarOpen}
+            open={isSidebarOpen}
             onClose={onSidebarClose}
             variant={lgUp ? 'permanent' : 'temporary'}
             sx={{
@@ -26,7 +31,9 @@ const AssetsSidebar = ({ isMobileSidebarOpen, onSidebarClose }: Props) => {
                 [`& .MuiDrawer-paper`]: { position: 'relative' },
             }}
         >
-            <AssetsFilter />
+            <Box>
+                <AssetsFilter />
+            </Box>
         </Drawer>
     );
 };
