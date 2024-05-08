@@ -1,7 +1,17 @@
 import { useDispatch } from 'react-redux';
 import { IconSearch } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
-import { InputAdornment, Box, Button, Divider, Typography, OutlinedInput, Stack, Checkbox } from '@mui/material';
+import {
+    InputAdornment,
+    Box,
+    Button,
+    Divider,
+    Typography,
+    OutlinedInput,
+    Stack,
+    useMediaQuery,
+    Theme,
+} from '@mui/material';
 import assetsMetadata from '@/mock/assetsMetadata.json';
 import { actions } from '@/features/filters/slice';
 import { ContextItem } from '../components/ContextItem';
@@ -21,6 +31,7 @@ import { useSelector } from '@/store/hooks';
 const Filters = () => {
     const dispatch = useDispatch();
     const { language } = useI18n();
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
     const values = useSelector((state) => state.filters);
     const tags = useSelector((state) => state.assets.tags);
@@ -35,23 +46,23 @@ const Filters = () => {
     };
 
     return (
-        <Stack gap={2} p={1} pb={2} mt={1} height="92vh" overflow="auto">
+        <Stack gap={2} p={1} pb={2} mt={1} pt={isSmallScreen ? 8 : 1} height="92vh" overflow="auto">
             <OutlinedInput
-                id="outlined-search"
-                placeholder={language['search.assetFilter.search.placeholder'] as string}
-                size="small"
-                type="search"
-                color="primary"
-                notched
-                startAdornment={
-                    <InputAdornment position="start">
-                        <IconSearch size="14" />
-                    </InputAdornment>
-                }
-                fullWidth
-                value={values.name}
-                onChange={(e) => dispatch(actions.changeName({ name: e.target.value }))}
-            />
+                    id="outlined-search"
+                    placeholder={language['search.assetFilter.search.placeholder'] as string}
+                    size="small"
+                    type="search"
+                    color="primary"
+                    notched
+                    startAdornment={
+                        <InputAdornment position="start">
+                            <IconSearch size="14" />
+                        </InputAdornment>
+                    }
+                    fullWidth
+                    value={values.name}
+                    onChange={(e) => dispatch(actions.changeName({ name: e.target.value }))}
+                />
 
             <AssetFilterAccordion title="Licenses">
                 <Box>

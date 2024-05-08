@@ -8,22 +8,18 @@ import AssetsList from './components/Assets/assetsGrid/AssetsList';
 import PageContainer from './components/Container/PageContainer';
 import AppCard from './components/Shared/AppCard';
 import Header from './components/Header';
+import { useToggle } from './hooks/useToggle';
+import { useSelector } from '@/store/hooks';
 
 const Search = () => {
-    const [isMobileSidebarOpen, setMobileSidebarOpen] = React.useState(true);
-
     return (
         <RootLayout>
             <Header />
             <PageContainer title="Search" description="this is Search">
                 <AppCard>
-                    <AssetsSidebar
-                        isMobileSidebarOpen={isMobileSidebarOpen}
-                        onSidebarClose={() => setMobileSidebarOpen(false)}
-                    />
-
+                    <AssetsSidebar />
                     <Box flexGrow={1}>
-                        <AssetsList onClick={() => setMobileSidebarOpen(!isMobileSidebarOpen)} />
+                        <AssetsList />
                     </Box>
                 </AppCard>
             </PageContainer>

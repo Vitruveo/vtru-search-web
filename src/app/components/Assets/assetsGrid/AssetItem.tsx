@@ -87,7 +87,7 @@ const AssetItem = ({
                     style={{ backgroundColor: isAvailable ? 'white' : '#c4c4c4' }}
                 >
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
-                        <Typography title={assetTitle} variant="h6" sx={{ cursor: 'pointer' }}>
+                        <Typography title={assetTitle} variant="h6" sx={{ cursor: 'pointer' }} width='100%' whiteSpace='nowrap' overflow='hidden' textOverflow='ellipsis'>
                             {assetTitle}
                         </Typography>
                         {isCurated && <Checkbox style={{ padding: 0 }} checked={checkedCurate} />}
