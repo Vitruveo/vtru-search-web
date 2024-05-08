@@ -1,4 +1,4 @@
-import { Box, CardContent, Checkbox, Stack, Typography } from '@mui/material';
+import { Box, CardContent, Checkbox, Link, Stack, Typography } from '@mui/material';
 import BlankCard from '../../Shared/BlankCard';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { Asset } from '@/features/assets/types';
@@ -28,6 +28,28 @@ const AssetItem = ({
     price,
 }: Props) => {
     const dispatch = useDispatch();
+
+    const hasCreator =
+        asset?.assetMetadata?.creators?.formData instanceof Array &&
+        asset?.assetMetadata?.creators?.formData?.length > 0;
+
+    const assetTitle = asset?.assetMetadata?.context?.formData?.title || 'No Title';
+
+    const creatorName = hasCreator ? asset!.assetMetadata!.creators!.formData![0]!.name : 'No creator';
+
+    const onCreatorNameClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        event.stopPropagation();
+        if (hasCreator) {
+            dispatch(
+                actions.change({
+                    key: 'creators',
+                    value: {
+                        name: [asset!.assetMetadata!.creators!.formData![0].name],
+                    },
+                })
+            );
+        }
+    };
 
     return (
         <Box
@@ -64,41 +86,40 @@ const AssetItem = ({
                     sx={{ p: 3, pt: 2 }}
                     style={{ backgroundColor: isAvailable ? 'white' : '#c4c4c4' }}
                 >
-                    <Stack direction="row" alignItems="center" justifyContent="space-between" mt={1}>
-                        <Typography variant="h6" sx={{ cursor: 'pointer' }}>
-                            {asset?.assetMetadata?.context?.formData?.title || 'No Title'}
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography title={assetTitle} variant="h6" sx={{ cursor: 'pointer' }} width='100%' whiteSpace='nowrap' overflow='hidden' textOverflow='ellipsis'>
+                            {assetTitle}
                         </Typography>
                         {isCurated && <Checkbox style={{ padding: 0 }} checked={checkedCurate} />}
                     </Stack>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between" mt={1}>
-                        {Array.isArray(asset?.assetMetadata?.creators?.formData) &&
-                            asset?.assetMetadata?.creators?.formData?.length > 0 && (
-                                <a
-                                    href="#"
-                                    onClick={(event) => {
-                                        event.stopPropagation();
-                                        if (Array.isArray(asset?.assetMetadata?.creators?.formData)) {
-                                            dispatch(
-                                                actions.change({
-                                                    key: 'creators',
-                                                    value: {
-                                                        name: [asset?.assetMetadata?.creators?.formData[0].name],
-                                                    },
-                                                })
-                                            );
-                                        }
-                                    }}
-                                    style={{ textDecoration: 'underline', padding: 5, paddingLeft: 0 }}
-                                >
-                                    {asset?.assetMetadata?.creators?.formData[0].name || 'No creator'}
-                                </a>
-                            )}
-                        {isAvailable && (
-                            <Typography variant="h6" minWidth={42} height={25}>
-                                {price}
-                            </Typography>
-                        )}
+
+                    <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
+                        <Link
+                            title={creatorName}
+                            padding={0}
+                            width="100%"
+                            overflow="hidden"
+                            whiteSpace="nowrap"
+                            textOverflow="ellipsis"
+                            href="#"
+                            onClick={onCreatorNameClick}
+                        >
+                            {creatorName}
+                        </Link>
                     </Stack>
+
+                    <Typography
+                        title={price}
+                        variant="h6"
+                        minWidth={42}
+                        height={25}
+                        width="100%"
+                        overflow="hidden"
+                        whiteSpace="nowrap"
+                        textOverflow="ellipsis"
+                    >
+                        {isAvailable ? price : ''}
+                    </Typography>
                 </CardContent>
             </BlankCard>
         </Box>

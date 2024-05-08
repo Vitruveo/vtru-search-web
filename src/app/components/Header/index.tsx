@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Image from 'next/image';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -11,11 +10,11 @@ import { styled } from '@mui/material/styles';
 import { IconMenu2 } from '@tabler/icons-react';
 import { useSelector } from '@/store/hooks';
 import { useDispatch } from 'react-redux';
-import { toggleMobileSidebar } from '@/features/customizer/slice';
 import Logo from '../Shared/Logo';
 import Language from '../Language';
 import { AvatarProfile } from '../AvatarProfile';
 import { Rss } from '../Rss';
+import { actions } from '@/features/layout';
 
 const Header = () => {
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
@@ -33,11 +32,16 @@ const Header = () => {
             minHeight: customizer.TopbarHeight,
         },
     }));
+
     const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
         margin: '0 auto',
         width: '100%',
         color: `${theme.palette.text.secondary} !important`,
     }));
+
+    const onMenuClick = () => {
+        dispatch(actions.toggleSidebar());
+    };
 
     return (
         <AppBarStyled position="sticky" color="default" elevation={8}>
@@ -46,16 +50,14 @@ const Header = () => {
                     maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
                 }}
             >
-                <Box sx={{ width: lgDown ? '45px' : 'auto', overflow: 'hidden' }}>
-                    <Logo />
-                </Box>
-
                 {lgDown ? (
-                    <IconButton color="inherit" aria-label="menu" onClick={() => dispatch(toggleMobileSidebar())}>
+                    <IconButton color="inherit" aria-label="menu" onClick={onMenuClick}>
                         <IconMenu2 />
                     </IconButton>
                 ) : (
-                    ''
+                    <Box sx={{ width: lgDown ? '45px' : 'auto', overflow: 'hidden' }}>
+                        <Logo />
+                    </Box>
                 )}
 
                 <Box flexGrow={1} />
