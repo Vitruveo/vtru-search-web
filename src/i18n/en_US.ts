@@ -10,7 +10,7 @@ const language: Translation = {
 
     /** General */
     'search.shareOnTwitter': 'Share on Twitter',
-    'search.checkoutMyNewVideo': 'Check out my new video stack on Vitruveo!',
+    'search.checkoutMyNewVideo': 'Check out my curated artwork stack on Vitruveo!',
 
     /* Asset Filter */
     'search.assetFilter.search.placeholder': 'Search Asset',
