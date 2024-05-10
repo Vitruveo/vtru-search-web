@@ -14,7 +14,7 @@ import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/assets';
 import { Asset } from '@/features/assets/types';
 import { DrawerAsset } from '../components/DrawerAsset';
-import { DrawerStack } from '../components/DrawerStack';
+import { DrawerStack } from '../components/DrawerStack/DrawerStack';
 import AssetItem from './AssetItem';
 import { useToggle } from '@/app/hooks/useToggle';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
