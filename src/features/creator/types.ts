@@ -6,6 +6,7 @@ export interface InitialState {
     wasSended: boolean;
     loading: boolean;
     id: string;
+    avatar: string | null;
 }
 
 export interface OptConfirmResponse {
@@ -13,5 +14,8 @@ export interface OptConfirmResponse {
     creator: {
         username: string;
         _id: string;
+        profile: {
+            avatar: string;
+        };
     };
 }
