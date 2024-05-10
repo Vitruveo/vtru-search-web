@@ -63,8 +63,9 @@ export function ContextItem({ title, values, hidden, type, options, onChange, on
                 />
             )}
 
-            {type === 'color' && (
-                <Box>
+            {type === 'color' &&
+                /*
+                    <Box>
                     <InputColor
                         name={title}
                         onChange={(event) => debounceColor(event.target.value)}
@@ -73,7 +74,8 @@ export function ContextItem({ title, values, hidden, type, options, onChange, on
 
                     <Colors colors={values['context'][title] as string[]} onRemove={(item) => onRemove(item)} />
                 </Box>
-            )}
+                */
+                null}
 
             {type === 'text' && (
                 <InputText
