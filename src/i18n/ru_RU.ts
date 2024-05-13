@@ -10,7 +10,7 @@ const language: Translation = {
 
     /** General */
     'search.shareOnTwitter': 'Поделиться в Twitter',
-    'search.checkoutMyNewVideo': 'Посмотрите мой новый видео-стек на Vitruveo!',
+    'search.checkoutMyNewVideo': 'Посмотрите мой кураторский стек произведений искусства на Vitruveo!',
 
     /* Asset Filter */
     'search.assetFilter.search.placeholder': 'Поиск актива',

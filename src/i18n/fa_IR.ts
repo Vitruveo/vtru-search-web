@@ -10,7 +10,7 @@ const language: Translation = {
 
     /** General */
     'search.shareOnTwitter': 'اشتراک گذاری در توییتر',
-    'search.checkoutMyNewVideo': 'پشته ویدیوی جدید من را در ویتروو بررسی کنید!',
+    'search.checkoutMyNewVideo': 'پشته آثار هنری من را در ویتروو بررسی کنید',
 
     /* Asset Filter */
     'search.assetFilter.search.placeholder': 'جستجوی دارایی',
