@@ -38,6 +38,7 @@ function* verifyCode() {
                 username: response.data.data.creator.username,
                 token: response.data.data.token,
                 id: response.data.data.creator._id,
+                avatar: response.data.data.creator.profile.avatar,
             })
         );
     } catch (error) {

@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { InitialState } from './types';
+import { set } from 'lodash';
 
 const initialState: InitialState = {
     username: '',
@@ -9,6 +10,7 @@ const initialState: InitialState = {
     wasSended: false,
     loading: false,
     id: '',
+    avatar: '',
 };
 
 export const creatorSlice = createSlice({
@@ -23,6 +25,7 @@ export const creatorSlice = createSlice({
             state.email = '';
             state.code = '';
             state.wasSended = false;
+            state.avatar = '';
         },
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload;
@@ -33,6 +36,7 @@ export const creatorSlice = createSlice({
                 token: string;
                 username: string;
                 id: string;
+                avatar: string;
             }>
         ) => {
             state.token = action.payload.token;
