@@ -8,8 +8,6 @@ import AssetsList from './components/Assets/assetsGrid/AssetsList';
 import PageContainer from './components/Container/PageContainer';
 import AppCard from './components/Shared/AppCard';
 import Header from './components/Header';
-import { useToggle } from './hooks/useToggle';
-import { useSelector } from '@/store/hooks';
 
 const Search = () => {
     return (

@@ -7,6 +7,7 @@ export const AvatarProfile = () => {
     const dispatch = useDispatch();
 
     const username = useSelector((state) => state.creator.username);
+    const avatar = useSelector((state) => state.creator.avatar);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -18,6 +19,9 @@ export const AvatarProfile = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const src = avatar != null && avatar !== '' ? avatar : '/images/profile/default.png';
+
     return (
         <>
             <IconButton
@@ -28,7 +32,7 @@ export const AvatarProfile = () => {
                 aria-haspopup="true"
                 onClick={handleClick}
             >
-                <Avatar src="/images/profile/default.png" sx={{ width: 35, height: 35 }} />
+                <Avatar src={src} sx={{ width: 35, height: 35 }} />
             </IconButton>
             <Menu
                 id="long-menu"
