@@ -80,7 +80,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             },
         });
 
-        yield put(actions.setMaxPrice(response.data.data.maxPrice))
+        yield put(actions.setMaxPrice(response.data.data.maxPrice));
 
         yield put(
             actions.setData({
@@ -97,16 +97,18 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
     }
     yield put(actions.finishLoading());
 }
+
 function* getCreator(action: PayloadAction<GetCreatorParams>) {
     try {
-        yield put(actions.setCreator(''));
+        yield put(actions.setCreator({ username: '', avatar: '' }));
 
         const URL_ASSET_CREATOR = `${API_BASE_URL}/assets/public/${action.payload.assetId}`;
 
         const response: AxiosResponse<APIResponse<ResponseAsserCreator>> = yield call(axios.get, URL_ASSET_CREATOR, {});
 
         if (response.status == 200) {
-            yield put(actions.setCreator(response.data.data.username));
+            const res = response.data.data;
+            yield put(actions.setCreator({ username: res.username, avatar: res.avatar }));
         }
     } catch (error) {
         // Handle error
