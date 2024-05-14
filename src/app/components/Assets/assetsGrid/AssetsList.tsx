@@ -31,8 +31,7 @@ const AssetsList = () => {
     const drawerStack = useToggle();
 
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
-    const totalPage = useSelector((state: AppState) => state.assets.data.totalPage);
-    const assets = useSelector((state: AppState) => state.assets.data.data);
+    const { data: assets, totalPage, page: currentPage } = useSelector((state: AppState) => state.assets.data);
     const isLoading = useSelector((state: AppState) => state.assets.loading);
 
     useEffect(() => {
@@ -217,6 +216,7 @@ const AssetsList = () => {
                 <Box mt={3} mb={4} display="flex" justifyContent="center" width="100%">
                     <Pagination
                         count={totalPage}
+                        page={currentPage}
                         onChange={(event, value) => handleChangePage({ page: value })}
                         color="primary"
                         size="large"
