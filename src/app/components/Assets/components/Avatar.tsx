@@ -44,6 +44,6 @@ export default function AvatarWrapper({ baseUrl, name, path, format = 'circular'
                 {name.toUpperCase().substring(0, 2)}
             </AvatarMui>
         );
-    if (!path && !name) return <AvatarMui variant={format} sx={sizes[size]} src="/profileDefault.png" alt="avatar" />;
+    if (!path && !name) return <AvatarMui variant={format} sx={sizes[size]} alt="default image" />;
     return <Avatar baseUrl={baseUrl} name={name} path={path} format={format} size={size} />;
 }
