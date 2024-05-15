@@ -1,11 +1,12 @@
 import { useI18n } from '@/app/hooks/useI18n';
-import { Avatar, Box, Button, Typography, Drawer, useMediaQuery } from '@mui/material';
+import { Box, Button, Typography, Drawer, useMediaQuery } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
-import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import { AWS_BASE_URL_S3, GENERAL_STORAGE_URL } from '@/constants/aws';
+import { STORE_BASE_URL } from '@/constants/api';
 import { useSelector } from '@/store/hooks';
 import { MediaRenderer } from './MediaRenderer';
-import { STORE_BASE_URL } from '@/constants/api';
+import Avatar from './Avatar';
 
 interface Props {
     drawerOpen: boolean;
@@ -19,10 +20,10 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
-    const creator = useSelector((state) => state.assets.creator.username);
+    const creator = useSelector((state) => state.assets.creator);
 
     const handleClickView = () => {
-        window.open(`${STORE_BASE_URL}/${creator}/${assetView?._id}/${Date.now()}`);
+        window.open(`${STORE_BASE_URL}/${creator.username}/${assetView?._id}/${Date.now()}`);
     };
 
     const width = lgUp ? 400 : mdUp ? 300 : 200;
@@ -42,7 +43,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                     {assetView?.assetMetadata?.context?.formData?.title}
                 </Typography>
                 <Box mt={3} mb={3} display="flex" alignItems="center" gap={1}>
-                    <Avatar />
+                    <Avatar baseUrl={GENERAL_STORAGE_URL} path={creator.avatar} />
                     {Array.isArray(assetView?.assetMetadata?.creators?.formData) &&
                         assetView?.assetMetadata?.creators?.formData?.length > 0 && (
                             <Typography variant="h6">

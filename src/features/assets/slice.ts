@@ -16,6 +16,7 @@ const initialState: AssetsSliceState = {
     tags: [],
     creator: {
         username: '',
+        avatar: '',
     },
     video: '',
     loadingVideo: false,
@@ -51,11 +52,11 @@ export const assetsSlice = createSlice({
             state.tags = action.payload;
         },
         setCreator: (state, action) => {
-            state.creator.username = action.payload;
+            state.creator = action.payload;
         },
         setMaxPrice: (state, action: PayloadAction<number>) => {
             state.maxPrice = action.payload;
-        }
+        },
     },
 });
 
