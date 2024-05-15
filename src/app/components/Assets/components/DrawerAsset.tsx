@@ -59,7 +59,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                         {assetView?.assetMetadata?.context?.formData?.description}
                     </Typography>
                 </Box>
-                <Button disabled={!creator} fullWidth variant="contained" onClick={handleClickView}>
+                <Button disabled={!creator.username} fullWidth variant="contained" onClick={handleClickView}>
                     {language['search.assetList.visualization.view'] as string}
                 </Button>
             </Box>
