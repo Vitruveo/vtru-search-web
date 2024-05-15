@@ -126,7 +126,7 @@
                 "classNames": "display-fixed make-scrollable"
             },
             "colors": {
-                "ui:widget": "hidden",
+                "ui:widget": "color",
                 "items": {
                     "ui:options": {
                         "label": false

@@ -48,4 +48,7 @@ export interface FilterSliceState {
         min: number;
         max: number;
     };
+    colorPrecision: {
+        value: number;
+    };
 }
