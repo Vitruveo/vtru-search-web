@@ -107,8 +107,7 @@ function* getCreator(action: PayloadAction<GetCreatorParams>) {
         const response: AxiosResponse<APIResponse<ResponseAsserCreator>> = yield call(axios.get, URL_ASSET_CREATOR, {});
 
         if (response.status == 200) {
-            const res = response.data.data;
-            yield put(actions.setCreator({ username: res.username, avatar: res.avatar }));
+            yield put(actions.setCreator({ username: response.data.data.username, avatar: response.data.data.avatar }));
         }
     } catch (error) {
         // Handle error

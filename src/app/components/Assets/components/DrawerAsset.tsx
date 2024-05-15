@@ -2,10 +2,10 @@ import { useI18n } from '@/app/hooks/useI18n';
 import { Box, Button, Typography, Drawer, useMediaQuery } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
-import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import { AWS_BASE_URL_S3, GENERAL_STORAGE_URL } from '@/constants/aws';
+import { STORE_BASE_URL } from '@/constants/api';
 import { useSelector } from '@/store/hooks';
 import { MediaRenderer } from './MediaRenderer';
-import { API_BASE_URL, STORE_BASE_URL } from '@/constants/api';
 import Avatar from './Avatar';
 
 interface Props {
@@ -43,7 +43,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                     {assetView?.assetMetadata?.context?.formData?.title}
                 </Typography>
                 <Box mt={3} mb={3} display="flex" alignItems="center" gap={1}>
-                    <Avatar baseUrl={API_BASE_URL} path={creator.avatar} />
+                    <Avatar baseUrl={GENERAL_STORAGE_URL} path={creator.avatar} />
                     {Array.isArray(assetView?.assetMetadata?.creators?.formData) &&
                         assetView?.assetMetadata?.creators?.formData?.length > 0 && (
                             <Typography variant="h6">
