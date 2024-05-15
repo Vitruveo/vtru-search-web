@@ -1,23 +1,23 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 import { Box, Typography } from '@mui/material';
-import { debounce } from 'lodash';
-
 import { useI18n } from '@/app/hooks/useI18n';
 import { InputSelect } from './InputSelect';
 import { InputText } from './InputText';
 import { InputColor } from './InputColor';
 import { Colors } from './Colors';
 import type { ContextItem, Option } from '../types';
+import { convertHEXtoRGB } from '@/utils/colors';
+import { useDispatch } from '@/store/hooks';
+import { actions } from '@/features/filters/slice';
 
 export function ContextItem({ title, values, hidden, type, options, onChange, onRemove }: ContextItem) {
+    const dispatch = useDispatch()
     const { language } = useI18n();
     const context = 'search.assetFilter.context';
 
-    const [color, setColor] = useState('#000000');
-
-    const debounceColor = debounce((value) => {
-        setColor(value);
-    }, 500);
+    const afterColorPrecisionChange = (value: number) => {
+        dispatch(actions.changeColorPrecision(value));
+    }
 
     return (
         <Box mb={2}>
@@ -67,8 +67,8 @@ export function ContextItem({ title, values, hidden, type, options, onChange, on
                 <Box>
                     <InputColor
                         name={title}
-                        onChange={(event) => debounceColor(event.target.value)}
-                        onClick={() => onChange([...(values['context'][title] as string[]), color])}
+                        onClick={(hex) => onChange([...(values['context'][title] as string[]), convertHEXtoRGB(hex)])}
+                        afterPrecisionChange={afterColorPrecisionChange}
                     />
 
                     <Colors colors={values['context'][title] as string[]} onRemove={(item) => onRemove(item)} />

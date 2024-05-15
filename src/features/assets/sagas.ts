@@ -32,6 +32,9 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
         const filtersCreators: FilterSliceState['creators'] = yield select((state: AppState) => state.filters.creators);
         const price: FilterSliceState['price'] = yield select((state: AppState) => state.filters.price);
+        const colorPrecision: FilterSliceState['colorPrecision'] = yield select(
+            (state: AppState) => state.filters.colorPrecision
+        );
 
         const buildFilters = {
             context: filtersContext,
@@ -77,10 +80,11 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 minPrice: price.min,
                 maxPrice: price.max,
                 name: name.trim() ? name : null,
+                precision: colorPrecision.value,
             },
         });
 
-        yield put(actions.setMaxPrice(response.data.data.maxPrice))
+        yield put(actions.setMaxPrice(response.data.data.maxPrice));
 
         yield put(
             actions.setData({
@@ -156,6 +160,7 @@ export function* assetsSagas() {
         takeEvery(actionsFilter.change.type, getAssets),
         debounce(1000, actionsFilter.changeName.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),
+        takeEvery(actionsFilter.changeColorPrecision.type, getAssets),
         setup(),
     ]);
 }
