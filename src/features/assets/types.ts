@@ -2,6 +2,7 @@ import { AssetsMetadata } from '@/app/components/Assets/assetsGrid/types';
 
 export interface Creator {
     username: string;
+    avatar: string;
 }
 export interface AssetsSliceState {
     loading: boolean;
@@ -110,6 +111,7 @@ export interface ResponseAssets {
 
 export interface ResponseAsserCreator {
     username: string;
+    avatar: string;
 }
 
 export interface AssetData {

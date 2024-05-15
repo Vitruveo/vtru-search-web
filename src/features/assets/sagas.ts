@@ -101,16 +101,17 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
     }
     yield put(actions.finishLoading());
 }
+
 function* getCreator(action: PayloadAction<GetCreatorParams>) {
     try {
-        yield put(actions.setCreator(''));
+        yield put(actions.setCreator({ username: '', avatar: '' }));
 
         const URL_ASSET_CREATOR = `${API_BASE_URL}/assets/public/${action.payload.assetId}`;
 
         const response: AxiosResponse<APIResponse<ResponseAsserCreator>> = yield call(axios.get, URL_ASSET_CREATOR, {});
 
         if (response.status == 200) {
-            yield put(actions.setCreator(response.data.data.username));
+            yield put(actions.setCreator({ username: response.data.data.username, avatar: response.data.data.avatar }));
         }
     } catch (error) {
         // Handle error
