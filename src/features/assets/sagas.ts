@@ -35,6 +35,9 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         const colorPrecision: FilterSliceState['colorPrecision'] = yield select(
             (state: AppState) => state.filters.colorPrecision
         );
+        const showAdditionalAssets: FilterSliceState['showAdditionalAssets'] = yield select(
+            (state: AppState) => state.filters.showAdditionalAssets.value
+        );
 
         const buildFilters = {
             context: filtersContext,
@@ -81,6 +84,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 maxPrice: price.max,
                 name: name.trim() ? name : null,
                 precision: colorPrecision.value,
+                showAdditionalAssets,
             },
         });
 
@@ -162,6 +166,7 @@ export function* assetsSagas() {
         debounce(1000, actionsFilter.changeName.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),
         takeEvery(actionsFilter.changeColorPrecision.type, getAssets),
+        debounce(1000, actionsFilter.changeShowAdditionalAssets.type, getAssets),
         setup(),
     ]);
 }

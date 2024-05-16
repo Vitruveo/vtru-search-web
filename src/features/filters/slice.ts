@@ -56,8 +56,11 @@ const initialState: FilterSliceState = {
         max: 1000,
     },
     colorPrecision: {
-        value: 0.7
-    }
+        value: 0.7,
+    },
+    showAdditionalAssets: {
+        value: false,
+    },
 };
 
 export const filterSlice = createSlice({
@@ -101,9 +104,12 @@ export const filterSlice = createSlice({
         },
         changeColorPrecision: (state, action: PayloadAction<number>) => {
             state.colorPrecision = {
-                value: action.payload
+                value: action.payload,
             };
-        }
+        },
+        changeShowAdditionalAssets: (state, action: PayloadAction<boolean>) => {
+            state.showAdditionalAssets.value = action.payload;
+        },
     },
 });
 

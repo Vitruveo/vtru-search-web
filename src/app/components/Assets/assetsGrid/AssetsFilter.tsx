@@ -48,21 +48,21 @@ const Filters = () => {
     return (
         <Stack gap={2} p={1} pb={2} mt={1} pt={isSmallScreen ? 8 : 1} height="92vh" overflow="auto">
             <OutlinedInput
-                    id="outlined-search"
-                    placeholder={language['search.assetFilter.search.placeholder'] as string}
-                    size="small"
-                    type="search"
-                    color="primary"
-                    notched
-                    startAdornment={
-                        <InputAdornment position="start">
-                            <IconSearch size="14" />
-                        </InputAdornment>
-                    }
-                    fullWidth
-                    value={values.name}
-                    onChange={(e) => dispatch(actions.changeName({ name: e.target.value }))}
-                />
+                id="outlined-search"
+                placeholder={language['search.assetFilter.search.placeholder'] as string}
+                size="small"
+                type="search"
+                color="primary"
+                notched
+                startAdornment={
+                    <InputAdornment position="start">
+                        <IconSearch size="14" />
+                    </InputAdornment>
+                }
+                fullWidth
+                value={values.name}
+                onChange={(e) => dispatch(actions.changeName({ name: e.target.value }))}
+            />
 
             <AssetFilterAccordion title="Licenses">
                 <Box>

@@ -19,6 +19,7 @@ import AssetItem from './AssetItem';
 import { useToggle } from '@/app/hooks/useToggle';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
 import { getAssetPrice, isAssetAvailable } from '@/utils/assets';
+import { AdditionalAssetsFilter } from './AdditionalAssetsFilter';
 
 const AssetsList = () => {
     const dispatch = useDispatch();
@@ -177,6 +178,23 @@ const AssetsList = () => {
                                 />
                             </Grid>
                         ))}
+                        <Grid
+                            item
+                            xl={3}
+                            lg={4}
+                            md={4}
+                            sm={6}
+                            xs={12}
+                            display="flex"
+                            alignItems="stretch"
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            {currentPage == totalPage && <AdditionalAssetsFilter />}
+                        </Grid>
                     </>
                 ) : isLoading ? (
                     [...Array(3)].map((_, index) => (
