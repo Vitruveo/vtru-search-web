@@ -19,7 +19,7 @@ export function CreatorsItem({ title, values, hidden, type, options, onChange, l
                 </Typography>
             )}
 
-            {type === 'radios' && (
+            {type === 'radios' && Array.isArray(values['creators'][title]) && (
                 <InputSelect
                     value={(values['creators'][title] as string[]).map((item) => ({
                         value: item,
