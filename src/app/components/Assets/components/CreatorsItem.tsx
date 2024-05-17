@@ -6,6 +6,7 @@ import { InputSelect } from './InputSelect';
 import { InputText } from './InputText';
 import type { CreatorsItem, Option } from '../types';
 import { AsyncSelect } from './AsyncSelect';
+import countriesMapper from '@/utils/countries/mapper';
 
 export function CreatorsItem({ title, values, hidden, type, options, onChange, loadOptionsEndpoint }: CreatorsItem) {
     const { language } = useI18n();
@@ -19,15 +20,15 @@ export function CreatorsItem({ title, values, hidden, type, options, onChange, l
                 </Typography>
             )}
 
-            {type === 'radios' && (
+            {type === 'radios' && Array.isArray(values['creators'][title]) && (
                 <InputSelect
                     value={(values['creators'][title] as string[]).map((item) => ({
                         value: item,
-                        label: item,
+                        label: countriesMapper[item as keyof typeof countriesMapper],
                     }))}
                     options={options.map((item) => ({
                         value: item,
-                        label: item,
+                        label: countriesMapper[item as keyof typeof countriesMapper],
                     }))}
                     onChange={(option: Option[]) => onChange(option.map((item) => item.value))}
                 />
