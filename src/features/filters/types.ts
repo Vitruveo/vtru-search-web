@@ -51,4 +51,7 @@ export interface FilterSliceState {
     colorPrecision: {
         value: number;
     };
+    showAdditionalAssets: {
+        value: boolean;
+    };
 }
