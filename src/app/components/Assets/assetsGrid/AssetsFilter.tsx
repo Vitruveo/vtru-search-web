@@ -21,6 +21,7 @@ import type {
     AssetsMetadata,
     ItemsOrCultureOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrEthnicityOrGenderOrBlockchain,
     MoodOrMediumOrStyle,
+    NationalityOrResidenceOrCountry,
 } from './types';
 import type { Context, Taxonomy, Creators } from '../types';
 import Version from '../../Version';
@@ -224,13 +225,7 @@ const Filters = () => {
                                     key as keyof AssetsMetadata['creators']['schema']['items']['properties']
                                 ]['ui:widget']
                             }
-                            options={
-                                (
-                                    value as ItemsOrCultureOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrEthnicityOrGenderOrBlockchain
-                                )?.enum ||
-                                (value as MoodOrMediumOrStyle)?.items?.enum ||
-                                []
-                            }
+                            options={(value as NationalityOrResidenceOrCountry)?.enum || []}
                             onChange={(changeValue) =>
                                 dispatch(
                                     actions.change({
