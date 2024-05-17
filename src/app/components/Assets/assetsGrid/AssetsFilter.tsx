@@ -225,7 +225,7 @@ const Filters = () => {
                                     key as keyof AssetsMetadata['creators']['schema']['items']['properties']
                                 ]['ui:widget']
                             }
-                            options={(value as NationalityOrResidenceOrCountry)?.enumNames || []}
+                            options={(value as NationalityOrResidenceOrCountry)?.enum || []}
                             onChange={(changeValue) =>
                                 dispatch(
                                     actions.change({
