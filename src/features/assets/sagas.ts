@@ -166,7 +166,6 @@ export function* assetsSagas() {
         debounce(1000, actionsFilter.changeName.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),
         takeEvery(actionsFilter.changeColorPrecision.type, getAssets),
-        debounce(1000, actionsFilter.changeShowAdditionalAssets.type, getAssets),
         setup(),
     ]);
 }
