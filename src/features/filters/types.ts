@@ -53,5 +53,6 @@ export interface FilterSliceState {
     };
     showAdditionalAssets: {
         value: boolean;
+        lastPage: number; // this is used to load assets from the last page
     };
 }

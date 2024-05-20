@@ -4,18 +4,22 @@ import BlankCard from '../../Shared/BlankCard';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions as assetActions } from '@/features/assets';
 
-interface AdditionalAssetsFilterProps {
-    currentPage: number;
-}
-
-export const AdditionalAssetsFilter = ({ currentPage }: AdditionalAssetsFilterProps) => {
+export const AdditionalAssetsFilter = () => {
     const dispatch = useDispatch();
 
-    const value = useSelector((state) => state.filters.showAdditionalAssets.value);
+    const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets.value);
+    const currentPage = useSelector((state) => state.assets.data.page);
+    const lastPageBeforeClick = useSelector((state) => state.filters.showAdditionalAssets.lastPage);
 
     const onShowAdditionalAssetsClick = () => {
-        dispatch(filterActions.changeShowAdditionalAssets(!value));
-        dispatch(assetActions.loadAssets({ page: currentPage }));
+        if (!showAdditionalAssets) {
+            dispatch(filterActions.changeAdditionalAssetsLastPage(currentPage));
+            dispatch(filterActions.changeShowAdditionalAssets(true));
+            dispatch(assetActions.loadAssets({ page: currentPage }));
+            return;
+        }
+        dispatch(filterActions.changeShowAdditionalAssets(false));
+        dispatch(assetActions.loadAssets({ page: lastPageBeforeClick }));
     };
 
     return (
@@ -30,7 +34,7 @@ export const AdditionalAssetsFilter = ({ currentPage }: AdditionalAssetsFilterPr
                 <CardContent color="white" sx={{ p: 3, pt: 3, height: '100%' }}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                         <Button onClick={onShowAdditionalAssetsClick} variant="outlined">
-                            {value ? 'Hide' : 'Show'}
+                            {showAdditionalAssets ? 'Hide' : 'Show'}
                         </Button>
                     </Stack>
                 </CardContent>
