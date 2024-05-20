@@ -5,6 +5,7 @@ import { API_BASE_URL } from '@/constants/api';
 import { APIResponse } from '../common/types';
 import { actions as actionsCreator } from './slice';
 import { OptConfirmResponse } from './types';
+import { toastrActionsCreators } from '../toastr/slice';
 
 function* sendCode() {
     yield put(actionsCreator.setLoading(true));
@@ -15,7 +16,7 @@ function* sendCode() {
         });
         yield put(actionsCreator.wasSended());
     } catch (error) {
-        // something went wrong
+        yield put(toastrActionsCreators.displayToastr({ message: 'An unexpected error occured', type: 'error' }));
     }
     yield put(actionsCreator.setLoading(false));
 }
@@ -42,7 +43,7 @@ function* verifyCode() {
             })
         );
     } catch (error) {
-        // something went wrong
+        yield put(toastrActionsCreators.displayToastr({ message: 'Invalid code', type: 'error' }));
     }
     yield put(actionsCreator.setLoading(false));
 }
