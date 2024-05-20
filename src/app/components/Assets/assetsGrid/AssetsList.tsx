@@ -193,7 +193,7 @@ const AssetsList = () => {
                                 justifyContent: 'center',
                             }}
                         >
-                            {currentPage == totalPage && <AdditionalAssetsFilter />}
+                            {currentPage == totalPage && <AdditionalAssetsFilter currentPage={currentPage} />}
                         </Grid>
                     </>
                 ) : isLoading ? (
