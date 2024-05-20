@@ -6,8 +6,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { PersistGate } from 'redux-persist/integration/react';
 import CssBaseline from '@mui/material/CssBaseline';
 import '@/utils/i18n';
-import 'toastr/build/toastr.css';
-import 'toastr/build/toastr.min';
+import 'toastr/build/toastr.min.css';
 import 'react-image-crop/dist/ReactCrop.css';
 
 import store, { persistor } from '@/store';
