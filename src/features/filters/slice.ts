@@ -55,6 +55,13 @@ const initialState: FilterSliceState = {
         min: 0,
         max: 1000,
     },
+    colorPrecision: {
+        value: 0.7,
+    },
+    showAdditionalAssets: {
+        value: false,
+        lastPage: 1,
+    },
 };
 
 export const filterSlice = createSlice({
@@ -95,6 +102,17 @@ export const filterSlice = createSlice({
                 min: action.payload.min,
                 max: action.payload.max,
             };
+        },
+        changeColorPrecision: (state, action: PayloadAction<number>) => {
+            state.colorPrecision = {
+                value: action.payload,
+            };
+        },
+        changeShowAdditionalAssets: (state, action: PayloadAction<boolean>) => {
+            state.showAdditionalAssets.value = action.payload;
+        },
+        changeAdditionalAssetsLastPage: (state, action: PayloadAction<number>) => {
+            state.showAdditionalAssets.lastPage = action.payload;
         },
     },
 });

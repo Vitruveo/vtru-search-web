@@ -15,6 +15,7 @@ import { customizerSlice } from '@/features/customizer';
 import { assetsSlice } from '@/features/assets/slice';
 import { creatorSlice } from '@/features/creator';
 import { layoutSlice } from '@/features/layout';
+import { toastrSlice } from '@/features/toastr';
 
 const sagaMiddleware = createSagaMiddleware({
     onError: (error, errorInfo) => {
@@ -51,6 +52,7 @@ const rootReducer = combineReducers({
     filters: filterSlice.reducer,
     customizer: customizerSlice.reducer,
     layout: layoutSlice.reducer,
+    toastr: toastrSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

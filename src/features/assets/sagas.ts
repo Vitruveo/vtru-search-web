@@ -32,6 +32,12 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
         const filtersCreators: FilterSliceState['creators'] = yield select((state: AppState) => state.filters.creators);
         const price: FilterSliceState['price'] = yield select((state: AppState) => state.filters.price);
+        const colorPrecision: FilterSliceState['colorPrecision'] = yield select(
+            (state: AppState) => state.filters.colorPrecision
+        );
+        const showAdditionalAssets: FilterSliceState['showAdditionalAssets'] = yield select(
+            (state: AppState) => state.filters.showAdditionalAssets.value
+        );
 
         const buildFilters = {
             context: filtersContext,
@@ -77,10 +83,12 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 minPrice: price.min,
                 maxPrice: price.max,
                 name: name.trim() ? name : null,
+                precision: colorPrecision.value,
+                showAdditionalAssets,
             },
         });
 
-        yield put(actions.setMaxPrice(response.data.data.maxPrice))
+        yield put(actions.setMaxPrice(response.data.data.maxPrice));
 
         yield put(
             actions.setData({
@@ -97,16 +105,17 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
     }
     yield put(actions.finishLoading());
 }
+
 function* getCreator(action: PayloadAction<GetCreatorParams>) {
     try {
-        yield put(actions.setCreator(''));
+        yield put(actions.setCreator({ username: '', avatar: '' }));
 
         const URL_ASSET_CREATOR = `${API_BASE_URL}/assets/public/${action.payload.assetId}`;
 
         const response: AxiosResponse<APIResponse<ResponseAsserCreator>> = yield call(axios.get, URL_ASSET_CREATOR, {});
 
         if (response.status == 200) {
-            yield put(actions.setCreator(response.data.data.username));
+            yield put(actions.setCreator({ username: response.data.data.username, avatar: response.data.data.avatar }));
         }
     } catch (error) {
         // Handle error
@@ -156,6 +165,7 @@ export function* assetsSagas() {
         takeEvery(actionsFilter.change.type, getAssets),
         debounce(1000, actionsFilter.changeName.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),
+        takeEvery(actionsFilter.changeColorPrecision.type, getAssets),
         setup(),
     ]);
 }

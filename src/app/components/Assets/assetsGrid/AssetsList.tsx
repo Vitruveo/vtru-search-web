@@ -19,6 +19,7 @@ import AssetItem from './AssetItem';
 import { useToggle } from '@/app/hooks/useToggle';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
 import { getAssetPrice, isAssetAvailable } from '@/utils/assets';
+import { AdditionalAssetsFilter } from './AdditionalAssetsFilter';
 
 const AssetsList = () => {
     const dispatch = useDispatch();
@@ -31,8 +32,7 @@ const AssetsList = () => {
     const drawerStack = useToggle();
 
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
-    const totalPage = useSelector((state: AppState) => state.assets.data.totalPage);
-    const assets = useSelector((state: AppState) => state.assets.data.data);
+    const { data: assets, totalPage, page: currentPage } = useSelector((state: AppState) => state.assets.data);
     const isLoading = useSelector((state: AppState) => state.assets.loading);
 
     useEffect(() => {
@@ -178,6 +178,23 @@ const AssetsList = () => {
                                 />
                             </Grid>
                         ))}
+                        <Grid
+                            item
+                            xl={3}
+                            lg={4}
+                            md={4}
+                            sm={6}
+                            xs={12}
+                            display="flex"
+                            alignItems="stretch"
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            {currentPage === totalPage && <AdditionalAssetsFilter />}
+                        </Grid>
                     </>
                 ) : isLoading ? (
                     [...Array(3)].map((_, index) => (
@@ -217,6 +234,7 @@ const AssetsList = () => {
                 <Box mt={3} mb={4} display="flex" justifyContent="center" width="100%">
                     <Pagination
                         count={totalPage}
+                        page={currentPage}
                         onChange={(event, value) => handleChangePage({ page: value })}
                         color="primary"
                         size="large"

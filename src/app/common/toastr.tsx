@@ -11,7 +11,7 @@ export interface CustomizedSnackbarState {
 }
 
 interface CustomizedSnackbarProps extends CustomizedSnackbarState {
-    setOpentate: React.Dispatch<React.SetStateAction<CustomizedSnackbarState>>;
+    setOpenState: (state: CustomizedSnackbarState) => void;
 }
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
@@ -23,13 +23,13 @@ export default function CustomizedSnackbar({
     open,
     message,
     autoClose = true,
-    setOpentate,
+    setOpenState,
 }: CustomizedSnackbarProps) {
     const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
-        setOpentate({ open: false, type: '', message: '' });
+        setOpenState({ open: false, type: '', message: '' });
     };
 
     return (

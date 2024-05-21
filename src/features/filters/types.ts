@@ -48,4 +48,11 @@ export interface FilterSliceState {
         min: number;
         max: number;
     };
+    colorPrecision: {
+        value: number;
+    };
+    showAdditionalAssets: {
+        value: boolean;
+        lastPage: number; // this is used to load assets from the last page
+    };
 }
