@@ -5,7 +5,7 @@ import { Asset } from '@/features/assets/types';
 import { MediaRenderer } from '../components/MediaRenderer';
 import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/filters/slice';
-import { motion } from 'framer-motion';
+import { ShowAnimation } from '@/animations';
 
 interface Props {
     assetView: Asset;
@@ -136,7 +136,7 @@ const AssetItem = ({
                             overflow="hidden"
                             whiteSpace="nowrap"
                             textOverflow="ellipsis"
-                            color='red'
+                            color="red"
                         >
                             {variant == 'blocked' ? 'Blocked' : ''}
                         </Typography>
@@ -163,14 +163,7 @@ export const AssetCardContainer = ({ children }: { children: React.ReactNode }) 
             justifyContent: 'center',
         }}
     >
-        <motion.div
-            style={{ height: '100%' }}
-            initial={{ opacity: 0, y: -5 }}
-            transition={{ type: 'spring' }}
-            animate={{ opacity: 1, y: 0 }}
-        >
-            {children}
-        </motion.div>
+        <ShowAnimation>{children}</ShowAnimation>
     </Grid>
 );
 
