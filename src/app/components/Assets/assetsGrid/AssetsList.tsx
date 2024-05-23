@@ -166,16 +166,9 @@ const AssetsList = () => {
                             </AssetCardContainer>
                         ))}
 
-                        {/* When disabled, shows at the end of the page */}
-                        {currentPage === totalPage && !showAdditionalAssets.value && (
-                            <AssetCardContainer>
-                                <AdditionalAssetsFilterCard />
-                            </AssetCardContainer>
-                        )}
-
-                        {/* When enabled, shows between active and blocked arts */}
-                        {showAdditionalAssets.value && blockedAssets.length > 0 && activeAssets.length > 0 && (
-                            <AssetCardContainer>
+                        {(currentPage === totalPage ||
+                            (showAdditionalAssets.value && blockedAssets.length > 0 && activeAssets.length > 0)) && (
+                            <AssetCardContainer key={1}>
                                 <AdditionalAssetsFilterCard />
                             </AssetCardContainer>
                         )}
