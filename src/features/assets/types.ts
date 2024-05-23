@@ -92,6 +92,10 @@ export interface Asset {
         createdBy: string | null;
         updatedBy: string | null;
     };
+    consignArtwork: {
+        listing: string;
+        status: 'blocked' | 'active'
+    }
 }
 
 export interface Tags {
