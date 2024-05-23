@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Inter } from 'next/font/google';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { PersistGate } from 'redux-persist/integration/react';
 import CssBaseline from '@mui/material/CssBaseline';
