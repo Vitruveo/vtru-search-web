@@ -1,5 +1,6 @@
 'use client';
 
+import { Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { Variant } from '@mui/material/styles/createTypography';
 
@@ -19,19 +20,18 @@ export default function VtruTitle({
     copyRem?: string;
 }) {
     return (
-        <Typography display="inline">
+        <Stack display="inline">
             <Typography style={{ fontSize: login ? '3em' : vtruRem }} fontWeight="bold" variant={vtru} display="inline">
                 VTRU
             </Typography>
             <Typography
                 style={{ fontSize: login ? '3em' : studioRem }}
-                variant={studio}
                 fontWeight="normal"
                 display="inline"
             >
                 {' '}
                 Search
             </Typography>
-        </Typography>
+        </Stack>
     );
 }
