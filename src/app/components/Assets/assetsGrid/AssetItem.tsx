@@ -1,10 +1,11 @@
-import { Box, CardContent, Checkbox, Link, Stack, Typography } from '@mui/material';
+import { Box, CardContent, Checkbox, Grid, Link, Stack, Typography } from '@mui/material';
 import BlankCard from '../../Shared/BlankCard';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { Asset } from '@/features/assets/types';
 import { MediaRenderer } from '../components/MediaRenderer';
 import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/filters/slice';
+import { ShowAnimation } from '@/animations';
 
 interface Props {
     assetView: Asset;
@@ -15,6 +16,7 @@ interface Props {
     handleClickImage(): void;
     isAvailable?: boolean;
     price?: string;
+    variant?: 'active' | 'blocked';
 }
 
 const AssetItem = ({
@@ -26,6 +28,7 @@ const AssetItem = ({
     handleClickImage,
     isAvailable = true,
     price,
+    variant = 'active',
 }: Props) => {
     const dispatch = useDispatch();
 
@@ -84,10 +87,18 @@ const AssetItem = ({
                 <CardContent
                     color="white"
                     sx={{ p: 3, pt: 2 }}
-                    style={{ backgroundColor: isAvailable ? 'white' : '#c4c4c4' }}
+                    style={{ backgroundColor: isAvailable ? 'white' : '#e2e2e2' }}
                 >
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
-                        <Typography title={assetTitle} variant="h6" sx={{ cursor: 'pointer' }} width='100%' whiteSpace='nowrap' overflow='hidden' textOverflow='ellipsis'>
+                        <Typography
+                            title={assetTitle}
+                            variant="h6"
+                            sx={{ cursor: 'pointer' }}
+                            width="100%"
+                            whiteSpace="nowrap"
+                            overflow="hidden"
+                            textOverflow="ellipsis"
+                        >
                             {assetTitle}
                         </Typography>
                         {isCurated && <Checkbox style={{ padding: 0 }} checked={checkedCurate} />}
@@ -108,22 +119,52 @@ const AssetItem = ({
                         </Link>
                     </Stack>
 
-                    <Typography
-                        title={price}
-                        variant="h6"
-                        minWidth={42}
-                        height={25}
-                        width="100%"
-                        overflow="hidden"
-                        whiteSpace="nowrap"
-                        textOverflow="ellipsis"
-                    >
-                        {isAvailable ? price : ''}
-                    </Typography>
+                    <Stack flexDirection="row" justifyContent="space-between" alignItems="end">
+                        <Typography
+                            title={price}
+                            variant="h6"
+                            maxWidth="60%"
+                            overflow="hidden"
+                            whiteSpace="nowrap"
+                            textOverflow="ellipsis"
+                        >
+                            {isAvailable ? price : ''}
+                        </Typography>
+                        <Typography
+                            title={price}
+                            variant="h6"
+                            overflow="hidden"
+                            whiteSpace="nowrap"
+                            textOverflow="ellipsis"
+                            color="red"
+                        >
+                            {variant == 'blocked' ? 'Blocked' : ''}
+                        </Typography>
+                    </Stack>
                 </CardContent>
             </BlankCard>
         </Box>
     );
 };
+
+export const AssetCardContainer = ({ children }: { children: React.ReactNode }) => (
+    <Grid
+        item
+        xl={3}
+        lg={4}
+        md={4}
+        sm={6}
+        xs={12}
+        display="flex"
+        alignItems="stretch"
+        sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        }}
+    >
+        <ShowAnimation>{children}</ShowAnimation>
+    </Grid>
+);
 
 export default AssetItem;
