@@ -1,8 +1,6 @@
 'use client';
 import React from 'react';
 import { Box } from '@mui/material';
-
-import RootLayout from './layout';
 import AssetsSidebar from './components/Assets/assetsGrid/AssetsSidebar';
 import AssetsList from './components/Assets/assetsGrid/AssetsList';
 import PageContainer from './components/Container/PageContainer';
@@ -11,7 +9,7 @@ import Header from './components/Header';
 
 const Search = () => {
     return (
-        <RootLayout>
+        <div>
             <Header />
             <PageContainer title="Search" description="this is Search">
                 <AppCard>
@@ -21,7 +19,7 @@ const Search = () => {
                     </Box>
                 </AppCard>
             </PageContainer>
-        </RootLayout>
+        </div>
     );
 };
 

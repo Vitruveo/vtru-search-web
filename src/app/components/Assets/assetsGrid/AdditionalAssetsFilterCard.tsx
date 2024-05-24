@@ -4,7 +4,7 @@ import BlankCard from '../../Shared/BlankCard';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions as assetActions } from '@/features/assets';
 
-export const AdditionalAssetsFilter = () => {
+export const AdditionalAssetsFilterCard = () => {
     const dispatch = useDispatch();
 
     const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets.value);

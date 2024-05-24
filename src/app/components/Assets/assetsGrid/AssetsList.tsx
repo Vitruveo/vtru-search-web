@@ -1,25 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector } from '@/store/hooks';
 import Image from 'next/image';
 import { Pagination, Box, Grid, Skeleton, Typography, Stack, useMediaQuery, Switch, Badge } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { IconCopy } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
-
-import './AssetScroll.css';
-
-import emptyCart from 'public/images/products/empty-shopping-cart.svg';
-import { AppState } from '@/store';
 import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/assets';
 import { Asset } from '@/features/assets/types';
 import { DrawerAsset } from '../components/DrawerAsset';
 import { DrawerStack } from '../components/DrawerStack/DrawerStack';
-import AssetItem from './AssetItem';
+import AssetItem, { AssetCardContainer } from './AssetItem';
 import { useToggle } from '@/app/hooks/useToggle';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
 import { getAssetPrice, isAssetAvailable } from '@/utils/assets';
-import { AdditionalAssetsFilter } from './AdditionalAssetsFilter';
+import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
+import emptyCart from 'public/images/products/empty-shopping-cart.svg';
+import './AssetScroll.css';
 
 const AssetsList = () => {
     const dispatch = useDispatch();
@@ -32,8 +29,10 @@ const AssetsList = () => {
     const drawerStack = useToggle();
 
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
-    const { data: assets, totalPage, page: currentPage } = useSelector((state: AppState) => state.assets.data);
-    const isLoading = useSelector((state: AppState) => state.assets.loading);
+    const { data: assets, totalPage, page: currentPage } = useSelector((state) => state.assets.data);
+    const isLoading = useSelector((state) => state.assets.loading);
+
+    const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets);
 
     useEffect(() => {
         const idsFromURL = getAssetsIdsFromURL();
@@ -86,6 +85,9 @@ const AssetsList = () => {
         assetDrawer.deactivate();
         setAssetView(undefined);
     };
+
+    const activeAssets = assets.filter((asset) => asset.consignArtwork.status === 'active');
+    const blockedAssets = assets.filter((asset) => asset.consignArtwork.status === 'blocked');
 
     return (
         <Box>
@@ -145,23 +147,8 @@ const AssetsList = () => {
             >
                 {assets.length > 0 ? (
                     <>
-                        {assets.map((asset) => (
-                            <Grid
-                                item
-                                xl={3}
-                                lg={4}
-                                md={4}
-                                sm={6}
-                                xs={12}
-                                display="flex"
-                                alignItems="stretch"
-                                key={asset._id}
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                            >
+                        {activeAssets.map((asset) => (
+                            <AssetCardContainer key={asset._id}>
                                 <AssetItem
                                     isAvailable={isAssetAvailable(asset)}
                                     assetView={assetView}
@@ -176,46 +163,42 @@ const AssetsList = () => {
                                     }}
                                     price={getAssetPrice(asset)}
                                 />
-                            </Grid>
+                            </AssetCardContainer>
                         ))}
-                        <Grid
-                            item
-                            xl={3}
-                            lg={4}
-                            md={4}
-                            sm={6}
-                            xs={12}
-                            display="flex"
-                            alignItems="stretch"
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            {currentPage === totalPage && <AdditionalAssetsFilter />}
-                        </Grid>
+
+                        {(currentPage === totalPage ||
+                            (showAdditionalAssets.value && blockedAssets.length > 0 && activeAssets.length > 0)) && (
+                            <AssetCardContainer key={1}>
+                                <AdditionalAssetsFilterCard />
+                            </AssetCardContainer>
+                        )}
+
+                        {showAdditionalAssets.value &&
+                            blockedAssets.map((asset) => (
+                                <AssetCardContainer key={asset._id}>
+                                    <AssetItem
+                                        variant="blocked"
+                                        isAvailable={isAssetAvailable(asset)}
+                                        assetView={assetView}
+                                        asset={asset}
+                                        isCurated={curateStack.isActive}
+                                        checkedCurate={selected.some((item) => item._id === asset._id)}
+                                        handleChangeCurate={() => {
+                                            handleCheckCurate(asset);
+                                        }}
+                                        handleClickImage={() => {
+                                            handleAssetImageClick(asset);
+                                        }}
+                                        price={getAssetPrice(asset)}
+                                    />
+                                </AssetCardContainer>
+                            ))}
                     </>
                 ) : isLoading ? (
                     [...Array(3)].map((_, index) => (
-                        <Grid
-                            key={index}
-                            item
-                            xl={3}
-                            lg={4}
-                            md={4}
-                            sm={6}
-                            xs={12}
-                            display="flex"
-                            alignItems="stretch"
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
+                        <AssetCardContainer key={index}>
                             <Skeleton variant="rectangular" width={250} height={250} />
-                        </Grid>
+                        </AssetCardContainer>
                     ))
                 ) : (
                     <>
