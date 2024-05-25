@@ -19,7 +19,7 @@ export const AssetFilterAccordion = ({ title, children, numberOfFilters }: Asset
                         {title}
                     </Typography>
                     <Box display="flex" gap={10}>
-                        {numberOfFilters && (
+                        {numberOfFilters && numberOfFilters > 0 && !expanded ? (
                             <Paper
                                 variant="elevation"
                                 sx={{
@@ -36,7 +36,7 @@ export const AssetFilterAccordion = ({ title, children, numberOfFilters }: Asset
                                     {numberOfFilters}
                                 </Typography>
                             </Paper>
-                        )}
+                        ) : null}
                         <IconMenu2
                             size="20"
                             style={{
