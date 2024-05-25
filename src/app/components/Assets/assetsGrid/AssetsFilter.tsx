@@ -13,7 +13,7 @@ import {
     Theme,
 } from '@mui/material';
 import assetsMetadata from '@/mock/assetsMetadata.json';
-import { actions } from '@/features/filters/slice';
+import { actions, filterSlice } from '@/features/filters/slice';
 import { ContextItem } from '../components/ContextItem';
 import { TaxonomyItem } from '../components/TaxonomyItem';
 import { CreatorsItem } from '../components/CreatorsItem';
@@ -29,9 +29,13 @@ import { AssetFilterAccordion } from './AssetFilterAccordion';
 import { Range } from '../components/Range';
 import { useSelector } from '@/store/hooks';
 import { useEffect, useState } from 'react';
+import { FilterSliceState } from '@/features/filters/types';
 
 const Filters = () => {
-    const [contextFilters, setContextFilters] = useState<any>();
+    const [contextFilters, setContextFilters] = useState<number>();
+    const [taxonomyFilters, setTaxonomyFilters] = useState<number>();
+    const [creatorsFilters, setCreatorsFilters] = useState<number>();
+
     const dispatch = useDispatch();
     const { language } = useI18n();
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
@@ -39,12 +43,26 @@ const Filters = () => {
     const values = useSelector((state) => state.filters);
     const tags = useSelector((state) => state.assets.tags);
 
-    useEffect(() => {
-        const totalContextLength = Object.entries(values.context).reduce((acc, [_key, arrayfield]) => {
+    const getTotalFiltersApplied = (fieldName: keyof FilterSliceState) => {
+        return Object.entries(values[fieldName]).reduce((acc, [_key, arrayfield]) => {
             return Array.isArray(arrayfield) ? acc + arrayfield.length : acc;
         }, 0);
+    };
+
+    useEffect(() => {
+        const totalContextLength = getTotalFiltersApplied('context');
         setContextFilters(totalContextLength);
     }, [values.context]);
+
+    useEffect(() => {
+        const totalTaxonomyLength = getTotalFiltersApplied('taxonomy');
+        setTaxonomyFilters(totalTaxonomyLength);
+    }, [values.taxonomy]);
+
+    useEffect(() => {
+        const totalCreatorsLength = getTotalFiltersApplied('creators');
+        setCreatorsFilters(totalCreatorsLength);
+    }, [values.creators]);
 
     const afterPriceChange = (min: number, max: number) => {
         dispatch(
@@ -146,7 +164,10 @@ const Filters = () => {
 
             <Divider />
 
-            <AssetFilterAccordion title={language['search.assetFilter.taxonomy'] as string}>
+            <AssetFilterAccordion
+                title={language['search.assetFilter.taxonomy'] as string}
+                numberOfFilters={taxonomyFilters}
+            >
                 {Object.entries(assetsMetadata.taxonomy.schema.properties).map((item) => {
                     const [key, value] = item;
 
@@ -212,7 +233,10 @@ const Filters = () => {
 
             <Divider />
 
-            <AssetFilterAccordion title={language['search.assetFilter.creators'] as string}>
+            <AssetFilterAccordion
+                title={language['search.assetFilter.creators'] as string}
+                numberOfFilters={creatorsFilters}
+            >
                 {Object.entries(assetsMetadata.creators.schema.items.properties).map((item) => {
                     const [key, value] = item;
                     return (
