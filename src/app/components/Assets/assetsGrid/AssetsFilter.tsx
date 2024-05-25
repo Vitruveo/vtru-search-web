@@ -28,14 +28,23 @@ import Version from '../../Version';
 import { AssetFilterAccordion } from './AssetFilterAccordion';
 import { Range } from '../components/Range';
 import { useSelector } from '@/store/hooks';
+import { useEffect, useState } from 'react';
 
 const Filters = () => {
+    const [contextFilters, setContextFilters] = useState<any>();
     const dispatch = useDispatch();
     const { language } = useI18n();
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
     const values = useSelector((state) => state.filters);
     const tags = useSelector((state) => state.assets.tags);
+
+    useEffect(() => {
+        const totalContextLength = Object.entries(values.context).reduce((acc, [_key, arrayfield]) => {
+            return Array.isArray(arrayfield) ? acc + arrayfield.length : acc;
+        }, 0);
+        setContextFilters(totalContextLength);
+    }, [values.context]);
 
     const afterPriceChange = (min: number, max: number) => {
         dispatch(
@@ -78,7 +87,10 @@ const Filters = () => {
 
             <Divider />
 
-            <AssetFilterAccordion title={language['search.assetFilter.context'] as string}>
+            <AssetFilterAccordion
+                title={language['search.assetFilter.context'] as string}
+                numberOfFilters={contextFilters}
+            >
                 {Object.entries(assetsMetadata.context.schema.properties).map((item) => {
                     const [key, value] = item;
                     return (
