@@ -7,6 +7,7 @@ import { IconCopy } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/assets';
+import { actions as layoutActions } from '@/features/layout';
 import { Asset } from '@/features/assets/types';
 import { DrawerAsset } from '../components/DrawerAsset';
 import { DrawerStack } from '../components/DrawerStack/DrawerStack';
@@ -71,6 +72,10 @@ const AssetsList = () => {
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
         assetDrawer.activate();
+    };
+
+    const openSideBar = () => {
+        dispatch(layoutActions.toggleSidebar());
     };
 
     const handleAssetImageClick = (asset: Asset) => {
@@ -140,7 +145,9 @@ const AssetsList = () => {
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         padding: '0.2rem 0.6rem',
+                                        cursor: 'pointer',
                                     }}
+                                    onClick={openSideBar}
                                 >
                                     <Typography fontSize="0.8rem" fontWeight="700">
                                         {totalFiltersApplied}
