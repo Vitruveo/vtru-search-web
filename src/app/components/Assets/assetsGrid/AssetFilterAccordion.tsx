@@ -1,6 +1,7 @@
 import { useToggle } from '@/app/hooks/useToggle';
 import { Accordion, AccordionSummary, AccordionDetails, Box, Typography, Paper } from '@mui/material';
 import { IconMenu2 } from '@tabler/icons-react';
+import NumberOfFilters from '../components/numberOfFilters';
 
 interface AssetFilterAccordionProps {
     title: string;
@@ -19,24 +20,7 @@ export const AssetFilterAccordion = ({ title, children, numberOfFilters }: Asset
                         {title}
                     </Typography>
                     <Box display="flex" gap={10}>
-                        {numberOfFilters && numberOfFilters > 0 && !expanded ? (
-                            <Paper
-                                variant="elevation"
-                                sx={{
-                                    backgroundColor: '#00d6f4',
-                                    color: 'white',
-                                    borderRadius: 10,
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    padding: '0.2rem 0.6rem',
-                                }}
-                            >
-                                <Typography fontSize="0.8rem" fontWeight="700">
-                                    {numberOfFilters}
-                                </Typography>
-                            </Paper>
-                        ) : null}
+                        {!expanded && <NumberOfFilters value={numberOfFilters} />}
                         <IconMenu2
                             size="20"
                             style={{

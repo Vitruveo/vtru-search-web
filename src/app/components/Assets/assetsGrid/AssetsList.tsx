@@ -18,6 +18,7 @@ import { getAssetPrice, isAssetAvailable } from '@/utils/assets';
 import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
 import './AssetScroll.css';
+import NumberOfFilters from '../components/numberOfFilters';
 
 const AssetsList = () => {
     const dispatch = useDispatch();
@@ -134,26 +135,7 @@ const AssetsList = () => {
                             <Typography variant={lgUp ? 'h4' : 'h5'}>
                                 {language['search.assetList.curateStack'] as string}
                             </Typography>
-                            {totalFiltersApplied && totalFiltersApplied > 0 && !lgUp ? (
-                                <Paper
-                                    variant="elevation"
-                                    sx={{
-                                        backgroundColor: '#00d6f4',
-                                        color: 'white',
-                                        borderRadius: 10,
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        padding: '0.2rem 0.6rem',
-                                        cursor: 'pointer',
-                                    }}
-                                    onClick={openSideBar}
-                                >
-                                    <Typography fontSize="0.8rem" fontWeight="700">
-                                        {totalFiltersApplied}
-                                    </Typography>
-                                </Paper>
-                            ) : null}
+                            {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
                         </Box>
                     </Box>
                     {curateStack.isActive && (
