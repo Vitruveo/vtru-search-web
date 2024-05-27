@@ -23,6 +23,7 @@ const AssetsList = () => {
     const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
     const [selected, setSelected] = useState<Asset[]>([]);
+    const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
 
     const assetDrawer = useToggle();
     const curateStack = useToggle();
@@ -33,6 +34,26 @@ const AssetsList = () => {
     const isLoading = useSelector((state) => state.assets.loading);
 
     const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets);
+    const values = useSelector((state) => state.filters);
+
+    const getTotalFiltersApplied = () => {
+        const fields = {
+            ...values.context,
+            ...values.taxonomy,
+            ...values.creators,
+        };
+        return Object.entries(fields).reduce((acc, [_key, arrayfield]) => {
+            return Array.isArray(arrayfield) ? acc + arrayfield.length : acc;
+        }, 0);
+    };
+
+    useEffect(() => {
+        const updateTotalFiltersApplied = () => {
+            const total = getTotalFiltersApplied();
+            setTotalFiltersApplied(total);
+        };
+        updateTotalFiltersApplied();
+    }, [values]);
 
     useEffect(() => {
         const idsFromURL = getAssetsIdsFromURL();
@@ -121,7 +142,7 @@ const AssetsList = () => {
                                 }}
                             >
                                 <Typography fontSize="0.8rem" fontWeight="700">
-                                    10
+                                    {totalFiltersApplied}
                                 </Typography>
                             </Paper>
                         </Box>
