@@ -129,22 +129,24 @@ const AssetsList = () => {
                             <Typography variant={lgUp ? 'h4' : 'h5'}>
                                 {language['search.assetList.curateStack'] as string}
                             </Typography>
-                            <Paper
-                                variant="elevation"
-                                sx={{
-                                    backgroundColor: '#00d6f4',
-                                    color: 'white',
-                                    borderRadius: 10,
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    padding: '0.2rem 0.6rem',
-                                }}
-                            >
-                                <Typography fontSize="0.8rem" fontWeight="700">
-                                    {totalFiltersApplied}
-                                </Typography>
-                            </Paper>
+                            {totalFiltersApplied && totalFiltersApplied > 0 && !lgUp ? (
+                                <Paper
+                                    variant="elevation"
+                                    sx={{
+                                        backgroundColor: '#00d6f4',
+                                        color: 'white',
+                                        borderRadius: 10,
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        padding: '0.2rem 0.6rem',
+                                    }}
+                                >
+                                    <Typography fontSize="0.8rem" fontWeight="700">
+                                        {totalFiltersApplied}
+                                    </Typography>
+                                </Paper>
+                            ) : null}
                         </Box>
                     </Box>
                     {curateStack.isActive && (
