@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from '@/store/hooks';
 import Image from 'next/image';
-import { Pagination, Box, Grid, Skeleton, Typography, Stack, useMediaQuery, Switch, Badge } from '@mui/material';
+import { Pagination, Box, Grid, Skeleton, Typography, Stack, useMediaQuery, Switch, Badge, Paper } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { IconCopy } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -104,9 +104,27 @@ const AssetsList = () => {
                 <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
                     <Box display="flex" alignItems="center">
                         <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
-                        <Typography variant={lgUp ? 'h4' : 'h5'}>
-                            {language['search.assetList.curateStack'] as string}
-                        </Typography>
+                        <Box display={'flex'} gap={1}>
+                            <Typography variant={lgUp ? 'h4' : 'h5'}>
+                                {language['search.assetList.curateStack'] as string}
+                            </Typography>
+                            <Paper
+                                variant="elevation"
+                                sx={{
+                                    backgroundColor: '#00d6f4',
+                                    color: 'white',
+                                    borderRadius: 10,
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    padding: '0.2rem 0.6rem',
+                                }}
+                            >
+                                <Typography fontSize="0.8rem" fontWeight="700">
+                                    10
+                                </Typography>
+                            </Paper>
+                        </Box>
                     </Box>
                     {curateStack.isActive && (
                         <Box
