@@ -50,19 +50,18 @@ const Filters = () => {
     };
 
     useEffect(() => {
-        const totalContextLength = getTotalFiltersApplied('context');
-        setContextFilters(totalContextLength);
-    }, [values.context]);
+        const updateFilters = (
+            fieldName: keyof FilterSliceState,
+            setFilters: React.Dispatch<React.SetStateAction<number | undefined>>
+        ) => {
+            const totalFiltersLength = getTotalFiltersApplied(fieldName);
+            setFilters(totalFiltersLength);
+        };
 
-    useEffect(() => {
-        const totalTaxonomyLength = getTotalFiltersApplied('taxonomy');
-        setTaxonomyFilters(totalTaxonomyLength);
-    }, [values.taxonomy]);
-
-    useEffect(() => {
-        const totalCreatorsLength = getTotalFiltersApplied('creators');
-        setCreatorsFilters(totalCreatorsLength);
-    }, [values.creators]);
+        updateFilters('context', setContextFilters);
+        updateFilters('taxonomy', setTaxonomyFilters);
+        updateFilters('creators', setCreatorsFilters);
+    }, [values.context, values.taxonomy, values.creators]);
 
     const afterPriceChange = (min: number, max: number) => {
         dispatch(
