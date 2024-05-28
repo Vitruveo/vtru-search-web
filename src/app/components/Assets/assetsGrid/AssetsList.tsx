@@ -196,7 +196,7 @@ const AssetsList = () => {
                             </AssetCardContainer>
                         ))}
 
-                        {(currentPage === totalPage ||
+                        {(currentPage === totalPage && !showAdditionalAssets.value ||
                             (showAdditionalAssets.value && blockedAssets.length > 0 && activeAssets.length > 0)) && (
                             <AssetCardContainer key={1}>
                                 <AdditionalAssetsFilterCard />
