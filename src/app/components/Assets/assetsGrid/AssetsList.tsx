@@ -200,8 +200,7 @@ const AssetsList = () => {
                             </AssetCardContainer>
                         ))}
 
-                        {((isLastPage && showAdditionalAssets.value == false) ||
-                            (showAdditionalAssets.value == true && hasActiveAssets && hasBlockedAssets)) && (
+                        {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) && (
                             <AssetCardContainer key={1}>
                                 <AdditionalAssetsFilterCard />
                             </AssetCardContainer>

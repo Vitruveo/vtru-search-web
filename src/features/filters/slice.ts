@@ -60,7 +60,6 @@ const initialState: FilterSliceState = {
     },
     showAdditionalAssets: {
         value: false,
-        lastPage: 1,
     },
 };
 
@@ -110,9 +109,6 @@ export const filterSlice = createSlice({
         },
         changeShowAdditionalAssets: (state, action: PayloadAction<boolean>) => {
             state.showAdditionalAssets.value = action.payload;
-        },
-        changeAdditionalAssetsLastPage: (state, action: PayloadAction<number>) => {
-            state.showAdditionalAssets.lastPage = action.payload;
         },
     },
 });

@@ -9,17 +9,14 @@ export const AdditionalAssetsFilterCard = () => {
 
     const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets.value);
     const currentPage = useSelector((state) => state.assets.data.page);
-    const lastPageBeforeClick = useSelector((state) => state.filters.showAdditionalAssets.lastPage);
 
     const onShowAdditionalAssetsClick = () => {
         if (!showAdditionalAssets) {
-            dispatch(filterActions.changeAdditionalAssetsLastPage(currentPage));
             dispatch(filterActions.changeShowAdditionalAssets(true));
-            dispatch(assetActions.loadAssets({ page: currentPage }));
-            return;
+        } else {
+            dispatch(filterActions.changeShowAdditionalAssets(false));
         }
-        dispatch(filterActions.changeShowAdditionalAssets(false));
-        dispatch(assetActions.loadAssets({ page: lastPageBeforeClick }));
+        dispatch(assetActions.loadAssets({ page: currentPage }));
     };
 
     return (
