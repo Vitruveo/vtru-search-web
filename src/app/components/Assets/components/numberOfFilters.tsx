@@ -16,7 +16,8 @@ export default function NumberOfFilters({ value, onClick }: NumberOfFiltersProps
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                padding: '0.2rem 0.6rem',
+                width: 24,
+                height: 24,
                 cursor: onClick ? 'pointer' : 'default',
             }}
             onClick={onClick}

@@ -13,7 +13,7 @@ import {
     Theme,
 } from '@mui/material';
 import assetsMetadata from '@/mock/assetsMetadata.json';
-import { actions, filterSlice } from '@/features/filters/slice';
+import { actions } from '@/features/filters/slice';
 import { ContextItem } from '../components/ContextItem';
 import { TaxonomyItem } from '../components/TaxonomyItem';
 import { CreatorsItem } from '../components/CreatorsItem';
