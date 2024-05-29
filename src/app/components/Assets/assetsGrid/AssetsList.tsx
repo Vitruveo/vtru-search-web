@@ -7,7 +7,6 @@ import { IconCopy } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/assets';
-import { actions as filterActions } from '@/features/filters/slice';
 import { actions as layoutActions } from '@/features/layout';
 import { Asset } from '@/features/assets/types';
 import { DrawerAsset } from '../components/DrawerAsset';
@@ -20,7 +19,6 @@ import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
 import './AssetScroll.css';
 import NumberOfFilters from '../components/numberOfFilters';
-import { FilterSliceState } from '@/features/filters/types';
 
 const AssetsList = () => {
     const dispatch = useDispatch();
@@ -50,32 +48,6 @@ const AssetsList = () => {
             return Array.isArray(arrayfield) ? acc + arrayfield.length : acc;
         }, 0);
     };
-
-    const applySelectedFilters = (field: keyof FilterSliceState) => {
-        const selectedfilters: { key: string; value: string | string[] }[] = [];
-        Object.entries(values[field]).map((item) => {
-            const [key, value] = item;
-            if (value.length > 0) selectedfilters.push({ key, value });
-        });
-        if (selectedfilters.length > 0) {
-            selectedfilters.map((item) => {
-                dispatch(
-                    filterActions.change({
-                        key: field,
-                        value: {
-                            [item.key]: item.value,
-                        },
-                    })
-                );
-            });
-        }
-    };
-
-    useEffect(() => {
-        applySelectedFilters('context');
-        applySelectedFilters('taxonomy');
-        applySelectedFilters('creators');
-    }, []);
 
     useEffect(() => {
         const updateTotalFiltersApplied = () => {
