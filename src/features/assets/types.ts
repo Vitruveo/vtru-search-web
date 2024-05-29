@@ -94,8 +94,8 @@ export interface Asset {
     };
     consignArtwork: {
         listing: string;
-        status: 'blocked' | 'active'
-    }
+        status: 'blocked' | 'active';
+    };
 }
 
 export interface Tags {
@@ -128,6 +128,11 @@ export interface AssetData {
 
 export interface GetAssetsParams {
     page: number;
+    filters?: {
+        context: any;
+        taxonomy: any;
+        creators: any;
+    };
 }
 
 export interface GetCreatorParams {
