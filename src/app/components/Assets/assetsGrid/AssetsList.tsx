@@ -144,6 +144,10 @@ const AssetsList = () => {
     const activeAssets = assets.filter((asset) => asset.consignArtwork.status === 'active');
     const blockedAssets = assets.filter((asset) => asset.consignArtwork.status === 'blocked');
 
+    const isLastPage = currentPage === totalPage;
+    const hasActiveAssets = activeAssets.length > 0;
+    const hasBlockedAssets = blockedAssets.length > 0;
+
     return (
         <Box>
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
@@ -224,8 +228,7 @@ const AssetsList = () => {
                             </AssetCardContainer>
                         ))}
 
-                        {(currentPage === totalPage ||
-                            (showAdditionalAssets.value && blockedAssets.length > 0 && activeAssets.length > 0)) && (
+                        {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) && (
                             <AssetCardContainer key={1}>
                                 <AdditionalAssetsFilterCard />
                             </AssetCardContainer>

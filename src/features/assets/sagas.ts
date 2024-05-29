@@ -6,7 +6,6 @@ import { confetti } from '@tsparticles/confetti';
 import { API_BASE_URL } from '@/constants/api';
 import type { FilterSliceState } from '../filters/types';
 import type {
-    AssetsSliceState,
     BuidlQuery,
     GetAssetsParams,
     GetCreatorParams,
@@ -23,6 +22,7 @@ import { getAssetsIdsFromURL } from '@/utils/url-assets';
 
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
+
     try {
         const name: string = yield select((state: AppState) => state.filters.name);
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
