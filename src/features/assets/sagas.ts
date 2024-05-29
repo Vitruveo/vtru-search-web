@@ -19,6 +19,7 @@ import { actions as actionsFilter } from '../filters/slice';
 import { APIResponse } from '../common/types';
 import { AppState } from '@/store';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
+import filterTruthAndNonEmpty from '@/utils/filterTruthObjects';
 
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
@@ -150,7 +151,13 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
 }
 
 function* setup() {
-    yield put(actions.loadAssets({ page: 1 }));
+    const { context, taxonomy, creators }: FilterSliceState = yield select((state: AppState) => state.filters);
+    const filters = {
+        context: filterTruthAndNonEmpty(context),
+        taxonomy: filterTruthAndNonEmpty(taxonomy),
+        creators: filterTruthAndNonEmpty(creators),
+    };
+    yield put(actions.loadAssets({ page: 1, filters }));
 }
 
 export function* assetsSagas() {
@@ -163,6 +170,6 @@ export function* assetsSagas() {
         debounce(1000, actionsFilter.changeName.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),
         takeEvery(actionsFilter.changeColorPrecision.type, getAssets),
-        setup(),
+        takeEvery('persist/REHYDRATE', setup),
     ]);
 }
