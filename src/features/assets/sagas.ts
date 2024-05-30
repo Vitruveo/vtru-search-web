@@ -25,6 +25,19 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
 
     try {
+        yield put(
+            actions.setData({
+                data: [],
+                limit: 0,
+                page: 0,
+                total: 0,
+                totalPage: 0,
+            })
+        );
+        yield put(actions.finishLoading());
+
+        return;
+
         const name: string = yield select((state: AppState) => state.filters.name);
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
