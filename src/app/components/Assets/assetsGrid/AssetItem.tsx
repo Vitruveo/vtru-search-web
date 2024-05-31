@@ -108,7 +108,6 @@ const AssetItem = ({
                         <Link
                             title={creatorName}
                             padding={0}
-                            width="100%"
                             overflow="hidden"
                             whiteSpace="nowrap"
                             textOverflow="ellipsis"

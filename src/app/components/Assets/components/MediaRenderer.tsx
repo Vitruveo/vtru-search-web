@@ -14,7 +14,7 @@ export const MediaRenderer = (props: MediaRendererProps) => {
         setSrc(props?.fallbackSrc ?? 'fallback');
     };
 
-    const isImage = src.match(/\.(jpeg|jpg|gif|png)$/) != null;
+    const isImage = src.match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
     const isVideo = src.match(/\.(mp4|webm|ogg)$/) != null;
 
     if (isVideo) {
