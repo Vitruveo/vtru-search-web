@@ -72,9 +72,9 @@ const AssetItem = ({
             <BlankCard className="hoverCard">
                 <Box width={250} height={250} onClick={handleClickImage} borderRadius="8px 8px 0 0" position="relative">
                     {!isAvailable && (
-                        <Box position="absolute" pl={4} pt={2} maxWidth="50%">
+                        <Box position="absolute" p={1} m={1} maxWidth="50%" sx={{ backgroundColor: 'gray' }}>
                             <Typography fontWeight={900} fontSize={16} color="white">
-                                NOT AVAILABLE
+                                SOLD
                             </Typography>
                         </Box>
                     )}
