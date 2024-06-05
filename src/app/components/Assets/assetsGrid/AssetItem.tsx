@@ -1,4 +1,4 @@
-import { Box, CardContent, Checkbox, Grid, Link, Stack, Typography } from '@mui/material';
+import { Box, CardContent, Checkbox, Grid, Link, Paper, Stack, Typography } from '@mui/material';
 import BlankCard from '../../Shared/BlankCard';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { Asset } from '@/features/assets/types';
@@ -61,9 +61,6 @@ const AssetItem = ({
                 maxWidth: 250,
                 cursor: 'pointer',
             }}
-            style={{
-                filter: isAvailable ? 'none' : 'grayscale(1)',
-            }}
             onClick={() => {
                 if (isCurated) handleChangeCurate();
                 else handleClickImage();
@@ -71,13 +68,6 @@ const AssetItem = ({
         >
             <BlankCard className="hoverCard">
                 <Box width={250} height={250} onClick={handleClickImage} borderRadius="8px 8px 0 0" position="relative">
-                    {!isAvailable && (
-                        <Box position="absolute" p={1} m={1} maxWidth="50%" sx={{ backgroundColor: 'gray' }}>
-                            <Typography fontWeight={900} fontSize={16} color="white">
-                                SOLD
-                            </Typography>
-                        </Box>
-                    )}
                     <MediaRenderer
                         src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
                         fallbackSrc={'https://via.placeholder.com/250'}
@@ -119,16 +109,16 @@ const AssetItem = ({
                     </Stack>
 
                     <Stack flexDirection="row" justifyContent="space-between" alignItems="end">
-                        <Typography
-                            title={price}
-                            variant="h6"
-                            maxWidth="60%"
-                            overflow="hidden"
-                            whiteSpace="nowrap"
-                            textOverflow="ellipsis"
-                        >
-                            {isAvailable ? price : ''}
-                        </Typography>
+                        <Box>
+                            {!isAvailable && (
+                                <Typography variant="h6" overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis">
+                                    Last Sold
+                                </Typography>
+                            )}
+                            <Typography variant="h6" overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis">
+                                {price}
+                            </Typography>
+                        </Box>
                         <Typography
                             title={price}
                             variant="h6"
@@ -139,6 +129,16 @@ const AssetItem = ({
                         >
                             {variant == 'blocked' ? 'Blocked' : ''}
                         </Typography>
+                        {!isAvailable && (
+                            <Paper
+                                sx={{
+                                    backgroundColor: 'red',
+                                    borderRadius: '100%',
+                                    height: 40,
+                                    width: 40,
+                                }}
+                            />
+                        )}
                     </Stack>
                 </CardContent>
             </BlankCard>

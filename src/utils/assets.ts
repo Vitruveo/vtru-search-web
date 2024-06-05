@@ -20,8 +20,11 @@ export const getAssetPrice = (asset: Asset) => {
 export const formatPrice = (price = 0) => {
     const language = navigator.language || 'en-US';
 
-    return price.toLocaleString(language, {
+    const formatedPrice = price.toLocaleString(language, {
         style: 'currency',
         currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
     });
+    return formatedPrice.replace('US', '');
 };
