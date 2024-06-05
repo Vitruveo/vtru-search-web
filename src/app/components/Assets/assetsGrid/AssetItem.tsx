@@ -61,9 +61,6 @@ const AssetItem = ({
                 maxWidth: 250,
                 cursor: 'pointer',
             }}
-            style={{
-                filter: isAvailable ? 'none' : 'grayscale(1)',
-            }}
             onClick={() => {
                 if (isCurated) handleChangeCurate();
                 else handleClickImage();
