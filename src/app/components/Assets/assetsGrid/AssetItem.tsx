@@ -68,13 +68,6 @@ const AssetItem = ({
         >
             <BlankCard className="hoverCard">
                 <Box width={250} height={250} onClick={handleClickImage} borderRadius="8px 8px 0 0" position="relative">
-                    {!isAvailable && (
-                        <Box position="absolute" p={1} m={1} maxWidth="50%" sx={{ backgroundColor: 'gray' }}>
-                            <Typography fontWeight={900} fontSize={16} color="white">
-                                SOLD
-                            </Typography>
-                        </Box>
-                    )}
                     <MediaRenderer
                         src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
                         fallbackSrc={'https://via.placeholder.com/250'}
@@ -116,16 +109,16 @@ const AssetItem = ({
                     </Stack>
 
                     <Stack flexDirection="row" justifyContent="space-between" alignItems="end">
-                        <Typography
-                            title={price}
-                            variant="h6"
-                            maxWidth="60%"
-                            overflow="hidden"
-                            whiteSpace="nowrap"
-                            textOverflow="ellipsis"
-                        >
-                            {price}
-                        </Typography>
+                        <Box>
+                            {!isAvailable && (
+                                <Typography variant="h6" overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis">
+                                    Last Sold
+                                </Typography>
+                            )}
+                            <Typography variant="h6" overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis">
+                                {price}
+                            </Typography>
+                        </Box>
                         <Typography
                             title={price}
                             variant="h6"
