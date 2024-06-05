@@ -124,7 +124,7 @@ const AssetItem = ({
                             whiteSpace="nowrap"
                             textOverflow="ellipsis"
                         >
-                            {isAvailable ? price : ''}
+                            {price}
                         </Typography>
                         <Typography
                             title={price}
