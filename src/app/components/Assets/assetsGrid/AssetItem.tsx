@@ -134,8 +134,8 @@ const AssetItem = ({
                                 sx={{
                                     backgroundColor: 'red',
                                     borderRadius: '100%',
-                                    height: 50,
-                                    width: 50,
+                                    height: 40,
+                                    width: 40,
                                 }}
                             />
                         )}
