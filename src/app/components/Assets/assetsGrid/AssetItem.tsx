@@ -1,4 +1,4 @@
-import { Box, CardContent, Checkbox, Grid, Link, Stack, Typography } from '@mui/material';
+import { Box, CardContent, Checkbox, Grid, Link, Paper, Stack, Typography } from '@mui/material';
 import BlankCard from '../../Shared/BlankCard';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { Asset } from '@/features/assets/types';
@@ -129,6 +129,16 @@ const AssetItem = ({
                         >
                             {variant == 'blocked' ? 'Blocked' : ''}
                         </Typography>
+                        {!isAvailable && (
+                            <Paper
+                                sx={{
+                                    backgroundColor: 'red',
+                                    borderRadius: '100%',
+                                    height: 50,
+                                    width: 50,
+                                }}
+                            />
+                        )}
                     </Stack>
                 </CardContent>
             </BlankCard>
