@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Button,ListItemIcon, ListItemText, Menu, MenuItem, MenuList } from '@mui/material';
+import { Box, Button, ListItemIcon, ListItemText, Menu, MenuItem, MenuList } from '@mui/material';
 import ShareIcon from '@mui/icons-material/Share';
 import XIcon from '@mui/icons-material/X';
 import ContentCopy from '@mui/icons-material/ContentCopy';
@@ -14,7 +14,7 @@ export const ShareButton = ({ twitterURL, videoURL }: ShareButtonProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [isCopied, setIsCopied] = useState(false);
 
-    // await the menu closes
+    // await the menu closes.
     useEffect(() => {
         setTimeout(() => {
             setIsCopied(false);
