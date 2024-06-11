@@ -22,19 +22,19 @@ export const AdditionalAssetsFilterCard = () => {
     return (
         <Box height="100%" maxWidth={250}>
             <BlankCard className="hoverCard">
-                <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative" sx={{ p: 3, pt: 2 }}>
-                    <Typography variant="h6">
-                        Show additional assets including those that may be of low quality or offensive content.
-                    </Typography>
-                </Box>
+                <Box display="flex" flexDirection="column" justifyContent="space-between" height="100%">
+                    <Box width={250} borderRadius="8px 8px 0 0" position="relative" sx={{ p: 3, pt: 2 }}>
+                        <Typography variant="h6">
+                            Show additional assets including those that may be of low quality or offensive content.
+                        </Typography>
+                    </Box>
 
-                <CardContent color="white" sx={{ p: 3, pt: 3, height: '100%' }}>
-                    <Stack direction="row" alignItems="center" justifyContent="flex-end">
+                    <Stack direction="row" alignItems="center" justifyContent="flex-end" padding={3}>
                         <Button onClick={onShowAdditionalAssetsClick} variant="outlined">
                             {showAdditionalAssets ? 'Hide' : 'Show'}
                         </Button>
                     </Stack>
-                </CardContent>
+                </Box>
             </BlankCard>
         </Box>
     );

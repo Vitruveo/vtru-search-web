@@ -60,6 +60,7 @@ const AssetItem = ({
                 border: assetView === asset ? '1px solid #00d6f4' : '',
                 maxWidth: 250,
                 cursor: 'pointer',
+                height: '100%',
             }}
             onClick={() => {
                 if (isCurated) handleChangeCurate();
