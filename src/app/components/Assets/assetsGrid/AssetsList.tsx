@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from '@/store/hooks';
 import Image from 'next/image';
 import {
@@ -37,6 +37,7 @@ const AssetsList = () => {
     const [assetView, setAssetView] = useState<any>();
     const [selected, setSelected] = useState<Asset[]>([]);
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
+    const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
     const curateStack = useToggle();
@@ -80,6 +81,12 @@ const AssetsList = () => {
             setSelected(assets.filter((asset) => idsFromURL.includes(asset._id)));
         }
     }, []);
+
+    useEffect(() => {
+        if (!isLoading && topRef.current) {
+            topRef.current.scrollIntoView({ behavior: 'instant' });
+        }
+    }, [isLoading]);
 
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
@@ -186,38 +193,12 @@ const AssetsList = () => {
                     maxHeight: '85vh',
                 }}
             >
-                {assets.length > 0 ? (
-                    <>
-                        {activeAssets.map((asset) => (
-                            <AssetCardContainer key={asset._id}>
-                                <AssetItem
-                                    isAvailable={isAssetAvailable(asset)}
-                                    assetView={assetView}
-                                    asset={asset}
-                                    isCurated={curateStack.isActive}
-                                    checkedCurate={selected.some((item) => item._id === asset._id)}
-                                    handleChangeCurate={() => {
-                                        handleCheckCurate(asset);
-                                    }}
-                                    handleClickImage={() => {
-                                        handleAssetImageClick(asset);
-                                    }}
-                                    price={getAssetPrice(asset)}
-                                />
-                            </AssetCardContainer>
-                        ))}
-
-                        {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) && (
-                            <AssetCardContainer key={1}>
-                                <AdditionalAssetsFilterCard />
-                            </AssetCardContainer>
-                        )}
-
-                        {showAdditionalAssets.value &&
-                            blockedAssets.map((asset) => (
+                <div ref={topRef} style={{ display: 'flex', flexWrap: 'wrap', rowGap: '100px' }}>
+                    {assets.length > 0 ? (
+                        <>
+                            {activeAssets.map((asset) => (
                                 <AssetCardContainer key={asset._id}>
                                     <AssetItem
-                                        variant="blocked"
                                         isAvailable={isAssetAvailable(asset)}
                                         assetView={assetView}
                                         asset={asset}
@@ -233,27 +214,54 @@ const AssetsList = () => {
                                     />
                                 </AssetCardContainer>
                             ))}
-                    </>
-                ) : isLoading ? (
-                    [...Array(3)].map((_, index) => (
-                        <AssetCardContainer key={index}>
-                            <Skeleton variant="rectangular" width={250} height={250} />
-                        </AssetCardContainer>
-                    ))
-                ) : (
-                    <>
-                        <Grid item xs={12} lg={12} md={12} sm={12}>
-                            <Box textAlign="center" mt={6}>
-                                <Image src={emptyCart} alt="cart" width={200} />
-                                <Typography variant="h2">There is no Asset</Typography>
-                                <Typography variant="h6" mb={3}>
-                                    The Asset you are searching is no longer available.
-                                </Typography>
-                            </Box>
-                        </Grid>
-                    </>
-                )}
 
+                            {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) && (
+                                <AssetCardContainer key={1}>
+                                    <AdditionalAssetsFilterCard />
+                                </AssetCardContainer>
+                            )}
+
+                            {showAdditionalAssets.value &&
+                                blockedAssets.map((asset) => (
+                                    <AssetCardContainer key={asset._id}>
+                                        <AssetItem
+                                            variant="blocked"
+                                            isAvailable={isAssetAvailable(asset)}
+                                            assetView={assetView}
+                                            asset={asset}
+                                            isCurated={curateStack.isActive}
+                                            checkedCurate={selected.some((item) => item._id === asset._id)}
+                                            handleChangeCurate={() => {
+                                                handleCheckCurate(asset);
+                                            }}
+                                            handleClickImage={() => {
+                                                handleAssetImageClick(asset);
+                                            }}
+                                            price={getAssetPrice(asset)}
+                                        />
+                                    </AssetCardContainer>
+                                ))}
+                        </>
+                    ) : isLoading ? (
+                        [...Array(3)].map((_, index) => (
+                            <AssetCardContainer key={index}>
+                                <Skeleton variant="rectangular" width={250} height={250} />
+                            </AssetCardContainer>
+                        ))
+                    ) : (
+                        <>
+                            <Grid item xs={12} lg={12} md={12} sm={12}>
+                                <Box textAlign="center" mt={6}>
+                                    <Image src={emptyCart} alt="cart" width={200} />
+                                    <Typography variant="h2">There is no Asset</Typography>
+                                    <Typography variant="h6" mb={3}>
+                                        The Asset you are searching is no longer available.
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                        </>
+                    )}
+                </div>
                 <Box mt={4} mb={4} display="flex" justifyContent="center" width="100%" alignItems="center">
                     <Pagination
                         count={totalPage}
