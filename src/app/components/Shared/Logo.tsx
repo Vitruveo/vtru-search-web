@@ -5,6 +5,8 @@ import { Box, useTheme } from '@mui/material';
 
 import { useSelector } from '@/store/hooks';
 import VtruTitle from '../VtruTitle';
+import { useDispatch } from 'react-redux';
+import { actions } from '@/features/assets';
 
 const LogoNormalDark = () => (
     <Box display="flex" marginTop={2} alignItems="center">
@@ -71,6 +73,7 @@ const LogoLtrLight = () => (
 );
 
 const Logo = () => {
+    const dispatch = useDispatch();
     const customizer = useSelector((state) => state.customizer);
     const theme = useTheme();
     const LinkStyled = styled(Link)(() => ({
@@ -84,6 +87,10 @@ const Logo = () => {
         display: 'block',
         color: theme.palette.text.primary,
     }));
+
+    const returnToPageOne = () => {
+        dispatch(actions.loadAssets({ page: 1 }));
+    };
 
     const dice =
         customizer.activeDir === 'ltr'
@@ -99,7 +106,7 @@ const Logo = () => {
               };
 
     return (
-        <LinkStyled style={dice.style} href="/home">
+        <LinkStyled style={dice.style} href="/home" onClick={returnToPageOne}>
             {customizer.activeMode === 'dark' ? <dice.dark /> : <dice.light />}
         </LinkStyled>
     );
