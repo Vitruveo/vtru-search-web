@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from '@/store/hooks';
 import Image from 'next/image';
-import { Pagination, Box, Grid, Skeleton, Typography, Stack, useMediaQuery, Switch, Badge } from '@mui/material';
+import {
+    Pagination,
+    Box,
+    Grid,
+    Skeleton,
+    Typography,
+    Stack,
+    useMediaQuery,
+    Switch,
+    Badge,
+    TextField,
+} from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { IconCopy } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -84,10 +95,6 @@ const AssetsList = () => {
 
         openAssetDrawer(asset);
         dispatch(actions.loadCreator({ assetId: asset._id }));
-    };
-
-    const handleChangePage = ({ page }: { page: number }) => {
-        dispatch(actions.loadAssets({ page }));
     };
 
     const handleCheckCurate = (asset: Asset) => {
@@ -251,10 +258,18 @@ const AssetsList = () => {
                     <Pagination
                         count={totalPage}
                         page={currentPage}
-                        onChange={(event, value) => handleChangePage({ page: value })}
+                        onChange={(_event, value) => dispatch(actions.setCurrentPage(value))}
                         color="primary"
                         size="large"
                         style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}
+                    />
+                    <TextField
+                        type="number"
+                        color="primary"
+                        variant="outlined"
+                        size="small"
+                        placeholder="Select Page"
+                        onChange={(e) => dispatch(actions.setCurrentPage(parseInt(e.target.value)))}
                     />
                 </Box>
             </Grid>
