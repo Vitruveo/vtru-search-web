@@ -254,14 +254,13 @@ const AssetsList = () => {
                     </>
                 )}
 
-                <Box mt={3} mb={4} display="flex" justifyContent="center" width="100%">
+                <Box mt={4} mb={4} display="flex" justifyContent="center" width="100%" alignItems="center">
                     <Pagination
                         count={totalPage}
                         page={currentPage}
                         onChange={(_event, value) => dispatch(actions.setCurrentPage(value))}
                         color="primary"
                         size="large"
-                        style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}
                     />
                     <TextField
                         type="number"
