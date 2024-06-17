@@ -189,13 +189,26 @@ const AssetsList = () => {
                 sx={{
                     overflow: 'auto',
                     maxHeight: '85vh',
+                    justifyContent: 'flex-end',
                 }}
             >
-                <Select
-                    placeholder="Select Page"
-                    options={optionsForSelect}
-                    onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
-                />
+                <Box width={'16%'} mr={4} mb={4}>
+                    <Select
+                        placeholder="Select Page"
+                        options={optionsForSelect}
+                        onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
+                        styles={{
+                            control: (base, state) => ({
+                                ...base,
+                                borderColor: state.isFocused ? '#00d6f4' : '#E0E0E0',
+                                boxShadow: '#00d6f4',
+                                '&:hover': {
+                                    borderColor: '#00d6f4',
+                                },
+                            }),
+                        }}
+                    />
+                </Box>
 
                 <div ref={topRef} style={{ display: 'flex', flexWrap: 'wrap', rowGap: '100px' }}>
                     {assets.length > 0 ? (
