@@ -2,7 +2,18 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Select from 'react-select';
 import { useSelector } from '@/store/hooks';
 import Image from 'next/image';
-import { Pagination, Box, Grid, Skeleton, Typography, Stack, useMediaQuery, Switch, Badge } from '@mui/material';
+import {
+    Pagination,
+    Box,
+    Grid,
+    Skeleton,
+    Typography,
+    Stack,
+    useMediaQuery,
+    Switch,
+    Badge,
+    Button,
+} from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { IconCopy } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -80,12 +91,6 @@ const AssetsList = () => {
         }
     }, []);
 
-    /*     useEffect(() => {
-        if (!isLoading && topRef.current) {
-            topRef.current.scrollIntoView({ behavior: 'instant' });
-        }
-    }, [isLoading]); */
-
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
         assetDrawer.activate();
@@ -118,6 +123,10 @@ const AssetsList = () => {
         }
     };
 
+    const handleScrollToTop = () => {
+        topRef?.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
 
     const onAssetDrawerClose = () => {
@@ -133,7 +142,7 @@ const AssetsList = () => {
     const hasBlockedAssets = blockedAssets.length > 0;
 
     return (
-        <Box>
+        <Box position="fixed">
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
 
             <DrawerStack
@@ -192,10 +201,11 @@ const AssetsList = () => {
                     justifyContent: 'flex-end',
                 }}
             >
-                <Box width={'16%'} mr={4} mb={4}>
+                <Grid item xs={12} sm={'auto'} mr={4} mb={4} minWidth={'16%'}>
                     <Select
                         placeholder="Select Page"
                         options={optionsForSelect}
+                        value={currentPage > 1 ? { value: currentPage, label: currentPage } : null}
                         onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
                         styles={{
                             control: (base, state) => ({
@@ -208,7 +218,7 @@ const AssetsList = () => {
                             }),
                         }}
                     />
-                </Box>
+                </Grid>
 
                 <div ref={topRef} style={{ display: 'flex', flexWrap: 'wrap', rowGap: '100px' }}>
                     {assets.length > 0 ? (
@@ -279,7 +289,7 @@ const AssetsList = () => {
                         </>
                     )}
                 </div>
-                <Box mt={4} mb={4} display="flex" justifyContent="center" width="100%" alignItems="center">
+                <Box mt={4} display="flex" justifyContent="center" width="100%" alignItems="center">
                     <Pagination
                         count={totalPage}
                         page={currentPage}
@@ -287,6 +297,9 @@ const AssetsList = () => {
                         color="primary"
                         size="large"
                     />
+                </Box>
+                <Box display="flex" justifyContent="flex-end" width="100%" mr={4} mb={4}>
+                    <Button onClick={handleScrollToTop}>Scroll to top</Button>
                 </Box>
             </Grid>
         </Box>
