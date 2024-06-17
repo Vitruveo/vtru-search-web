@@ -191,7 +191,11 @@ const AssetsList = () => {
                     maxHeight: '85vh',
                 }}
             >
-                <Select placeholder="Select Page" options={optionsForSelect} />
+                <Select
+                    placeholder="Select Page"
+                    options={optionsForSelect}
+                    onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
+                />
 
                 <div ref={topRef} style={{ display: 'flex', flexWrap: 'wrap', rowGap: '100px' }}>
                     {assets.length > 0 ? (
