@@ -1,18 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import Select from 'react-select';
 import { useSelector } from '@/store/hooks';
 import Image from 'next/image';
-import {
-    Pagination,
-    Box,
-    Grid,
-    Skeleton,
-    Typography,
-    Stack,
-    useMediaQuery,
-    Switch,
-    Badge,
-    TextField,
-} from '@mui/material';
+import { Pagination, Box, Grid, Skeleton, Typography, Stack, useMediaQuery, Switch, Badge } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { IconCopy } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -50,6 +40,14 @@ const AssetsList = () => {
     const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets);
     const values = useSelector((state) => state.filters);
 
+    const optionsForSelect = useMemo(() => {
+        const options: { value: number; label: number }[] = [];
+        for (let i = 1; i <= totalPage; i++) {
+            options.push({ value: i, label: i });
+        }
+        return options;
+    }, [totalPage]);
+
     const getTotalFiltersApplied = () => {
         const fields = {
             ...values.context,
@@ -82,11 +80,11 @@ const AssetsList = () => {
         }
     }, []);
 
-    useEffect(() => {
+    /*     useEffect(() => {
         if (!isLoading && topRef.current) {
             topRef.current.scrollIntoView({ behavior: 'instant' });
         }
-    }, [isLoading]);
+    }, [isLoading]); */
 
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
@@ -193,6 +191,8 @@ const AssetsList = () => {
                     maxHeight: '85vh',
                 }}
             >
+                <Select placeholder="Select Page" options={optionsForSelect} />
+
                 <div ref={topRef} style={{ display: 'flex', flexWrap: 'wrap', rowGap: '100px' }}>
                     {assets.length > 0 ? (
                         <>
@@ -269,14 +269,6 @@ const AssetsList = () => {
                         onChange={(_event, value) => dispatch(actions.setCurrentPage(value))}
                         color="primary"
                         size="large"
-                    />
-                    <TextField
-                        type="number"
-                        color="primary"
-                        variant="outlined"
-                        size="small"
-                        placeholder="Select Page"
-                        onChange={(e) => dispatch(actions.setCurrentPage(parseInt(e.target.value)))}
                     />
                 </Box>
             </Grid>
