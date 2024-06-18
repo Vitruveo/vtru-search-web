@@ -57,6 +57,9 @@ export const assetsSlice = createSlice({
         setMaxPrice: (state, action: PayloadAction<number>) => {
             state.maxPrice = action.payload;
         },
+        setCurrentPage: (state, action: PayloadAction<number>) => {
+            state.data.page = action.payload;
+        },
     },
 });
 

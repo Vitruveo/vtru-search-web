@@ -1,7 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import Select from 'react-select';
 import { useSelector } from '@/store/hooks';
 import Image from 'next/image';
-import { Pagination, Box, Grid, Skeleton, Typography, Stack, useMediaQuery, Switch, Badge } from '@mui/material';
+import {
+    Pagination,
+    Box,
+    Grid,
+    Skeleton,
+    Typography,
+    Stack,
+    useMediaQuery,
+    Switch,
+    Badge,
+    Button,
+} from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { IconCopy } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -26,6 +38,7 @@ const AssetsList = () => {
     const [assetView, setAssetView] = useState<any>();
     const [selected, setSelected] = useState<Asset[]>([]);
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
+    const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
     const curateStack = useToggle();
@@ -37,6 +50,14 @@ const AssetsList = () => {
 
     const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets);
     const values = useSelector((state) => state.filters);
+
+    const optionsForSelect = useMemo(() => {
+        const options: { value: number; label: number }[] = [];
+        for (let i = 1; i <= totalPage; i++) {
+            options.push({ value: i, label: i });
+        }
+        return options;
+    }, [totalPage]);
 
     const getTotalFiltersApplied = () => {
         const fields = {
@@ -86,10 +107,6 @@ const AssetsList = () => {
         dispatch(actions.loadCreator({ assetId: asset._id }));
     };
 
-    const handleChangePage = ({ page }: { page: number }) => {
-        dispatch(actions.loadAssets({ page }));
-    };
-
     const handleCheckCurate = (asset: Asset) => {
         const isSelected = selected.some((item) => item._id === asset._id);
 
@@ -104,6 +121,10 @@ const AssetsList = () => {
                 return updatedSelection;
             });
         }
+    };
+
+    const handleScrollToTop = () => {
+        topRef?.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
@@ -121,7 +142,7 @@ const AssetsList = () => {
     const hasBlockedAssets = blockedAssets.length > 0;
 
     return (
-        <Box>
+        <Box position="fixed">
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
 
             <DrawerStack
@@ -177,40 +198,34 @@ const AssetsList = () => {
                 sx={{
                     overflow: 'auto',
                     maxHeight: '85vh',
+                    justifyContent: 'flex-end',
                 }}
             >
-                {assets.length > 0 ? (
-                    <>
-                        {activeAssets.map((asset) => (
-                            <AssetCardContainer key={asset._id}>
-                                <AssetItem
-                                    isAvailable={isAssetAvailable(asset)}
-                                    assetView={assetView}
-                                    asset={asset}
-                                    isCurated={curateStack.isActive}
-                                    checkedCurate={selected.some((item) => item._id === asset._id)}
-                                    handleChangeCurate={() => {
-                                        handleCheckCurate(asset);
-                                    }}
-                                    handleClickImage={() => {
-                                        handleAssetImageClick(asset);
-                                    }}
-                                    price={getAssetPrice(asset)}
-                                />
-                            </AssetCardContainer>
-                        ))}
+                <Grid item xs={12} sm={'auto'} mr={4} mb={4} minWidth={'16%'}>
+                    <Select
+                        placeholder="Select Page"
+                        options={optionsForSelect}
+                        value={currentPage > 1 ? { value: currentPage, label: currentPage } : null}
+                        onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
+                        styles={{
+                            control: (base, state) => ({
+                                ...base,
+                                borderColor: state.isFocused ? '#00d6f4' : '#E0E0E0',
+                                boxShadow: '#00d6f4',
+                                '&:hover': {
+                                    borderColor: '#00d6f4',
+                                },
+                            }),
+                        }}
+                    />
+                </Grid>
 
-                        {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) && (
-                            <AssetCardContainer key={1}>
-                                <AdditionalAssetsFilterCard />
-                            </AssetCardContainer>
-                        )}
-
-                        {showAdditionalAssets.value &&
-                            blockedAssets.map((asset) => (
+                <div ref={topRef} style={{ display: 'flex', flexWrap: 'wrap', rowGap: '100px' }}>
+                    {assets.length > 0 ? (
+                        <>
+                            {activeAssets.map((asset) => (
                                 <AssetCardContainer key={asset._id}>
                                     <AssetItem
-                                        variant="blocked"
                                         isAvailable={isAssetAvailable(asset)}
                                         assetView={assetView}
                                         asset={asset}
@@ -226,36 +241,65 @@ const AssetsList = () => {
                                     />
                                 </AssetCardContainer>
                             ))}
-                    </>
-                ) : isLoading ? (
-                    [...Array(3)].map((_, index) => (
-                        <AssetCardContainer key={index}>
-                            <Skeleton variant="rectangular" width={250} height={250} />
-                        </AssetCardContainer>
-                    ))
-                ) : (
-                    <>
-                        <Grid item xs={12} lg={12} md={12} sm={12}>
-                            <Box textAlign="center" mt={6}>
-                                <Image src={emptyCart} alt="cart" width={200} />
-                                <Typography variant="h2">There is no Asset</Typography>
-                                <Typography variant="h6" mb={3}>
-                                    The Asset you are searching is no longer available.
-                                </Typography>
-                            </Box>
-                        </Grid>
-                    </>
-                )}
 
-                <Box mt={3} mb={4} display="flex" justifyContent="center" width="100%">
+                            {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) && (
+                                <AssetCardContainer key={1}>
+                                    <AdditionalAssetsFilterCard />
+                                </AssetCardContainer>
+                            )}
+
+                            {showAdditionalAssets.value &&
+                                blockedAssets.map((asset) => (
+                                    <AssetCardContainer key={asset._id}>
+                                        <AssetItem
+                                            variant="blocked"
+                                            isAvailable={isAssetAvailable(asset)}
+                                            assetView={assetView}
+                                            asset={asset}
+                                            isCurated={curateStack.isActive}
+                                            checkedCurate={selected.some((item) => item._id === asset._id)}
+                                            handleChangeCurate={() => {
+                                                handleCheckCurate(asset);
+                                            }}
+                                            handleClickImage={() => {
+                                                handleAssetImageClick(asset);
+                                            }}
+                                            price={getAssetPrice(asset)}
+                                        />
+                                    </AssetCardContainer>
+                                ))}
+                        </>
+                    ) : isLoading ? (
+                        [...Array(3)].map((_, index) => (
+                            <AssetCardContainer key={index}>
+                                <Skeleton variant="rectangular" width={250} height={250} />
+                            </AssetCardContainer>
+                        ))
+                    ) : (
+                        <>
+                            <Grid item xs={12} lg={12} md={12} sm={12}>
+                                <Box textAlign="center" mt={6}>
+                                    <Image src={emptyCart} alt="cart" width={200} />
+                                    <Typography variant="h2">There is no Asset</Typography>
+                                    <Typography variant="h6" mb={3}>
+                                        The Asset you are searching is no longer available.
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                        </>
+                    )}
+                </div>
+                <Box mt={4} display="flex" justifyContent="center" width="100%" alignItems="center">
                     <Pagination
                         count={totalPage}
                         page={currentPage}
-                        onChange={(event, value) => handleChangePage({ page: value })}
+                        onChange={(_event, value) => dispatch(actions.setCurrentPage(value))}
                         color="primary"
                         size="large"
-                        style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}
                     />
+                </Box>
+                <Box display="flex" justifyContent="flex-end" width="100%" mr={4} mb={4}>
+                    <Button onClick={handleScrollToTop}>Scroll to top</Button>
                 </Box>
             </Grid>
         </Box>
