@@ -219,6 +219,7 @@ const AssetsList = () => {
                                 '&:hover': {
                                     borderColor: '#00d6f4',
                                 },
+                                display: totalPage > 1 ? 'block' : 'none',
                             }),
                         }}
                     />
@@ -293,7 +294,13 @@ const AssetsList = () => {
                         </>
                     )}
                 </div>
-                <Box mt={4} display="flex" justifyContent="center" width="100%" alignItems="center">
+                <Box
+                    mt={4}
+                    display={totalPage === 0 ? 'none' : 'flex'}
+                    justifyContent="center"
+                    width="100%"
+                    alignItems="center"
+                >
                     <Pagination
                         count={totalPage}
                         page={currentPage}
@@ -302,7 +309,7 @@ const AssetsList = () => {
                         size="large"
                     />
                 </Box>
-                <Box display="flex" justifyContent="flex-end" width="100%" mr={4} mb={4}>
+                <Box display={totalPage === 0 ? 'none' : 'flex'} justifyContent="flex-end" width="100%" mr={4} mb={4}>
                     <Button onClick={handleScrollToTop}>Scroll to top</Button>
                 </Box>
             </Grid>
