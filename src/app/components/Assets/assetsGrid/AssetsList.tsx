@@ -219,12 +219,13 @@ const AssetsList = () => {
                                 '&:hover': {
                                     borderColor: '#00d6f4',
                                 },
+                                display: totalPage === 0 ? 'none' : 'flex',
                             }),
                         }}
                     />
                 </Grid>
 
-                <div ref={topRef} style={{ display: 'flex', flexWrap: 'wrap', rowGap: '100px' }}>
+                <Grid container ref={topRef} display={'flex'} ml={4} rowGap={3}>
                     {assets.length > 0 ? (
                         <>
                             {activeAssets.map((asset) => (
@@ -280,20 +281,24 @@ const AssetsList = () => {
                             </AssetCardContainer>
                         ))
                     ) : (
-                        <>
-                            <Grid item xs={12} lg={12} md={12} sm={12}>
-                                <Box textAlign="center" mt={6}>
-                                    <Image src={emptyCart} alt="cart" width={200} />
-                                    <Typography variant="h2">There is no Asset</Typography>
-                                    <Typography variant="h6" mb={3}>
-                                        The Asset you are searching is no longer available.
-                                    </Typography>
-                                </Box>
-                            </Grid>
-                        </>
+                        <Grid item xs={12}>
+                            <Box textAlign="center" mt={6}>
+                                <Image src={emptyCart} alt="cart" width={200} />
+                                <Typography variant="h2">There is no Asset</Typography>
+                                <Typography variant="h6" mb={3}>
+                                    The Asset you are searching is no longer available.
+                                </Typography>
+                            </Box>
+                        </Grid>
                     )}
-                </div>
-                <Box mt={4} display="flex" justifyContent="center" width="100%" alignItems="center">
+                </Grid>
+                <Box
+                    mt={4}
+                    display={totalPage === 0 ? 'none' : 'flex'}
+                    justifyContent="center"
+                    width="100%"
+                    alignItems="center"
+                >
                     <Pagination
                         count={totalPage}
                         page={currentPage}
@@ -302,7 +307,7 @@ const AssetsList = () => {
                         size="large"
                     />
                 </Box>
-                <Box display="flex" justifyContent="flex-end" width="100%" mr={4} mb={4}>
+                <Box display={totalPage === 0 ? 'none' : 'flex'} justifyContent="flex-end" width="100%" mr={4} mb={4}>
                     <Button onClick={handleScrollToTop}>Scroll to top</Button>
                 </Box>
             </Grid>

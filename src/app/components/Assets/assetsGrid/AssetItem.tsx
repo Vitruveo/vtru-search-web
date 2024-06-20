@@ -44,11 +44,8 @@ const AssetItem = ({
         event.stopPropagation();
         if (hasCreator) {
             dispatch(
-                actions.change({
-                    key: 'creators',
-                    value: {
-                        name: [asset!.assetMetadata!.creators!.formData![0].name],
-                    },
+                actions.changeName({
+                    name: asset!.assetMetadata!.creators!.formData![0].name,
                 })
             );
         }
