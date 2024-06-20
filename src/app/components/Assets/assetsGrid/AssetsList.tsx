@@ -219,13 +219,12 @@ const AssetsList = () => {
                                 '&:hover': {
                                     borderColor: '#00d6f4',
                                 },
-                                display: totalPage > 1 ? 'block' : 'none',
                             }),
                         }}
                     />
                 </Grid>
 
-                <div ref={topRef} style={{ display: 'flex', flexWrap: 'wrap', rowGap: '100px' }}>
+                <Grid container ref={topRef} display={'flex'} ml={4} rowGap={3}>
                     {assets.length > 0 ? (
                         <>
                             {activeAssets.map((asset) => (
@@ -293,7 +292,7 @@ const AssetsList = () => {
                             </Grid>
                         </>
                     )}
-                </div>
+                </Grid>
                 <Box
                     mt={4}
                     display={totalPage === 0 ? 'none' : 'flex'}
