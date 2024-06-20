@@ -219,6 +219,7 @@ const AssetsList = () => {
                                 '&:hover': {
                                     borderColor: '#00d6f4',
                                 },
+                                display: totalPage === 0 ? 'none' : 'flex',
                             }),
                         }}
                     />
@@ -280,17 +281,15 @@ const AssetsList = () => {
                             </AssetCardContainer>
                         ))
                     ) : (
-                        <>
-                            <Grid item xs={12} lg={12} md={12} sm={12}>
-                                <Box textAlign="center" mt={6}>
-                                    <Image src={emptyCart} alt="cart" width={200} />
-                                    <Typography variant="h2">There is no Asset</Typography>
-                                    <Typography variant="h6" mb={3}>
-                                        The Asset you are searching is no longer available.
-                                    </Typography>
-                                </Box>
-                            </Grid>
-                        </>
+                        <Grid item xs={12}>
+                            <Box textAlign="center" mt={6}>
+                                <Image src={emptyCart} alt="cart" width={200} />
+                                <Typography variant="h2">There is no Asset</Typography>
+                                <Typography variant="h6" mb={3}>
+                                    The Asset you are searching is no longer available.
+                                </Typography>
+                            </Box>
+                        </Grid>
                     )}
                 </Grid>
                 <Box
