@@ -89,7 +89,7 @@ const Logo = () => {
     }));
 
     const returnToPageOne = () => {
-        dispatch(actions.loadAssets({ page: 1 }));
+        dispatch(actions.setCurrentPage(1));
     };
 
     const dice =

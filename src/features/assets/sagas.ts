@@ -26,6 +26,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
 
     try {
         const name: string = yield select((state: AppState) => state.filters.name);
+        const page: number = yield select((state: AppState) => state.assets.data.page);
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
         const filtersCreators: FilterSliceState['creators'] = yield select((state: AppState) => state.filters.creators);
@@ -76,7 +77,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.get, URL_ASSETS_SEARCH, {
             params: {
                 limit: 24,
-                page: action.payload?.page || 1,
+                page: page || 1,
                 query: buildQuery,
                 minPrice: price.min,
                 maxPrice: price.max,
@@ -168,6 +169,7 @@ export function* assetsSagas() {
         takeEvery(actions.makeVideo.type, makeVideo),
         takeEvery(actionsFilter.change.type, getAssets),
         debounce(1000, actionsFilter.changeName.type, getAssets),
+        debounce(500, actions.setCurrentPage.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),
         takeEvery(actionsFilter.changeColorPrecision.type, getAssets),
         takeEvery('persist/REHYDRATE', setup),
