@@ -1,5 +1,5 @@
 import { useToggle } from '@/app/hooks/useToggle';
-import { Accordion, AccordionSummary, AccordionDetails, Box, Typography, Paper } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Box, Typography } from '@mui/material';
 import { IconMenu2 } from '@tabler/icons-react';
 import NumberOfFilters from '../components/numberOfFilters';
 
