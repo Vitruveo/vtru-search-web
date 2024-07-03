@@ -95,6 +95,10 @@ const AssetsList = () => {
         topRef?.current?.scrollIntoView({ behavior: 'smooth' });
     }, [currentPage]);
 
+    useEffect(() => {
+        if (currentPage > totalPage) dispatch(actions.setCurrentPage(totalPage));
+    }, [totalPage]);
+
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
         assetDrawer.activate();

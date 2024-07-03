@@ -1,5 +1,5 @@
 import { actions as filterActions } from '@/features/filters/slice';
-import { Stack, Typography, Box, CardContent, Button } from '@mui/material';
+import { Stack, Typography, Box, Button } from '@mui/material';
 import BlankCard from '../../Shared/BlankCard';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions as assetActions } from '@/features/assets';
