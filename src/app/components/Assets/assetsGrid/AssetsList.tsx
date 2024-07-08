@@ -285,12 +285,25 @@ const AssetsList = () => {
                             </AssetCardContainer>
                         ))
                     ) : (
-                        <Grid item xs={12}>
-                            <Box textAlign="center" mt={6}>
+                        <Grid
+                            item
+                            xl={12}
+                            lg={12}
+                            md={12}
+                            sm={12}
+                            xs={12}
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                minWidth: 'calc(100vw - 320px)',
+                            }}
+                        >
+                            <Box textAlign="center" mt={6} width="100%">
                                 <Image src={emptyCart} alt="cart" width={200} />
-                                <Typography variant="h2">There is no Asset</Typography>
+                                <Typography variant="h2">No Asset found</Typography>
                                 <Typography variant="h6" mb={3}>
-                                    The Asset you are searching is no longer available.
+                                    The Asset you are searching for could not be found.
                                 </Typography>
                             </Box>
                         </Grid>
