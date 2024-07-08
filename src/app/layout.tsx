@@ -49,6 +49,9 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
+            <head>
+                <meta httpEquiv="refresh" content="3600" />
+            </head>
             <body style={{ overflow: 'hidden' }}>
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>
