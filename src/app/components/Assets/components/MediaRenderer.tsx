@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Stack, Typography } from '@mui/material';
+import { Stack, Typography, useMediaQuery } from '@mui/material';
 import { useRef, useState } from 'react';
 
 interface MediaRendererProps {
@@ -9,6 +9,7 @@ interface MediaRendererProps {
 
 export const MediaRenderer = (props: MediaRendererProps) => {
     const [src, setSrc] = useState(props.src);
+    const isMobile = useMediaQuery('(max-width: 900px)');
     const videoRef = useRef<HTMLVideoElement | null>(null);
 
     const onError = () => {
@@ -32,12 +33,13 @@ export const MediaRenderer = (props: MediaRendererProps) => {
     if (isVideo) {
         return (
             <video
-                ref={videoRef}
+                ref={isMobile ? videoRef : null}
+                autoPlay={!isMobile}
                 muted
                 loop
                 style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }}
                 onError={onError}
-                onClick={togglePlayPause}
+                onClick={isMobile ? togglePlayPause : undefined}
             >
                 <source src={src} type="video/mp4" />
             </video>
