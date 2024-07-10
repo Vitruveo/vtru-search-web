@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Stack, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 interface MediaRendererProps {
     src: string;
@@ -9,9 +9,21 @@ interface MediaRendererProps {
 
 export const MediaRenderer = (props: MediaRendererProps) => {
     const [src, setSrc] = useState(props.src);
+    const videoRef = useRef<HTMLVideoElement | null>(null);
 
     const onError = () => {
         setSrc(props?.fallbackSrc ?? 'fallback');
+    };
+
+    const togglePlayPause = () => {
+        if (videoRef.current) {
+            const video = videoRef.current;
+            if (video.paused || video.ended) {
+                video.play();
+            } else {
+                video.pause();
+            }
+        }
     };
 
     const isImage = src.match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
@@ -19,7 +31,14 @@ export const MediaRenderer = (props: MediaRendererProps) => {
 
     if (isVideo) {
         return (
-            <video autoPlay muted loop style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} onError={onError}>
+            <video
+                ref={videoRef}
+                muted
+                loop
+                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }}
+                onError={onError}
+                onClick={togglePlayPause}
+            >
                 <source src={src} type="video/mp4" />
             </video>
         );
