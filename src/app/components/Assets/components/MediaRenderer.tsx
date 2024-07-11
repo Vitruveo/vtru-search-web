@@ -41,7 +41,9 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false }: Me
                     <source src={src} type="video/mp4" />
                 </video>
                 <IconPlayerPlayFilled
-                    style={isMobile ? { position: 'absolute', bottom: 10, right: 10 } : { display: 'none' }}
+                    style={
+                        isMobile && !autoPlay ? { position: 'absolute', bottom: 10, right: 10 } : { display: 'none' }
+                    }
                 />
             </div>
         );
