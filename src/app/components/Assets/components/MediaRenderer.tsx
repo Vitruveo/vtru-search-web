@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Stack, Typography, useMediaQuery } from '@mui/material';
 import { useState } from 'react';
+import { IconPlayerPlayFilled } from '@tabler/icons-react';
 
 interface MediaRendererProps {
     src: string;
@@ -21,15 +22,28 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false }: Me
 
     if (isVideo) {
         return (
-            <video
-                autoPlay={!isMobile || autoPlay}
-                muted
-                loop
-                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }}
-                onError={onError}
-            >
-                <source src={src} type="video/mp4" />
-            </video>
+            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                <video
+                    autoPlay={!isMobile || autoPlay}
+                    muted
+                    loop
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        borderRadius: 'inherit',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                    }}
+                    onError={onError}
+                >
+                    <source src={src} type="video/mp4" />
+                </video>
+                <IconPlayerPlayFilled
+                    style={isMobile ? { position: 'absolute', bottom: 10, right: 10 } : { display: 'none' }}
+                />
+            </div>
         );
     }
 
