@@ -1,30 +1,19 @@
 import Image from 'next/image';
 import { Stack, Typography, useMediaQuery } from '@mui/material';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 interface MediaRendererProps {
     src: string;
     fallbackSrc?: string;
+    autoPlay?: boolean;
 }
 
-export const MediaRenderer = (props: MediaRendererProps) => {
-    const [src, setSrc] = useState(props.src);
+export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false }: MediaRendererProps) => {
+    const [src, setSrc] = useState(source);
     const isMobile = useMediaQuery('(max-width: 900px)');
-    const videoRef = useRef<HTMLVideoElement | null>(null);
 
     const onError = () => {
-        setSrc(props?.fallbackSrc ?? 'fallback');
-    };
-
-    const togglePlayPause = () => {
-        if (videoRef.current) {
-            const video = videoRef.current;
-            if (video.paused || video.ended) {
-                video.play();
-            } else {
-                video.pause();
-            }
-        }
+        setSrc(fallbackSrc ?? 'fallback');
     };
 
     const isImage = src.match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
@@ -33,20 +22,18 @@ export const MediaRenderer = (props: MediaRendererProps) => {
     if (isVideo) {
         return (
             <video
-                ref={isMobile ? videoRef : null}
-                autoPlay={!isMobile}
+                autoPlay={!isMobile || autoPlay}
                 muted
                 loop
                 style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }}
                 onError={onError}
-                onClick={isMobile ? togglePlayPause : undefined}
             >
                 <source src={src} type="video/mp4" />
             </video>
         );
     }
 
-    if (isImage || src === props.fallbackSrc) {
+    if (isImage || src === fallbackSrc) {
         return (
             <Image
                 src={src}
