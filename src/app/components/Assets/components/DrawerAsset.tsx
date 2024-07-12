@@ -36,6 +36,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                     <MediaRenderer
                         src={`${AWS_BASE_URL_S3}/${assetView?.formats?.preview?.path}`}
                         fallbackSrc={'https://via.placeholder.com/' + width + 'x' + height}
+                        autoPlay
                     />
                 </Box>
 
