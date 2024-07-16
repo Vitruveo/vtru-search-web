@@ -53,7 +53,7 @@ const initialState: FilterSliceState = {
     },
     price: {
         min: 0,
-        max: 1000,
+        max: 10000,
     },
     colorPrecision: {
         value: 0.7,
