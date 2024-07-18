@@ -41,13 +41,17 @@ const Filters = () => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
     const values = useSelector((state) => state.filters);
-    const tags = useSelector((state) => state.assets.tags);
+    const { tags, maxPrice } = useSelector((state) => state.assets);
 
     const getTotalFiltersApplied = (fieldName: keyof FilterSliceState) => {
         return Object.entries(values[fieldName]).reduce((acc, [_key, arrayfield]) => {
             return Array.isArray(arrayfield) ? acc + arrayfield.length : acc;
         }, 0);
     };
+
+    useEffect(() => {
+        dispatch(actions.changePrice({ min: 0, max: maxPrice }));
+    }, [dispatch]);
 
     useEffect(() => {
         const updateFilters = (
@@ -291,7 +295,7 @@ const Filters = () => {
             </AssetFilterAccordion>
 
             <Box>
-                <Button variant="contained" onClick={() => dispatch(actions.reset())} fullWidth>
+                <Button variant="contained" onClick={() => dispatch(actions.reset({ maxPrice }))} fullWidth>
                     {language['search.assetFilter.resetFilters'] as string}
                 </Button>
             </Box>
