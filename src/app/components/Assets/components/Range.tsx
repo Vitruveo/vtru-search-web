@@ -16,7 +16,7 @@ export const Range = ({ afterChange }: RangeProps) => {
     const [key, setKey] = useState(0);
 
     useEffect(() => {
-        if (price.min === minPrice && price.max === maxPrice) setKey((prev) => prev + 1);
+        if (price.min === minPrice && price.max === minPrice) setKey((prev) => prev + 1);
     }, [price.min, price.max]);
 
     const onChange = (_event: Event | null, newValue: number | number[]) => {
@@ -31,7 +31,7 @@ export const Range = ({ afterChange }: RangeProps) => {
         <Box>
             <Slider
                 key={key}
-                defaultValue={[minPrice, maxPrice]}
+                defaultValue={[minPrice, minPrice]}
                 step={10}
                 onChange={onChange}
                 valueLabelDisplay="auto"
