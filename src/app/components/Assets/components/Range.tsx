@@ -11,7 +11,7 @@ export const maxPrice = 10000;
 
 export const Range = ({ afterChange }: RangeProps) => {
     const max = useSelector((state) => state.assets.maxPrice);
-    const { reseted } = useSelector((state) => state.filters);
+    const { reseted, price } = useSelector((state) => state.filters);
 
     const onChange = (_event: Event | null, newValue: number | number[]) => {
         if (!Array.isArray(newValue)) return;
@@ -26,6 +26,7 @@ export const Range = ({ afterChange }: RangeProps) => {
             <Slider
                 key={reseted}
                 defaultValue={[minPrice, minPrice]}
+                value={[price.min, price.max === max ? minPrice : price.max]}
                 step={10}
                 onChange={onChange}
                 valueLabelDisplay="auto"

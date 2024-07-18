@@ -26,7 +26,7 @@ import type {
 import type { Context, Taxonomy, Creators } from '../types';
 import Version from '../../Version';
 import { AssetFilterAccordion } from './AssetFilterAccordion';
-import { Range } from '../components/Range';
+import { minPrice, Range } from '../components/Range';
 import { useSelector } from '@/store/hooks';
 import { useEffect, useState } from 'react';
 import { FilterSliceState } from '@/features/filters/types';
@@ -41,6 +41,7 @@ const Filters = () => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
     const values = useSelector((state) => state.filters);
+    const price = useSelector((state) => state.filters.price);
     const { tags, maxPrice } = useSelector((state) => state.assets);
 
     const getTotalFiltersApplied = (fieldName: keyof FilterSliceState) => {
@@ -50,7 +51,7 @@ const Filters = () => {
     };
 
     useEffect(() => {
-        dispatch(actions.changePrice({ min: 0, max: maxPrice }));
+        if (price.min === minPrice && price.max === minPrice) dispatch(actions.changePrice({ min: 0, max: maxPrice }));
     }, [dispatch]);
 
     useEffect(() => {
