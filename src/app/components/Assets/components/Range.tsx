@@ -1,7 +1,6 @@
 import { Box, Slider, Stack, Typography } from '@mui/material';
 import { formatPrice } from '@/utils/assets';
 import { useSelector } from '@/store/hooks';
-import { useEffect, useState } from 'react';
 
 interface RangeProps {
     afterChange?: (minValue: number, maxValue: number) => void;
@@ -12,12 +11,7 @@ export const maxPrice = 10000;
 
 export const Range = ({ afterChange }: RangeProps) => {
     const max = useSelector((state) => state.assets.maxPrice);
-    const price = useSelector((state) => state.filters.price);
-    const [key, setKey] = useState(0);
-
-    useEffect(() => {
-        if (price.min === minPrice && price.max === minPrice) setKey((prev) => prev + 1);
-    }, [price.min, price.max]);
+    const { reseted } = useSelector((state) => state.filters);
 
     const onChange = (_event: Event | null, newValue: number | number[]) => {
         if (!Array.isArray(newValue)) return;
@@ -30,7 +24,7 @@ export const Range = ({ afterChange }: RangeProps) => {
     return (
         <Box>
             <Slider
-                key={key}
+                key={reseted}
                 defaultValue={[minPrice, minPrice]}
                 step={10}
                 onChange={onChange}

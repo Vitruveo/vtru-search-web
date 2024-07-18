@@ -7,6 +7,7 @@ import { clearAssetsFromURL } from '@/utils/url-assets';
 
 const initialState: FilterSliceState = {
     name: '',
+    reseted: 0,
     context: {
         title: '',
         description: '',
@@ -82,7 +83,7 @@ export const filterSlice = createSlice({
                 value: DeepPartial<FilterSliceState[keyof FilterSliceState]>;
             }>
         ) => {
-            state[action.payload.key] = {
+            (state[action.payload.key] as any) = {
                 ...(state[action.payload.key] as any),
                 ...(action.payload.value as any),
             };
@@ -97,6 +98,7 @@ export const filterSlice = createSlice({
                 min: 0,
                 max: action.payload.maxPrice,
             };
+            state.reseted += 1;
             clearAssetsFromURL();
         },
         changePrice: (state, action: PayloadAction<{ min: number; max: number }>) => {

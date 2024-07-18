@@ -76,6 +76,10 @@ const Filters = () => {
         );
     };
 
+    const handleResetFilters = () => {
+        dispatch(actions.reset({ maxPrice }));
+    };
+
     return (
         <Stack gap={2} p={1} pb={2} mt={1} pt={isSmallScreen ? 8 : 1} height="92vh" overflow="auto">
             <OutlinedInput
@@ -295,7 +299,7 @@ const Filters = () => {
             </AssetFilterAccordion>
 
             <Box>
-                <Button variant="contained" onClick={() => dispatch(actions.reset({ maxPrice }))} fullWidth>
+                <Button variant="contained" onClick={handleResetFilters} fullWidth>
                     {language['search.assetFilter.resetFilters'] as string}
                 </Button>
             </Box>
