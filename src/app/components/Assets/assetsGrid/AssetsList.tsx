@@ -31,6 +31,7 @@ import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
 import './AssetScroll.css';
 import NumberOfFilters from '../components/numberOfFilters';
+import Slider from '../../../components/Slider';
 
 const AssetsList = () => {
     const dispatch = useDispatch();
@@ -209,6 +210,10 @@ const AssetsList = () => {
                     justifyContent: 'flex-end',
                 }}
             >
+                <Grid item xs={12}>
+                    {currentPage === 1 && <Slider />}
+                </Grid>
+
                 <Grid item xs={12} sm={'auto'} mr={4} mb={4} minWidth={'16%'}>
                     <Select
                         placeholder="Select Page"
