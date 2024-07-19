@@ -9,6 +9,7 @@ export interface AssetsSliceState {
     error: string | null;
     data: AssetData;
     tags: Tags[];
+    lastSold: AssetData['data'];
     creator: Creator;
     video: string;
     loadingVideo: boolean;
@@ -102,6 +103,8 @@ export interface Tags {
     tag: string;
     count: number;
 }
+
+export type ResponseAssetsLastSold = Asset[];
 
 export interface ResponseAssets {
     data: Asset[];

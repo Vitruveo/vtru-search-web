@@ -13,6 +13,7 @@ import type {
     MakeVideoResponse,
     ResponseAsserCreator,
     ResponseAssets,
+    ResponseAssetsLastSold,
 } from './types';
 import { actions } from './slice';
 import { actions as actionsFilter } from '../filters/slice';
@@ -20,6 +21,21 @@ import { APIResponse } from '../common/types';
 import { AppState } from '@/store';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
 import filterTruthAndNonEmpty from '@/utils/filterTruthObjects';
+
+function* getAssetsLastSold() {
+    try {
+        const URL_ASSETS_LAST_SOLD = `${API_BASE_URL}/assets/public/lastSold`;
+
+        const response: AxiosResponse<APIResponse<ResponseAssetsLastSold>> = yield call(
+            axios.get,
+            URL_ASSETS_LAST_SOLD
+        );
+
+        yield put(actions.setLastSold(response.data.data));
+    } catch (error) {
+        // Handle error
+    }
+}
 
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
@@ -86,6 +102,10 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 showAdditionalAssets,
             },
         });
+
+        if (page === 1 || page === 0) {
+            yield put(actions.loadAssetsLastSold());
+        }
 
         yield put(actions.setMaxPrice(response.data.data.maxPrice));
 
@@ -165,6 +185,7 @@ export function* assetsSagas() {
     yield all([
         takeEvery(actionsFilter.reset.type, getAssets),
         takeEvery(actions.loadAssets.type, getAssets),
+        takeEvery(actions.loadAssetsLastSold.type, getAssetsLastSold),
         takeEvery(actions.loadCreator.type, getCreator),
         takeEvery(actions.makeVideo.type, makeVideo),
         takeEvery(actionsFilter.change.type, getAssets),

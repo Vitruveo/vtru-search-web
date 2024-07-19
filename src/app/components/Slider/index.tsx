@@ -1,15 +1,14 @@
 import React from 'react';
-import Image from 'next/image';
 import Marquee from 'react-fast-marquee';
-
 import { Box, CardContent, Link, Paper, Stack, Typography } from '@mui/material';
+
 import { useSelector } from '@/store/hooks';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { getAssetPrice } from '@/utils/assets';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
 
 function Slider() {
-    const assets = useSelector((state) => state.assets.data.data);
+    const assets = useSelector((state) => state.assets.lastSold);
 
     return (
         <Box sx={{ width: 'calc(100vw - 350px)' }}>
@@ -17,7 +16,7 @@ function Slider() {
                 Recently Sold
             </Typography>
             <Marquee>
-                {assets.slice(0, 50).map((asset) => {
+                {assets.map((asset) => {
                     const assetTitle = asset?.assetMetadata?.context?.formData?.title || 'No Title';
 
                     const hasCreator =
