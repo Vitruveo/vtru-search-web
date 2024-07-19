@@ -22,7 +22,15 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false }: Me
 
     if (isVideo) {
         return (
-            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+            <div
+                style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '100%',
+                    borderTopRightRadius: 10,
+                    borderTopLeftRadius: 10,
+                }}
+            >
                 <video
                     autoPlay={!isMobile || autoPlay}
                     muted
@@ -35,6 +43,8 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false }: Me
                         position: 'absolute',
                         top: 0,
                         left: 0,
+                        borderTopRightRadius: 10,
+                        borderTopLeftRadius: 10,
                     }}
                     onError={onError}
                 >

@@ -161,41 +161,39 @@ const AssetsList = () => {
                 onClose={drawerStack.deactivate}
             />
 
-            <Stack direction="row" justifyContent="space-between" alignItems="center" p={3}>
-                <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
-                    <Box display="flex" alignItems="center">
-                        <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
-                        <Box display={'flex'} gap={1}>
-                            <Typography variant={lgUp ? 'h4' : 'h5'}>
-                                {language['search.assetList.curateStack'] as string}
-                            </Typography>
-                            {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
-                        </Box>
-                    </Box>
-                    {curateStack.isActive && (
-                        <Box
-                            sx={{ cursor: 'pointer' }}
-                            display="flex"
-                            alignItems="center"
-                            gap={1}
-                            onClick={drawerStack.activate}
-                        >
-                            {lgUp && (
-                                <>
-                                    <Typography variant="h4">
-                                        {selected.length} {language['search.assetList.curateStack.selected'] as string}
-                                    </Typography>
-                                    <IconCopy width={20} />
-                                </>
-                            )}
+            <Stack width="100%" direction="row" display="flex" justifyContent="flex-end" alignItems="center" p={3}>
+                {curateStack.isActive && (
+                    <Box
+                        sx={{ cursor: 'pointer' }}
+                        display="flex"
+                        alignItems="center"
+                        gap={1}
+                        onClick={drawerStack.activate}
+                    >
+                        {lgUp && (
+                            <Box display="flex" alignItems="center" gap={2}>
+                                <Typography variant="h4">
+                                    {selected.length} {language['search.assetList.curateStack.selected'] as string}
+                                </Typography>
+                                <IconCopy width={20} />
+                            </Box>
+                        )}
 
-                            {!lgUp && (
-                                <Badge badgeContent={selected.length} color="primary">
-                                    <IconCopy width={20} color={iconColor} />
-                                </Badge>
-                            )}
-                        </Box>
-                    )}
+                        {!lgUp && (
+                            <Badge badgeContent={selected.length} color="primary">
+                                <IconCopy width={20} color={iconColor} />
+                            </Badge>
+                        )}
+                    </Box>
+                )}
+                <Box display="flex" alignItems="center">
+                    <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
+                    <Box display={'flex'} gap={1}>
+                        <Typography variant={lgUp ? 'h4' : 'h5'}>
+                            {language['search.assetList.curateStack'] as string}
+                        </Typography>
+                        {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
+                    </Box>
                 </Box>
             </Stack>
 
@@ -210,7 +208,13 @@ const AssetsList = () => {
                     justifyContent: 'flex-end',
                 }}
             >
-                <Grid item xs={12}>
+                <Grid
+                    item
+                    xs={12}
+                    style={{
+                        paddingTop: 0,
+                    }}
+                >
                     {currentPage === 1 && <Slider />}
                 </Grid>
 
