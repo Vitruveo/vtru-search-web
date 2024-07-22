@@ -93,7 +93,7 @@ const AssetsList = () => {
     }, []);
 
     useEffect(() => {
-        topRef?.current?.scrollIntoView({ behavior: 'smooth' });
+        handleScrollToTop();
     }, [currentPage]);
 
     useEffect(() => {
@@ -133,7 +133,12 @@ const AssetsList = () => {
     };
 
     const handleScrollToTop = () => {
-        topRef?.current?.scrollIntoView({ behavior: 'smooth' });
+        if (topRef.current) {
+            topRef.current.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            });
+        }
     };
 
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
@@ -207,6 +212,7 @@ const AssetsList = () => {
                     maxHeight: '85vh',
                     justifyContent: 'flex-end',
                 }}
+                ref={topRef}
             >
                 <Grid
                     item
@@ -238,7 +244,7 @@ const AssetsList = () => {
                     />
                 </Grid>
 
-                <Grid container ref={topRef} display={'flex'} ml={4} rowGap={3}>
+                <Grid container display={'flex'} ml={4} rowGap={3}>
                     {assets.length > 0 ? (
                         <>
                             {activeAssets.map((asset) => (
