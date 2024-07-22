@@ -1,6 +1,6 @@
 import React from 'react';
 import Marquee from 'react-fast-marquee';
-import { Box, CardContent, Link, Paper, Stack, Typography } from '@mui/material';
+import { Box, CardContent, Link, Paper, Stack, Theme, Typography, useMediaQuery } from '@mui/material';
 
 import { useSelector } from '@/store/hooks';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
@@ -11,13 +11,14 @@ import { STORE_BASE_URL } from '@/constants/api';
 
 function Slider() {
     const assets = useSelector((state) => state.assets.lastSold);
+    const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
 
     const handleClickItem = (asset: LastSoldAsset) => {
-        window.open(`${STORE_BASE_URL}/${asset.username}/${asset?._id}`);
+        window.open(`${STORE_BASE_URL}/${asset?.username || 'preview'}/${asset?._id}`);
     };
 
     return (
-        <Box sx={{ width: 'calc(100vw - 350px)' }}>
+        <Box sx={{ width: lgUp ? 'calc(100vw - 350px)' : 'calc(100vw - 65px)' }}>
             <Typography variant="h1" mb={4} fontWeight={500}>
                 Recently Sold
             </Typography>
