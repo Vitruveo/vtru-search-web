@@ -31,6 +31,7 @@ import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
 import './AssetScroll.css';
 import NumberOfFilters from '../components/numberOfFilters';
+import Slider from '../../../components/Slider';
 
 const AssetsList = () => {
     const dispatch = useDispatch();
@@ -92,7 +93,7 @@ const AssetsList = () => {
     }, []);
 
     useEffect(() => {
-        topRef?.current?.scrollIntoView({ behavior: 'smooth' });
+        handleScrollToTop();
     }, [currentPage]);
 
     useEffect(() => {
@@ -132,7 +133,12 @@ const AssetsList = () => {
     };
 
     const handleScrollToTop = () => {
-        topRef?.current?.scrollIntoView({ behavior: 'smooth' });
+        if (topRef.current) {
+            topRef.current.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            });
+        }
     };
 
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
@@ -160,41 +166,39 @@ const AssetsList = () => {
                 onClose={drawerStack.deactivate}
             />
 
-            <Stack direction="row" justifyContent="space-between" alignItems="center" p={3}>
-                <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
-                    <Box display="flex" alignItems="center">
-                        <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
-                        <Box display={'flex'} gap={1}>
-                            <Typography variant={lgUp ? 'h4' : 'h5'}>
-                                {language['search.assetList.curateStack'] as string}
-                            </Typography>
-                            {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
-                        </Box>
-                    </Box>
-                    {curateStack.isActive && (
-                        <Box
-                            sx={{ cursor: 'pointer' }}
-                            display="flex"
-                            alignItems="center"
-                            gap={1}
-                            onClick={drawerStack.activate}
-                        >
-                            {lgUp && (
-                                <>
-                                    <Typography variant="h4">
-                                        {selected.length} {language['search.assetList.curateStack.selected'] as string}
-                                    </Typography>
-                                    <IconCopy width={20} />
-                                </>
-                            )}
+            <Stack width="100%" direction="row" display="flex" justifyContent="flex-end" alignItems="center" p={3}>
+                {curateStack.isActive && (
+                    <Box
+                        sx={{ cursor: 'pointer' }}
+                        display="flex"
+                        alignItems="center"
+                        gap={1}
+                        onClick={drawerStack.activate}
+                    >
+                        {lgUp && (
+                            <Box display="flex" alignItems="center" gap={2}>
+                                <Typography variant="h4">
+                                    {selected.length} {language['search.assetList.curateStack.selected'] as string}
+                                </Typography>
+                                <IconCopy width={20} />
+                            </Box>
+                        )}
 
-                            {!lgUp && (
-                                <Badge badgeContent={selected.length} color="primary">
-                                    <IconCopy width={20} color={iconColor} />
-                                </Badge>
-                            )}
-                        </Box>
-                    )}
+                        {!lgUp && (
+                            <Badge badgeContent={selected.length} color="primary">
+                                <IconCopy width={20} color={iconColor} />
+                            </Badge>
+                        )}
+                    </Box>
+                )}
+                <Box display="flex" alignItems="center">
+                    <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
+                    <Box display={'flex'} gap={1}>
+                        <Typography variant={lgUp ? 'h4' : 'h5'}>
+                            {language['search.assetList.curateStack'] as string}
+                        </Typography>
+                        {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
+                    </Box>
                 </Box>
             </Stack>
 
@@ -208,7 +212,18 @@ const AssetsList = () => {
                     maxHeight: '85vh',
                     justifyContent: 'flex-end',
                 }}
+                ref={topRef}
             >
+                <Grid
+                    item
+                    xs={12}
+                    style={{
+                        paddingTop: 0,
+                    }}
+                >
+                    {currentPage === 1 && <Slider />}
+                </Grid>
+
                 <Grid item xs={12} sm={'auto'} mr={4} mb={4} minWidth={'16%'}>
                     <Select
                         placeholder="Select Page"
@@ -229,7 +244,7 @@ const AssetsList = () => {
                     />
                 </Grid>
 
-                <Grid container ref={topRef} display={'flex'} ml={4} rowGap={3}>
+                <Grid container display={'flex'} ml={4} rowGap={3}>
                     {assets.length > 0 ? (
                         <>
                             {activeAssets.map((asset) => (

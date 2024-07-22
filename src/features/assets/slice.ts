@@ -1,7 +1,7 @@
 'use client';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import type { AssetsSliceState, GetAssetsParams, GetCreatorParams } from './types';
+import type { AssetsSliceState, GetAssetsParams, GetCreatorParams, LastSoldAsset } from './types';
 
 const initialState: AssetsSliceState = {
     loading: false,
@@ -13,6 +13,7 @@ const initialState: AssetsSliceState = {
         total: 0,
         totalPage: 0,
     },
+    lastSold: [],
     tags: [],
     creator: {
         username: '',
@@ -28,6 +29,7 @@ export const assetsSlice = createSlice({
     initialState,
     reducers: {
         loadAssets: (state, action: PayloadAction<GetAssetsParams | null>) => {},
+        loadAssetsLastSold: (state, action: PayloadAction) => {},
         startLoading: (state) => {
             state.loading = true;
         },
@@ -59,6 +61,9 @@ export const assetsSlice = createSlice({
         },
         setCurrentPage: (state, action: PayloadAction<number>) => {
             state.data.page = action.payload;
+        },
+        setLastSold: (state, action: PayloadAction<LastSoldAsset[]>) => {
+            state.lastSold = action.payload;
         },
     },
 });
