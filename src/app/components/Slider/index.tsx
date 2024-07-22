@@ -6,9 +6,15 @@ import { useSelector } from '@/store/hooks';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { getAssetPrice } from '@/utils/assets';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
+import { LastSoldAsset } from '@/features/assets/types';
+import { STORE_BASE_URL } from '@/constants/api';
 
 function Slider() {
     const assets = useSelector((state) => state.assets.lastSold);
+
+    const handleClickItem = (asset: LastSoldAsset) => {
+        window.open(`${STORE_BASE_URL}/${asset.username}/${asset?._id}`);
+    };
 
     return (
         <Box sx={{ width: 'calc(100vw - 350px)' }}>
@@ -28,17 +34,23 @@ function Slider() {
 
                     return (
                         <Box
-                            key={asset._id}
                             display="flex"
                             flexDirection="column"
                             justifyContent="center"
                             alignItems="center"
-                            ml={2}
-                            mr={2}
+                            m={2}
+                            onClick={() => handleClickItem(asset)}
+                            sx={{
+                                ':hover': {
+                                    cursor: 'pointer',
+                                    boxShadow: '0 0 10px 0px #000',
+                                },
+                            }}
+                            key={asset._id}
                         >
                             <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
                                 <MediaRenderer
-                                    src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
+                                    src={`${AWS_BASE_URL_S3}/${asset?.formats?.path}`}
                                     fallbackSrc={'https://via.placeholder.com/250'}
                                 />
                             </Box>

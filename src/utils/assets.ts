@@ -1,17 +1,17 @@
-import { Asset } from '@/features/assets/types';
+import { Asset, LastSoldAsset } from '@/features/assets/types';
 
 export const isAssetAvailable = (asset: Asset) => asset.licenses.nft.availableLicenses > 0;
 
-export const getAssetPrice = (asset: Asset) => {
-    const { nft } = asset.licenses;
+export const getAssetPrice = (asset: Asset | LastSoldAsset) => {
+    const license = 'username' in asset ? asset.licenses : asset.licenses.nft;
 
-    switch (nft.editionOption) {
+    switch (license.editionOption) {
         case 'elastic':
-            return formatPrice(nft.elastic.editionPrice);
+            return formatPrice(license.elastic.editionPrice);
         case 'single':
-            return formatPrice(nft.single.editionPrice);
+            return formatPrice(license.single.editionPrice);
         case 'unlimited':
-            return formatPrice(nft.unlimited.editionPrice);
+            return formatPrice(license.unlimited.editionPrice);
         default:
             return 'N/A';
     }
