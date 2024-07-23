@@ -75,17 +75,22 @@ function Slider() {
                                 >
                                     {assetTitle}
                                 </Typography>
-                                <Link
-                                    title={creatorName}
-                                    padding={0}
-                                    overflow="hidden"
-                                    whiteSpace="nowrap"
-                                    textOverflow="ellipsis"
-                                    href="#"
-                                    onClick={() => {}}
-                                >
-                                    {creatorName}
-                                </Link>
+                                <Box sx={{ width: '100%' }}>
+                                    <Link
+                                        title={creatorName}
+                                        sx={{
+                                            display: 'block',
+                                            width: '100%',
+                                            overflow: 'hidden',
+                                            whiteSpace: 'nowrap',
+                                            textOverflow: 'ellipsis',
+                                        }}
+                                        href="#"
+                                        onClick={() => {}}
+                                    >
+                                        {creatorName}
+                                    </Link>
+                                </Box>
                                 <Stack direction="row" justifyContent="space-between" mt={2}>
                                     <Box>
                                         <Typography
