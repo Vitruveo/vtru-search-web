@@ -26,7 +26,7 @@ import type {
 import type { Context, Taxonomy, Creators } from '../types';
 import Version from '../../Version';
 import { AssetFilterAccordion } from './AssetFilterAccordion';
-import { Range } from '../components/Range';
+import { minPrice, Range } from '../components/Range';
 import { useSelector } from '@/store/hooks';
 import { useEffect, useState } from 'react';
 import { FilterSliceState } from '@/features/filters/types';
@@ -41,13 +41,18 @@ const Filters = () => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
     const values = useSelector((state) => state.filters);
-    const tags = useSelector((state) => state.assets.tags);
+    const price = useSelector((state) => state.filters.price);
+    const { tags, maxPrice } = useSelector((state) => state.assets);
 
     const getTotalFiltersApplied = (fieldName: keyof FilterSliceState) => {
         return Object.entries(values[fieldName]).reduce((acc, [_key, arrayfield]) => {
             return Array.isArray(arrayfield) ? acc + arrayfield.length : acc;
         }, 0);
     };
+
+    useEffect(() => {
+        if (price.min === minPrice && price.max === minPrice) dispatch(actions.changePrice({ min: 0, max: maxPrice }));
+    }, [dispatch]);
 
     useEffect(() => {
         const updateFilters = (
@@ -70,6 +75,10 @@ const Filters = () => {
                 max,
             })
         );
+    };
+
+    const handleResetFilters = () => {
+        dispatch(actions.reset({ maxPrice }));
     };
 
     return (
@@ -291,7 +300,7 @@ const Filters = () => {
             </AssetFilterAccordion>
 
             <Box>
-                <Button variant="contained" onClick={() => dispatch(actions.reset())} fullWidth>
+                <Button variant="contained" onClick={handleResetFilters} fullWidth>
                     {language['search.assetFilter.resetFilters'] as string}
                 </Button>
             </Box>
