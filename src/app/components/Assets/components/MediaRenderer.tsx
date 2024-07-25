@@ -7,11 +7,10 @@ interface MediaRendererProps {
     src: string;
     fallbackSrc?: string;
     autoPlay?: boolean;
-    preSource: string;
+    preSource?: string;
 }
 
 export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false, preSource }: MediaRendererProps) => {
-    console.log(source, preSource);
     const [src, setSrc] = useState(source);
     const isMobile = useMediaQuery('(max-width: 900px)');
 
