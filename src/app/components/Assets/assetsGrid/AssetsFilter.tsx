@@ -36,6 +36,7 @@ import { FilterSliceState } from '@/features/filters/types';
 
 const Filters = () => {
     const [isNuditychecked, setIsNudityChecked] = useState<boolean>(false);
+    const [isAIchecked, setIsAIChecked] = useState<boolean>(true);
     const [contextFilters, setContextFilters] = useState<number>();
     const [taxonomyFilters, setTaxonomyFilters] = useState<number>();
     const [creatorsFilters, setCreatorsFilters] = useState<number>();
@@ -71,6 +72,7 @@ const Filters = () => {
         updateFilters('taxonomy', setTaxonomyFilters);
         updateFilters('creators', setCreatorsFilters);
         setIsNudityChecked(values.shortCuts.nudity === 'yes');
+        setIsAIChecked(values.shortCuts.aiGeneration === 'full');
     }, [values.context, values.taxonomy, values.creators, values.shortCuts]);
 
     const afterPriceChange = (min: number, max: number) => {
@@ -84,7 +86,11 @@ const Filters = () => {
 
     const handleChangeNudity = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsNudityChecked(event.target.checked);
-        dispatch(actions.changeIsNudity(event.target.checked));
+        dispatch(actions.changeShortCut({ key: 'nudity', value: event.target.checked ? 'yes' : 'no' }));
+    };
+    const handleChangeAI = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIsAIChecked(event.target.checked);
+        dispatch(actions.changeShortCut({ key: 'aiGeneration', value: event.target.checked ? 'full' : 'none' }));
     };
 
     const handleResetFilters = () => {
@@ -115,7 +121,7 @@ const Filters = () => {
                     control={<Checkbox onChange={handleChangeNudity} checked={isNuditychecked} />}
                     label={'Nudity'}
                 />
-                <FormControlLabel control={<Checkbox defaultChecked />} label={'AI'} />
+                <FormControlLabel control={<Checkbox onChange={handleChangeAI} checked={isAIchecked} />} label={'AI'} />
             </FormGroup>
 
             <AssetFilterAccordion title="Licenses">

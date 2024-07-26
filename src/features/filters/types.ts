@@ -57,5 +57,6 @@ export interface FilterSliceState {
     };
     shortCuts: {
         nudity: string;
+        aiGeneration: string;
     };
 }

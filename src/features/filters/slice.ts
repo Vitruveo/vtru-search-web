@@ -64,6 +64,7 @@ const initialState: FilterSliceState = {
     },
     shortCuts: {
         nudity: 'no',
+        aiGeneration: 'full',
     },
 };
 
@@ -91,8 +92,8 @@ export const filterSlice = createSlice({
                 ...(action.payload.value as any),
             };
         },
-        changeIsNudity: (state, action: PayloadAction<boolean>) => {
-            state.shortCuts.nudity = action.payload ? 'yes' : 'no';
+        changeShortCut: (state, action: PayloadAction<{ key: keyof FilterSliceState['shortCuts']; value: string }>) => {
+            state.shortCuts[action.payload.key] = action.payload.value;
         },
         reset: (state, action: PayloadAction<{ maxPrice: number }>) => {
             state.name = '';
@@ -104,9 +105,7 @@ export const filterSlice = createSlice({
                 min: 0,
                 max: action.payload.maxPrice,
             };
-            state.shortCuts = {
-                nudity: 'no',
-            };
+            state.shortCuts = initialState.shortCuts;
             state.reseted += 1;
             clearAssetsFromURL();
         },
