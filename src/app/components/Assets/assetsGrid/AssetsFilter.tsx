@@ -11,6 +11,9 @@ import {
     Stack,
     useMediaQuery,
     Theme,
+    Checkbox,
+    FormGroup,
+    FormControlLabel,
 } from '@mui/material';
 import assetsMetadata from '@/mock/assetsMetadata.json';
 import { actions } from '@/features/filters/slice';
@@ -28,10 +31,11 @@ import Version from '../../Version';
 import { AssetFilterAccordion } from './AssetFilterAccordion';
 import { minPrice, Range } from '../components/Range';
 import { useSelector } from '@/store/hooks';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FilterSliceState } from '@/features/filters/types';
 
 const Filters = () => {
+    const [isNuditychecked, setIsNudityChecked] = useState<boolean>(false);
     const [contextFilters, setContextFilters] = useState<number>();
     const [taxonomyFilters, setTaxonomyFilters] = useState<number>();
     const [creatorsFilters, setCreatorsFilters] = useState<number>();
@@ -66,7 +70,8 @@ const Filters = () => {
         updateFilters('context', setContextFilters);
         updateFilters('taxonomy', setTaxonomyFilters);
         updateFilters('creators', setCreatorsFilters);
-    }, [values.context, values.taxonomy, values.creators]);
+        setIsNudityChecked(values.shortCuts.nudity === 'yes');
+    }, [values.context, values.taxonomy, values.creators, values.shortCuts]);
 
     const afterPriceChange = (min: number, max: number) => {
         dispatch(
@@ -75,6 +80,11 @@ const Filters = () => {
                 max,
             })
         );
+    };
+
+    const handleChangeNudity = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIsNudityChecked(event.target.checked);
+        dispatch(actions.changeIsNudity(event.target.checked));
     };
 
     const handleResetFilters = () => {
@@ -99,6 +109,14 @@ const Filters = () => {
                 value={values.name}
                 onChange={(e) => dispatch(actions.changeName({ name: e.target.value }))}
             />
+
+            <FormGroup sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                <FormControlLabel
+                    control={<Checkbox onChange={handleChangeNudity} checked={isNuditychecked} />}
+                    label={'Nudity'}
+                />
+                <FormControlLabel control={<Checkbox defaultChecked />} label={'AI'} />
+            </FormGroup>
 
             <AssetFilterAccordion title="Licenses">
                 <Box>

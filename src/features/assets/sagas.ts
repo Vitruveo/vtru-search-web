@@ -42,6 +42,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
 
     try {
         const name: string = yield select((state: AppState) => state.filters.name);
+        const isNudityEnable: string = yield select((state: AppState) => state.filters.shortCuts.nudity);
         const page: number = yield select((state: AppState) => state.assets.data.page);
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
@@ -54,9 +55,14 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             (state: AppState) => state.filters.showAdditionalAssets.value
         );
 
+        const filtersTaxonomyCopy = {
+            ...filtersTaxonomy,
+            nudity: filtersTaxonomy.nudity.length > 0 ? filtersTaxonomy.nudity : [isNudityEnable],
+        };
+
         const buildFilters = {
             context: filtersContext,
-            taxonomy: filtersTaxonomy,
+            taxonomy: filtersTaxonomyCopy,
             creators: filtersCreators,
         };
 
@@ -189,6 +195,7 @@ export function* assetsSagas() {
         takeEvery(actions.loadCreator.type, getCreator),
         takeEvery(actions.makeVideo.type, makeVideo),
         takeEvery(actionsFilter.change.type, getAssets),
+        takeEvery(actionsFilter.changeIsNudity.type, getAssets),
         debounce(1000, actionsFilter.changeName.type, getAssets),
         debounce(500, actions.setCurrentPage.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),

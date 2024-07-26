@@ -62,6 +62,9 @@ const initialState: FilterSliceState = {
     showAdditionalAssets: {
         value: false,
     },
+    shortCuts: {
+        nudity: 'no',
+    },
 };
 
 export const filterSlice = createSlice({
@@ -88,6 +91,9 @@ export const filterSlice = createSlice({
                 ...(action.payload.value as any),
             };
         },
+        changeIsNudity: (state, action: PayloadAction<boolean>) => {
+            state.shortCuts.nudity = action.payload ? 'yes' : 'no';
+        },
         reset: (state, action: PayloadAction<{ maxPrice: number }>) => {
             state.name = '';
             state.context = initialState.context;
@@ -97,6 +103,9 @@ export const filterSlice = createSlice({
             state.price = {
                 min: 0,
                 max: action.payload.maxPrice,
+            };
+            state.shortCuts = {
+                nudity: 'no',
             };
             state.reseted += 1;
             clearAssetsFromURL();
