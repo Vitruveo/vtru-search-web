@@ -37,6 +37,11 @@ import { FilterSliceState } from '@/features/filters/types';
 const Filters = () => {
     const [isNuditychecked, setIsNudityChecked] = useState<boolean>(false);
     const [isAIchecked, setIsAIChecked] = useState<boolean>(true);
+    const [isVideoChecked, setIsVideoChecked] = useState<boolean>(false);
+    const [isPhotographyChecked, setIsPhotographyChecked] = useState<boolean>(false);
+    const [isHorizontalChecked, setIsHorizontalChecked] = useState<boolean>(false);
+    const [isVerticalChecked, setIsVerticalChecked] = useState<boolean>(false);
+
     const [contextFilters, setContextFilters] = useState<number>();
     const [taxonomyFilters, setTaxonomyFilters] = useState<number>();
     const [creatorsFilters, setCreatorsFilters] = useState<number>();
@@ -93,8 +98,26 @@ const Filters = () => {
         dispatch(actions.changeShortCut({ key: 'aiGeneration', value: event.target.checked ? 'full' : 'none' }));
     };
 
-    const handleResetFilters = () => {
-        dispatch(actions.reset({ maxPrice }));
+    const handleResetFilters = () => dispatch(actions.reset({ maxPrice }));
+
+    const handleChangeVideo = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['video'] : [] } }));
+        setIsVideoChecked(event.target.checked);
+    };
+
+    const handleChangePhotography = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['photography'] : [] } }));
+        setIsPhotographyChecked(event.target.checked);
+    };
+    const handleChangeHorizontal = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(
+            actions.change({ key: 'context', value: { orientation: event.target.checked ? ['horizontal'] : [] } })
+        );
+        setIsHorizontalChecked(event.target.checked);
+    };
+    const handleChangeVertical = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(actions.change({ key: 'context', value: { orientation: event.target.checked ? ['vertical'] : [] } }));
+        setIsVerticalChecked(event.target.checked);
     };
 
     return (
@@ -116,12 +139,35 @@ const Filters = () => {
                 onChange={(e) => dispatch(actions.changeName({ name: e.target.value }))}
             />
 
-            <FormGroup sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                <FormControlLabel
-                    control={<Checkbox onChange={handleChangeNudity} checked={isNuditychecked} />}
-                    label={'Nudity'}
-                />
-                <FormControlLabel control={<Checkbox onChange={handleChangeAI} checked={isAIchecked} />} label={'AI'} />
+            <FormGroup sx={{ display: 'flex', flexDirection: 'row', marginLeft: '8%' }}>
+                <Box display={'flex'} flexDirection={'column'}>
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangeNudity} checked={isNuditychecked} />}
+                        label={'Nudity'}
+                    />
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangeVideo} checked={isVideoChecked} />}
+                        label={'Video'}
+                    />
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangeVertical} checked={isVerticalChecked} />}
+                        label={'Vertical'}
+                    />
+                </Box>
+                <Box display={'flex'} flexDirection={'column'}>
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangeAI} checked={isAIchecked} />}
+                        label={'AI'}
+                    />
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangePhotography} checked={isPhotographyChecked} />}
+                        label={'Photography'}
+                    />
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangeHorizontal} checked={isHorizontalChecked} />}
+                        label={'Horizontal'}
+                    />
+                </Box>
             </FormGroup>
 
             <AssetFilterAccordion title="Licenses">
