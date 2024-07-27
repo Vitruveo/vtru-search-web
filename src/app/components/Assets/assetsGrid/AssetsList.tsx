@@ -191,6 +191,7 @@ const AssetsList = () => {
                     <Select
                         placeholder="Sort"
                         options={optionsForSelectSort}
+                        onChange={(e) => dispatch(actions.setSort(e?.value || ''))}
                         styles={{
                             control: (base, state) => ({
                                 ...base,
