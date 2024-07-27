@@ -89,22 +89,33 @@ const Filters = () => {
         );
     };
 
+    const generateQueryParam = (key: string, value: string) => {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set(key, value);
+        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+    };
+
     const handleChangeNudity = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsNudityChecked(event.target.checked);
         dispatch(actions.changeShortCut({ key: 'nudity', value: event.target.checked ? 'yes' : 'no' }));
+        generateQueryParam('nudity', event.target.checked ? 'yes' : 'no');
     };
     const handleChangeAI = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsAIChecked(event.target.checked);
         dispatch(actions.changeShortCut({ key: 'aiGeneration', value: event.target.checked ? 'full' : 'none' }));
+        generateQueryParam('aiGeneration', event.target.checked ? 'full' : 'none');
     };
-
-    const handleResetFilters = () => dispatch(actions.reset({ maxPrice }));
+    const handleResetFilters = () => {
+        const searchParams = new URLSearchParams();
+        window.history.pushState({}, '', `${window.location.pathname}?${searchParams.toString()}`);
+        dispatch(actions.reset({ maxPrice }));
+    };
 
     const handleChangeVideo = (event: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['video'] : [] } }));
         setIsVideoChecked(event.target.checked);
     };
-
     const handleChangePhotography = (event: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['photography'] : [] } }));
         setIsPhotographyChecked(event.target.checked);
