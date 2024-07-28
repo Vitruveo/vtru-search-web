@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import Select from 'react-select';
+import Select, { SingleValue } from 'react-select';
 import { useSelector } from '@/store/hooks';
 import Image from 'next/image';
 import {
@@ -42,6 +42,8 @@ const AssetsList = () => {
     const [assetView, setAssetView] = useState<any>();
     const [selected, setSelected] = useState<Asset[]>([]);
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
+    const [sortOrder, setSortOrder] = useState<string>('latest');
+    const [isIncludeSold, setIsIncludeSold] = useState<boolean>(false);
     const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
@@ -154,6 +156,20 @@ const AssetsList = () => {
         }
     };
 
+    const handleChangeSelectSortOrder = (
+        e: SingleValue<{
+            value: string;
+            label: string;
+        }>
+    ) => {
+        setSortOrder(e?.value || '');
+        dispatch(actions.setSort({ order: e?.value || '', isIncludeSold: isIncludeSold }));
+    };
+    const handleChangeIsIncludeSold = () => {
+        setIsIncludeSold(!isIncludeSold);
+        dispatch(actions.setSort({ order: sortOrder, isIncludeSold: !isIncludeSold }));
+    };
+
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
 
     const onAssetDrawerClose = () => {
@@ -191,7 +207,7 @@ const AssetsList = () => {
                     <Select
                         placeholder="Sort"
                         options={optionsForSelectSort}
-                        onChange={(e) => dispatch(actions.setSort(e?.value || ''))}
+                        onChange={(e) => handleChangeSelectSortOrder(e)}
                         styles={{
                             control: (base, state) => ({
                                 ...base,
@@ -208,7 +224,10 @@ const AssetsList = () => {
                             }),
                         }}
                     />
-                    <FormControlLabel control={<Checkbox />} label="Include Sold" />
+                    <FormControlLabel
+                        control={<Checkbox checked={isIncludeSold} onChange={handleChangeIsIncludeSold} />}
+                        label="Include Sold"
+                    />
                 </Grid>
                 <Box display={'flex'}>
                     {curateStack.isActive && (

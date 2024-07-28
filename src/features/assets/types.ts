@@ -14,7 +14,10 @@ export interface AssetsSliceState {
     video: string;
     loadingVideo: boolean;
     maxPrice: number;
-    sort: string;
+    sort: {
+        order: string;
+        isIncludeSold: boolean;
+    };
 }
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';

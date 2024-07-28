@@ -43,7 +43,8 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
     try {
         const name: string = yield select((state: AppState) => state.filters.name);
         const page: number = yield select((state: AppState) => state.assets.data.page);
-        const sort: string = yield select((state: AppState) => state.assets.sort);
+        const order: string = yield select((state: AppState) => state.assets.sort.order);
+        const isIncludeSold: boolean = yield select((state: AppState) => state.assets.sort.isIncludeSold);
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
         const filtersCreators: FilterSliceState['creators'] = yield select((state: AppState) => state.filters.creators);
@@ -101,7 +102,10 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 name: name.trim() ? name : null,
                 precision: colorPrecision.value,
                 showAdditionalAssets,
-                sort,
+                sort: {
+                    order,
+                    isIncludeSold,
+                },
             },
         });
 
@@ -175,7 +179,7 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
 
 function* setup() {
     const { context, taxonomy, creators }: FilterSliceState = yield select((state: AppState) => state.filters);
-    yield put(actions.setSort(''));
+    yield put(actions.setSort({ order: '', isIncludeSold: false }));
     const filters = {
         context: filterTruthAndNonEmpty(context),
         taxonomy: filterTruthAndNonEmpty(taxonomy),
