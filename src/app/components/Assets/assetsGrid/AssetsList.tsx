@@ -156,6 +156,13 @@ const AssetsList = () => {
         }
     };
 
+    const generateQueryParam = (key: string, value: string) => {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set(key, value);
+        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+    };
+
     const handleChangeSelectSortOrder = (
         e: SingleValue<{
             value: string;
@@ -163,10 +170,12 @@ const AssetsList = () => {
         }>
     ) => {
         setSortOrder(e?.value || '');
+        generateQueryParam('sort', e?.value || '');
         dispatch(actions.setSort({ order: e?.value || '', isIncludeSold: isIncludeSold }));
     };
     const handleChangeIsIncludeSold = () => {
         setIsIncludeSold(!isIncludeSold);
+        generateQueryParam('includeSold', (!isIncludeSold).toString());
         dispatch(actions.setSort({ order: sortOrder, isIncludeSold: !isIncludeSold }));
     };
 
