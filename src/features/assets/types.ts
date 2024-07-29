@@ -9,10 +9,15 @@ export interface AssetsSliceState {
     error: string | null;
     data: AssetData;
     tags: Tags[];
+    lastSold: LastSoldAsset[];
     creator: Creator;
     video: string;
     loadingVideo: boolean;
     maxPrice: number;
+    sort: {
+        order: string;
+        isIncludeSold: boolean;
+    };
 }
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';
@@ -102,6 +107,34 @@ export interface Tags {
     tag: string;
     count: number;
 }
+
+export interface LastSoldAsset {
+    _id: string;
+    assetMetadata: AssetsMetadata;
+    formats: Format;
+    licenses: {
+        version: string;
+        added: boolean;
+        license: string;
+        elastic: {
+            editionPrice: number;
+            numberOfEditions: number;
+            totalPrice: number;
+            editionDiscount: boolean;
+        };
+        single: {
+            editionPrice: number;
+        };
+        unlimited: {
+            editionPrice: number;
+        };
+        editionOption: 'elastic' | 'single' | 'unlimited';
+        availableLicenses: number;
+    };
+    username: string;
+}
+
+export type ResponseAssetsLastSold = LastSoldAsset[];
 
 export interface ResponseAssets {
     data: Asset[];

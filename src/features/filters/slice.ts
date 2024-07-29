@@ -7,6 +7,7 @@ import { clearAssetsFromURL } from '@/utils/url-assets';
 
 const initialState: FilterSliceState = {
     name: '',
+    reseted: 0,
     context: {
         title: '',
         description: '',
@@ -53,13 +54,17 @@ const initialState: FilterSliceState = {
     },
     price: {
         min: 0,
-        max: 1000,
+        max: 0,
     },
     colorPrecision: {
         value: 0.7,
     },
     showAdditionalAssets: {
         value: false,
+    },
+    shortCuts: {
+        nudity: 'no',
+        aiGeneration: 'full',
     },
 };
 
@@ -82,18 +87,30 @@ export const filterSlice = createSlice({
                 value: DeepPartial<FilterSliceState[keyof FilterSliceState]>;
             }>
         ) => {
-            state[action.payload.key] = {
+            (state[action.payload.key] as any) = {
                 ...(state[action.payload.key] as any),
                 ...(action.payload.value as any),
             };
         },
-        reset: (state) => {
+        changeShortCut: (state, action: PayloadAction<{ key: keyof FilterSliceState['shortCuts']; value: string }>) => {
+            state.shortCuts[action.payload.key] = action.payload.value;
+        },
+        reset: (state, action: PayloadAction<{ maxPrice: number }>) => {
             state.name = '';
             state.context = initialState.context;
-            state.taxonomy = initialState.taxonomy;
+            state.taxonomy = {
+                ...initialState.taxonomy,
+                nudity: ['no'],
+                aiGeneration: ['full'],
+            };
             state.creators = initialState.creators;
             state.provenance = initialState.provenance;
-            state.price = initialState.price;
+            state.price = {
+                min: 0,
+                max: action.payload.maxPrice,
+            };
+            state.shortCuts = initialState.shortCuts;
+            state.reseted += 1;
             clearAssetsFromURL();
         },
         changePrice: (state, action: PayloadAction<{ min: number; max: number }>) => {

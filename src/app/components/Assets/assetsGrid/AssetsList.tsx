@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import Select from 'react-select';
+import Select, { SingleValue } from 'react-select';
 import { useSelector } from '@/store/hooks';
 import Image from 'next/image';
 import {
@@ -13,6 +13,9 @@ import {
     Switch,
     Badge,
     Button,
+    Divider,
+    Checkbox,
+    FormControlLabel,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { IconCopy } from '@tabler/icons-react';
@@ -31,6 +34,7 @@ import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
 import './AssetScroll.css';
 import NumberOfFilters from '../components/numberOfFilters';
+import Slider from '../../../components/Slider';
 
 const AssetsList = () => {
     const dispatch = useDispatch();
@@ -38,6 +42,8 @@ const AssetsList = () => {
     const [assetView, setAssetView] = useState<any>();
     const [selected, setSelected] = useState<Asset[]>([]);
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
+    const [sortOrder, setSortOrder] = useState<string>('latest');
+    const [isIncludeSold, setIsIncludeSold] = useState<boolean>(false);
     const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
@@ -58,6 +64,16 @@ const AssetsList = () => {
         }
         return options;
     }, [totalPage]);
+
+    const optionsForSelectSort = [
+        { value: 'latest', label: 'Latest' },
+        { value: 'priceHighToLow', label: 'Price – High to Low' },
+        { value: 'priceLowToHigh', label: 'Price – Low to High' },
+        { value: 'creatorAZ', label: 'Creator – A-Z' },
+        { value: 'creatorZA', label: 'Creator – Z-A' },
+        { value: 'consignNewToOld', label: 'Consign Date – New to Old' },
+        { value: 'consignOldToNew', label: 'Consign Date – Old to New' },
+    ];
 
     const getTotalFiltersApplied = () => {
         const fields = {
@@ -92,8 +108,12 @@ const AssetsList = () => {
     }, []);
 
     useEffect(() => {
-        topRef?.current?.scrollIntoView({ behavior: 'smooth' });
+        handleScrollToTop();
     }, [currentPage]);
+
+    useEffect(() => {
+        if (currentPage > totalPage) dispatch(actions.setCurrentPage(totalPage));
+    }, [totalPage]);
 
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
@@ -128,7 +148,35 @@ const AssetsList = () => {
     };
 
     const handleScrollToTop = () => {
-        topRef?.current?.scrollIntoView({ behavior: 'smooth' });
+        if (topRef.current) {
+            topRef.current.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            });
+        }
+    };
+
+    const generateQueryParam = (key: string, value: string) => {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set(key, value);
+        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+    };
+
+    const handleChangeSelectSortOrder = (
+        e: SingleValue<{
+            value: string;
+            label: string;
+        }>
+    ) => {
+        setSortOrder(e?.value || '');
+        generateQueryParam('sort', e?.value || '');
+        dispatch(actions.setSort({ order: e?.value || '', isIncludeSold: isIncludeSold }));
+    };
+    const handleChangeIsIncludeSold = () => {
+        setIsIncludeSold(!isIncludeSold);
+        generateQueryParam('sold', (!isIncludeSold).toString());
+        dispatch(actions.setSort({ order: sortOrder, isIncludeSold: !isIncludeSold }));
     };
 
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
@@ -156,17 +204,41 @@ const AssetsList = () => {
                 onClose={drawerStack.deactivate}
             />
 
-            <Stack direction="row" justifyContent="space-between" alignItems="center" p={3}>
-                <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
-                    <Box display="flex" alignItems="center">
-                        <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
-                        <Box display={'flex'} gap={1}>
-                            <Typography variant={lgUp ? 'h4' : 'h5'}>
-                                {language['search.assetList.curateStack'] as string}
-                            </Typography>
-                            {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
-                        </Box>
-                    </Box>
+            <Stack width="100%" direction="row" display="flex" justifyContent="space-between" alignItems="center" p={3}>
+                <Grid
+                    item
+                    xs={12}
+                    sm={'auto'}
+                    display={'flex'}
+                    gap={lgUp ? 4 : 0}
+                    flexDirection={lgUp ? 'row' : 'column'}
+                >
+                    <Select
+                        placeholder="Sort"
+                        options={optionsForSelectSort}
+                        onChange={(e) => handleChangeSelectSortOrder(e)}
+                        styles={{
+                            control: (base, state) => ({
+                                ...base,
+                                minWidth: '12vw',
+                                borderColor: state.isFocused ? '#00d6f4' : '#E0E0E0',
+                                boxShadow: '#00d6f4',
+                                '&:hover': {
+                                    borderColor: '#00d6f4',
+                                },
+                            }),
+                            menu: (base) => ({
+                                ...base,
+                                zIndex: 1000,
+                            }),
+                        }}
+                    />
+                    <FormControlLabel
+                        control={<Checkbox checked={isIncludeSold} onChange={handleChangeIsIncludeSold} />}
+                        label="Include Sold"
+                    />
+                </Grid>
+                <Box display={'flex'}>
                     {curateStack.isActive && (
                         <Box
                             sx={{ cursor: 'pointer' }}
@@ -176,12 +248,12 @@ const AssetsList = () => {
                             onClick={drawerStack.activate}
                         >
                             {lgUp && (
-                                <>
+                                <Box display="flex" alignItems="center" gap={2}>
                                     <Typography variant="h4">
                                         {selected.length} {language['search.assetList.curateStack.selected'] as string}
                                     </Typography>
                                     <IconCopy width={20} />
-                                </>
+                                </Box>
                             )}
 
                             {!lgUp && (
@@ -191,6 +263,16 @@ const AssetsList = () => {
                             )}
                         </Box>
                     )}
+
+                    <Box display="flex" alignItems="center">
+                        <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
+                        <Box display={'flex'} gap={1}>
+                            <Typography variant={lgUp ? 'h4' : 'h5'}>
+                                {language['search.assetList.curateStack'] as string}
+                            </Typography>
+                            {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
+                        </Box>
+                    </Box>
                 </Box>
             </Stack>
 
@@ -204,7 +286,18 @@ const AssetsList = () => {
                     maxHeight: '85vh',
                     justifyContent: 'flex-end',
                 }}
+                ref={topRef}
             >
+                <Grid
+                    item
+                    xs={12}
+                    style={{
+                        paddingTop: 0,
+                    }}
+                >
+                    {currentPage === 1 && <Slider />}
+                </Grid>
+
                 <Grid item xs={12} sm={'auto'} mr={4} mb={4} minWidth={'16%'}>
                     <Select
                         placeholder="Select Page"
@@ -225,7 +318,7 @@ const AssetsList = () => {
                     />
                 </Grid>
 
-                <Grid container ref={topRef} display={'flex'} ml={4} rowGap={3}>
+                <Grid container display={'flex'} ml={4} rowGap={3}>
                     {assets.length > 0 ? (
                         <>
                             {activeAssets.map((asset) => (
@@ -281,12 +374,25 @@ const AssetsList = () => {
                             </AssetCardContainer>
                         ))
                     ) : (
-                        <Grid item xs={12}>
-                            <Box textAlign="center" mt={6}>
+                        <Grid
+                            item
+                            xl={12}
+                            lg={12}
+                            md={12}
+                            sm={12}
+                            xs={12}
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                minWidth: 'calc(100vw - 320px)',
+                            }}
+                        >
+                            <Box textAlign="center" mt={6} width="100%">
                                 <Image src={emptyCart} alt="cart" width={200} />
-                                <Typography variant="h2">There is no Asset</Typography>
+                                <Typography variant="h2">No Asset found</Typography>
                                 <Typography variant="h6" mb={3}>
-                                    The Asset you are searching is no longer available.
+                                    The Asset you are searching for could not be found.
                                 </Typography>
                             </Box>
                         </Grid>

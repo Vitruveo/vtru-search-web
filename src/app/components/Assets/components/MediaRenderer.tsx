@@ -1,17 +1,20 @@
 import Image from 'next/image';
-import { Stack, Typography } from '@mui/material';
+import { Stack, Typography, useMediaQuery } from '@mui/material';
 import { useState } from 'react';
+import { IconPlayerPlayFilled } from '@tabler/icons-react';
 
 interface MediaRendererProps {
     src: string;
     fallbackSrc?: string;
+    autoPlay?: boolean;
 }
 
-export const MediaRenderer = (props: MediaRendererProps) => {
-    const [src, setSrc] = useState(props.src);
+export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false }: MediaRendererProps) => {
+    const [src, setSrc] = useState(source);
+    const isMobile = useMediaQuery('(max-width: 900px)');
 
     const onError = () => {
-        setSrc(props?.fallbackSrc ?? 'fallback');
+        setSrc(fallbackSrc ?? 'fallback');
     };
 
     const isImage = src.match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
@@ -19,13 +22,44 @@ export const MediaRenderer = (props: MediaRendererProps) => {
 
     if (isVideo) {
         return (
-            <video autoPlay muted loop style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} onError={onError}>
-                <source src={src} type="video/mp4" />
-            </video>
+            <div
+                style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '100%',
+                    borderTopRightRadius: 10,
+                    borderTopLeftRadius: 10,
+                }}
+            >
+                <video
+                    autoPlay={!isMobile || autoPlay}
+                    muted
+                    loop
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        borderRadius: 'inherit',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        borderTopRightRadius: 10,
+                        borderTopLeftRadius: 10,
+                    }}
+                    onError={onError}
+                >
+                    <source src={src} type="video/mp4" />
+                </video>
+                <IconPlayerPlayFilled
+                    style={
+                        isMobile && !autoPlay ? { position: 'absolute', bottom: 10, right: 10 } : { display: 'none' }
+                    }
+                />
+            </div>
         );
     }
 
-    if (isImage || src === props.fallbackSrc) {
+    if (isImage || src === fallbackSrc) {
         return (
             <Image
                 src={src}

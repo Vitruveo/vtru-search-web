@@ -1,54 +1,41 @@
-import { useSelector } from '@/store/hooks';
 import { Box, Slider, Stack, Typography } from '@mui/material';
-import { useRef } from 'react';
 import { formatPrice } from '@/utils/assets';
+import { useSelector } from '@/store/hooks';
 
 interface RangeProps {
     afterChange?: (minValue: number, maxValue: number) => void;
 }
 
+export const minPrice = 0;
+export const maxPrice = 10000;
+
 export const Range = ({ afterChange }: RangeProps) => {
-    const price = useSelector((state) => state.filters.price);
     const max = useSelector((state) => state.assets.maxPrice);
-    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const { reseted, price } = useSelector((state) => state.filters);
 
-    const onChange = (event: Event, newValue: number | number[]) => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-        }
-        if (newValue instanceof Array) {
-            timeoutRef.current = setTimeout(() => {
-                afterChange?.(newValue[0], newValue[1]);
-            }, 1000);
-        }
+    const onChange = (_event: Event | null, newValue: number | number[]) => {
+        if (!Array.isArray(newValue)) return;
+
+        const [start, end] = newValue;
+        const isMinRange = start === minPrice && end === minPrice;
+        afterChange?.(isMinRange ? minPrice : start, isMinRange ? max : end);
     };
-
-    const marks = [
-        {
-            value: 0,
-            label: '',
-        },
-        {
-            value: max,
-            label: '',
-        },
-    ];
 
     return (
         <Box>
             <Slider
-                key={Date.now()} // Remontando o componente para que ele utilize o defaulValue como se fosse um value
-                defaultValue={[price.min, price.max]}
+                key={reseted}
+                defaultValue={[minPrice, minPrice]}
+                value={[price.min, price.max === max ? minPrice : price.max]}
                 step={10}
                 onChange={onChange}
                 valueLabelDisplay="auto"
-                min={0}
-                max={max}
-                marks={marks}
+                min={minPrice}
+                max={maxPrice}
             />
             <Stack direction="row" justifyContent="space-between" p={0}>
-                <Typography fontSize={11}>{formatPrice(0)}</Typography>
-                <Typography fontSize={11}>{formatPrice(max)}</Typography>
+                <Typography fontSize={11}>{formatPrice(minPrice)}</Typography>
+                <Typography fontSize={11}>{formatPrice(maxPrice)}</Typography>
             </Stack>
         </Box>
     );

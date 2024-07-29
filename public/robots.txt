@@ -1,0 +1,11 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://search.vitruveo.xyz
+
+# Sitemaps
+Sitemap: https://search.vitruveo.xyz/sitemap.xml
+Sitemap: https://search.vitruveo.xyz/my-custom-sitemap-1.xml
+Sitemap: https://search.vitruveo.xyz/my-custom-sitemap-2.xml

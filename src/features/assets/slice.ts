@@ -1,7 +1,7 @@
 'use client';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import type { AssetsSliceState, GetAssetsParams, GetCreatorParams } from './types';
+import type { AssetsSliceState, GetAssetsParams, GetCreatorParams, LastSoldAsset } from './types';
 
 const initialState: AssetsSliceState = {
     loading: false,
@@ -13,6 +13,7 @@ const initialState: AssetsSliceState = {
         total: 0,
         totalPage: 0,
     },
+    lastSold: [],
     tags: [],
     creator: {
         username: '',
@@ -21,6 +22,10 @@ const initialState: AssetsSliceState = {
     video: '',
     loadingVideo: false,
     maxPrice: 0, // this is used to mark the max price of the price range slider
+    sort: {
+        order: '',
+        isIncludeSold: false,
+    },
 };
 
 export const assetsSlice = createSlice({
@@ -28,6 +33,7 @@ export const assetsSlice = createSlice({
     initialState,
     reducers: {
         loadAssets: (state, action: PayloadAction<GetAssetsParams | null>) => {},
+        loadAssetsLastSold: (state, action: PayloadAction) => {},
         startLoading: (state) => {
             state.loading = true;
         },
@@ -44,6 +50,9 @@ export const assetsSlice = createSlice({
         setData: (state, action: PayloadAction<AssetsSliceState['data']>) => {
             state.data = action.payload;
         },
+        setSort: (state, action: PayloadAction<AssetsSliceState['sort']>) => {
+            state.sort = action.payload;
+        },
         setLoadingVideo: (state, action: PayloadAction<boolean>) => {
             state.loadingVideo = action.payload;
         },
@@ -59,6 +68,9 @@ export const assetsSlice = createSlice({
         },
         setCurrentPage: (state, action: PayloadAction<number>) => {
             state.data.page = action.payload;
+        },
+        setLastSold: (state, action: PayloadAction<LastSoldAsset[]>) => {
+            state.lastSold = action.payload;
         },
     },
 });

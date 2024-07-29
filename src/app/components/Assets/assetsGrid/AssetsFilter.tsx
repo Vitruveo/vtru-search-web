@@ -11,6 +11,9 @@ import {
     Stack,
     useMediaQuery,
     Theme,
+    Checkbox,
+    FormGroup,
+    FormControlLabel,
 } from '@mui/material';
 import assetsMetadata from '@/mock/assetsMetadata.json';
 import { actions } from '@/features/filters/slice';
@@ -26,12 +29,19 @@ import type {
 import type { Context, Taxonomy, Creators } from '../types';
 import Version from '../../Version';
 import { AssetFilterAccordion } from './AssetFilterAccordion';
-import { Range } from '../components/Range';
+import { minPrice, Range } from '../components/Range';
 import { useSelector } from '@/store/hooks';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FilterSliceState } from '@/features/filters/types';
 
 const Filters = () => {
+    const [isNuditychecked, setIsNudityChecked] = useState(false);
+    const [isAIchecked, setIsAIChecked] = useState(true);
+    const [isVideoChecked, setIsVideoChecked] = useState(false);
+    const [isPhotographyChecked, setIsPhotographyChecked] = useState(false);
+    const [isHorizontalChecked, setIsHorizontalChecked] = useState(false);
+    const [isVerticalChecked, setIsVerticalChecked] = useState(false);
+
     const [contextFilters, setContextFilters] = useState<number>();
     const [taxonomyFilters, setTaxonomyFilters] = useState<number>();
     const [creatorsFilters, setCreatorsFilters] = useState<number>();
@@ -41,13 +51,18 @@ const Filters = () => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
     const values = useSelector((state) => state.filters);
-    const tags = useSelector((state) => state.assets.tags);
+    const price = useSelector((state) => state.filters.price);
+    const { tags, maxPrice } = useSelector((state) => state.assets);
 
     const getTotalFiltersApplied = (fieldName: keyof FilterSliceState) => {
         return Object.entries(values[fieldName]).reduce((acc, [_key, arrayfield]) => {
             return Array.isArray(arrayfield) ? acc + arrayfield.length : acc;
         }, 0);
     };
+
+    useEffect(() => {
+        if (price.min === minPrice && price.max === minPrice) dispatch(actions.changePrice({ min: 0, max: maxPrice }));
+    }, [dispatch]);
 
     useEffect(() => {
         const updateFilters = (
@@ -61,7 +76,13 @@ const Filters = () => {
         updateFilters('context', setContextFilters);
         updateFilters('taxonomy', setTaxonomyFilters);
         updateFilters('creators', setCreatorsFilters);
-    }, [values.context, values.taxonomy, values.creators]);
+        setIsNudityChecked(values.shortCuts.nudity === 'yes');
+        setIsAIChecked(values.shortCuts.aiGeneration === 'full');
+        setIsVideoChecked(values.taxonomy.category.includes('video'));
+        setIsPhotographyChecked(values.taxonomy.category.includes('photography'));
+        setIsHorizontalChecked(values.context.orientation.includes('horizontal'));
+        setIsVerticalChecked(values.context.orientation.includes('vertical'));
+    }, [values.context, values.taxonomy, values.creators, values.shortCuts]);
 
     const afterPriceChange = (min: number, max: number) => {
         dispatch(
@@ -70,6 +91,58 @@ const Filters = () => {
                 max,
             })
         );
+    };
+
+    const generateQueryParam = (key: string, value: string) => {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set(key, value);
+        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+    };
+
+    const handleChangeNudity = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIsNudityChecked(event.target.checked);
+        dispatch(actions.changeShortCut({ key: 'nudity', value: event.target.checked ? 'yes' : 'no' }));
+        generateQueryParam('nudity', event.target.checked ? 'true' : 'false');
+        dispatch(actions.change({ key: 'taxonomy', value: { nudity: event.target.checked ? ['yes'] : ['no'] } }));
+    };
+    const handleChangeAI = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIsAIChecked(event.target.checked);
+        dispatch(actions.changeShortCut({ key: 'aiGeneration', value: event.target.checked ? 'full' : 'none' }));
+        generateQueryParam('ai', event.target.checked ? 'true' : 'false');
+        dispatch(
+            actions.change({ key: 'taxonomy', value: { aiGeneration: event.target.checked ? ['full'] : ['none'] } })
+        );
+    };
+    const handleResetFilters = () => {
+        const params = new URLSearchParams(window.location.search);
+        params.set('sort', 'latest');
+        // params.set('order', 'asc');
+        params.set('sold', 'false');
+        params.set('ai', 'true');
+        params.set('nudity', 'false');
+
+        window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+        dispatch(actions.reset({ maxPrice }));
+    };
+
+    const handleChangeVideo = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['video'] : [] } }));
+        setIsVideoChecked(event.target.checked);
+    };
+    const handleChangePhotography = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['photography'] : [] } }));
+        setIsPhotographyChecked(event.target.checked);
+    };
+    const handleChangeHorizontal = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(
+            actions.change({ key: 'context', value: { orientation: event.target.checked ? ['horizontal'] : [] } })
+        );
+        setIsHorizontalChecked(event.target.checked);
+    };
+    const handleChangeVertical = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(actions.change({ key: 'context', value: { orientation: event.target.checked ? ['vertical'] : [] } }));
+        setIsVerticalChecked(event.target.checked);
     };
 
     return (
@@ -90,6 +163,37 @@ const Filters = () => {
                 value={values.name}
                 onChange={(e) => dispatch(actions.changeName({ name: e.target.value }))}
             />
+
+            <FormGroup sx={{ display: 'flex', flexDirection: 'row', marginLeft: '8%' }}>
+                <Box display={'flex'} flexDirection={'column'}>
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangeNudity} checked={isNuditychecked} />}
+                        label={'Nudity'}
+                    />
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangeVideo} checked={isVideoChecked} />}
+                        label={'Video'}
+                    />
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangeVertical} checked={isVerticalChecked} />}
+                        label={'Vertical'}
+                    />
+                </Box>
+                <Box display={'flex'} flexDirection={'column'}>
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangeAI} checked={isAIchecked} />}
+                        label={'AI'}
+                    />
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangePhotography} checked={isPhotographyChecked} />}
+                        label={'Photography'}
+                    />
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangeHorizontal} checked={isHorizontalChecked} />}
+                        label={'Horizontal'}
+                    />
+                </Box>
+            </FormGroup>
 
             <AssetFilterAccordion title="Licenses">
                 <Box>
@@ -291,7 +395,7 @@ const Filters = () => {
             </AssetFilterAccordion>
 
             <Box>
-                <Button variant="contained" onClick={() => dispatch(actions.reset())} fullWidth>
+                <Button variant="contained" onClick={handleResetFilters} fullWidth>
                     {language['search.assetFilter.resetFilters'] as string}
                 </Button>
             </Box>
