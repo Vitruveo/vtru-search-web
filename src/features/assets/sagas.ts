@@ -205,7 +205,7 @@ export function* assetsSagas() {
         takeEvery(actions.makeVideo.type, makeVideo),
         takeEvery(actions.setSort.type, getAssets),
         takeEvery(actionsFilter.change.type, getAssets),
-        takeEvery(actionsFilter.changeShortCut.type, getAssets),
+        // takeEvery(actionsFilter.changeShortCut.type, getAssets),
         debounce(1000, actionsFilter.changeName.type, getAssets),
         debounce(500, actions.setCurrentPage.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),
