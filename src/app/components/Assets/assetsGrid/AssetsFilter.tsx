@@ -102,13 +102,13 @@ const Filters = () => {
 
     const handleChangeNudity = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsNudityChecked(event.target.checked);
-        dispatch(actions.changeShortCut({ key: 'nudity', value: event.target.checked ? 'yes' : 'no' }));
+        // dispatch(actions.changeShortCut({ key: 'nudity', value: event.target.checked ? 'yes' : 'no' }));
         generateQueryParam('nudity', event.target.checked ? 'true' : 'false');
         dispatch(actions.change({ key: 'taxonomy', value: { nudity: event.target.checked ? ['yes'] : ['no'] } }));
     };
     const handleChangeAI = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsAIChecked(event.target.checked);
-        dispatch(actions.changeShortCut({ key: 'aiGeneration', value: event.target.checked ? 'full' : 'none' }));
+        // dispatch(actions.changeShortCut({ key: 'aiGeneration', value: event.target.checked ? 'full' : 'none' }));
         generateQueryParam('ai', event.target.checked ? 'true' : 'false');
         dispatch(
             actions.change({ key: 'taxonomy', value: { aiGeneration: event.target.checked ? ['full'] : ['none'] } })
