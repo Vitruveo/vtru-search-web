@@ -52,6 +52,7 @@ const AssetsList = () => {
 
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const { data: assets, totalPage, page: currentPage } = useSelector((state) => state.assets.data);
+    const { sort } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
 
     const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets);
@@ -114,6 +115,11 @@ const AssetsList = () => {
     useEffect(() => {
         if (currentPage > totalPage) dispatch(actions.setCurrentPage(totalPage));
     }, [totalPage]);
+
+    useEffect(() => {
+        setSortOrder(sort.order);
+        setIsIncludeSold(sort.isIncludeSold);
+    }, [sort]);
 
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
@@ -216,11 +222,12 @@ const AssetsList = () => {
                     <Select
                         placeholder="Sort"
                         options={optionsForSelectSort}
+                        value={optionsForSelectSort.find((option) => option.value === sortOrder)}
                         onChange={(e) => handleChangeSelectSortOrder(e)}
                         styles={{
                             control: (base, state) => ({
                                 ...base,
-                                minWidth: '12vw',
+                                minWidth: '240px',
                                 borderColor: state.isFocused ? '#00d6f4' : '#E0E0E0',
                                 boxShadow: '#00d6f4',
                                 '&:hover': {
