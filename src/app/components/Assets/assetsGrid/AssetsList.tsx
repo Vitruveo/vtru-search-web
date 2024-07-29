@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import Select from 'react-select';
+import Select, { SingleValue } from 'react-select';
 import { useSelector } from '@/store/hooks';
 import Image from 'next/image';
 import {
@@ -13,6 +13,9 @@ import {
     Switch,
     Badge,
     Button,
+    Divider,
+    Checkbox,
+    FormControlLabel,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { IconCopy } from '@tabler/icons-react';
@@ -39,6 +42,8 @@ const AssetsList = () => {
     const [assetView, setAssetView] = useState<any>();
     const [selected, setSelected] = useState<Asset[]>([]);
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
+    const [sortOrder, setSortOrder] = useState<string>('latest');
+    const [isIncludeSold, setIsIncludeSold] = useState<boolean>(false);
     const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
@@ -59,6 +64,16 @@ const AssetsList = () => {
         }
         return options;
     }, [totalPage]);
+
+    const optionsForSelectSort = [
+        { value: 'latest', label: 'Latest' },
+        { value: 'priceHighToLow', label: 'Price – High to Low' },
+        { value: 'priceLowToHigh', label: 'Price – Low to High' },
+        { value: 'creatorAZ', label: 'Creator – A-Z' },
+        { value: 'creatorZA', label: 'Creator – Z-A' },
+        { value: 'consignNewToOld', label: 'Consign Date – New to Old' },
+        { value: 'consignOldToNew', label: 'Consign Date – Old to New' },
+    ];
 
     const getTotalFiltersApplied = () => {
         const fields = {
@@ -141,6 +156,29 @@ const AssetsList = () => {
         }
     };
 
+    const generateQueryParam = (key: string, value: string) => {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set(key, value);
+        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+    };
+
+    const handleChangeSelectSortOrder = (
+        e: SingleValue<{
+            value: string;
+            label: string;
+        }>
+    ) => {
+        setSortOrder(e?.value || '');
+        generateQueryParam('sort', e?.value || '');
+        dispatch(actions.setSort({ order: e?.value || '', isIncludeSold: isIncludeSold }));
+    };
+    const handleChangeIsIncludeSold = () => {
+        setIsIncludeSold(!isIncludeSold);
+        generateQueryParam('sold', (!isIncludeSold).toString());
+        dispatch(actions.setSort({ order: sortOrder, isIncludeSold: !isIncludeSold }));
+    };
+
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
 
     const onAssetDrawerClose = () => {
@@ -166,38 +204,74 @@ const AssetsList = () => {
                 onClose={drawerStack.deactivate}
             />
 
-            <Stack width="100%" direction="row" display="flex" justifyContent="flex-end" alignItems="center" p={3}>
-                {curateStack.isActive && (
-                    <Box
-                        sx={{ cursor: 'pointer' }}
-                        display="flex"
-                        alignItems="center"
-                        gap={1}
-                        onClick={drawerStack.activate}
-                    >
-                        {lgUp && (
-                            <Box display="flex" alignItems="center" gap={2}>
-                                <Typography variant="h4">
-                                    {selected.length} {language['search.assetList.curateStack.selected'] as string}
-                                </Typography>
-                                <IconCopy width={20} />
-                            </Box>
-                        )}
+            <Stack width="100%" direction="row" display="flex" justifyContent="space-between" alignItems="center" p={3}>
+                <Grid
+                    item
+                    xs={12}
+                    sm={'auto'}
+                    display={'flex'}
+                    gap={lgUp ? 4 : 0}
+                    flexDirection={lgUp ? 'row' : 'column'}
+                >
+                    <Select
+                        placeholder="Sort"
+                        options={optionsForSelectSort}
+                        onChange={(e) => handleChangeSelectSortOrder(e)}
+                        styles={{
+                            control: (base, state) => ({
+                                ...base,
+                                minWidth: '12vw',
+                                borderColor: state.isFocused ? '#00d6f4' : '#E0E0E0',
+                                boxShadow: '#00d6f4',
+                                '&:hover': {
+                                    borderColor: '#00d6f4',
+                                },
+                            }),
+                            menu: (base) => ({
+                                ...base,
+                                zIndex: 1000,
+                            }),
+                        }}
+                    />
+                    <FormControlLabel
+                        control={<Checkbox checked={isIncludeSold} onChange={handleChangeIsIncludeSold} />}
+                        label="Include Sold"
+                    />
+                </Grid>
+                <Box display={'flex'}>
+                    {curateStack.isActive && (
+                        <Box
+                            sx={{ cursor: 'pointer' }}
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            onClick={drawerStack.activate}
+                        >
+                            {lgUp && (
+                                <Box display="flex" alignItems="center" gap={2}>
+                                    <Typography variant="h4">
+                                        {selected.length} {language['search.assetList.curateStack.selected'] as string}
+                                    </Typography>
+                                    <IconCopy width={20} />
+                                </Box>
+                            )}
 
-                        {!lgUp && (
-                            <Badge badgeContent={selected.length} color="primary">
-                                <IconCopy width={20} color={iconColor} />
-                            </Badge>
-                        )}
-                    </Box>
-                )}
-                <Box display="flex" alignItems="center">
-                    <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
-                    <Box display={'flex'} gap={1}>
-                        <Typography variant={lgUp ? 'h4' : 'h5'}>
-                            {language['search.assetList.curateStack'] as string}
-                        </Typography>
-                        {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
+                            {!lgUp && (
+                                <Badge badgeContent={selected.length} color="primary">
+                                    <IconCopy width={20} color={iconColor} />
+                                </Badge>
+                            )}
+                        </Box>
+                    )}
+
+                    <Box display="flex" alignItems="center">
+                        <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
+                        <Box display={'flex'} gap={1}>
+                            <Typography variant={lgUp ? 'h4' : 'h5'}>
+                                {language['search.assetList.curateStack'] as string}
+                            </Typography>
+                            {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
+                        </Box>
                     </Box>
                 </Box>
             </Stack>

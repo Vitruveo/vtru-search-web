@@ -22,6 +22,10 @@ const initialState: AssetsSliceState = {
     video: '',
     loadingVideo: false,
     maxPrice: 0, // this is used to mark the max price of the price range slider
+    sort: {
+        order: '',
+        isIncludeSold: false,
+    },
 };
 
 export const assetsSlice = createSlice({
@@ -45,6 +49,9 @@ export const assetsSlice = createSlice({
         },
         setData: (state, action: PayloadAction<AssetsSliceState['data']>) => {
             state.data = action.payload;
+        },
+        setSort: (state, action: PayloadAction<AssetsSliceState['sort']>) => {
+            state.sort = action.payload;
         },
         setLoadingVideo: (state, action: PayloadAction<boolean>) => {
             state.loadingVideo = action.payload;

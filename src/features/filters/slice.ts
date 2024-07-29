@@ -62,6 +62,10 @@ const initialState: FilterSliceState = {
     showAdditionalAssets: {
         value: false,
     },
+    shortCuts: {
+        nudity: 'no',
+        aiGeneration: 'full',
+    },
 };
 
 export const filterSlice = createSlice({
@@ -88,16 +92,24 @@ export const filterSlice = createSlice({
                 ...(action.payload.value as any),
             };
         },
+        changeShortCut: (state, action: PayloadAction<{ key: keyof FilterSliceState['shortCuts']; value: string }>) => {
+            state.shortCuts[action.payload.key] = action.payload.value;
+        },
         reset: (state, action: PayloadAction<{ maxPrice: number }>) => {
             state.name = '';
             state.context = initialState.context;
-            state.taxonomy = initialState.taxonomy;
+            state.taxonomy = {
+                ...initialState.taxonomy,
+                nudity: ['no'],
+                aiGeneration: ['full'],
+            };
             state.creators = initialState.creators;
             state.provenance = initialState.provenance;
             state.price = {
                 min: 0,
                 max: action.payload.maxPrice,
             };
+            state.shortCuts = initialState.shortCuts;
             state.reseted += 1;
             clearAssetsFromURL();
         },

@@ -42,7 +42,11 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
 
     try {
         const name: string = yield select((state: AppState) => state.filters.name);
+        const isNudityEnable: string = yield select((state: AppState) => state.filters.shortCuts.nudity);
+        const isAIEnable: string = yield select((state: AppState) => state.filters.shortCuts.aiGeneration);
         const page: number = yield select((state: AppState) => state.assets.data.page);
+        const order: string = yield select((state: AppState) => state.assets.sort.order);
+        const isIncludeSold: boolean = yield select((state: AppState) => state.assets.sort.isIncludeSold);
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
         const filtersCreators: FilterSliceState['creators'] = yield select((state: AppState) => state.filters.creators);
@@ -54,9 +58,15 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             (state: AppState) => state.filters.showAdditionalAssets.value
         );
 
+        const filtersTaxonomyCopy = {
+            ...filtersTaxonomy,
+            nudity: filtersTaxonomy.nudity.length > 0 ? filtersTaxonomy.nudity : [isNudityEnable],
+            aiGeneration: filtersTaxonomy.aiGeneration.length > 0 ? filtersTaxonomy.aiGeneration : [isAIEnable],
+        };
+
         const buildFilters = {
             context: filtersContext,
-            taxonomy: filtersTaxonomy,
+            taxonomy: filtersTaxonomyCopy,
             creators: filtersCreators,
         };
 
@@ -100,6 +110,10 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 name: name.trim() ? name : null,
                 precision: colorPrecision.value,
                 showAdditionalAssets,
+                sort: {
+                    order,
+                    isIncludeSold,
+                },
             },
         });
 
@@ -173,6 +187,7 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
 
 function* setup() {
     const { context, taxonomy, creators }: FilterSliceState = yield select((state: AppState) => state.filters);
+    yield put(actions.setSort({ order: '', isIncludeSold: false }));
     const filters = {
         context: filterTruthAndNonEmpty(context),
         taxonomy: filterTruthAndNonEmpty(taxonomy),
@@ -188,7 +203,9 @@ export function* assetsSagas() {
         takeEvery(actions.loadAssetsLastSold.type, getAssetsLastSold),
         takeEvery(actions.loadCreator.type, getCreator),
         takeEvery(actions.makeVideo.type, makeVideo),
+        takeEvery(actions.setSort.type, getAssets),
         takeEvery(actionsFilter.change.type, getAssets),
+        takeEvery(actionsFilter.changeShortCut.type, getAssets),
         debounce(1000, actionsFilter.changeName.type, getAssets),
         debounce(500, actions.setCurrentPage.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),
