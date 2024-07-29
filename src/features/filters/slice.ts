@@ -98,7 +98,11 @@ export const filterSlice = createSlice({
         reset: (state, action: PayloadAction<{ maxPrice: number }>) => {
             state.name = '';
             state.context = initialState.context;
-            state.taxonomy = initialState.taxonomy;
+            state.taxonomy = {
+                ...initialState.taxonomy,
+                nudity: ['no'],
+                aiGeneration: ['full'],
+            };
             state.creators = initialState.creators;
             state.provenance = initialState.provenance;
             state.price = {

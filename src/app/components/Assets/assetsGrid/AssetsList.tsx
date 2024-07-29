@@ -175,7 +175,7 @@ const AssetsList = () => {
     };
     const handleChangeIsIncludeSold = () => {
         setIsIncludeSold(!isIncludeSold);
-        generateQueryParam('includeSold', (!isIncludeSold).toString());
+        generateQueryParam('sold', (!isIncludeSold).toString());
         dispatch(actions.setSort({ order: sortOrder, isIncludeSold: !isIncludeSold }));
     };
 

@@ -35,12 +35,12 @@ import React, { useEffect, useState } from 'react';
 import { FilterSliceState } from '@/features/filters/types';
 
 const Filters = () => {
-    const [isNuditychecked, setIsNudityChecked] = useState<boolean>(false);
-    const [isAIchecked, setIsAIChecked] = useState<boolean>(true);
-    const [isVideoChecked, setIsVideoChecked] = useState<boolean>(false);
-    const [isPhotographyChecked, setIsPhotographyChecked] = useState<boolean>(false);
-    const [isHorizontalChecked, setIsHorizontalChecked] = useState<boolean>(false);
-    const [isVerticalChecked, setIsVerticalChecked] = useState<boolean>(false);
+    const [isNuditychecked, setIsNudityChecked] = useState(false);
+    const [isAIchecked, setIsAIChecked] = useState(true);
+    const [isVideoChecked, setIsVideoChecked] = useState(false);
+    const [isPhotographyChecked, setIsPhotographyChecked] = useState(false);
+    const [isHorizontalChecked, setIsHorizontalChecked] = useState(false);
+    const [isVerticalChecked, setIsVerticalChecked] = useState(false);
 
     const [contextFilters, setContextFilters] = useState<number>();
     const [taxonomyFilters, setTaxonomyFilters] = useState<number>();
@@ -78,6 +78,10 @@ const Filters = () => {
         updateFilters('creators', setCreatorsFilters);
         setIsNudityChecked(values.shortCuts.nudity === 'yes');
         setIsAIChecked(values.shortCuts.aiGeneration === 'full');
+        setIsVideoChecked(values.taxonomy.category.includes('video'));
+        setIsPhotographyChecked(values.taxonomy.category.includes('photography'));
+        setIsHorizontalChecked(values.context.orientation.includes('horizontal'));
+        setIsVerticalChecked(values.context.orientation.includes('vertical'));
     }, [values.context, values.taxonomy, values.creators, values.shortCuts]);
 
     const afterPriceChange = (min: number, max: number) => {
@@ -99,16 +103,26 @@ const Filters = () => {
     const handleChangeNudity = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsNudityChecked(event.target.checked);
         dispatch(actions.changeShortCut({ key: 'nudity', value: event.target.checked ? 'yes' : 'no' }));
-        generateQueryParam('nudity', event.target.checked ? 'yes' : 'no');
+        generateQueryParam('nudity', event.target.checked ? 'true' : 'false');
+        dispatch(actions.change({ key: 'taxonomy', value: { nudity: event.target.checked ? ['yes'] : ['no'] } }));
     };
     const handleChangeAI = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsAIChecked(event.target.checked);
         dispatch(actions.changeShortCut({ key: 'aiGeneration', value: event.target.checked ? 'full' : 'none' }));
-        generateQueryParam('aiGeneration', event.target.checked ? 'full' : 'none');
+        generateQueryParam('ai', event.target.checked ? 'true' : 'false');
+        dispatch(
+            actions.change({ key: 'taxonomy', value: { aiGeneration: event.target.checked ? ['full'] : ['none'] } })
+        );
     };
     const handleResetFilters = () => {
-        const searchParams = new URLSearchParams();
-        window.history.pushState({}, '', `${window.location.pathname}?${searchParams.toString()}`);
+        const params = new URLSearchParams(window.location.search);
+        params.set('sort', 'latest');
+        // params.set('order', 'asc');
+        params.set('sold', 'false');
+        params.set('ai', 'true');
+        params.set('nudity', 'false');
+
+        window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
         dispatch(actions.reset({ maxPrice }));
     };
 
