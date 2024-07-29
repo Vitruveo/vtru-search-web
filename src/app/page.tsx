@@ -15,44 +15,25 @@ import { actions as actionsAssets } from '@/features/assets/slice';
 const Search = () => {
     const dispatch = useDispatch();
     const searchParams = useSearchParams();
-    const router = useRouter();
 
     const sort = searchParams.get('sort');
-    const order = searchParams.get('order');
     const sold = searchParams.get('sold');
     const ai = searchParams.get('ai'); // default = true
     const nudity = searchParams.get('nudity'); // default = false
-
-    if (!sort && !order && !sold && !ai && !nudity) {
-        // redirect to home with default ?sort=latest&order=asc&sold=false&ai=true&nudity=false
-        const params = new URLSearchParams(window.location.search);
-        params.set('sort', 'latest');
-        // params.set('order', 'asc');
-        params.set('sold', 'false');
-        params.set('ai', 'true');
-        params.set('nudity', 'false');
-
-        window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
-        window.location.reload();
-    }
 
     useEffect(() => {
         dispatch(
             actions.change({
                 key: 'taxonomy',
                 value: {
-                    nudity: nudity === 'false' ? ['no'] : nudity === 'true' ? ['yes'] : [],
-                    aiGeneration: ai === 'true' ? ['full'] : ai === 'false' ? ['none'] : [],
+                    nudity: nudity === 'true' ? ['yes'] : ['no'],
+                    aiGeneration: ai === 'false' ? ['none'] : ['full'],
                 },
             })
         );
-        dispatch(
-            actionsAssets.setSort({
-                order: 'latest',
-                isIncludeSold: false,
-            })
-        );
-    }, []);
+
+        dispatch(actionsAssets.setSort({ order: sort || 'latest', isIncludeSold: sold === 'true' }));
+    }, [searchParams]);
 
     return (
         <div>
