@@ -24,7 +24,7 @@ export default function GridStack({ selectedAssets }: GridStackProps) {
     const [screenShot, setScreenShot] = useState('');
     const { language } = useI18n();
 
-    const captureScreenshot = async () => {
+    const captureScreenshot = () => {
         if (captureRef.current) {
             html2canvas(captureRef.current).then((canvas) => {
                 const image = canvas.toDataURL('image/png');
@@ -32,7 +32,7 @@ export default function GridStack({ selectedAssets }: GridStackProps) {
                 if (screenShot) {
                     const newTab = window.open();
                     if (newTab) {
-                        newTab.document.body.innerHTML = `<img src="${image}" style="width: 600px; height: 600px;" alt="Screenshot"/>`;
+                        newTab.document.body.innerHTML = `<img src="${image}" style="width: 200px; height: 200px;" alt="Screenshot"/>`;
                     }
                 }
             });
