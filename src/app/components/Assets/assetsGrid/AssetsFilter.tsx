@@ -161,7 +161,10 @@ const Filters = () => {
                 }
                 fullWidth
                 value={values.name}
-                onChange={(e) => dispatch(actions.changeName({ name: e.target.value }))}
+                onChange={(e) => {
+                    generateQueryParam('search', e.target.value);
+                    dispatch(actions.changeName({ name: e.target.value }));
+                }}
             />
 
             <FormGroup sx={{ display: 'flex', flexDirection: 'row', marginLeft: '8%' }}>

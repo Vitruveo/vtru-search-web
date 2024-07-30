@@ -20,6 +20,7 @@ const Search = () => {
     const sold = searchParams.get('sold');
     const ai = searchParams.get('ai'); // default = true
     const nudity = searchParams.get('nudity'); // default = false
+    const search = searchParams.get('search');
 
     useEffect(() => {
         dispatch(
@@ -31,6 +32,8 @@ const Search = () => {
                 },
             })
         );
+
+        if (search) dispatch(actions.changeName({ name: search }));
 
         dispatch(actionsAssets.setSort({ order: sort || 'latest', isIncludeSold: sold === 'true' }));
     }, [searchParams]);
