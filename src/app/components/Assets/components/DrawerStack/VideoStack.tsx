@@ -62,11 +62,13 @@ export default function VideoStack({ selectedAssets, title, selectedAudio, audio
 
     return (
         <>
-            {!published ? (
-                <Typography> 📹 Let is make a video from your amazing curation</Typography>
-            ) : (
-                <Typography>Now share your video with the world</Typography>
-            )}
+            <Box display={'flex'} justifyContent={'center'}>
+                {!published ? (
+                    <Typography> 📹 Let is make a video from your amazing curation</Typography>
+                ) : (
+                    <Typography>Now share your video with the world</Typography>
+                )}
+            </Box>
             {!published && (
                 <Box display="flex" alignItems="center" mb={2} mt={2}>
                     <Typography width={150}>{language['search.drawer.stack.sound'] as string}</Typography>

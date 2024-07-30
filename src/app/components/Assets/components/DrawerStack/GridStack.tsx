@@ -3,8 +3,9 @@ import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { Asset } from '@/features/assets/types';
 import { Box, Button, Typography } from '@mui/material';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ShareButton } from './ShareButton';
+import html2canvas from 'html2canvas';
 
 interface GridStackProps {
     selectedAssets: Asset[];
@@ -17,9 +18,26 @@ const sizes = {
 } as { [key: string]: number };
 
 export default function GridStack({ selectedAssets }: GridStackProps) {
+    const captureRef = useRef<HTMLDivElement | null>(null);
     const [selected, setSelected] = useState('2x2');
     const [confirmedGrid, setConfirmedGrid] = useState(false);
+    const [screenShot, setScreenShot] = useState('');
     const { language } = useI18n();
+
+    const captureScreenshot = async () => {
+        if (captureRef.current) {
+            html2canvas(captureRef.current).then((canvas) => {
+                const image = canvas.toDataURL('image/png');
+                setScreenShot(image);
+                if (screenShot) {
+                    const newTab = window.open();
+                    if (newTab) {
+                        newTab.document.body.innerHTML = `<img src="${image}" style="width: 600px; height: 600px;" alt="Screenshot"/>`;
+                    }
+                }
+            });
+        }
+    };
 
     const handleConfirmGrid = () => {
         setConfirmedGrid(true);
@@ -28,7 +46,9 @@ export default function GridStack({ selectedAssets }: GridStackProps) {
     if (confirmedGrid) {
         return (
             <>
-                <Typography>Now share your image grid with the world</Typography>
+                <Box display={'flex'} justifyContent={'center'}>
+                    <Typography fontWeight={'bold'}>Now share your image grid with the world</Typography>
+                </Box>
                 <Box display={'flex'} flexDirection={'row'} gap={5} mt={4} mb={4} justifyContent={'center'}>
                     <Box
                         display={'grid'}
@@ -36,6 +56,7 @@ export default function GridStack({ selectedAssets }: GridStackProps) {
                         gap={0.5}
                         p={1}
                         border={'2px solid #23afdb'}
+                        ref={captureRef}
                     >
                         {Array.from({ length: Number(selected[0]) ** 2 }).map((_, index) => (
                             <div
@@ -51,7 +72,7 @@ export default function GridStack({ selectedAssets }: GridStackProps) {
                                         src={`${AWS_BASE_URL_S3}/${selectedAssets[index]?.formats?.preview?.path}`}
                                         width={sizes[selected] * 2}
                                         height={sizes[selected] * 2}
-                                        alt={'asset in grid 2x2'}
+                                        alt={`asset in grid ${selected}`}
                                     />
                                 )}
                             </div>
@@ -59,7 +80,9 @@ export default function GridStack({ selectedAssets }: GridStackProps) {
                     </Box>
                 </Box>
                 <Box display={'flex'} justifyContent={'center'}>
-                    <ShareButton twitterURL={''} videoURL="" />
+                    <div style={{ display: 'inline-flex' }} onClick={captureScreenshot}>
+                        <ShareButton twitterURL={''} videoURL={''} />
+                    </div>
                 </Box>
             </>
         );
@@ -67,7 +90,9 @@ export default function GridStack({ selectedAssets }: GridStackProps) {
 
     return (
         <>
-            <Typography> 🖼️ An image grid looks great on social media</Typography>
+            <Box display={'flex'} justifyContent={'center'}>
+                <Typography fontWeight={'bold'}> 🖼️ An image grid looks great on social media</Typography>
+            </Box>
 
             <Box display={'flex'} flexDirection={'row'} gap={5} mt={6} mb={6}>
                 <Box
