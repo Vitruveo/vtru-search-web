@@ -58,6 +58,7 @@ const AssetItem = ({
                 maxWidth: 250,
                 cursor: 'pointer',
                 height: '100%',
+                marginRight: '32px',
             }}
             onClick={() => {
                 if (isCurated) handleChangeCurate();

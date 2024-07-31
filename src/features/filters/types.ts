@@ -55,4 +55,8 @@ export interface FilterSliceState {
     showAdditionalAssets: {
         value: boolean;
     };
+    shortCuts: {
+        nudity: string;
+        aiGeneration: string;
+    };
 }
