@@ -23,7 +23,7 @@ function Slider() {
                 Recently Sold
             </Typography>
             <Marquee>
-                {assets.map((asset) => {
+                {assets.map((asset, index) => {
                     const assetTitle = asset?.assetMetadata?.context?.formData?.title || 'No Title';
 
                     const hasCreator =
@@ -33,6 +33,7 @@ function Slider() {
 
                     const price = getAssetPrice(asset);
 
+                    const nextAssetExists = index + 1 < assets.length;
                     return (
                         <Box
                             display="flex"
@@ -53,6 +54,9 @@ function Slider() {
                                 <MediaRenderer
                                     src={`${AWS_BASE_URL_S3}/${asset?.formats?.path}`}
                                     fallbackSrc={'https://via.placeholder.com/250'}
+                                    preSource={
+                                        nextAssetExists ? `${AWS_BASE_URL_S3}/${assets[index + 1]?.formats?.path}` : ''
+                                    }
                                 />
                             </Box>
                             <CardContent
