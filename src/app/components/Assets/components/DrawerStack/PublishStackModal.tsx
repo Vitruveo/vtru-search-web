@@ -88,7 +88,7 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
                         />
                     </TabPanel>
                     <TabPanel value="2">
-                        <GridStack selectedAssets={selectedAssets} />
+                        <GridStack selectedAssets={selectedAssets} title={title} />
                     </TabPanel>
                 </TabContext>
             </Box>

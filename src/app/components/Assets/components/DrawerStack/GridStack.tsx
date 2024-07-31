@@ -3,12 +3,13 @@ import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { Asset } from '@/features/assets/types';
 import { Box, Button, Typography } from '@mui/material';
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ShareButton } from './ShareButton';
 import html2canvas from 'html2canvas';
 
 interface GridStackProps {
     selectedAssets: Asset[];
+    title: string;
 }
 
 const sizes = {
@@ -17,7 +18,7 @@ const sizes = {
     '4x4': 19,
 } as { [key: string]: number };
 
-export default function GridStack({ selectedAssets }: GridStackProps) {
+export default function GridStack({ selectedAssets, title }: GridStackProps) {
     const captureRef = useRef<HTMLDivElement | null>(null);
     const [selected, setSelected] = useState('2x2');
     const [confirmedGrid, setConfirmedGrid] = useState(false);
@@ -26,27 +27,42 @@ export default function GridStack({ selectedAssets }: GridStackProps) {
 
     const captureScreenshot = () => {
         if (captureRef.current) {
+            captureRef.current.style.cssText = `
+                display: grid;
+                gap: 20px;
+                grid-template-columns: repeat(${selected[0]}, 1fr);
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            `;
+            document.body.style.overflow = 'hidden';
             html2canvas(captureRef.current).then((canvas) => {
+                captureRef.current!.style.display = 'none';
                 setScreenShot(canvas.toDataURL());
-                if (screenShot) {
-                    const newTab = window.open();
-                    if (newTab) {
-                        newTab.document.body.innerHTML = `<img src="${screenShot}" style="width: 200px; height: 200px;" alt="Screenshot"/>`;
-                    }
-                }
             });
         }
     };
+
+    useEffect(() => {
+        if (confirmedGrid) captureScreenshot();
+    }, [confirmedGrid]);
 
     const handleConfirmGrid = () => {
         setConfirmedGrid(true);
     };
 
     if (confirmedGrid) {
+        const canvaSize = 2000;
+
         return (
             <>
                 <Box display={'flex'} justifyContent={'center'}>
                     <Typography fontWeight={'bold'}>Now share your image grid with the world</Typography>
+                    {screenShot && (
+                        <a href={screenShot} download="teste">
+                            baixar arquivo
+                        </a>
+                    )}
                 </Box>
                 <Box display={'flex'} flexDirection={'row'} gap={5} mt={4} mb={4} justifyContent={'center'}>
                     <Box
@@ -55,8 +71,37 @@ export default function GridStack({ selectedAssets }: GridStackProps) {
                         gap={0.5}
                         p={1}
                         border={'2px solid #23afdb'}
-                        ref={captureRef}
                     >
+                        <div
+                            style={{
+                                backgroundColor: '#EEEEEE',
+                                height: canvaSize,
+                                width: canvaSize,
+                                display: 'none',
+                            }}
+                            ref={captureRef}
+                        >
+                            {Array.from({ length: Number(selected[0]) ** 2 }).map((_, index) => (
+                                <div
+                                    key={index}
+                                    style={{
+                                        backgroundColor: '#EEEEEE',
+                                        height: canvaSize,
+                                        width: canvaSize,
+                                    }}
+                                >
+                                    {selectedAssets[index] && (
+                                        <Image
+                                            src={`${AWS_BASE_URL_S3}/${selectedAssets[index]?.formats?.preview?.path}`}
+                                            width={canvaSize}
+                                            height={canvaSize}
+                                            alt={`asset in grid ${selected}`}
+                                        />
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
                         {Array.from({ length: Number(selected[0]) ** 2 }).map((_, index) => (
                             <div
                                 key={index}
@@ -79,9 +124,7 @@ export default function GridStack({ selectedAssets }: GridStackProps) {
                     </Box>
                 </Box>
                 <Box display={'flex'} justifyContent={'center'}>
-                    <div style={{ display: 'inline-flex' }} onClick={captureScreenshot}>
-                        <ShareButton twitterURL={''} videoURL={''} />
-                    </div>
+                    <ShareButton twitterURL={''} videoURL={''} />
                 </Box>
             </>
         );
@@ -181,7 +224,12 @@ export default function GridStack({ selectedAssets }: GridStackProps) {
             </Box>
 
             <Typography variant="caption">Note: Grid is limited to the first 16 curated items.</Typography>
-            <Button variant="contained" fullWidth onClick={handleConfirmGrid}>
+            <Button
+                variant="contained"
+                fullWidth
+                onClick={handleConfirmGrid}
+                disabled={selectedAssets.length === 0 || title.length === 0}
+            >
                 {language['search.drawer.stack.button.publish'] as string}
             </Button>
         </>
