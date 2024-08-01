@@ -7,6 +7,8 @@ export interface InitialState {
     loading: boolean;
     id: string;
     avatar: string | null;
+    preSignedURL: string | null;
+    shareAvailable: boolean;
 }
 
 export interface OptConfirmResponse {
@@ -18,4 +20,17 @@ export interface OptConfirmResponse {
             avatar: string;
         };
     };
+}
+
+export interface PreSignedURLPayload {
+    preSignedURL: string;
+    transactionId: string;
+    path: string;
+    origin: 'asset' | 'profile';
+    method: 'PUT' | 'DELETE';
+}
+
+export interface UploadPayload {
+    preSignedURL: string;
+    screenShot: string;
 }

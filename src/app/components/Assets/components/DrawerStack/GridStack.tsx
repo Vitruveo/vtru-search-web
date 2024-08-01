@@ -6,6 +6,9 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { ShareButton } from './ShareButton';
 import html2canvas from 'html2canvas';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { actions } from '@/features/creator';
+import { socket } from '@/services/socket';
 
 interface GridStackProps {
     selectedAssets: Asset[];
@@ -20,6 +23,8 @@ const sizes = {
 
 export default function GridStack({ selectedAssets, title }: GridStackProps) {
     const captureRef = useRef<HTMLDivElement | null>(null);
+    const dispatch = useDispatch();
+    const { preSignedURL, shareAvailable } = useSelector((state) => state.creator);
     const [selected, setSelected] = useState('2x2');
     const [confirmedGrid, setConfirmedGrid] = useState(false);
     const [screenShot, setScreenShot] = useState('');
@@ -46,6 +51,26 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
     useEffect(() => {
         if (confirmedGrid) captureScreenshot();
     }, [confirmedGrid]);
+
+    useEffect(() => {
+        if (screenShot) {
+            dispatch(actions.requestUpload());
+        }
+    }, [screenShot]);
+
+    useEffect(() => {
+        if (socket.io) dispatch(actions.watchEvents());
+    }, [socket]);
+
+    useEffect(() => {
+        if (preSignedURL && screenShot)
+            dispatch(
+                actions.upload({
+                    preSignedURL,
+                    screenShot,
+                })
+            );
+    }, [preSignedURL, screenShot, dispatch]);
 
     const handleConfirmGrid = () => {
         setConfirmedGrid(true);
@@ -123,9 +148,11 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                         ))}
                     </Box>
                 </Box>
-                <Box display={'flex'} justifyContent={'center'}>
-                    <ShareButton twitterURL={''} videoURL={''} />
-                </Box>
+                {shareAvailable && (
+                    <Box display={'flex'} justifyContent={'center'}>
+                        <ShareButton twitterURL={''} videoURL={''} />
+                    </Box>
+                )}
             </>
         );
     }
