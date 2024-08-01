@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Avatar, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions as actionsCreator } from '@/features/creator';
+import { disconnectWebSocket } from '@/services/socket';
 
 export const AvatarProfile = () => {
     const dispatch = useDispatch();
@@ -18,6 +19,11 @@ export const AvatarProfile = () => {
 
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const handleLogout = () => {
+        dispatch(actionsCreator.logout());
+        disconnectWebSocket();
     };
 
     const src = avatar != null && avatar !== '' ? avatar : '/images/profile/default.png';
@@ -48,7 +54,7 @@ export const AvatarProfile = () => {
                 <MenuItem sx={{ py: 2, px: 3 }}>
                     <Typography>{username || ''}</Typography>
                 </MenuItem>
-                <MenuItem sx={{ py: 2, px: 3 }} onClick={() => dispatch(actionsCreator.logout())}>
+                <MenuItem sx={{ py: 2, px: 3 }} onClick={handleLogout}>
                     <Typography color="#00d6f4">Logout</Typography>
                 </MenuItem>
             </Menu>

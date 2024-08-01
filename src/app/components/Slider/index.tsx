@@ -23,7 +23,7 @@ function Slider() {
                 Recently Sold
             </Typography>
             <Marquee>
-                {assets.map((asset) => {
+                {assets?.map((asset) => {
                     const assetTitle = asset?.assetMetadata?.context?.formData?.title || 'No Title';
 
                     const hasCreator =

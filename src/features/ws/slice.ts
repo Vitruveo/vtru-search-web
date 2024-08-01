@@ -4,6 +4,7 @@ import { InitialState, UploadPayload } from './types';
 const initialState: InitialState = {
     preSignedURL: '',
     shareAvailable: false,
+    path: '',
 };
 
 export const wsSlice = createSlice({
@@ -14,6 +15,9 @@ export const wsSlice = createSlice({
         watchEvents: () => {},
         setPresignedURL: (state, action: PayloadAction<string>) => {
             state.preSignedURL = action.payload;
+        },
+        setPath: (state, action: PayloadAction<string>) => {
+            state.path = action.payload;
         },
         setShareAvailable: (state, action: PayloadAction<boolean>) => {
             state.shareAvailable = action.payload;

@@ -1,6 +1,7 @@
 export interface InitialState {
     preSignedURL: string | null;
     shareAvailable: boolean;
+    path: string;
 }
 
 export interface PreSignedURLPayload {

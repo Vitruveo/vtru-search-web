@@ -78,7 +78,7 @@ export default function VideoStack({ selectedAssets, title, selectedAudio, audio
 
                 {!loadingVideo && (
                     <Box display={'flex'} justifyContent={'center'} mt={2}>
-                        <ShareButton twitterURL={twitterShareURL} videoURL={video} />
+                        <ShareButton twitterURL={twitterShareURL} url={video} />
                     </Box>
                 )}
             </>

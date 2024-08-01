@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Box, Button,ListItemIcon, ListItemText, Menu, MenuItem, MenuList } from '@mui/material';
+import { Box, Button, ListItemIcon, ListItemText, Menu, MenuItem, MenuList } from '@mui/material';
 import ShareIcon from '@mui/icons-material/Share';
 import XIcon from '@mui/icons-material/X';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import DoneIcon from '@mui/icons-material/Done';
+import { IconDownload } from '@tabler/icons-react';
 
 interface ShareButtonProps {
     twitterURL: string;
-    videoURL: string;
+    url: string;
+    downloadable?: boolean;
+    title?: string;
 }
 
-export const ShareButton = ({ twitterURL, videoURL }: ShareButtonProps) => {
+export const ShareButton = ({ twitterURL, url, downloadable = false, title }: ShareButtonProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [isCopied, setIsCopied] = useState(false);
 
@@ -33,11 +36,18 @@ export const ShareButton = ({ twitterURL, videoURL }: ShareButtonProps) => {
 
     const onCopyClick = () => {
         setIsCopied(true);
-        navigator.clipboard.writeText(videoURL);
+        navigator.clipboard.writeText(url);
     };
 
     const onTwitterClick = () => {
         window.open(twitterURL, '_blank');
+    };
+
+    const onDownloadClick = () => {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = title || 'gridStack';
+        a.click();
     };
 
     return (
@@ -54,23 +64,32 @@ export const ShareButton = ({ twitterURL, videoURL }: ShareButtonProps) => {
                             </ListItemIcon>
                             <ListItemText>Twitter</ListItemText>
                         </MenuItem>
-                        <MenuItem onClick={onCopyClick}>
-                            {isCopied ? (
-                                <>
-                                    <ListItemIcon>
-                                        <DoneIcon fontSize="small" />
-                                    </ListItemIcon>
-                                    <ListItemText>Copied!</ListItemText>
-                                </>
-                            ) : (
-                                <>
-                                    <ListItemIcon>
-                                        <ContentCopy fontSize="small" />
-                                    </ListItemIcon>
-                                    <ListItemText>Copy to clipboard</ListItemText>
-                                </>
-                            )}
-                        </MenuItem>
+                        {downloadable ? (
+                            <MenuItem onClick={onDownloadClick}>
+                                <ListItemIcon>
+                                    <IconDownload fontSize="small" />
+                                </ListItemIcon>
+                                <ListItemText>Download</ListItemText>
+                            </MenuItem>
+                        ) : (
+                            <MenuItem onClick={onCopyClick}>
+                                {isCopied ? (
+                                    <>
+                                        <ListItemIcon>
+                                            <DoneIcon fontSize="small" />
+                                        </ListItemIcon>
+                                        <ListItemText>Copied!</ListItemText>
+                                    </>
+                                ) : (
+                                    <>
+                                        <ListItemIcon>
+                                            <ContentCopy fontSize="small" />
+                                        </ListItemIcon>
+                                        <ListItemText>Copy to clipboard</ListItemText>
+                                    </>
+                                )}
+                            </MenuItem>
+                        )}
                     </MenuList>
                 </Box>
             </Menu>

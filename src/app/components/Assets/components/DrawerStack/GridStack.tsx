@@ -9,6 +9,8 @@ import html2canvas from 'html2canvas';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/ws';
 import { socket } from '@/services/socket';
+import { createTwitterIntent } from '@/utils/twitter';
+import { API_BASE_URL } from '@/constants/api';
 
 interface GridStackProps {
     selectedAssets: Asset[];
@@ -24,7 +26,7 @@ const sizes = {
 export default function GridStack({ selectedAssets, title }: GridStackProps) {
     const captureRef = useRef<HTMLDivElement | null>(null);
     const dispatch = useDispatch();
-    const { preSignedURL, shareAvailable } = useSelector((state) => state.ws);
+    const { preSignedURL, shareAvailable, path } = useSelector((state) => state.ws);
     const [selected, setSelected] = useState('2x2');
     const [confirmedGrid, setConfirmedGrid] = useState(false);
     const [screenShot, setScreenShot] = useState('');
@@ -54,6 +56,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
 
     useEffect(() => {
         if (screenShot) {
+            dispatch(actions.setShareAvailable(false));
             dispatch(actions.requestUpload());
         }
     }, [screenShot]);
@@ -70,11 +73,18 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                     screenShot,
                 })
             );
-    }, [preSignedURL, screenShot, dispatch]);
+    }, [preSignedURL, screenShot]);
 
     const handleConfirmGrid = () => {
         setConfirmedGrid(true);
     };
+
+    const [creatorId, type, timestamp] = path.split('/');
+
+    const twitterShareURL = createTwitterIntent({
+        url: `${API_BASE_URL}/search/grid`,
+        extra: `&title=${title}&creatorId=${creatorId}&type=${type}&timestamp=${timestamp}`,
+    });
 
     if (confirmedGrid) {
         const canvaSize = 2000;
@@ -83,11 +93,6 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
             <>
                 <Box display={'flex'} justifyContent={'center'}>
                     <Typography fontWeight={'bold'}>Now share your image grid with the world</Typography>
-                    {screenShot && (
-                        <a href={screenShot} download="teste">
-                            baixar arquivo
-                        </a>
-                    )}
                 </Box>
                 <Box display={'flex'} flexDirection={'row'} gap={5} mt={4} mb={4} justifyContent={'center'}>
                     <Box
@@ -150,7 +155,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                 </Box>
                 {shareAvailable && (
                     <Box display={'flex'} justifyContent={'center'}>
-                        <ShareButton twitterURL={''} videoURL={''} />
+                        <ShareButton twitterURL={twitterShareURL} url={screenShot} downloadable title={title} />
                     </Box>
                 )}
             </>

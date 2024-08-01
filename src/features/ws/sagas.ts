@@ -1,5 +1,5 @@
 import { API_BASE_URL } from '@/constants/api';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { all, call, put, select, takeLatest } from 'redux-saga/effects';
 import { toastrActionsCreators } from '../toastr/slice';
 import { PreSignedURLPayload, UploadPayload } from './types';
@@ -7,6 +7,7 @@ import { socket } from '@/services/socket';
 import store from '@/store';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { actions } from './slice';
+import { APIResponse } from '../common/types';
 
 function* requestUpload() {
     try {
@@ -29,19 +30,32 @@ function* requestUpload() {
 function* watchEvents() {
     yield socket.io?.on('preSignedURL', (data: PreSignedURLPayload) => {
         store.dispatch(actions.setPresignedURL(data.preSignedURL));
+        store.dispatch(actions.setPath(data.path));
     });
 }
 
 function* upload(action: PayloadAction<UploadPayload>) {
     const { preSignedURL, screenShot } = action.payload;
 
+    // Converte a string base64 em um Blob
+    const byteCharacters = atob(screenShot.split(',')[1]);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'image/png' });
+
     try {
-        yield call(axios.put, preSignedURL, screenShot, {
+        const response: AxiosResponse<APIResponse> = yield call(axios.put, preSignedURL, blob, {
             headers: {
-                'Content-Type': 'image/png;base64',
+                'Content-Type': 'image/png',
             },
         });
-        yield put(actions.setShareAvailable(true));
+        if (response.status === 200) {
+            yield put(actions.setShareAvailable(true));
+            yield put(actions.setPresignedURL(''));
+        }
     } catch (error) {
         yield put(toastrActionsCreators.displayToastr({ message: 'An unexpected error occurred', type: 'error' }));
     }
