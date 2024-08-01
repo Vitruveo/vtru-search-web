@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ShareButton } from './ShareButton';
 import html2canvas from 'html2canvas';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { actions } from '@/features/creator';
+import { actions } from '@/features/ws';
 import { socket } from '@/services/socket';
 
 interface GridStackProps {
@@ -24,7 +24,7 @@ const sizes = {
 export default function GridStack({ selectedAssets, title }: GridStackProps) {
     const captureRef = useRef<HTMLDivElement | null>(null);
     const dispatch = useDispatch();
-    const { preSignedURL, shareAvailable } = useSelector((state) => state.creator);
+    const { preSignedURL, shareAvailable } = useSelector((state) => state.ws);
     const [selected, setSelected] = useState('2x2');
     const [confirmedGrid, setConfirmedGrid] = useState(false);
     const [screenShot, setScreenShot] = useState('');

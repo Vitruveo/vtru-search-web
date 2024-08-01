@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { InitialState, UploadPayload } from './types';
+import { InitialState } from './types';
 
 const initialState: InitialState = {
     username: '',
@@ -10,8 +10,6 @@ const initialState: InitialState = {
     loading: false,
     id: '',
     avatar: '',
-    preSignedURL: '',
-    shareAvailable: false,
 };
 
 export const creatorSlice = createSlice({
@@ -21,20 +19,12 @@ export const creatorSlice = createSlice({
         sendCode: () => {},
         resendCode: () => {},
         verifyCode: () => {},
-        requestUpload: () => {},
-        watchEvents: () => {},
         logout: (state) => {
             state.token = '';
             state.email = '';
             state.code = '';
             state.wasSended = false;
             state.avatar = '';
-        },
-        setPresignedURL: (state, action: PayloadAction<string>) => {
-            state.preSignedURL = action.payload;
-        },
-        setShareAvailable: (state, action: PayloadAction<boolean>) => {
-            state.shareAvailable = action.payload;
         },
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload;
@@ -65,7 +55,6 @@ export const creatorSlice = createSlice({
         changeCode: (state, action: PayloadAction<string>) => {
             state.code = action.payload;
         },
-        upload: (_state, _action: PayloadAction<UploadPayload>) => {},
     },
 });
 
