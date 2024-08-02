@@ -17,8 +17,8 @@ export const Range = ({ afterChange }: RangeProps) => {
         if (!Array.isArray(newValue)) return;
 
         const [start, end] = newValue;
-        const isMinRange = start === minPrice && end === minPrice;
-        afterChange?.(isMinRange ? minPrice : start, isMinRange ? max : end);
+
+        afterChange?.(start, end);
     };
 
     return (

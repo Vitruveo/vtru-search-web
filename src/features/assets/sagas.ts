@@ -42,9 +42,8 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
 
     try {
+        const ids: string[] = yield select((state: AppState) => state.filters.grid);
         const name: string = yield select((state: AppState) => state.filters.name);
-        const isNudityEnable: string = yield select((state: AppState) => state.filters.shortCuts.nudity);
-        const isAIEnable: string = yield select((state: AppState) => state.filters.shortCuts.aiGeneration);
         const page: number = yield select((state: AppState) => state.assets.data.page);
         const order: string = yield select((state: AppState) => state.assets.sort.order);
         const isIncludeSold: boolean = yield select((state: AppState) => state.assets.sort.isIncludeSold);
@@ -59,15 +58,9 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             (state: AppState) => state.filters.showAdditionalAssets.value
         );
 
-        const filtersTaxonomyCopy = {
-            ...filtersTaxonomy,
-            nudity: filtersTaxonomy.nudity.length > 0 ? filtersTaxonomy.nudity : [isNudityEnable],
-            aiGeneration: filtersTaxonomy.aiGeneration.length > 0 ? filtersTaxonomy.aiGeneration : [isAIEnable],
-        };
-
         const buildFilters = {
             context: filtersContext,
-            taxonomy: filtersTaxonomyCopy,
+            taxonomy: filtersTaxonomy,
             creators: filtersCreators,
         };
 
@@ -99,13 +92,19 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             return acc;
         }, {});
 
+        if (ids.length) {
+            buildQuery['_id'] = {
+                $in: ids,
+            };
+        }
+
         const URL_ASSETS_SEARCH = `${API_BASE_URL}/assets/public/search`;
 
         const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.get, URL_ASSETS_SEARCH, {
             params: {
                 limit: 24,
                 page: page || 1,
-                query: Array.isArray(action.payload.ids) ? { _id: { $in: action.payload.ids } } : buildQuery,
+                query: buildQuery,
                 minPrice: price.min,
                 maxPrice: price.max,
                 name: name.trim() ? name : null,
@@ -154,14 +153,8 @@ function* getGrid(action: PayloadAction<string>) {
             Array.isArray(response.data.data.grid.search.grid[0].assets) &&
             response.data.data.grid.search.grid[0].assets.length > 0
         ) {
-            yield put(actionsFilter.clear());
-            yield put(
-                actions.loadGrid({
-                    page: 1,
-                    ids: response.data.data.grid.search.grid[0].assets,
-                    filters: { context: {}, taxonomy: {}, creators: {} },
-                })
-            );
+            yield put(actionsFilter.changeGrid(response.data.data.grid.search.grid[0].assets));
+            yield put(actions.loadAssets({ page: 1 }));
         }
     } catch (error) {
         // handle error
@@ -236,12 +229,12 @@ export function* assetsSagas() {
         takeEvery(actions.setSort.type, getAssets),
         takeEvery(actionsFilter.change.type, getAssets),
         takeEvery(actions.setGridId.type, getGrid),
-        takeEvery(actions.loadGrid.type, getAssets),
+
         // takeEvery(actionsFilter.changeShortCut.type, getAssets),
         debounce(1000, actionsFilter.changeName.type, getAssets),
         debounce(500, actions.setCurrentPage.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),
         takeEvery(actionsFilter.changeColorPrecision.type, getAssets),
-        takeEvery('persist/REHYDRATE', setup),
+        // takeEvery('persist/REHYDRATE', setup),
     ]);
 }

@@ -66,6 +66,7 @@ const initialState: FilterSliceState = {
         nudity: 'no',
         aiGeneration: 'full',
     },
+    grid: [],
 };
 
 export const filterSlice = createSlice({
@@ -110,20 +111,11 @@ export const filterSlice = createSlice({
                 max: action.payload.maxPrice,
             };
             state.shortCuts = initialState.shortCuts;
+            state.grid = initialState.grid;
             state.reseted += 1;
             clearAssetsFromURL();
         },
-        clear: (state) => {
-            state.name = '';
-            state.context = initialState.context;
-            state.taxonomy = initialState.taxonomy;
-            state.creators = initialState.creators;
-            state.provenance = initialState.provenance;
-            state.price = initialState.price;
-            state.shortCuts = initialState.shortCuts;
-            state.reseted += 1;
-            clearAssetsFromURL();
-        },
+
         changePrice: (state, action: PayloadAction<{ min: number; max: number }>) => {
             state.price = {
                 min: action.payload.min,
@@ -137,6 +129,23 @@ export const filterSlice = createSlice({
         },
         changeShowAdditionalAssets: (state, action: PayloadAction<boolean>) => {
             state.showAdditionalAssets.value = action.payload;
+        },
+        changeGrid: (state, action: PayloadAction<string[]>) => {
+            state.grid = action.payload;
+
+            // clear other filters
+            state.name = '';
+            state.context = initialState.context;
+            state.taxonomy = initialState.taxonomy;
+            state.creators = initialState.creators;
+            state.provenance = initialState.provenance;
+            state.price = initialState.price;
+            state.shortCuts = {
+                nudity: 'no',
+                aiGeneration: 'no',
+            };
+            state.reseted += 1;
+            clearAssetsFromURL();
         },
     },
 });

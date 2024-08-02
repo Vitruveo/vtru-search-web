@@ -59,4 +59,5 @@ export interface FilterSliceState {
         nudity: string;
         aiGeneration: string;
     };
+    grid: string[];
 }

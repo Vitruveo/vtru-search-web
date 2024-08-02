@@ -1,6 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { IconSearch } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
+import { useSearchParams } from 'next/navigation';
 import {
     InputAdornment,
     Box,
@@ -35,8 +36,11 @@ import React, { useEffect, useState } from 'react';
 import { FilterSliceState } from '@/features/filters/types';
 
 const Filters = () => {
+    const searchParamsHook = useSearchParams();
+    const grid = searchParamsHook.get('grid');
+
     const [isNuditychecked, setIsNudityChecked] = useState(false);
-    const [isAIchecked, setIsAIChecked] = useState(true);
+    const [isAIchecked, setIsAIChecked] = useState(false);
     const [isVideoChecked, setIsVideoChecked] = useState(false);
     const [isPhotographyChecked, setIsPhotographyChecked] = useState(false);
     const [isHorizontalChecked, setIsHorizontalChecked] = useState(false);
@@ -61,10 +65,8 @@ const Filters = () => {
     };
 
     useEffect(() => {
-        if (price.min === minPrice && price.max === minPrice) dispatch(actions.changePrice({ min: 0, max: maxPrice }));
-    }, [dispatch]);
+        if (grid) return;
 
-    useEffect(() => {
         const updateFilters = (
             fieldName: keyof FilterSliceState,
             setFilters: React.Dispatch<React.SetStateAction<number | undefined>>

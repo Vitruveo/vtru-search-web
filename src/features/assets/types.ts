@@ -180,7 +180,6 @@ export interface GetAssetsParams {
         taxonomy: any;
         creators: any;
     };
-    ids?: string[];
 }
 
 export interface GetCreatorParams {

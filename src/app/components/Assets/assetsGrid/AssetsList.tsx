@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Select, { SingleValue } from 'react-select';
 import { useSelector } from '@/store/hooks';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import {
     Pagination,
@@ -36,7 +37,10 @@ import NumberOfFilters from '../components/numberOfFilters';
 import Slider from '../../../components/Slider';
 
 const AssetsList = () => {
+    const searchParamsHook = useSearchParams();
     const dispatch = useDispatch();
+
+    const grid = searchParamsHook.get('grid');
     const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
     const [selected, setSelected] = useState<Asset[]>([]);
@@ -112,10 +116,14 @@ const AssetsList = () => {
     }, [currentPage]);
 
     useEffect(() => {
+        if (grid) return;
+
         if (currentPage > totalPage) dispatch(actions.setCurrentPage(totalPage));
     }, [totalPage]);
 
     useEffect(() => {
+        if (grid) return;
+
         setSortOrder(sort.order);
         setIsIncludeSold(sort.isIncludeSold);
     }, [sort]);

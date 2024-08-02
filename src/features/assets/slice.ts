@@ -35,7 +35,6 @@ export const assetsSlice = createSlice({
         loadAssets: (_state, _action: PayloadAction<GetAssetsParams | null>) => {},
         loadAssetsLastSold: (_state, _action: PayloadAction) => {},
         setGridId: (_state, _action: PayloadAction<string>) => {},
-        loadGrid: (_state, _action: PayloadAction<GetAssetsParams>) => {},
         startLoading: (state) => {
             state.loading = true;
         },

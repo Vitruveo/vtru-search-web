@@ -24,6 +24,13 @@ const Search = () => {
     const grid = searchParams.get('grid');
 
     useEffect(() => {
+        if (grid) {
+            dispatch(actionsAssets.setGridId(grid));
+
+            return;
+        }
+        if (search) dispatch(actions.changeName({ name: search }));
+        dispatch(actions.reset({ maxPrice: 0 }));
         dispatch(
             actions.change({
                 key: 'taxonomy',
@@ -33,9 +40,6 @@ const Search = () => {
                 },
             })
         );
-        if (grid) dispatch(actionsAssets.setGridId(grid));
-        if (search) dispatch(actions.changeName({ name: search }));
-
         dispatch(actionsAssets.setSort({ order: sort || 'latest', isIncludeSold: sold === 'true' }));
     }, [searchParams]);
 
