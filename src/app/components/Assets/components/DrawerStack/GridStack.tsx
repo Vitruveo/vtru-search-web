@@ -97,8 +97,8 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
     const [creatorId, type, timestamp] = path.split('/');
 
     const twitterShareURL = createTwitterIntent({
-        url: `${API_BASE_URL}/search/grid`,
-        extra: `&title=${title}&creatorId=${creatorId}&type=${type}&timestamp=${timestamp}`,
+        url: `https://d3ce-187-44-10-111.ngrok-free.app/search/grid`,
+        extra: `&title=${encodeURIComponent(title)}&creatorId=${encodeURIComponent(creatorId)}&type=${encodeURIComponent(type)}&timestamp=${encodeURIComponent(timestamp)}`,
     });
 
     if (confirmedGrid) {

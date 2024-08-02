@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from 'axios';
 import { all, call, put, select, takeLatest } from 'redux-saga/effects';
 import { toastrActionsCreators } from '../toastr/slice';
 import { PreSignedURLPayload, UploadPayload } from './types';
-import { socket } from '@/services/socket';
+import { connectWebSocket, disconnectWebSocket, socket, socketEmit } from '@/services/socket';
 import store from '@/store';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { actions } from './slice';
@@ -65,10 +65,28 @@ function* upload(action: PayloadAction<UploadPayload>) {
     }
 }
 
+function* reconnect() {
+    yield call(disconnectWebSocket);
+
+    const { token: isLogged, id, email } = yield select((state) => state.creator);
+
+    if (isLogged) {
+        yield call(connectWebSocket);
+        yield call(socketEmit, 'login', {
+            id,
+            email,
+            token: 'creator',
+        });
+    }
+}
+
 export function* wsSagas() {
     yield all([
         takeLatest(actions.requestUpload, requestUpload),
         takeLatest(actions.watchEvents, watchEvents),
         takeLatest(actions.upload, upload),
+
+        // reload websocket connection after rehydrate
+        takeLatest('persist/REHYDRATE', reconnect),
     ]);
 }

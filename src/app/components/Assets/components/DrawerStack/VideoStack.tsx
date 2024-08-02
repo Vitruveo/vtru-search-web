@@ -55,7 +55,7 @@ export default function VideoStack({ selectedAssets, title, selectedAudio, audio
     };
 
     const twitterShareURL = createTwitterIntent({
-        url: `${API_BASE_URL}/creators/search/${creatorId}/html`,
+        url: `https://d3ce-187-44-10-111.ngrok-free.app/creators/search/${creatorId}/html`,
         hashtags: 'Vitruveo,VTRUSuite',
         text: `${language['search.checkoutMyNewVideo']} ${createBackLink(selectedAssets)}`,
     });
