@@ -76,8 +76,8 @@ const Filters = () => {
         updateFilters('context', setContextFilters);
         updateFilters('taxonomy', setTaxonomyFilters);
         updateFilters('creators', setCreatorsFilters);
-        setIsNudityChecked(values.shortCuts.nudity === 'yes');
-        setIsAIChecked(values.shortCuts.aiGeneration === 'full');
+        setIsNudityChecked(values.taxonomy.nudity.includes('yes'));
+        setIsAIChecked(values.taxonomy.aiGeneration.includes('full'));
         setIsVideoChecked(values.taxonomy.category.includes('video'));
         setIsPhotographyChecked(values.taxonomy.category.includes('photography'));
         setIsHorizontalChecked(values.context.orientation.includes('horizontal'));
@@ -102,13 +102,13 @@ const Filters = () => {
 
     const handleChangeNudity = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsNudityChecked(event.target.checked);
-        dispatch(actions.changeShortCut({ key: 'nudity', value: event.target.checked ? 'yes' : 'no' }));
+        // dispatch(actions.changeShortCut({ key: 'nudity', value: event.target.checked ? 'yes' : 'no' }));
         generateQueryParam('nudity', event.target.checked ? 'true' : 'false');
         dispatch(actions.change({ key: 'taxonomy', value: { nudity: event.target.checked ? ['yes'] : ['no'] } }));
     };
     const handleChangeAI = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsAIChecked(event.target.checked);
-        dispatch(actions.changeShortCut({ key: 'aiGeneration', value: event.target.checked ? 'full' : 'none' }));
+        // dispatch(actions.changeShortCut({ key: 'aiGeneration', value: event.target.checked ? 'full' : 'none' }));
         generateQueryParam('ai', event.target.checked ? 'true' : 'false');
         dispatch(
             actions.change({ key: 'taxonomy', value: { aiGeneration: event.target.checked ? ['full'] : ['none'] } })
@@ -161,7 +161,10 @@ const Filters = () => {
                 }
                 fullWidth
                 value={values.name}
-                onChange={(e) => dispatch(actions.changeName({ name: e.target.value }))}
+                onChange={(e) => {
+                    generateQueryParam('search', e.target.value);
+                    dispatch(actions.changeName({ name: e.target.value }));
+                }}
             />
 
             <FormGroup sx={{ display: 'flex', flexDirection: 'row', marginLeft: '8%' }}>

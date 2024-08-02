@@ -7,9 +7,10 @@ interface MediaRendererProps {
     src: string;
     fallbackSrc?: string;
     autoPlay?: boolean;
+    preSource?: string;
 }
 
-export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false }: MediaRendererProps) => {
+export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false, preSource }: MediaRendererProps) => {
     const [src, setSrc] = useState(source);
     const isMobile = useMediaQuery('(max-width: 900px)');
 
@@ -19,6 +20,8 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false }: Me
 
     const isImage = src.match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
     const isVideo = src.match(/\.(mp4|webm|ogg)$/) != null;
+    const preIsImage = preSource?.match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
+    const preIsVideo = preSource?.match(/\.(mp4|webm|ogg)$/) != null;
 
     if (isVideo) {
         return (
@@ -31,6 +34,11 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false }: Me
                     borderTopLeftRadius: 10,
                 }}
             >
+                {preIsVideo && (
+                    <video muted style={{ display: 'none' }}>
+                        <source src={src} type="video/mp4" />
+                    </video>
+                )}
                 <video
                     autoPlay={!isMobile || autoPlay}
                     muted
@@ -61,14 +69,17 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false }: Me
 
     if (isImage || src === fallbackSrc) {
         return (
-            <Image
-                src={src}
-                alt="asset"
-                width={160}
-                height={160}
-                onError={onError}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }}
-            />
+            <>
+                {preIsImage && <Image src={src} alt="asset" width={160} height={160} style={{ display: 'none' }} />}
+                <Image
+                    src={src}
+                    alt="asset"
+                    width={160}
+                    height={160}
+                    onError={onError}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }}
+                />
+            </>
         );
     }
 
