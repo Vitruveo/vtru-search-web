@@ -12,7 +12,7 @@ export const wsSlice = createSlice({
     name: 'ws',
     initialState,
     reducers: {
-        requestUpload: () => {},
+        requestUpload: (state, action: PayloadAction<string[]>) => {},
         watchEvents: () => {},
         setPresignedURL: (state, action: PayloadAction<string>) => {
             state.preSignedURL = action.payload;

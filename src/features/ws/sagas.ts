@@ -10,13 +10,13 @@ import { actions } from './slice';
 import { APIResponse } from '../common/types';
 import { TOKEN_CREATORS } from '@/constants/ws';
 
-function* requestUpload() {
+function* requestUpload(action: PayloadAction<string[]>) {
     try {
         const token: string = yield select((state) => state.creator.token);
         yield call(
             axios.post,
             `${API_BASE_URL}/upload/request`,
-            {},
+            { assets: action.payload },
             {
                 headers: {
                     Authorization: `Bearer ${token}`,

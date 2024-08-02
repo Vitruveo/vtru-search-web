@@ -85,7 +85,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
     useEffect(() => {
         if (screenShot) {
             setLoadingRequest(true);
-            dispatch(actions.requestUpload());
+            dispatch(actions.requestUpload(selectedAssets.map((item) => item._id)));
         }
     }, [screenShot]);
 
@@ -115,8 +115,6 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
     });
 
     if (confirmedGrid) {
-        const canvaSize = 2000;
-
         return (
             <>
                 <Box display={'flex'} justifyContent={'center'}>
@@ -133,8 +131,8 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                         <div
                             style={{
                                 backgroundColor: '#EEEEEE',
-                                height: canvaSize,
-                                width: canvaSize,
+                                height: 630,
+                                width: 1200,
                                 display: 'none',
                             }}
                             ref={captureRef}
@@ -144,15 +142,15 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                                     key={index}
                                     style={{
                                         backgroundColor: '#EEEEEE',
-                                        height: canvaSize,
-                                        width: canvaSize,
+                                        height: 300,
+                                        width: 300,
                                     }}
                                 >
                                     {updatedAssets[index] && (
                                         <Image
                                             src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
-                                            width={canvaSize}
-                                            height={canvaSize}
+                                            width={300}
+                                            height={300}
                                             alt={`asset in grid ${selected}`}
                                         />
                                     )}
