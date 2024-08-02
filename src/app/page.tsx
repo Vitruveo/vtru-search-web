@@ -21,6 +21,7 @@ const Search = () => {
     const ai = searchParams.get('ai'); // default = true
     const nudity = searchParams.get('nudity'); // default = false
     const search = searchParams.get('search');
+    const grid = searchParams.get('grid');
 
     useEffect(() => {
         dispatch(
@@ -32,7 +33,7 @@ const Search = () => {
                 },
             })
         );
-
+        if (grid) dispatch(actionsAssets.setGridId(grid));
         if (search) dispatch(actions.changeName({ name: search }));
 
         dispatch(actionsAssets.setSort({ order: sort || 'latest', isIncludeSold: sold === 'true' }));

@@ -146,6 +146,20 @@ export interface ResponseAssets {
     maxPrice: number;
 }
 
+export interface ResponseGrid {
+    grid: {
+        _id: string;
+        search: {
+            grid: {
+                id: string;
+                path: string;
+                assets: string[];
+                createdAt: string;
+            }[];
+        };
+    };
+}
+
 export interface ResponseAsserCreator {
     username: string;
     avatar: string;
@@ -166,6 +180,7 @@ export interface GetAssetsParams {
         taxonomy: any;
         creators: any;
     };
+    ids?: string[];
 }
 
 export interface GetCreatorParams {

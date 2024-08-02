@@ -14,6 +14,7 @@ import type {
     ResponseAsserCreator,
     ResponseAssets,
     ResponseAssetsLastSold,
+    ResponseGrid,
 } from './types';
 import { actions } from './slice';
 import { actions as actionsFilter } from '../filters/slice';
@@ -104,7 +105,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             params: {
                 limit: 24,
                 page: page || 1,
-                query: buildQuery,
+                query: Array.isArray(action.payload.ids) ? { _id: { $in: action.payload.ids } } : buildQuery,
                 minPrice: price.min,
                 maxPrice: price.max,
                 name: name.trim() ? name : null,
@@ -135,6 +136,35 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         yield put(actions.setTags(response.data.data.tags.sort((a, b) => (a.count > b.count ? -1 : 1))));
     } catch (error) {
         // Handle error
+    }
+    yield put(actions.finishLoading());
+}
+
+function* getGrid(action: PayloadAction<string>) {
+    yield put(actions.startLoading());
+    try {
+        const response: AxiosResponse<APIResponse<ResponseGrid>> = yield call(
+            axios.get,
+            `${API_BASE_URL}/assets/public/grid/${action.payload}`
+        );
+        if (
+            response.status === 200 &&
+            Array.isArray(response.data.data.grid.search.grid) &&
+            response.data.data.grid.search.grid.length > 0 &&
+            Array.isArray(response.data.data.grid.search.grid[0].assets) &&
+            response.data.data.grid.search.grid[0].assets.length > 0
+        ) {
+            yield put(actionsFilter.clear());
+            yield put(
+                actions.loadGrid({
+                    page: 1,
+                    ids: response.data.data.grid.search.grid[0].assets,
+                    filters: { context: {}, taxonomy: {}, creators: {} },
+                })
+            );
+        }
+    } catch (error) {
+        // handle error
     }
     yield put(actions.finishLoading());
 }
@@ -205,6 +235,8 @@ export function* assetsSagas() {
         takeEvery(actions.makeVideo.type, makeVideo),
         takeEvery(actions.setSort.type, getAssets),
         takeEvery(actionsFilter.change.type, getAssets),
+        takeEvery(actions.setGridId.type, getGrid),
+        takeEvery(actions.loadGrid.type, getAssets),
         // takeEvery(actionsFilter.changeShortCut.type, getAssets),
         debounce(1000, actionsFilter.changeName.type, getAssets),
         debounce(500, actions.setCurrentPage.type, getAssets),

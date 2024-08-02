@@ -13,7 +13,6 @@ import {
     Switch,
     Badge,
     Button,
-    Divider,
     Checkbox,
     FormControlLabel,
 } from '@mui/material';

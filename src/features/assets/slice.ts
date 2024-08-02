@@ -32,12 +32,14 @@ export const assetsSlice = createSlice({
     name: 'assets',
     initialState,
     reducers: {
-        loadAssets: (state, action: PayloadAction<GetAssetsParams | null>) => {},
-        loadAssetsLastSold: (state, action: PayloadAction) => {},
+        loadAssets: (_state, _action: PayloadAction<GetAssetsParams | null>) => {},
+        loadAssetsLastSold: (_state, _action: PayloadAction) => {},
+        setGridId: (_state, _action: PayloadAction<string>) => {},
+        loadGrid: (_state, _action: PayloadAction<GetAssetsParams>) => {},
         startLoading: (state) => {
             state.loading = true;
         },
-        loadCreator: (state, action: PayloadAction<GetCreatorParams>) => {},
+        loadCreator: (_state, _action: PayloadAction<GetCreatorParams>) => {},
         finishLoading: (state) => {
             state.loading = false;
         },
@@ -56,7 +58,7 @@ export const assetsSlice = createSlice({
         setLoadingVideo: (state, action: PayloadAction<boolean>) => {
             state.loadingVideo = action.payload;
         },
-        makeVideo: (state, payload) => {},
+        makeVideo: (_state, _payload) => {},
         setTags: (state, action: PayloadAction<AssetsSliceState['tags']>) => {
             state.tags = action.payload;
         },

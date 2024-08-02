@@ -113,6 +113,17 @@ export const filterSlice = createSlice({
             state.reseted += 1;
             clearAssetsFromURL();
         },
+        clear: (state) => {
+            state.name = '';
+            state.context = initialState.context;
+            state.taxonomy = initialState.taxonomy;
+            state.creators = initialState.creators;
+            state.provenance = initialState.provenance;
+            state.price = initialState.price;
+            state.shortCuts = initialState.shortCuts;
+            state.reseted += 1;
+            clearAssetsFromURL();
+        },
         changePrice: (state, action: PayloadAction<{ min: number; max: number }>) => {
             state.price = {
                 min: action.payload.min,
