@@ -8,6 +8,7 @@ import store from '@/store';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { actions } from './slice';
 import { APIResponse } from '../common/types';
+import { TOKEN_CREATORS } from '@/constants/ws';
 
 function* requestUpload() {
     try {
@@ -75,7 +76,7 @@ function* reconnect() {
         yield call(socketEmit, 'login', {
             id,
             email,
-            token: 'creator',
+            token: TOKEN_CREATORS,
         });
     }
 }
