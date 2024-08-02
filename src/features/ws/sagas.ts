@@ -51,6 +51,10 @@ function* upload(action: PayloadAction<UploadPayload>) {
             headers: {
                 'Content-Type': 'image/png',
             },
+            onUploadProgress: (progressEvent) => {
+                const progress = Math.round((progressEvent.loaded * 100) / (progressEvent.total || 1));
+                store.dispatch(actions.setUploadProgress(progress));
+            },
         });
         if (response.status === 200) {
             yield put(actions.setShareAvailable(true));

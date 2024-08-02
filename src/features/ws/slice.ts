@@ -5,6 +5,7 @@ const initialState: InitialState = {
     preSignedURL: '',
     shareAvailable: false,
     path: '',
+    uploadProgress: 0,
 };
 
 export const wsSlice = createSlice({
@@ -21,6 +22,9 @@ export const wsSlice = createSlice({
         },
         setShareAvailable: (state, action: PayloadAction<boolean>) => {
             state.shareAvailable = action.payload;
+        },
+        setUploadProgress: (state, action: PayloadAction<number>) => {
+            state.uploadProgress = action.payload;
         },
         upload: (_state, _action: PayloadAction<UploadPayload>) => {},
     },

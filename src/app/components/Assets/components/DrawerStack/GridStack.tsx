@@ -11,6 +11,7 @@ import { actions } from '@/features/ws';
 import { socket } from '@/services/socket';
 import { createTwitterIntent } from '@/utils/twitter';
 import { API_BASE_URL } from '@/constants/api';
+import LinearProgressWithLabel from '../LinearProgressWithLabel';
 
 interface GridStackProps {
     selectedAssets: Asset[];
@@ -26,11 +27,28 @@ const sizes = {
 export default function GridStack({ selectedAssets, title }: GridStackProps) {
     const captureRef = useRef<HTMLDivElement | null>(null);
     const dispatch = useDispatch();
-    const { preSignedURL, shareAvailable, path } = useSelector((state) => state.ws);
+    const { preSignedURL, shareAvailable, path, uploadProgress } = useSelector((state) => state.ws);
     const [selected, setSelected] = useState('2x2');
     const [confirmedGrid, setConfirmedGrid] = useState(false);
     const [screenShot, setScreenShot] = useState('');
     const { language } = useI18n();
+
+    const updatedAssets = selectedAssets.map((asset) => {
+        const isVideo = asset?.formats?.preview?.path?.match(/\.(mp4|webm|ogg)$/) != null;
+        if (isVideo) {
+            return {
+                ...asset,
+                formats: {
+                    ...asset.formats,
+                    preview: {
+                        ...asset.formats.preview,
+                        path: asset.formats.preview.path.replace(/\.(\w+)$/, '_thumb.jpg'),
+                    },
+                },
+            };
+        }
+        return asset;
+    });
 
     const captureScreenshot = () => {
         if (captureRef.current) {
@@ -51,14 +69,13 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
     };
 
     useEffect(() => {
+        dispatch(actions.setUploadProgress(0));
+        dispatch(actions.setShareAvailable(false));
         if (confirmedGrid) captureScreenshot();
     }, [confirmedGrid]);
 
     useEffect(() => {
-        if (screenShot) {
-            dispatch(actions.setShareAvailable(false));
-            dispatch(actions.requestUpload());
-        }
+        if (screenShot) dispatch(actions.requestUpload());
     }, [screenShot]);
 
     useEffect(() => {
@@ -75,9 +92,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
             );
     }, [preSignedURL, screenShot]);
 
-    const handleConfirmGrid = () => {
-        setConfirmedGrid(true);
-    };
+    const handleConfirmGrid = () => setConfirmedGrid(true);
 
     const [creatorId, type, timestamp] = path.split('/');
 
@@ -120,9 +135,9 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                                         width: canvaSize,
                                     }}
                                 >
-                                    {selectedAssets[index] && (
+                                    {updatedAssets[index] && (
                                         <Image
-                                            src={`${AWS_BASE_URL_S3}/${selectedAssets[index]?.formats?.preview?.path}`}
+                                            src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
                                             width={canvaSize}
                                             height={canvaSize}
                                             alt={`asset in grid ${selected}`}
@@ -141,9 +156,9 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                                     width: sizes[selected] * 2,
                                 }}
                             >
-                                {selectedAssets[index] && (
+                                {updatedAssets[index] && (
                                     <Image
-                                        src={`${AWS_BASE_URL_S3}/${selectedAssets[index]?.formats?.preview?.path}`}
+                                        src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
                                         width={sizes[selected] * 2}
                                         height={sizes[selected] * 2}
                                         alt={`asset in grid ${selected}`}
@@ -153,10 +168,12 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                         ))}
                     </Box>
                 </Box>
-                {shareAvailable && (
+                {shareAvailable ? (
                     <Box display={'flex'} justifyContent={'center'}>
                         <ShareButton twitterURL={twitterShareURL} url={screenShot} downloadable title={title} />
                     </Box>
+                ) : (
+                    <LinearProgressWithLabel value={uploadProgress} />
                 )}
             </>
         );
@@ -186,9 +203,9 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                                 width: sizes['2x2'],
                             }}
                         >
-                            {selectedAssets[index] && (
+                            {updatedAssets[index] && (
                                 <Image
-                                    src={`${AWS_BASE_URL_S3}/${selectedAssets[index]?.formats?.preview?.path}`}
+                                    src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
                                     width={sizes['2x2']}
                                     height={sizes['2x2']}
                                     alt={'asset in grid 2x2'}
@@ -214,9 +231,9 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                                 width: sizes['3x3'],
                             }}
                         >
-                            {selectedAssets[index] && (
+                            {updatedAssets[index] && (
                                 <Image
-                                    src={`${AWS_BASE_URL_S3}/${selectedAssets[index]?.formats?.preview?.path}`}
+                                    src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
                                     width={sizes['3x3']}
                                     height={sizes['3x3']}
                                     alt={'asset in grid 3x3'}
@@ -242,9 +259,9 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                                 width: sizes['4x4'],
                             }}
                         >
-                            {selectedAssets[index] && (
+                            {updatedAssets[index] && (
                                 <Image
-                                    src={`${AWS_BASE_URL_S3}/${selectedAssets[index]?.formats?.preview?.path}`}
+                                    src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
                                     width={sizes['4x4']}
                                     height={sizes['4x4']}
                                     alt={'asset in grid 4x4'}
@@ -260,7 +277,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                 variant="contained"
                 fullWidth
                 onClick={handleConfirmGrid}
-                disabled={selectedAssets.length === 0 || title.length === 0}
+                disabled={updatedAssets.length === 0 || title.length === 0}
             >
                 {language['search.drawer.stack.button.publish'] as string}
             </Button>
