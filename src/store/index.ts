@@ -8,6 +8,7 @@ import { PERSIST_KEY, PERSIST_VERSION } from '@/constants/store';
 // sagas
 import { assetsSagas } from '@/features/assets';
 import { creatorSagas } from '@/features/creator';
+import { wsSagas } from '@/features/ws';
 
 // slices
 import { filterSlice } from '@/features/filters';
@@ -16,6 +17,7 @@ import { assetsSlice } from '@/features/assets/slice';
 import { creatorSlice } from '@/features/creator';
 import { layoutSlice } from '@/features/layout';
 import { toastrSlice } from '@/features/toastr';
+import { wsSlice } from '@/features/ws/slice';
 
 const sagaMiddleware = createSagaMiddleware({
     onError: (error, errorInfo) => {
@@ -52,6 +54,7 @@ const rootReducer = combineReducers({
     filters: filterSlice.reducer,
     customizer: customizerSlice.reducer,
     layout: layoutSlice.reducer,
+    ws: wsSlice.reducer,
     toastr: toastrSlice.reducer,
 });
 
@@ -70,7 +73,7 @@ export const store = configureStore({
 
 // Run sagas
 function* rootSaga() {
-    yield all([spawn(assetsSagas), spawn(creatorSagas)]);
+    yield all([spawn(assetsSagas), spawn(creatorSagas), spawn(wsSagas)]);
 }
 
 sagaMiddleware.run(rootSaga);
