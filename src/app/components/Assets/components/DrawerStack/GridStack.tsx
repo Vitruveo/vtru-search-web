@@ -31,6 +31,8 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
     const [selected, setSelected] = useState('2x2');
     const [confirmedGrid, setConfirmedGrid] = useState(false);
     const [screenShot, setScreenShot] = useState('');
+    const [loadingSreenshot, setLoadingScreenshot] = useState(false);
+    const [loadingRequest, setLoadingRequest] = useState(false);
     const { language } = useI18n();
 
     const updatedAssets = selectedAssets.map((asset) => {
@@ -50,21 +52,27 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
         return asset;
     });
 
-    const captureScreenshot = () => {
-        if (captureRef.current) {
-            captureRef.current.style.cssText = `
-                display: grid;
-                gap: 20px;
-                grid-template-columns: repeat(${selected[0]}, 1fr);
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
-            `;
-            document.body.style.overflow = 'hidden';
-            html2canvas(captureRef.current).then((canvas) => {
+    const captureScreenshot = async () => {
+        try {
+            setLoadingScreenshot(true);
+            if (captureRef.current) {
+                captureRef.current.style.cssText = `
+                    display: grid;
+                    gap: 20px;
+                    grid-template-columns: repeat(${selected[0]}, 1fr);
+                    position: absolute;
+                    top: -9999px;
+                    left: -9999px;
+                `;
+                document.body.style.overflow = 'hidden';
+                const canvas = await html2canvas(captureRef.current);
                 captureRef.current!.style.display = 'none';
                 setScreenShot(canvas.toDataURL());
-            });
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoadingScreenshot(false);
         }
     };
 
@@ -75,7 +83,10 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
     }, [confirmedGrid]);
 
     useEffect(() => {
-        if (screenShot) dispatch(actions.requestUpload());
+        if (screenShot) {
+            setLoadingRequest(true);
+            dispatch(actions.requestUpload());
+        }
     }, [screenShot]);
 
     useEffect(() => {
@@ -83,13 +94,15 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
     }, [socket]);
 
     useEffect(() => {
-        if (preSignedURL && screenShot)
+        if (preSignedURL && screenShot) {
+            setLoadingRequest(false);
             dispatch(
                 actions.upload({
                     preSignedURL,
                     screenShot,
                 })
             );
+        }
     }, [preSignedURL, screenShot]);
 
     const handleConfirmGrid = () => setConfirmedGrid(true);
@@ -97,7 +110,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
     const [creatorId, type, timestamp] = path.split('/');
 
     const twitterShareURL = createTwitterIntent({
-        url: `https://d3ce-187-44-10-111.ngrok-free.app/search/grid`,
+        url: `${API_BASE_URL}/search/grid`,
         extra: `&title=${encodeURIComponent(title)}&creatorId=${encodeURIComponent(creatorId)}&type=${encodeURIComponent(type)}&timestamp=${encodeURIComponent(timestamp)}`,
     });
 
@@ -168,6 +181,8 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                         ))}
                     </Box>
                 </Box>
+                {loadingSreenshot && <Typography variant="caption">Creating image grid...</Typography>}
+                {loadingRequest && <Typography variant="caption">Request upload image grid...</Typography>}
                 {shareAvailable ? (
                     <Box display={'flex'} justifyContent={'center'}>
                         <ShareButton twitterURL={twitterShareURL} url={screenShot} downloadable title={title} />
