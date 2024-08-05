@@ -183,7 +183,13 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                 {loadingRequest && <Typography variant="caption">Request upload image grid...</Typography>}
                 {shareAvailable ? (
                     <Box display={'flex'} justifyContent={'center'}>
-                        <ShareButton twitterURL={twitterShareURL} url={screenShot} downloadable title={title} />
+                        <ShareButton
+                            twitterURL={twitterShareURL}
+                            contentToCopy={twitterShareURL}
+                            url={screenShot}
+                            downloadable
+                            title={title}
+                        />
                     </Box>
                 ) : (
                     <LinearProgressWithLabel value={uploadProgress} />
