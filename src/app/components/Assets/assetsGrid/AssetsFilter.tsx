@@ -114,12 +114,13 @@ const Filters = () => {
     };
     const handleResetFilters = () => {
         const params = new URLSearchParams(window.location.search);
-        if (grid) {
+
+        if (params.get('grid')) {
             Array.from(params.keys()).forEach((key) => {
                 if (key !== 'grid') params.delete(key);
             });
             window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
-            dispatch(actionsAssets.setGridId(grid));
+            dispatch(actionsAssets.setGridId(params.get('grid')!));
             return;
         }
         params.set('sort', 'latest');
