@@ -37,10 +37,10 @@ const Logo = () => {
     const returnToPageOne = () => {
         const params = new URLSearchParams(window.location.search);
         params.set('sort', 'latest');
-        // params.set('order', 'asc');
         params.set('sold', 'false');
         params.set('ai', 'true');
         params.set('nudity', 'false');
+        params.delete('grid');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
 

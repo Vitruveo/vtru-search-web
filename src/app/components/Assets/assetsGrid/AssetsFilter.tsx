@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import assetsMetadata from '@/mock/assetsMetadata.json';
 import { actions } from '@/features/filters/slice';
+import { actions as actionsAssets } from '@/features/assets/slice';
 import { ContextItem } from '../components/ContextItem';
 import { TaxonomyItem } from '../components/TaxonomyItem';
 import { CreatorsItem } from '../components/CreatorsItem';
@@ -30,7 +31,7 @@ import type {
 import type { Context, Taxonomy, Creators } from '../types';
 import Version from '../../Version';
 import { AssetFilterAccordion } from './AssetFilterAccordion';
-import { minPrice, Range } from '../components/Range';
+import { Range } from '../components/Range';
 import { useSelector } from '@/store/hooks';
 import React, { useEffect, useState } from 'react';
 import { FilterSliceState } from '@/features/filters/types';
@@ -55,7 +56,6 @@ const Filters = () => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
     const values = useSelector((state) => state.filters);
-    const price = useSelector((state) => state.filters.price);
     const { tags, maxPrice } = useSelector((state) => state.assets);
 
     const getTotalFiltersApplied = (fieldName: keyof FilterSliceState) => {
@@ -65,8 +65,6 @@ const Filters = () => {
     };
 
     useEffect(() => {
-        if (grid) return;
-
         const updateFilters = (
             fieldName: keyof FilterSliceState,
             setFilters: React.Dispatch<React.SetStateAction<number | undefined>>
@@ -104,13 +102,11 @@ const Filters = () => {
 
     const handleChangeNudity = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsNudityChecked(event.target.checked);
-        // dispatch(actions.changeShortCut({ key: 'nudity', value: event.target.checked ? 'yes' : 'no' }));
         generateQueryParam('nudity', event.target.checked ? 'true' : 'false');
         dispatch(actions.change({ key: 'taxonomy', value: { nudity: event.target.checked ? ['yes'] : ['no'] } }));
     };
     const handleChangeAI = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsAIChecked(event.target.checked);
-        // dispatch(actions.changeShortCut({ key: 'aiGeneration', value: event.target.checked ? 'full' : 'none' }));
         generateQueryParam('ai', event.target.checked ? 'true' : 'false');
         dispatch(
             actions.change({ key: 'taxonomy', value: { aiGeneration: event.target.checked ? ['full'] : ['none'] } })
@@ -118,8 +114,15 @@ const Filters = () => {
     };
     const handleResetFilters = () => {
         const params = new URLSearchParams(window.location.search);
+        if (grid) {
+            Array.from(params.keys()).forEach((key) => {
+                if (key !== 'grid') params.delete(key);
+            });
+            window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+            dispatch(actionsAssets.setGridId(grid));
+            return;
+        }
         params.set('sort', 'latest');
-        // params.set('order', 'asc');
         params.set('sold', 'false');
         params.set('ai', 'true');
         params.set('nudity', 'false');

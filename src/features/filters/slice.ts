@@ -130,8 +130,10 @@ export const filterSlice = createSlice({
         changeShowAdditionalAssets: (state, action: PayloadAction<boolean>) => {
             state.showAdditionalAssets.value = action.payload;
         },
-        changeGrid: (state, action: PayloadAction<string[]>) => {
-            state.grid = action.payload;
+        changeGrid: (state, action: PayloadAction<string[] | null>) => {
+            if (action.payload) {
+                state.grid = action.payload;
+            }
 
             // clear other filters
             state.name = '';
