@@ -87,8 +87,8 @@ const Filters = () => {
     };
 
     const afterPriceChange = (min: number, max: number) => {
-        generateQueryParam('minPrice', min.toString());
-        generateQueryParam('maxPrice', max.toString());
+        generateQueryParam('price_min', min.toString());
+        generateQueryParam('price_max', max.toString());
         dispatch(
             actions.changePrice({
                 min,

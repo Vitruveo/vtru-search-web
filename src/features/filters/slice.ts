@@ -144,7 +144,7 @@ export const filterSlice = createSlice({
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     state[key] = action.payload[key];
-                } else if (Array.isArray(payload[key])) {
+                } else if (Array.isArray(payload[key]) || typeof payload[key] === 'number') {
                     const [parent, item] = key.split('_');
 
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
