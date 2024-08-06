@@ -109,10 +109,9 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
 
     const [creatorId, type, timestamp] = path.split('/');
 
-    const twitterShareURL = createTwitterIntent({
-        url: `${API_BASE_URL}/search/grid`,
-        extra: `&title=${encodeURIComponent(title)}&creatorId=${encodeURIComponent(creatorId)}&type=${encodeURIComponent(type)}&timestamp=${encodeURIComponent(timestamp)}`,
-    });
+    const url = `${API_BASE_URL}/search/grid`;
+    const extra = `&title=${encodeURIComponent(title)}&creatorId=${encodeURIComponent(creatorId)}&type=${encodeURIComponent(type)}&timestamp=${encodeURIComponent(timestamp)}`;
+    const twitterShareURL = createTwitterIntent({ url, extra });
 
     if (confirmedGrid) {
         return (
@@ -179,7 +178,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                     <Box display={'flex'} justifyContent={'center'}>
                         <ShareButton
                             twitterURL={twitterShareURL}
-                            contentToCopy={twitterShareURL}
+                            contentToCopy={`${url}?c=${Date.now()}${extra}`}
                             url={screenShot}
                             downloadable
                             title={title}
