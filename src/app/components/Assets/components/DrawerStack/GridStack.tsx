@@ -123,6 +123,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                 <Box display={'flex'} flexDirection={'row'} gap={5} mt={4} mb={4} justifyContent={'center'}>
                     <Box
                         display={'grid'}
+                        bgcolor={'transparent'}
                         gridTemplateColumns={`repeat(${selected[0]}, 1fr)`}
                         gap={0.5}
                         p={1}
@@ -138,14 +139,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                             ref={captureRef}
                         >
                             {Array.from({ length: Number(selected[0]) ** 2 }).map((_, index) => (
-                                <div
-                                    key={index}
-                                    style={{
-                                        backgroundColor: '#EEEEEE',
-                                        height: 300,
-                                        width: 300,
-                                    }}
-                                >
+                                <div key={index} style={{ backgroundColor: '#EEEEEE', height: 300, width: 300 }}>
                                     {updatedAssets[index] && (
                                         <Image
                                             src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
