@@ -85,7 +85,12 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
     useEffect(() => {
         if (screenShot) {
             setLoadingRequest(true);
-            dispatch(actions.requestUpload(selectedAssets.map((item) => item._id)));
+            dispatch(
+                actions.requestUpload({
+                    assets: selectedAssets.map((item) => item._id),
+                    fees: 10,
+                })
+            );
         }
     }, [screenShot]);
 
@@ -109,10 +114,9 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
 
     const [creatorId, type, timestamp] = path.split('/');
 
-    const twitterShareURL = createTwitterIntent({
-        url: `${API_BASE_URL}/search/grid`,
-        extra: `&title=${encodeURIComponent(title)}&creatorId=${encodeURIComponent(creatorId)}&type=${encodeURIComponent(type)}&timestamp=${encodeURIComponent(timestamp)}`,
-    });
+    const url = `${API_BASE_URL}/search/grid`;
+    const extra = `&title=${encodeURIComponent(title)}&creatorId=${encodeURIComponent(creatorId)}&type=${encodeURIComponent(type)}&timestamp=${encodeURIComponent(timestamp)}`;
+    const twitterShareURL = createTwitterIntent({ url, extra });
 
     if (confirmedGrid) {
         return (
@@ -123,6 +127,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                 <Box display={'flex'} flexDirection={'row'} gap={5} mt={4} mb={4} justifyContent={'center'}>
                     <Box
                         display={'grid'}
+                        bgcolor={'transparent'}
                         gridTemplateColumns={`repeat(${selected[0]}, 1fr)`}
                         gap={0.5}
                         p={1}
@@ -138,14 +143,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                             ref={captureRef}
                         >
                             {Array.from({ length: Number(selected[0]) ** 2 }).map((_, index) => (
-                                <div
-                                    key={index}
-                                    style={{
-                                        backgroundColor: '#EEEEEE',
-                                        height: 300,
-                                        width: 300,
-                                    }}
-                                >
+                                <div key={index} style={{ backgroundColor: '#EEEEEE', height: 300, width: 300 }}>
                                     {updatedAssets[index] && (
                                         <Image
                                             src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
@@ -185,7 +183,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                     <Box display={'flex'} justifyContent={'center'}>
                         <ShareButton
                             twitterURL={twitterShareURL}
-                            contentToCopy={twitterShareURL}
+                            contentToCopy={`${url}?c=${Date.now()}${extra}`}
                             url={screenShot}
                             downloadable
                             title={title}

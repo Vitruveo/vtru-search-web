@@ -38,8 +38,8 @@ const Logo = () => {
         const params = new URLSearchParams(window.location.search);
         params.set('sort', 'latest');
         params.set('sold', 'false');
-        params.set('ai', 'true');
-        params.set('nudity', 'false');
+        params.set('taxonomy_aiGeneration', 'full');
+        params.set('taxonomy_nudity', 'no');
         params.delete('grid');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);

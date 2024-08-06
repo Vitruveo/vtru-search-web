@@ -125,7 +125,7 @@ const AssetsList = () => {
         if (grid) return;
 
         setSortOrder(sort.order);
-        setIsIncludeSold(sort.isIncludeSold);
+        setIsIncludeSold(sort.sold === 'yes' ? true : false);
     }, [sort]);
 
     const openAssetDrawer = (asset: Asset) => {
@@ -183,13 +183,13 @@ const AssetsList = () => {
         }>
     ) => {
         setSortOrder(e?.value || '');
-        generateQueryParam('sort', e?.value || '');
-        dispatch(actions.setSort({ order: e?.value || '', isIncludeSold: isIncludeSold }));
+        generateQueryParam('order', e?.value || '');
+        dispatch(actions.setSort({ order: e?.value || '', sold: isIncludeSold ? 'yes' : 'no' }));
     };
     const handleChangeIsIncludeSold = () => {
         setIsIncludeSold(!isIncludeSold);
-        generateQueryParam('sold', (!isIncludeSold).toString());
-        dispatch(actions.setSort({ order: sortOrder, isIncludeSold: !isIncludeSold }));
+        generateQueryParam('sold', isIncludeSold ? 'no' : 'yes');
+        dispatch(actions.setSort({ order: sortOrder, sold: isIncludeSold ? 'no' : 'yes' }));
     };
 
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';

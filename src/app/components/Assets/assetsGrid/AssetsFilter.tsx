@@ -41,10 +41,8 @@ const Filters = () => {
 
     const [isNuditychecked, setIsNudityChecked] = useState(false);
     const [isAIchecked, setIsAIChecked] = useState(false);
-    const [isVideoChecked, setIsVideoChecked] = useState(false);
     const [isPhotographyChecked, setIsPhotographyChecked] = useState(false);
-    const [isHorizontalChecked, setIsHorizontalChecked] = useState(false);
-    const [isVerticalChecked, setIsVerticalChecked] = useState(false);
+    const [isPhysicalArtChecked, setIsPhysicalArtChecked] = useState(false);
 
     const [contextFilters, setContextFilters] = useState<number>();
     const [taxonomyFilters, setTaxonomyFilters] = useState<number>();
@@ -77,10 +75,8 @@ const Filters = () => {
         updateFilters('creators', setCreatorsFilters);
         setIsNudityChecked(values.taxonomy.nudity.includes('yes'));
         setIsAIChecked(values.taxonomy.aiGeneration.includes('full'));
-        setIsVideoChecked(values.taxonomy.category.includes('video'));
         setIsPhotographyChecked(values.taxonomy.category.includes('photography'));
-        setIsHorizontalChecked(values.context.orientation.includes('horizontal'));
-        setIsVerticalChecked(values.context.orientation.includes('vertical'));
+        setIsPhysicalArtChecked(values.taxonomy.objectType.includes('physicalart'));
     }, [values.context, values.taxonomy, values.creators, values.shortCuts]);
 
     const generateQueryParam = (key: string, value: string) => {
@@ -91,8 +87,8 @@ const Filters = () => {
     };
 
     const afterPriceChange = (min: number, max: number) => {
-        generateQueryParam('minPrice', min.toString());
-        generateQueryParam('maxPrice', max.toString());
+        generateQueryParam('price_min', min.toString());
+        generateQueryParam('price_max', max.toString());
         dispatch(
             actions.changePrice({
                 min,
@@ -140,27 +136,17 @@ const Filters = () => {
             actions.change({ key: 'taxonomy', value: { aiGeneration: event.target.checked ? ['full'] : ['none'] } })
         );
     };
-    const handleChangeVideo = (event: React.ChangeEvent<HTMLInputElement>) => {
-        generateQueryParam('taxonomy_category', event.target.checked ? 'video' : '');
-        dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['video'] : [] } }));
-        setIsVideoChecked(event.target.checked);
+    const handleChangePhysicalArt = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIsPhysicalArtChecked(event.target.checked);
+        syncFiltersWithUrl(event.target.checked ? ['physicalart'] : [], 'taxonomy_objectType');
+        dispatch(
+            actions.change({ key: 'taxonomy', value: { objectType: event.target.checked ? ['physicalart'] : [] } })
+        );
     };
     const handleChangePhotography = (event: React.ChangeEvent<HTMLInputElement>) => {
-        generateQueryParam('taxonomy_category', event.target.checked ? 'photography' : '');
-        dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['photography'] : [] } }));
         setIsPhotographyChecked(event.target.checked);
-    };
-    const handleChangeHorizontal = (event: React.ChangeEvent<HTMLInputElement>) => {
-        generateQueryParam('context_orientation', event.target.checked ? 'horizontal' : '');
-        dispatch(
-            actions.change({ key: 'context', value: { orientation: event.target.checked ? ['horizontal'] : [] } })
-        );
-        setIsHorizontalChecked(event.target.checked);
-    };
-    const handleChangeVertical = (event: React.ChangeEvent<HTMLInputElement>) => {
-        generateQueryParam('context_orientation', event.target.checked ? 'vertical' : '');
-        dispatch(actions.change({ key: 'context', value: { orientation: event.target.checked ? ['vertical'] : [] } }));
-        setIsVerticalChecked(event.target.checked);
+        syncFiltersWithUrl(event.target.checked ? ['photography'] : [], 'taxonomy_category');
+        dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['photography'] : [] } }));
     };
 
     return (
@@ -192,26 +178,18 @@ const Filters = () => {
                         label={'Nudity'}
                     />
                     <FormControlLabel
-                        control={<Checkbox onChange={handleChangeVideo} checked={isVideoChecked} />}
-                        label={'Video'}
-                    />
-                    <FormControlLabel
-                        control={<Checkbox onChange={handleChangeVertical} checked={isVerticalChecked} />}
-                        label={'Vertical'}
+                        control={<Checkbox onChange={handleChangeAI} checked={isAIchecked} />}
+                        label={'AI'}
                     />
                 </Box>
                 <Box display={'flex'} flexDirection={'column'}>
                     <FormControlLabel
-                        control={<Checkbox onChange={handleChangeAI} checked={isAIchecked} />}
-                        label={'AI'}
+                        control={<Checkbox onChange={handleChangePhysicalArt} checked={isPhysicalArtChecked} />}
+                        label={'Physical Art'}
                     />
                     <FormControlLabel
                         control={<Checkbox onChange={handleChangePhotography} checked={isPhotographyChecked} />}
                         label={'Photography'}
-                    />
-                    <FormControlLabel
-                        control={<Checkbox onChange={handleChangeHorizontal} checked={isHorizontalChecked} />}
-                        label={'Horizontal'}
                     />
                 </Box>
             </FormGroup>

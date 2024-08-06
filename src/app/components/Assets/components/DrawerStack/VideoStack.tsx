@@ -88,7 +88,7 @@ export default function VideoStack({ selectedAssets, title, selectedAudio, audio
     return (
         <>
             <Box display={'flex'} justifyContent={'center'}>
-                <Typography> 📹 Let is make a video from your amazing curation</Typography>
+                <Typography fontWeight={'bold'}> 📹 Let&apos;s make a video from your amazing curation</Typography>
             </Box>
             <Box display="flex" alignItems="center" mb={2} mt={2}>
                 <Typography width={150}>{language['search.drawer.stack.sound'] as string}</Typography>
