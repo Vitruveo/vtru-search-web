@@ -17,3 +17,8 @@ export interface UploadPayload {
     preSignedURL: string;
     screenShot: string;
 }
+
+export interface RequestUploadParams {
+    assets: string[];
+    fees: number;
+}

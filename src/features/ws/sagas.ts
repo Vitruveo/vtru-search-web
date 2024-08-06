@@ -2,7 +2,7 @@ import { API_BASE_URL } from '@/constants/api';
 import axios, { AxiosResponse } from 'axios';
 import { all, call, put, select, takeLatest } from 'redux-saga/effects';
 import { toastrActionsCreators } from '../toastr/slice';
-import { PreSignedURLPayload, UploadPayload } from './types';
+import { PreSignedURLPayload, RequestUploadParams, UploadPayload } from './types';
 import { connectWebSocket, disconnectWebSocket, socket, socketEmit } from '@/services/socket';
 import store from '@/store';
 import { PayloadAction } from '@reduxjs/toolkit';
@@ -10,13 +10,13 @@ import { actions } from './slice';
 import { APIResponse } from '../common/types';
 import { TOKEN_CREATORS } from '@/constants/ws';
 
-function* requestUpload(action: PayloadAction<string[]>) {
+function* requestUpload(action: PayloadAction<RequestUploadParams>) {
     try {
         const token: string = yield select((state) => state.creator.token);
         yield call(
             axios.post,
             `${API_BASE_URL}/upload/request`,
-            { assets: action.payload },
+            { assets: action.payload.assets, fees: action.payload.fees },
             {
                 headers: {
                     Authorization: `Bearer ${token}`,

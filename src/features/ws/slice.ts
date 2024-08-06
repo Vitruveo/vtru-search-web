@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { InitialState, UploadPayload } from './types';
+import { InitialState, RequestUploadParams, UploadPayload } from './types';
 
 const initialState: InitialState = {
     preSignedURL: '',
@@ -12,7 +12,7 @@ export const wsSlice = createSlice({
     name: 'ws',
     initialState,
     reducers: {
-        requestUpload: (_state, _action: PayloadAction<string[]>) => {},
+        requestUpload: (_state, _action: PayloadAction<RequestUploadParams>) => {},
         watchEvents: () => {},
         setPresignedURL: (state, action: PayloadAction<string>) => {
             state.preSignedURL = action.payload;

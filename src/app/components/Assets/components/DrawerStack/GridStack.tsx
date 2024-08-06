@@ -85,7 +85,12 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
     useEffect(() => {
         if (screenShot) {
             setLoadingRequest(true);
-            dispatch(actions.requestUpload(selectedAssets.map((item) => item._id)));
+            dispatch(
+                actions.requestUpload({
+                    assets: selectedAssets.map((item) => item._id),
+                    fees: 10,
+                })
+            );
         }
     }, [screenShot]);
 
