@@ -11,9 +11,10 @@ interface ShareButtonProps {
     url: string;
     downloadable?: boolean;
     title?: string;
+    contentToCopy?: string;
 }
 
-export const ShareButton = ({ twitterURL, url, downloadable = false, title }: ShareButtonProps) => {
+export const ShareButton = ({ twitterURL, url, downloadable = false, title, contentToCopy }: ShareButtonProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [isCopied, setIsCopied] = useState(false);
 
@@ -36,7 +37,7 @@ export const ShareButton = ({ twitterURL, url, downloadable = false, title }: Sh
 
     const onCopyClick = () => {
         setIsCopied(true);
-        navigator.clipboard.writeText(url);
+        navigator.clipboard.writeText(contentToCopy!);
     };
 
     const onTwitterClick = () => {
@@ -64,14 +65,15 @@ export const ShareButton = ({ twitterURL, url, downloadable = false, title }: Sh
                             </ListItemIcon>
                             <ListItemText>Twitter</ListItemText>
                         </MenuItem>
-                        {downloadable ? (
+                        {downloadable && (
                             <MenuItem onClick={onDownloadClick}>
                                 <ListItemIcon>
                                     <IconDownload fontSize="small" />
                                 </ListItemIcon>
                                 <ListItemText>Download</ListItemText>
                             </MenuItem>
-                        ) : (
+                        )}
+                        {contentToCopy && (
                             <MenuItem onClick={onCopyClick}>
                                 {isCopied ? (
                                     <>

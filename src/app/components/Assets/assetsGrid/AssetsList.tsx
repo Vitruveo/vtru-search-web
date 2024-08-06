@@ -25,7 +25,7 @@ import { actions } from '@/features/assets';
 import { actions as layoutActions } from '@/features/layout';
 import { Asset } from '@/features/assets/types';
 import { DrawerAsset } from '../components/DrawerAsset';
-import { DrawerStack } from '../components/DrawerStack/DrawerStack';
+import DrawerStack from '../components/DrawerStack/DrawerStack';
 import AssetItem, { AssetCardContainer } from './AssetItem';
 import { useToggle } from '@/app/hooks/useToggle';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';

@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import update from 'immutability-helper';
 import { Box, Button, Typography, Drawer, TextField, useMediaQuery, Theme, IconButton } from '@mui/material';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useDispatch } from 'react-redux';
 import { Asset } from '@/features/assets/types';
@@ -10,6 +13,7 @@ import { useToggle } from '@/app/hooks/useToggle';
 import { MediaRenderer } from '../MediaRenderer';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { PublishStackModal } from './PublishStackModal';
+import { CardDnd } from '../CardDnd';
 
 interface Props {
     drawerStackOpen: boolean;
@@ -18,11 +22,12 @@ interface Props {
     onClose(): void;
 }
 
-export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Props) {
+function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Props) {
     const dispatch = useDispatch();
     const { language } = useI18n();
 
     const modalSwitch = useToggle();
+    const [cards, setCards] = useState<Asset[]>(selected);
     const [statedLogin, setStatedLogin] = useState(false);
 
     const isLogged = useSelector((state) => state.creator.token !== '');
@@ -36,13 +41,47 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
         }
     }, [isLogged]);
 
+    useEffect(() => setCards(selected), [selected]);
+
+    const handleMoveCard = useCallback((dragIndex: number, hoverIndex: number) => {
+        setCards((prevCards) =>
+            update(prevCards, {
+                $splice: [
+                    [dragIndex, 1],
+                    [hoverIndex, 0, prevCards[dragIndex]],
+                ],
+            })
+        );
+    }, []);
+
+    const renderCard = useCallback((asset: Asset, index: number) => {
+        return (
+            <CardDnd key={asset._id} index={index} id={asset._id} moveCard={handleMoveCard}>
+                <Box width={160}>
+                    <Box height={160} borderRadius="8px" position="relative">
+                        <MediaRenderer
+                            src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
+                            fallbackSrc={`https://via.placeholder.com/${160}`}
+                        />
+                        <Box position="absolute" bottom={0} right={0} zIndex={1} m={1} bgcolor="#fff">
+                            <IconButton style={{ color: 'red' }} size="small" onClick={() => onRemove(asset)}>
+                                <DeleteIcon fontSize="small" />
+                            </IconButton>
+                        </Box>
+                    </Box>
+                    {asset.assetMetadata?.context?.formData?.title && (
+                        <Typography zIndex={100} textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">
+                            {asset.assetMetadata?.context?.formData?.title}
+                        </Typography>
+                    )}
+                </Box>
+            </CardDnd>
+        );
+    }, []);
+
     return (
         <>
-            <PublishStackModal
-                isOpen={modalSwitch.isActive}
-                onClose={modalSwitch.deactivate}
-                selectedAssets={selected}
-            />
+            <PublishStackModal isOpen={modalSwitch.isActive} onClose={modalSwitch.deactivate} selectedAssets={cards} />
 
             <Drawer anchor="right" open={drawerStackOpen} onClose={onClose}>
                 <Box width={mdUp ? 400 : 224} p={4}>
@@ -128,41 +167,21 @@ export function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Pr
                     )}
 
                     <Box mt={2} display="flex" gap={2} flexWrap="wrap">
-                        {selected.length === 0 && (
+                        {cards.length === 0 && (
                             <Typography>{language['search.drawer.stack.noSelectedAssets'] as string}</Typography>
                         )}
-                        {selected.map((asset) => (
-                            <Box key={asset._id} width={160}>
-                                <Box height={160} borderRadius="8px" position="relative">
-                                    <MediaRenderer
-                                        src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
-                                        fallbackSrc={`https://via.placeholder.com/${160}`}
-                                    />
-                                    <Box position="absolute" bottom={0} right={0} zIndex={1} m={1} bgcolor="#fff">
-                                        <IconButton
-                                            style={{ color: 'red' }}
-                                            size="small"
-                                            onClick={() => onRemove(asset)}
-                                        >
-                                            <DeleteIcon fontSize="small" />
-                                        </IconButton>
-                                    </Box>
-                                </Box>
-                                {asset.assetMetadata?.context?.formData?.title && (
-                                    <Typography
-                                        zIndex={100}
-                                        textOverflow="ellipsis"
-                                        overflow="hidden"
-                                        whiteSpace="nowrap"
-                                    >
-                                        {asset.assetMetadata?.context?.formData?.title}
-                                    </Typography>
-                                )}
-                            </Box>
-                        ))}
+                        {cards.map((asset, i) => renderCard(asset, i))}
                     </Box>
                 </Box>
             </Drawer>
         </>
+    );
+}
+
+export default function DrawerStackHoc({ drawerStackOpen, selected, onRemove, onClose }: Props) {
+    return (
+        <DndProvider backend={HTML5Backend}>
+            <DrawerStack drawerStackOpen={drawerStackOpen} selected={selected} onRemove={onRemove} onClose={onClose} />
+        </DndProvider>
     );
 }
