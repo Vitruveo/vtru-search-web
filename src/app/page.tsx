@@ -9,38 +9,36 @@ import AssetsList from './components/Assets/assetsGrid/AssetsList';
 import PageContainer from './components/Container/PageContainer';
 import AppCard from './components/Shared/AppCard';
 import Header from './components/Header';
-import { actions } from '@/features/filters/slice';
+import { actions, initialState } from '@/features/filters/slice';
 import { actions as actionsAssets } from '@/features/assets/slice';
+import { extractObjects } from '@/utils/extractObjects';
+
+const params = Object.keys(extractObjects(initialState));
+const initialParams: Record<string, string> = {};
 
 const Search = () => {
     const dispatch = useDispatch();
     const searchParams = useSearchParams();
-
-    const sort = searchParams.get('sort');
-    const sold = searchParams.get('sold');
-    const ai = searchParams.get('ai'); // default = true
-    const nudity = searchParams.get('nudity'); // default = false
-    const search = searchParams.get('search');
     const grid = searchParams.get('grid');
 
     useEffect(() => {
+        params.forEach((param) => {
+            if (searchParams.has(param)) {
+                initialParams[param] = searchParams.get(param)!;
+            }
+        });
+
         if (grid) {
             dispatch(actionsAssets.setGridId(grid));
-
             return;
         }
-        if (search) dispatch(actions.changeName({ name: search }));
-        dispatch(actions.reset({ maxPrice: 0 }));
-        dispatch(
-            actions.change({
-                key: 'taxonomy',
-                value: {
-                    nudity: nudity === 'true' ? ['yes'] : ['no'],
-                    aiGeneration: ai === 'false' ? ['none'] : ['full'],
-                },
-            })
-        );
-        dispatch(actionsAssets.setSort({ order: sort || 'latest', isIncludeSold: sold === 'true' }));
+
+        if (Object.keys(initialParams).length === 0) {
+            initialParams.taxonomy_aiGeneration = 'full';
+            initialParams.taxonomy_nudity = 'no';
+        }
+
+        dispatch(actions.initialParams(initialParams));
     }, [searchParams]);
 
     return (

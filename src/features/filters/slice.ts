@@ -4,8 +4,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FilterSliceState } from './types';
 import { DeepPartial } from '../common/types';
 import { clearAssetsFromURL } from '@/utils/url-assets';
+import { extractObjects } from '@/utils/extractObjects';
 
-const initialState: FilterSliceState = {
+export const initialState: FilterSliceState = {
     name: '',
     reseted: 0,
     context: {
@@ -73,6 +74,85 @@ export const filterSlice = createSlice({
     name: 'filters',
     initialState,
     reducers: {
+        initialParams: (state, action: PayloadAction<Record<string, string>>) => {
+            state.name = '';
+            state.context = {
+                title: '',
+                description: '',
+                culture: [],
+                mood: [],
+                colors: [],
+                orientation: [],
+                copyright: '',
+            };
+            state.taxonomy = {
+                objectType: [],
+                tags: [],
+                collections: '',
+                aiGeneration: [],
+                arenabled: [],
+                nudity: [],
+                category: [],
+                medium: [],
+                style: [],
+                subject: '',
+            };
+            state.creators = {
+                name: [],
+                roles: '',
+                bio: '',
+                profileUrl: '',
+                ethnicity: [],
+                gender: [],
+                nationality: [],
+                residence: [],
+            };
+            state.provenance = {
+                country: [],
+                plusCode: '',
+                blockchain: [],
+                exhibitions: {
+                    exhibitionName: '',
+                    exhibitionUrl: '',
+                },
+                awards: {
+                    awardName: '',
+                    awardUrl: '',
+                },
+            };
+            state.price = {
+                min: 0,
+                max: 0,
+            };
+            state.colorPrecision = {
+                value: 0.7,
+            };
+            state.showAdditionalAssets = {
+                value: false,
+            };
+            state.shortCuts = {
+                nudity: 'no',
+                aiGeneration: 'full',
+            };
+            state.grid = [];
+            state.reseted += 1;
+
+            const payload = extractObjects(initialState);
+
+            Object.entries(action.payload).forEach(([key, value]) => {
+                if (typeof payload[key] === 'string') {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    state[key] = action.payload[key];
+                } else if (Array.isArray(payload[key])) {
+                    const [parent, item] = key.split('_');
+
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    state[parent][item] = action.payload[key].split(',');
+                }
+            });
+        },
         changeName: (
             state,
             action: PayloadAction<{

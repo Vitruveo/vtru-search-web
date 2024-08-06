@@ -112,8 +112,8 @@ const Filters = () => {
         }
         params.set('sort', 'latest');
         params.set('sold', 'false');
-        params.set('ai', 'true');
-        params.set('nudity', 'false');
+        params.set('taxonomy_aiGeneration', 'full');
+        params.set('taxonomy_nudity', 'no');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
         dispatch(actions.reset({ maxPrice }));
@@ -130,35 +130,35 @@ const Filters = () => {
 
     const handleChangeNudity = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsNudityChecked(event.target.checked);
-        generateQueryParam('nudity', event.target.checked ? 'true' : 'false');
+        generateQueryParam('taxonomy_nudity', event.target.checked ? 'yes' : 'no');
         dispatch(actions.change({ key: 'taxonomy', value: { nudity: event.target.checked ? ['yes'] : ['no'] } }));
     };
     const handleChangeAI = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsAIChecked(event.target.checked);
-        generateQueryParam('ai', event.target.checked ? 'true' : 'false');
+        generateQueryParam('taxonomy_aiGeneration', event.target.checked ? 'full' : 'none');
         dispatch(
             actions.change({ key: 'taxonomy', value: { aiGeneration: event.target.checked ? ['full'] : ['none'] } })
         );
     };
     const handleChangeVideo = (event: React.ChangeEvent<HTMLInputElement>) => {
-        generateQueryParam('taxonomyVideo', event.target.checked ? 'true' : 'false');
+        generateQueryParam('taxonomy_category', event.target.checked ? 'video' : '');
         dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['video'] : [] } }));
         setIsVideoChecked(event.target.checked);
     };
     const handleChangePhotography = (event: React.ChangeEvent<HTMLInputElement>) => {
-        generateQueryParam('taxonomyPhotography', event.target.checked ? 'true' : 'false');
+        generateQueryParam('taxonomy_category', event.target.checked ? 'photography' : '');
         dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['photography'] : [] } }));
         setIsPhotographyChecked(event.target.checked);
     };
     const handleChangeHorizontal = (event: React.ChangeEvent<HTMLInputElement>) => {
-        generateQueryParam('contextHorizontal', event.target.checked ? 'true' : 'false');
+        generateQueryParam('context_orientation', event.target.checked ? 'horizontal' : '');
         dispatch(
             actions.change({ key: 'context', value: { orientation: event.target.checked ? ['horizontal'] : [] } })
         );
         setIsHorizontalChecked(event.target.checked);
     };
     const handleChangeVertical = (event: React.ChangeEvent<HTMLInputElement>) => {
-        generateQueryParam('contextVertical', event.target.checked ? 'true' : 'false');
+        generateQueryParam('context_orientation', event.target.checked ? 'vertical' : '');
         dispatch(actions.change({ key: 'context', value: { orientation: event.target.checked ? ['vertical'] : [] } }));
         setIsVerticalChecked(event.target.checked);
     };
@@ -180,7 +180,7 @@ const Filters = () => {
                 fullWidth
                 value={values.name}
                 onChange={(e) => {
-                    generateQueryParam('search', e.target.value);
+                    generateQueryParam('name', e.target.value);
                     dispatch(actions.changeName({ name: e.target.value }));
                 }}
             />
@@ -258,7 +258,7 @@ const Filters = () => {
                                 []
                             }
                             onChange={(changeValue) => {
-                                syncFiltersWithUrl(changeValue, `context${key}`);
+                                syncFiltersWithUrl(changeValue, `context_${key}`);
                                 dispatch(
                                     actions.change({
                                         key: 'context',
@@ -337,7 +337,7 @@ const Filters = () => {
                                 []
                             }
                             onChange={(changeValue) => {
-                                syncFiltersWithUrl(changeValue, `taxonomy${key}`);
+                                syncFiltersWithUrl(changeValue, `taxonomy_${key}`);
                                 dispatch(
                                     actions.change({
                                         key: 'taxonomy',
@@ -398,7 +398,7 @@ const Filters = () => {
                             }
                             options={(value as NationalityOrResidenceOrCountry)?.enum || []}
                             onChange={(changeValue) => {
-                                syncFiltersWithUrl(changeValue, `creators${key}`);
+                                syncFiltersWithUrl(changeValue, `creators_${key}`);
                                 dispatch(
                                     actions.change({
                                         key: 'creators',

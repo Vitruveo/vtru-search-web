@@ -229,6 +229,7 @@ export function* assetsSagas() {
         takeEvery(actions.setSort.type, getAssets),
         takeEvery(actionsFilter.change.type, getAssets),
         takeEvery(actions.setGridId.type, getGrid),
+        takeEvery(actionsFilter.initialParams.type, getAssets),
 
         // takeEvery(actionsFilter.changeShortCut.type, getAssets),
         debounce(1000, actionsFilter.changeName.type, getAssets),
