@@ -1,7 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { IconSearch } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
-import { useSearchParams } from 'next/navigation';
 import {
     InputAdornment,
     Box,
@@ -35,10 +34,10 @@ import { Range } from '../components/Range';
 import { useSelector } from '@/store/hooks';
 import React, { useEffect, useState } from 'react';
 import { FilterSliceState } from '@/features/filters/types';
+import chunkArray from '@/utils/chunkArray';
 
 const Filters = () => {
-    const searchParamsHook = useSearchParams();
-    const grid = searchParamsHook.get('grid');
+    const params = new URLSearchParams(window.location.search);
 
     const [isNuditychecked, setIsNudityChecked] = useState(false);
     const [isAIchecked, setIsAIChecked] = useState(false);
@@ -84,7 +83,16 @@ const Filters = () => {
         setIsVerticalChecked(values.context.orientation.includes('vertical'));
     }, [values.context, values.taxonomy, values.creators, values.shortCuts]);
 
+    const generateQueryParam = (key: string, value: string) => {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set(key, value);
+        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+    };
+
     const afterPriceChange = (min: number, max: number) => {
+        generateQueryParam('minPrice', min.toString());
+        generateQueryParam('maxPrice', max.toString());
         dispatch(
             actions.changePrice({
                 min,
@@ -93,11 +101,31 @@ const Filters = () => {
         );
     };
 
-    const generateQueryParam = (key: string, value: string) => {
-        const searchParams = new URLSearchParams(window.location.search);
-        searchParams.set(key, value);
-        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
-        window.history.pushState({ path: newUrl }, '', newUrl);
+    const handleResetFilters = () => {
+        Array.from(params.keys()).forEach((key) => {
+            if (key !== 'grid') params.delete(key);
+        });
+        if (params.get('grid')) {
+            window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+            dispatch(actionsAssets.setGridId(params.get('grid')!));
+            return;
+        }
+        params.set('sort', 'latest');
+        params.set('sold', 'false');
+        params.set('ai', 'true');
+        params.set('nudity', 'false');
+
+        window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+        dispatch(actions.reset({ maxPrice }));
+    };
+
+    const syncFiltersWithUrl = (changeValue: any, key: string) => {
+        if (Array.isArray(changeValue) && changeValue.length === 0) {
+            params.delete(key);
+            window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+            return;
+        }
+        generateQueryParam(key, changeValue.join(','));
     };
 
     const handleChangeNudity = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,41 +140,25 @@ const Filters = () => {
             actions.change({ key: 'taxonomy', value: { aiGeneration: event.target.checked ? ['full'] : ['none'] } })
         );
     };
-    const handleResetFilters = () => {
-        const params = new URLSearchParams(window.location.search);
-
-        if (params.get('grid')) {
-            Array.from(params.keys()).forEach((key) => {
-                if (key !== 'grid') params.delete(key);
-            });
-            window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
-            dispatch(actionsAssets.setGridId(params.get('grid')!));
-            return;
-        }
-        params.set('sort', 'latest');
-        params.set('sold', 'false');
-        params.set('ai', 'true');
-        params.set('nudity', 'false');
-
-        window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
-        dispatch(actions.reset({ maxPrice }));
-    };
-
     const handleChangeVideo = (event: React.ChangeEvent<HTMLInputElement>) => {
+        generateQueryParam('taxonomyVideo', event.target.checked ? 'true' : 'false');
         dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['video'] : [] } }));
         setIsVideoChecked(event.target.checked);
     };
     const handleChangePhotography = (event: React.ChangeEvent<HTMLInputElement>) => {
+        generateQueryParam('taxonomyPhotography', event.target.checked ? 'true' : 'false');
         dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['photography'] : [] } }));
         setIsPhotographyChecked(event.target.checked);
     };
     const handleChangeHorizontal = (event: React.ChangeEvent<HTMLInputElement>) => {
+        generateQueryParam('contextHorizontal', event.target.checked ? 'true' : 'false');
         dispatch(
             actions.change({ key: 'context', value: { orientation: event.target.checked ? ['horizontal'] : [] } })
         );
         setIsHorizontalChecked(event.target.checked);
     };
     const handleChangeVertical = (event: React.ChangeEvent<HTMLInputElement>) => {
+        generateQueryParam('contextVertical', event.target.checked ? 'true' : 'false');
         dispatch(actions.change({ key: 'context', value: { orientation: event.target.checked ? ['vertical'] : [] } }));
         setIsVerticalChecked(event.target.checked);
     };
@@ -245,7 +257,8 @@ const Filters = () => {
                                 (value as MoodOrMediumOrStyle)?.items?.enum ||
                                 []
                             }
-                            onChange={(changeValue) =>
+                            onChange={(changeValue) => {
+                                syncFiltersWithUrl(changeValue, `context${key}`);
                                 dispatch(
                                     actions.change({
                                         key: 'context',
@@ -253,9 +266,18 @@ const Filters = () => {
                                             [key]: changeValue,
                                         },
                                     })
-                                )
-                            }
-                            onRemove={(color) =>
+                                );
+                            }}
+                            onRemove={(color) => {
+                                const chunckedValues = chunkArray(params.getAll(`context${key}`), 3);
+                                const filtered = chunckedValues.filter(
+                                    (chunk) => !chunk.every((v, i) => parseInt(v) === parseInt(color[i]))
+                                );
+                                params.delete(`context${key}`);
+                                filtered.forEach((chunk) => {
+                                    params.append(`context${key}`, chunk.join(','));
+                                });
+                                window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
                                 dispatch(
                                     actions.change({
                                         key: 'context',
@@ -267,8 +289,8 @@ const Filters = () => {
                                             ).filter((itemColor) => itemColor !== color),
                                         },
                                     })
-                                )
-                            }
+                                );
+                            }}
                         />
                     );
                 })}
@@ -314,7 +336,8 @@ const Filters = () => {
                                 (value as MoodOrMediumOrStyle)?.items?.enum ||
                                 []
                             }
-                            onChange={(changeValue) =>
+                            onChange={(changeValue) => {
+                                syncFiltersWithUrl(changeValue, `taxonomy${key}`);
                                 dispatch(
                                     actions.change({
                                         key: 'taxonomy',
@@ -322,8 +345,8 @@ const Filters = () => {
                                             [key]: changeValue,
                                         },
                                     })
-                                )
-                            }
+                                );
+                            }}
                             onRemove={(color) =>
                                 dispatch(
                                     actions.change({
@@ -374,7 +397,8 @@ const Filters = () => {
                                 ]['ui:widget']
                             }
                             options={(value as NationalityOrResidenceOrCountry)?.enum || []}
-                            onChange={(changeValue) =>
+                            onChange={(changeValue) => {
+                                syncFiltersWithUrl(changeValue, `creators${key}`);
                                 dispatch(
                                     actions.change({
                                         key: 'creators',
@@ -382,8 +406,8 @@ const Filters = () => {
                                             [key]: changeValue,
                                         },
                                     })
-                                )
-                            }
+                                );
+                            }}
                             onRemove={(color) =>
                                 dispatch(
                                     actions.change({
