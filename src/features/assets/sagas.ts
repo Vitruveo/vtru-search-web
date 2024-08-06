@@ -21,7 +21,6 @@ import { actions as actionsFilter } from '../filters/slice';
 import { APIResponse } from '../common/types';
 import { AppState } from '@/store';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
-import filterTruthAndNonEmpty from '@/utils/filterTruthObjects';
 
 function* getAssetsLastSold() {
     try {
@@ -46,7 +45,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         const name: string = yield select((state: AppState) => state.filters.name);
         const page: number = yield select((state: AppState) => state.assets.data.page);
         const order: string = yield select((state: AppState) => state.assets.sort.order);
-        const isIncludeSold: boolean = yield select((state: AppState) => state.assets.sort.isIncludeSold);
+        const sold: string = yield select((state: AppState) => state.assets.sort.sold);
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
         const filtersCreators: FilterSliceState['creators'] = yield select((state: AppState) => state.filters.creators);
@@ -112,7 +111,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 showAdditionalAssets,
                 sort: {
                     order,
-                    isIncludeSold,
+                    isIncludeSold: sold === 'yes' ? true : false,
                 },
             },
         });
@@ -208,17 +207,6 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
     yield put(actions.setLoadingVideo(false));
 }
 
-function* setup() {
-    const { context, taxonomy, creators }: FilterSliceState = yield select((state: AppState) => state.filters);
-    yield put(actions.setSort({ order: '', isIncludeSold: false }));
-    const filters = {
-        context: filterTruthAndNonEmpty(context),
-        taxonomy: filterTruthAndNonEmpty(taxonomy),
-        creators: filterTruthAndNonEmpty(creators),
-    };
-    yield put(actions.loadAssets({ page: 1, filters }));
-}
-
 export function* assetsSagas() {
     yield all([
         takeEvery(actionsFilter.reset.type, getAssets),
@@ -229,13 +217,9 @@ export function* assetsSagas() {
         takeEvery(actions.setSort.type, getAssets),
         takeEvery(actionsFilter.change.type, getAssets),
         takeEvery(actions.setGridId.type, getGrid),
-        takeEvery(actionsFilter.initialParams.type, getAssets),
-
-        // takeEvery(actionsFilter.changeShortCut.type, getAssets),
         debounce(1000, actionsFilter.changeName.type, getAssets),
         debounce(500, actions.setCurrentPage.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),
         takeEvery(actionsFilter.changeColorPrecision.type, getAssets),
-        // takeEvery('persist/REHYDRATE', setup),
     ]);
 }

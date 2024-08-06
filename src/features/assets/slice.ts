@@ -3,7 +3,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import type { AssetsSliceState, GetAssetsParams, GetCreatorParams, LastSoldAsset } from './types';
 
-const initialState: AssetsSliceState = {
+export const initialState: AssetsSliceState = {
     loading: false,
     error: null,
     data: {
@@ -24,7 +24,7 @@ const initialState: AssetsSliceState = {
     maxPrice: 0, // this is used to mark the max price of the price range slider
     sort: {
         order: '',
-        isIncludeSold: false,
+        sold: '',
     },
 };
 

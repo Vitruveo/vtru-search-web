@@ -16,7 +16,7 @@ export interface AssetsSliceState {
     maxPrice: number;
     sort: {
         order: string;
-        isIncludeSold: boolean;
+        sold: string;
     };
 }
 
