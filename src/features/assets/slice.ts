@@ -21,7 +21,7 @@ export const initialState: AssetsSliceState = {
     },
     video: '',
     loadingVideo: false,
-    maxPrice: 0, // this is used to mark the max price of the price range slider
+    maxPrice: 0, // this is used to mark the max price of the price range slider.
     sort: {
         order: '',
         sold: '',
