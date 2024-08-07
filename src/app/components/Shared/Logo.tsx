@@ -1,54 +1,11 @@
-import Link from 'next/link';
 import Image from 'next/image';
-import { styled } from '@mui/material/styles';
-import { Box, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
 
 import { useSelector } from '@/store/hooks';
 import VtruTitle from '../VtruTitle';
 import { useDispatch } from 'react-redux';
 import { actions } from '@/features/assets';
-
-const LogoNormalDark = () => (
-    <Box display="flex" marginTop={2} alignItems="center">
-        <Image
-            style={{ marginRight: '5px' }}
-            src={'/images/logos/VTRU_Search.png'}
-            alt="logo"
-            height={35}
-            width={100}
-            priority
-        />
-        <Image
-            style={{ marginRight: '5px' }}
-            src={'/images/logos/newFullLogo.png'}
-            alt="logo"
-            height={25}
-            width={150}
-            priority
-        />
-    </Box>
-);
-
-const LogoNormalLight = () => (
-    <Box display="flex" marginTop={2} alignItems="center">
-        <Image
-            style={{ marginRight: '5px' }}
-            src={'/images/logos/VTRU_Search.png'}
-            alt="logo"
-            height={35}
-            width={100}
-            priority
-        />
-        <Image
-            style={{ marginRight: '5px' }}
-            src={'/images/logos/newFullLogo.png'}
-            alt="logo"
-            height={25}
-            width={150}
-            priority
-        />
-    </Box>
-);
+import { actions as actionsFilters } from '@/features/filters/slice';
 
 const LogoLtrDark = () => (
     <Box display="flex" marginTop={2} alignItems="center">
@@ -75,40 +32,34 @@ const LogoLtrLight = () => (
 const Logo = () => {
     const dispatch = useDispatch();
     const customizer = useSelector((state) => state.customizer);
-    const theme = useTheme();
-    const LinkStyled = styled(Link)(() => ({
-        height: customizer.TopbarHeight,
-        width: customizer.isMobileSidebar
-            ? '190px'
-            : customizer.isCollapse && !customizer.isSidebarHover
-              ? '40px'
-              : '190px',
-        overflow: 'hidden',
-        display: 'block',
-        color: theme.palette.text.primary,
-    }));
+    const { maxPrice } = useSelector((state) => state.assets);
 
     const returnToPageOne = () => {
+        const params = new URLSearchParams(window.location.search);
+
+        params.forEach((value, key) => params.delete(key));
+
+        params.set('sort', 'latest');
+        params.set('sold', 'no');
+        params.set('taxonomy_aiGeneration', 'full');
+        params.set('taxonomy_nudity', 'no');
+
+        window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+
         dispatch(actions.setCurrentPage(1));
+        dispatch(actionsFilters.reset({ maxPrice }));
     };
 
-    const dice =
-        customizer.activeDir === 'ltr'
-            ? {
-                  style: { textDecoration: 'none' },
-                  light: LogoLtrLight,
-                  dark: LogoLtrDark,
-              }
-            : {
-                  style: {},
-                  light: LogoNormalLight,
-                  dark: LogoNormalDark,
-              };
+    const dice = {
+        style: { textDecoration: 'none', cursor: 'pointer', marginTop: 0 },
+        light: LogoLtrLight,
+        dark: LogoLtrDark,
+    };
 
     return (
-        <LinkStyled style={dice.style} href="/home" onClick={returnToPageOne}>
+        <Box style={dice.style} onClick={returnToPageOne}>
             {customizer.activeMode === 'dark' ? <dice.dark /> : <dice.light />}
-        </LinkStyled>
+        </Box>
     );
 };
 

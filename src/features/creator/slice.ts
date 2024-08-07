@@ -1,6 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { InitialState } from './types';
-import { set } from 'lodash';
 
 const initialState: InitialState = {
     username: '',

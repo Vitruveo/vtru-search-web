@@ -1,9 +1,9 @@
 'use client';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import type { AssetsSliceState, GetAssetsParams, GetCreatorParams, LastSoldAsset } from './types';
+import type { AssetsSliceState, GetAssetsParams, GetCreatorParams, LastSoldAsset, MakeVideoParams } from './types';
 
-const initialState: AssetsSliceState = {
+export const initialState: AssetsSliceState = {
     loading: false,
     error: null,
     data: {
@@ -21,35 +21,44 @@ const initialState: AssetsSliceState = {
     },
     video: '',
     loadingVideo: false,
-    maxPrice: 0, // this is used to mark the max price of the price range slider
+    maxPrice: 0, // this is used to mark the max price of the price range slider.
+    sort: {
+        order: '',
+        sold: '',
+    },
 };
 
 export const assetsSlice = createSlice({
     name: 'assets',
     initialState,
     reducers: {
-        loadAssets: (state, action: PayloadAction<GetAssetsParams | null>) => {},
-        loadAssetsLastSold: (state, action: PayloadAction) => {},
+        loadAssets: (_state, _action: PayloadAction<GetAssetsParams | null>) => {},
+        loadAssetsLastSold: (_state, _action: PayloadAction) => {},
+        setGridId: (_state, _action: PayloadAction<string>) => {},
         startLoading: (state) => {
             state.loading = true;
         },
-        loadCreator: (state, action: PayloadAction<GetCreatorParams>) => {},
+        loadCreator: (_state, _action: PayloadAction<GetCreatorParams>) => {},
         finishLoading: (state) => {
             state.loading = false;
         },
         setError: (state, action) => {
             state.error = action.payload;
         },
-        setVideo: (state, action: PayloadAction<string>) => {
+        setVideoId: (state, action: PayloadAction<string>) => {},
+        setVideoUrl: (state, action: PayloadAction<string>) => {
             state.video = action.payload;
         },
         setData: (state, action: PayloadAction<AssetsSliceState['data']>) => {
             state.data = action.payload;
         },
+        setSort: (state, action: PayloadAction<AssetsSliceState['sort']>) => {
+            state.sort = action.payload;
+        },
         setLoadingVideo: (state, action: PayloadAction<boolean>) => {
             state.loadingVideo = action.payload;
         },
-        makeVideo: (state, payload) => {},
+        makeVideo: (_state, _payload: PayloadAction<MakeVideoParams>) => {},
         setTags: (state, action: PayloadAction<AssetsSliceState['tags']>) => {
             state.tags = action.payload;
         },

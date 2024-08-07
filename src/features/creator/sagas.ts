@@ -6,6 +6,8 @@ import { APIResponse } from '../common/types';
 import { actions as actionsCreator } from './slice';
 import { OptConfirmResponse } from './types';
 import { toastrActionsCreators } from '../toastr/slice';
+import { socketEmit, connectWebSocket } from '@/services/socket';
+import { TOKEN_CREATORS } from '@/constants/ws';
 
 function* sendCode() {
     yield put(actionsCreator.setLoading(true));
@@ -20,6 +22,7 @@ function* sendCode() {
     }
     yield put(actionsCreator.setLoading(false));
 }
+
 function* verifyCode() {
     yield put(actionsCreator.setLoading(true));
     try {
@@ -42,6 +45,12 @@ function* verifyCode() {
                 avatar: response.data.data.creator.profile.avatar,
             })
         );
+        yield call(connectWebSocket);
+        yield call(socketEmit, 'login', {
+            id: response.data.data.creator._id,
+            email,
+            token: TOKEN_CREATORS,
+        });
     } catch (error) {
         yield put(toastrActionsCreators.displayToastr({ message: 'Invalid code', type: 'error' }));
     }

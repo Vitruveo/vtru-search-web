@@ -4,9 +4,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FilterSliceState } from './types';
 import { DeepPartial } from '../common/types';
 import { clearAssetsFromURL } from '@/utils/url-assets';
+import { extractObjects } from '@/utils/extractObjects';
 
-const initialState: FilterSliceState = {
+export const initialState: FilterSliceState = {
     name: '',
+    reseted: 0,
     context: {
         title: '',
         description: '',
@@ -53,7 +55,7 @@ const initialState: FilterSliceState = {
     },
     price: {
         min: 0,
-        max: 10000,
+        max: 0,
     },
     colorPrecision: {
         value: 0.7,
@@ -61,12 +63,98 @@ const initialState: FilterSliceState = {
     showAdditionalAssets: {
         value: false,
     },
+    shortCuts: {
+        nudity: 'no',
+        aiGeneration: 'full',
+    },
+    grid: [],
+    video: [],
 };
 
 export const filterSlice = createSlice({
     name: 'filters',
     initialState,
     reducers: {
+        initialParams: (state, action: PayloadAction<Record<string, string>>) => {
+            state.name = '';
+            state.context = {
+                title: '',
+                description: '',
+                culture: [],
+                mood: [],
+                colors: [],
+                orientation: [],
+                copyright: '',
+            };
+            state.taxonomy = {
+                objectType: [],
+                tags: [],
+                collections: '',
+                aiGeneration: [],
+                arenabled: [],
+                nudity: [],
+                category: [],
+                medium: [],
+                style: [],
+                subject: '',
+            };
+            state.creators = {
+                name: [],
+                roles: '',
+                bio: '',
+                profileUrl: '',
+                ethnicity: [],
+                gender: [],
+                nationality: [],
+                residence: [],
+            };
+            state.provenance = {
+                country: [],
+                plusCode: '',
+                blockchain: [],
+                exhibitions: {
+                    exhibitionName: '',
+                    exhibitionUrl: '',
+                },
+                awards: {
+                    awardName: '',
+                    awardUrl: '',
+                },
+            };
+            state.price = {
+                min: 0,
+                max: 0,
+            };
+            state.colorPrecision = {
+                value: 0.7,
+            };
+            state.showAdditionalAssets = {
+                value: false,
+            };
+            state.shortCuts = {
+                nudity: 'no',
+                aiGeneration: 'full',
+            };
+            state.grid = [];
+            state.video = [];
+            state.reseted += 1;
+
+            const payload = extractObjects(initialState);
+
+            Object.entries(action.payload).forEach(([key, value]) => {
+                if (typeof payload[key] === 'string') {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    state[key] = action.payload[key];
+                } else if (Array.isArray(payload[key]) || typeof payload[key] === 'number') {
+                    const [parent, item] = key.split('_');
+
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    state[parent][item] = action.payload[key].split(',');
+                }
+            });
+        },
         changeName: (
             state,
             action: PayloadAction<{
@@ -82,20 +170,35 @@ export const filterSlice = createSlice({
                 value: DeepPartial<FilterSliceState[keyof FilterSliceState]>;
             }>
         ) => {
-            state[action.payload.key] = {
+            (state[action.payload.key] as any) = {
                 ...(state[action.payload.key] as any),
                 ...(action.payload.value as any),
             };
         },
-        reset: (state) => {
+        changeShortCut: (state, action: PayloadAction<{ key: keyof FilterSliceState['shortCuts']; value: string }>) => {
+            state.shortCuts[action.payload.key] = action.payload.value;
+        },
+        reset: (state, action: PayloadAction<{ maxPrice: number }>) => {
             state.name = '';
             state.context = initialState.context;
-            state.taxonomy = initialState.taxonomy;
+            state.taxonomy = {
+                ...initialState.taxonomy,
+                nudity: ['no'],
+                aiGeneration: ['full'],
+            };
             state.creators = initialState.creators;
             state.provenance = initialState.provenance;
-            state.price = initialState.price;
+            state.price = {
+                min: 0,
+                max: action.payload.maxPrice,
+            };
+            state.shortCuts = initialState.shortCuts;
+            state.grid = initialState.grid;
+            state.video = initialState.video;
+            state.reseted += 1;
             clearAssetsFromURL();
         },
+
         changePrice: (state, action: PayloadAction<{ min: number; max: number }>) => {
             state.price = {
                 min: action.payload.min,
@@ -109,6 +212,44 @@ export const filterSlice = createSlice({
         },
         changeShowAdditionalAssets: (state, action: PayloadAction<boolean>) => {
             state.showAdditionalAssets.value = action.payload;
+        },
+        changeGrid: (state, action: PayloadAction<string[] | null>) => {
+            if (action.payload) {
+                state.grid = action.payload;
+            }
+
+            // clear other filters
+            state.name = '';
+            state.context = initialState.context;
+            state.taxonomy = initialState.taxonomy;
+            state.creators = initialState.creators;
+            state.provenance = initialState.provenance;
+            state.price = initialState.price;
+            state.shortCuts = {
+                nudity: 'no',
+                aiGeneration: 'no',
+            };
+            state.reseted += 1;
+            clearAssetsFromURL();
+        },
+        changeVideo: (state, action: PayloadAction<string[] | null>) => {
+            if (action.payload) {
+                state.video = action.payload;
+            }
+
+            // clear other filters
+            state.name = '';
+            state.context = initialState.context;
+            state.taxonomy = initialState.taxonomy;
+            state.creators = initialState.creators;
+            state.provenance = initialState.provenance;
+            state.price = initialState.price;
+            state.shortCuts = {
+                nudity: 'no',
+                aiGeneration: 'no',
+            };
+            state.reseted += 1;
+            clearAssetsFromURL();
         },
     },
 });

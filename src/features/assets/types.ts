@@ -14,6 +14,10 @@ export interface AssetsSliceState {
     video: string;
     loadingVideo: boolean;
     maxPrice: number;
+    sort: {
+        order: string;
+        sold: string;
+    };
 }
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';
@@ -142,6 +146,34 @@ export interface ResponseAssets {
     maxPrice: number;
 }
 
+export interface ResponseGrid {
+    grid: {
+        _id: string;
+        search: {
+            grid: {
+                id: string;
+                path: string;
+                assets: string[];
+                createdAt: string;
+            }[];
+        };
+    };
+}
+
+export interface ResponseVideo {
+    video: {
+        _id: string;
+        search: {
+            video: {
+                id: string;
+                path: string;
+                assets: string[];
+                createdAt: string;
+            }[];
+        };
+    };
+}
+
 export interface ResponseAsserCreator {
     username: string;
     avatar: string;
@@ -190,4 +222,6 @@ export interface MakeVideoParams {
     artworks: string[];
     title: string;
     sound: string;
+    fees: number;
+    timestamp: string;
 }

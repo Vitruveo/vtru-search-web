@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import Select from 'react-select';
+import Select, { SingleValue } from 'react-select';
 import { useSelector } from '@/store/hooks';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import {
     Pagination,
@@ -13,6 +14,8 @@ import {
     Switch,
     Badge,
     Button,
+    Checkbox,
+    FormControlLabel,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { IconCopy } from '@tabler/icons-react';
@@ -22,7 +25,7 @@ import { actions } from '@/features/assets';
 import { actions as layoutActions } from '@/features/layout';
 import { Asset } from '@/features/assets/types';
 import { DrawerAsset } from '../components/DrawerAsset';
-import { DrawerStack } from '../components/DrawerStack/DrawerStack';
+import DrawerStack from '../components/DrawerStack/DrawerStack';
 import AssetItem, { AssetCardContainer } from './AssetItem';
 import { useToggle } from '@/app/hooks/useToggle';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
@@ -34,11 +37,18 @@ import NumberOfFilters from '../components/numberOfFilters';
 import Slider from '../../../components/Slider';
 
 const AssetsList = () => {
+    const searchParamsHook = useSearchParams();
     const dispatch = useDispatch();
+
+    const grid = searchParamsHook.get('grid');
+    const video = searchParamsHook.get('video');
+
     const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
     const [selected, setSelected] = useState<Asset[]>([]);
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
+    const [sortOrder, setSortOrder] = useState<string>('latest');
+    const [isIncludeSold, setIsIncludeSold] = useState<boolean>(false);
     const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
@@ -47,6 +57,7 @@ const AssetsList = () => {
 
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const { data: assets, totalPage, page: currentPage } = useSelector((state) => state.assets.data);
+    const { sort } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
 
     const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets);
@@ -59,6 +70,16 @@ const AssetsList = () => {
         }
         return options;
     }, [totalPage]);
+
+    const optionsForSelectSort = [
+        { value: 'latest', label: 'Latest' },
+        { value: 'priceHighToLow', label: 'Price – High to Low' },
+        { value: 'priceLowToHigh', label: 'Price – Low to High' },
+        { value: 'creatorAZ', label: 'Creator – A-Z' },
+        { value: 'creatorZA', label: 'Creator – Z-A' },
+        { value: 'consignNewToOld', label: 'Consign Date – New to Old' },
+        { value: 'consignOldToNew', label: 'Consign Date – Old to New' },
+    ];
 
     const getTotalFiltersApplied = () => {
         const fields = {
@@ -97,8 +118,17 @@ const AssetsList = () => {
     }, [currentPage]);
 
     useEffect(() => {
+        if (grid || video) return;
+
         if (currentPage > totalPage) dispatch(actions.setCurrentPage(totalPage));
     }, [totalPage]);
+
+    useEffect(() => {
+        if (grid || video) return;
+
+        setSortOrder(sort.order);
+        setIsIncludeSold(sort.sold === 'yes' ? true : false);
+    }, [sort]);
 
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
@@ -141,6 +171,29 @@ const AssetsList = () => {
         }
     };
 
+    const generateQueryParam = (key: string, value: string) => {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set(key, value);
+        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+    };
+
+    const handleChangeSelectSortOrder = (
+        e: SingleValue<{
+            value: string;
+            label: string;
+        }>
+    ) => {
+        setSortOrder(e?.value || '');
+        generateQueryParam('sort', e?.value || '');
+        dispatch(actions.setSort({ order: e?.value || '', sold: isIncludeSold ? 'yes' : 'no' }));
+    };
+    const handleChangeIsIncludeSold = () => {
+        setIsIncludeSold(!isIncludeSold);
+        generateQueryParam('sold', isIncludeSold ? 'no' : 'yes');
+        dispatch(actions.setSort({ order: sortOrder, sold: isIncludeSold ? 'no' : 'yes' }));
+    };
+
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
 
     const onAssetDrawerClose = () => {
@@ -166,38 +219,75 @@ const AssetsList = () => {
                 onClose={drawerStack.deactivate}
             />
 
-            <Stack width="100%" direction="row" display="flex" justifyContent="flex-end" alignItems="center" p={3}>
-                {curateStack.isActive && (
-                    <Box
-                        sx={{ cursor: 'pointer' }}
-                        display="flex"
-                        alignItems="center"
-                        gap={1}
-                        onClick={drawerStack.activate}
-                    >
-                        {lgUp && (
-                            <Box display="flex" alignItems="center" gap={2}>
-                                <Typography variant="h4">
-                                    {selected.length} {language['search.assetList.curateStack.selected'] as string}
-                                </Typography>
-                                <IconCopy width={20} />
-                            </Box>
-                        )}
+            <Stack width="100%" direction="row" display="flex" justifyContent="space-between" alignItems="center" p={3}>
+                <Grid
+                    item
+                    xs={12}
+                    sm={'auto'}
+                    display={'flex'}
+                    gap={lgUp ? 4 : 0}
+                    flexDirection={lgUp ? 'row' : 'column'}
+                >
+                    <Select
+                        placeholder="Sort"
+                        options={optionsForSelectSort}
+                        value={optionsForSelectSort.find((option) => option.value === sortOrder)}
+                        onChange={(e) => handleChangeSelectSortOrder(e)}
+                        styles={{
+                            control: (base, state) => ({
+                                ...base,
+                                minWidth: '240px',
+                                borderColor: state.isFocused ? '#00d6f4' : '#E0E0E0',
+                                boxShadow: '#00d6f4',
+                                '&:hover': {
+                                    borderColor: '#00d6f4',
+                                },
+                            }),
+                            menu: (base) => ({
+                                ...base,
+                                zIndex: 1000,
+                            }),
+                        }}
+                    />
+                    <FormControlLabel
+                        control={<Checkbox checked={isIncludeSold} onChange={handleChangeIsIncludeSold} />}
+                        label="Include Sold"
+                    />
+                </Grid>
+                <Box display={'flex'}>
+                    {curateStack.isActive && (
+                        <Box
+                            sx={{ cursor: 'pointer' }}
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            onClick={drawerStack.activate}
+                        >
+                            {lgUp && (
+                                <Box display="flex" alignItems="center" gap={2}>
+                                    <Typography variant="h4">
+                                        {selected.length} {language['search.assetList.curateStack.selected'] as string}
+                                    </Typography>
+                                    <IconCopy width={20} />
+                                </Box>
+                            )}
 
-                        {!lgUp && (
-                            <Badge badgeContent={selected.length} color="primary">
-                                <IconCopy width={20} color={iconColor} />
-                            </Badge>
-                        )}
-                    </Box>
-                )}
-                <Box display="flex" alignItems="center">
-                    <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
-                    <Box display={'flex'} gap={1}>
-                        <Typography variant={lgUp ? 'h4' : 'h5'}>
-                            {language['search.assetList.curateStack'] as string}
-                        </Typography>
-                        {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
+                            {!lgUp && (
+                                <Badge badgeContent={selected.length} color="primary">
+                                    <IconCopy width={20} color={iconColor} />
+                                </Badge>
+                            )}
+                        </Box>
+                    )}
+
+                    <Box display="flex" alignItems="center">
+                        <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
+                        <Box display={'flex'} gap={1}>
+                            <Typography variant={lgUp ? 'h4' : 'h5'}>
+                                {language['search.assetList.curateStack'] as string}
+                            </Typography>
+                            {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
+                        </Box>
                     </Box>
                 </Box>
             </Stack>

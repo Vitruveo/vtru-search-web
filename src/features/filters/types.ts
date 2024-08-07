@@ -1,5 +1,6 @@
 export interface FilterSliceState {
     name: string;
+    reseted: number;
     context: {
         title: string;
         description: string;
@@ -54,4 +55,10 @@ export interface FilterSliceState {
     showAdditionalAssets: {
         value: boolean;
     };
+    shortCuts: {
+        nudity: string;
+        aiGeneration: string;
+    };
+    grid: string[];
+    video: string[];
 }

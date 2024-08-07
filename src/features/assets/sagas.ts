@@ -14,13 +14,14 @@ import type {
     ResponseAsserCreator,
     ResponseAssets,
     ResponseAssetsLastSold,
+    ResponseGrid,
+    ResponseVideo,
 } from './types';
 import { actions } from './slice';
 import { actions as actionsFilter } from '../filters/slice';
 import { APIResponse } from '../common/types';
 import { AppState } from '@/store';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
-import filterTruthAndNonEmpty from '@/utils/filterTruthObjects';
 
 function* getAssetsLastSold() {
     try {
@@ -41,8 +42,13 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
 
     try {
+        const ids: string[] = yield select((state: AppState) =>
+            state.filters.grid.length ? state.filters.grid : state.filters.video.length ? state.filters.video : []
+        );
         const name: string = yield select((state: AppState) => state.filters.name);
         const page: number = yield select((state: AppState) => state.assets.data.page);
+        const order: string = yield select((state: AppState) => state.assets.sort.order);
+        const sold: string = yield select((state: AppState) => state.assets.sort.sold);
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
         const filtersCreators: FilterSliceState['creators'] = yield select((state: AppState) => state.filters.creators);
@@ -88,6 +94,12 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             return acc;
         }, {});
 
+        if (ids.length) {
+            buildQuery['_id'] = {
+                $in: ids,
+            };
+        }
+
         const URL_ASSETS_SEARCH = `${API_BASE_URL}/assets/public/search`;
 
         const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.get, URL_ASSETS_SEARCH, {
@@ -100,6 +112,10 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 name: name.trim() ? name : null,
                 precision: colorPrecision.value,
                 showAdditionalAssets,
+                sort: {
+                    order,
+                    isIncludeSold: sold === 'yes' ? true : false,
+                },
             },
         });
 
@@ -125,6 +141,53 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.finishLoading());
 }
 
+function* getGrid(action: PayloadAction<string>) {
+    yield put(actions.startLoading());
+    try {
+        const response: AxiosResponse<APIResponse<ResponseGrid>> = yield call(
+            axios.get,
+            `${API_BASE_URL}/assets/public/grid/${action.payload}`
+        );
+        if (
+            response.status === 200 &&
+            Array.isArray(response.data.data.grid.search.grid) &&
+            response.data.data.grid.search.grid.length > 0 &&
+            Array.isArray(response.data.data.grid.search.grid[0].assets) &&
+            response.data.data.grid.search.grid[0].assets.length > 0
+        ) {
+            yield put(actionsFilter.changeGrid(response.data.data.grid.search.grid[0].assets));
+            yield put(actions.loadAssets({ page: 1 }));
+        }
+    } catch (error) {
+        // handle error
+    }
+    yield put(actions.finishLoading());
+}
+
+function* getVideo(action: PayloadAction<string>) {
+    yield put(actions.startLoading());
+    try {
+        const response: AxiosResponse<APIResponse<ResponseVideo>> = yield call(
+            axios.get,
+            `${API_BASE_URL}/assets/public/video/${action.payload}`
+        );
+
+        if (
+            response.status === 200 &&
+            Array.isArray(response.data.data.video.search.video) &&
+            response.data.data.video.search.video.length > 0 &&
+            Array.isArray(response.data.data.video.search.video[0].assets) &&
+            response.data.data.video.search.video[0].assets.length > 0
+        ) {
+            yield put(actionsFilter.changeVideo(response.data.data.video.search.video[0].assets));
+            yield put(actions.loadAssets({ page: 1 }));
+        }
+    } catch (error) {
+        // handle error
+    }
+    yield put(actions.finishLoading());
+}
+
 function* getCreator(action: PayloadAction<GetCreatorParams>) {
     try {
         yield put(actions.setCreator({ username: '', avatar: '' }));
@@ -143,7 +206,7 @@ function* getCreator(action: PayloadAction<GetCreatorParams>) {
 
 function* makeVideo(action: PayloadAction<MakeVideoParams>) {
     try {
-        yield put(actions.setVideo(''));
+        yield put(actions.setVideoUrl(''));
         yield put(actions.setLoadingVideo(true));
 
         const token: string = yield select((state: AppState) => state.creator.token);
@@ -151,7 +214,13 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
         const response: AxiosResponse<APIResponse<MakeVideoResponse>> = yield call(
             axios.post,
             `${API_BASE_URL}/assets/videoGallery`,
-            { artworks: action.payload.artworks, title: action.payload.title, sound: action.payload.sound },
+            {
+                artworks: action.payload.artworks,
+                title: action.payload.title,
+                sound: action.payload.sound,
+                fees: action.payload.fees,
+                timestamp: action.payload.timestamp,
+            },
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -159,7 +228,7 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
                 onUploadProgress: (progressEvent: any) => {},
             }
         );
-        yield put(actions.setVideo(response.data.data.url));
+        yield put(actions.setVideoUrl(response.data.data.url));
         yield call(confetti, {
             particleCount: 500,
             spread: 250,
@@ -171,16 +240,6 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
     yield put(actions.setLoadingVideo(false));
 }
 
-function* setup() {
-    const { context, taxonomy, creators }: FilterSliceState = yield select((state: AppState) => state.filters);
-    const filters = {
-        context: filterTruthAndNonEmpty(context),
-        taxonomy: filterTruthAndNonEmpty(taxonomy),
-        creators: filterTruthAndNonEmpty(creators),
-    };
-    yield put(actions.loadAssets({ page: 1, filters }));
-}
-
 export function* assetsSagas() {
     yield all([
         takeEvery(actionsFilter.reset.type, getAssets),
@@ -188,11 +247,13 @@ export function* assetsSagas() {
         takeEvery(actions.loadAssetsLastSold.type, getAssetsLastSold),
         takeEvery(actions.loadCreator.type, getCreator),
         takeEvery(actions.makeVideo.type, makeVideo),
+        takeEvery(actions.setSort.type, getAssets),
         takeEvery(actionsFilter.change.type, getAssets),
+        takeEvery(actions.setGridId.type, getGrid),
+        takeEvery(actions.setVideoId.type, getVideo),
         debounce(1000, actionsFilter.changeName.type, getAssets),
         debounce(500, actions.setCurrentPage.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),
         takeEvery(actionsFilter.changeColorPrecision.type, getAssets),
-        takeEvery('persist/REHYDRATE', setup),
     ]);
 }
