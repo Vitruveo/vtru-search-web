@@ -3,11 +3,10 @@ import { ShareButton } from './ShareButton';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useI18n } from '@/app/hooks/useI18n';
 import { IconPlayerPause, IconPlayerPlay } from '@tabler/icons-react';
-import { Dispatch, SetStateAction, use, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import audios from '../../../../../../public/data/sounds.json';
 import { actions } from '@/features/assets';
 import { createTwitterIntent } from '@/utils/twitter';
-import { API_BASE_URL } from '@/constants/api';
 import { createBackLink } from '@/utils/url-assets';
 import { Asset } from '@/features/assets/types';
 
