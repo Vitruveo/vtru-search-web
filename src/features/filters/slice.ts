@@ -68,6 +68,7 @@ export const initialState: FilterSliceState = {
         aiGeneration: 'full',
     },
     grid: [],
+    video: [],
 };
 
 export const filterSlice = createSlice({
@@ -135,6 +136,7 @@ export const filterSlice = createSlice({
                 aiGeneration: 'full',
             };
             state.grid = [];
+            state.video = [];
             state.reseted += 1;
 
             const payload = extractObjects(initialState);
@@ -192,6 +194,7 @@ export const filterSlice = createSlice({
             };
             state.shortCuts = initialState.shortCuts;
             state.grid = initialState.grid;
+            state.video = initialState.video;
             state.reseted += 1;
             clearAssetsFromURL();
         },
@@ -213,6 +216,25 @@ export const filterSlice = createSlice({
         changeGrid: (state, action: PayloadAction<string[] | null>) => {
             if (action.payload) {
                 state.grid = action.payload;
+            }
+
+            // clear other filters
+            state.name = '';
+            state.context = initialState.context;
+            state.taxonomy = initialState.taxonomy;
+            state.creators = initialState.creators;
+            state.provenance = initialState.provenance;
+            state.price = initialState.price;
+            state.shortCuts = {
+                nudity: 'no',
+                aiGeneration: 'no',
+            };
+            state.reseted += 1;
+            clearAssetsFromURL();
+        },
+        changeVideo: (state, action: PayloadAction<string[] | null>) => {
+            if (action.payload) {
+                state.video = action.payload;
             }
 
             // clear other filters

@@ -25,8 +25,11 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
     const handleClickView = () => {
         const searchParams = new URLSearchParams(window.location.search);
         const grid = searchParams.get('grid');
+        const video = searchParams.get('video');
 
-        window.open(`${STORE_BASE_URL}/${creator.username}/${assetView?._id}${grid ? `?grid=${grid}` : ''}`, '_blank');
+        window.open(
+            `${STORE_BASE_URL}/${creator.username}/${assetView?._id}${grid ? `?grid=${grid}` : video ? `?video=${video}` : ''}`
+        );
     };
 
     const width = lgUp ? 400 : mdUp ? 300 : 200;

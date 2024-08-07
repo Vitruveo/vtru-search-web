@@ -120,8 +120,8 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
     const [creatorId, type, timestamp] = path.split('/');
 
     const url = `${API_BASE_URL}/search/grid`;
-    const extra = `&title=${encodeURIComponent(title)}&creatorId=${encodeURIComponent(creatorId)}&type=${encodeURIComponent(type)}&timestamp=${encodeURIComponent(timestamp)}`;
-    const twitterShareURL = createTwitterIntent({ url, extra });
+    const extra = `title=${encodeURIComponent(title)}&creatorId=${encodeURIComponent(creatorId)}&type=${encodeURIComponent(type)}&timestamp=${encodeURIComponent(timestamp)}`;
+    const twitterShareURL = createTwitterIntent({ url, extra, hashtags: 'Vitruveo,VTRUSuite' });
 
     if (confirmedGrid) {
         return (

@@ -1,7 +1,7 @@
 'use client';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import type { AssetsSliceState, GetAssetsParams, GetCreatorParams, LastSoldAsset } from './types';
+import type { AssetsSliceState, GetAssetsParams, GetCreatorParams, LastSoldAsset, MakeVideoParams } from './types';
 
 export const initialState: AssetsSliceState = {
     loading: false,
@@ -45,7 +45,8 @@ export const assetsSlice = createSlice({
         setError: (state, action) => {
             state.error = action.payload;
         },
-        setVideo: (state, action: PayloadAction<string>) => {
+        setVideoId: (state, action: PayloadAction<string>) => {},
+        setVideoUrl: (state, action: PayloadAction<string>) => {
             state.video = action.payload;
         },
         setData: (state, action: PayloadAction<AssetsSliceState['data']>) => {
@@ -57,7 +58,7 @@ export const assetsSlice = createSlice({
         setLoadingVideo: (state, action: PayloadAction<boolean>) => {
             state.loadingVideo = action.payload;
         },
-        makeVideo: (_state, _payload) => {},
+        makeVideo: (_state, _payload: PayloadAction<MakeVideoParams>) => {},
         setTags: (state, action: PayloadAction<AssetsSliceState['tags']>) => {
             state.tags = action.payload;
         },
