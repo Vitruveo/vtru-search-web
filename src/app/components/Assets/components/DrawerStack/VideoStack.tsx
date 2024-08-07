@@ -3,7 +3,7 @@ import { ShareButton } from './ShareButton';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useI18n } from '@/app/hooks/useI18n';
 import { IconPlayerPause, IconPlayerPlay } from '@tabler/icons-react';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, use, useEffect, useState } from 'react';
 import audios from '../../../../../../public/data/sounds.json';
 import { actions } from '@/features/assets';
 import { createTwitterIntent } from '@/utils/twitter';
@@ -17,9 +17,17 @@ interface VideoStackProps {
     selectedAudio: string;
     audio: HTMLAudioElement;
     setSelectedAudio: Dispatch<SetStateAction<string>>;
+    setGenerating: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function VideoStack({ selectedAssets, title, selectedAudio, audio, setSelectedAudio }: VideoStackProps) {
+export default function VideoStack({
+    selectedAssets,
+    title,
+    selectedAudio,
+    audio,
+    setSelectedAudio,
+    setGenerating,
+}: VideoStackProps) {
     const { language } = useI18n();
     const dispatch = useDispatch();
     const creatorId = useSelector((state) => state.creator.id);
@@ -27,6 +35,10 @@ export default function VideoStack({ selectedAssets, title, selectedAudio, audio
     const [published, setPublished] = useState(false);
     const { loadingVideo, video } = useSelector((state) => state.assets);
     const hasVideo = video !== '';
+
+    useEffect(() => {
+        setGenerating(loadingVideo);
+    }, [loadingVideo]);
 
     useEffect(() => {
         if (isPlaying) {

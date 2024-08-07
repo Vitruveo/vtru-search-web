@@ -3,7 +3,7 @@ import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { Asset } from '@/features/assets/types';
 import { Box, Button, Typography } from '@mui/material';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { ShareButton } from './ShareButton';
 import html2canvas from 'html2canvas';
 import { useDispatch, useSelector } from '@/store/hooks';
@@ -16,6 +16,7 @@ import LinearProgressWithLabel from '../LinearProgressWithLabel';
 interface GridStackProps {
     selectedAssets: Asset[];
     title: string;
+    setGenerating: Dispatch<SetStateAction<boolean>>;
 }
 
 const sizes = {
@@ -24,7 +25,7 @@ const sizes = {
     '4x4': 19,
 } as { [key: string]: number };
 
-export default function GridStack({ selectedAssets, title }: GridStackProps) {
+export default function GridStack({ selectedAssets, title, setGenerating }: GridStackProps) {
     const captureRef = useRef<HTMLDivElement | null>(null);
     const dispatch = useDispatch();
     const { preSignedURL, shareAvailable, path, uploadProgress } = useSelector((state) => state.ws);
@@ -34,6 +35,8 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
     const [loadingSreenshot, setLoadingScreenshot] = useState(false);
     const [loadingRequest, setLoadingRequest] = useState(false);
     const { language } = useI18n();
+
+    useEffect(() => setGenerating(!shareAvailable), [shareAvailable]);
 
     const updatedAssets = selectedAssets.map((asset) => {
         const isVideo = asset?.formats?.preview?.path?.match(/\.(mp4|webm|ogg)$/) != null;
@@ -65,7 +68,9 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                     left: -9999px;
                 `;
                 document.body.style.overflow = 'hidden';
-                const canvas = await html2canvas(captureRef.current);
+                const canvas = await html2canvas(captureRef.current, {
+                    backgroundColor: null,
+                });
                 captureRef.current!.style.display = 'none';
                 setScreenShot(canvas.toDataURL());
             }
