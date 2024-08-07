@@ -36,7 +36,9 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
     const [loadingRequest, setLoadingRequest] = useState(false);
     const { language } = useI18n();
 
-    useEffect(() => setGenerating(!shareAvailable), [shareAvailable]);
+    useEffect(() => {
+        if (confirmedGrid) setGenerating(!shareAvailable);
+    }, [confirmedGrid, shareAvailable]);
 
     const updatedAssets = selectedAssets.map((asset) => {
         const isVideo = asset?.formats?.preview?.path?.match(/\.(mp4|webm|ogg)$/) != null;
