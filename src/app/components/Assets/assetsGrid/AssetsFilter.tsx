@@ -134,7 +134,7 @@ const Filters = () => {
 
     const handleChangeNudity = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsNudityChecked(event.target.checked);
-        generateQueryParam('taxonomy_nudity', event.target.checked ? 'yes' : 'no');
+        generateQueryParam('taxonomy_nudity', event.target.checked ? 'yes,no' : 'no');
         dispatch(actions.change({ key: 'taxonomy', value: { nudity: event.target.checked ? ['yes', 'no'] : ['no'] } }));
     };
     const handleChangeAI = (event: React.ChangeEvent<HTMLInputElement>) => {
