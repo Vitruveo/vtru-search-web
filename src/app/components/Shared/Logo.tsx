@@ -41,7 +41,7 @@ const Logo = () => {
 
         params.set('sort', 'latest');
         params.set('sold', 'no');
-        params.set('taxonomy_aiGeneration', 'full');
+        params.set('taxonomy_aiGeneration', 'full,partial,none');
         params.set('taxonomy_nudity', 'no');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);

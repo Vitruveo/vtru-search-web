@@ -115,7 +115,7 @@ const Filters = () => {
 
         params.set('sort', 'latest');
         params.set('sold', 'no');
-        params.set('taxonomy_aiGeneration', 'full');
+        params.set('taxonomy_aiGeneration', 'full,partial,none');
         params.set('taxonomy_nudity', 'no');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
@@ -134,14 +134,17 @@ const Filters = () => {
 
     const handleChangeNudity = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsNudityChecked(event.target.checked);
-        generateQueryParam('taxonomy_nudity', event.target.checked ? 'yes' : 'no');
-        dispatch(actions.change({ key: 'taxonomy', value: { nudity: event.target.checked ? ['yes'] : ['no'] } }));
+        generateQueryParam('taxonomy_nudity', event.target.checked ? 'yes,no' : 'no');
+        dispatch(actions.change({ key: 'taxonomy', value: { nudity: event.target.checked ? ['yes', 'no'] : ['no'] } }));
     };
     const handleChangeAI = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsAIChecked(event.target.checked);
-        generateQueryParam('taxonomy_aiGeneration', event.target.checked ? 'full' : 'none');
+        generateQueryParam('taxonomy_aiGeneration', event.target.checked ? 'full,partial,none' : 'none');
         dispatch(
-            actions.change({ key: 'taxonomy', value: { aiGeneration: event.target.checked ? ['full'] : ['none'] } })
+            actions.change({
+                key: 'taxonomy',
+                value: { aiGeneration: event.target.checked ? ['full', 'partial', 'none'] : ['none'] },
+            })
         );
     };
     const handleChangePhysicalArt = (event: React.ChangeEvent<HTMLInputElement>) => {

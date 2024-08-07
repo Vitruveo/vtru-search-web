@@ -184,7 +184,7 @@ export const filterSlice = createSlice({
             state.taxonomy = {
                 ...initialState.taxonomy,
                 nudity: ['no'],
-                aiGeneration: ['full'],
+                aiGeneration: ['full', 'partial', 'none'],
             };
             state.creators = initialState.creators;
             state.provenance = initialState.provenance;
