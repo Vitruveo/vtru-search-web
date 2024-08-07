@@ -47,7 +47,7 @@ const Search = () => {
         }
 
         if (Object.keys(initialParams).length === 0) {
-            initialParams.taxonomy_aiGeneration = 'full';
+            initialParams.taxonomy_aiGeneration = 'full,partial,none';
             initialParams.taxonomy_nudity = 'no';
         }
 
