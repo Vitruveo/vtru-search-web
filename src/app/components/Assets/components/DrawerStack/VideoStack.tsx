@@ -75,7 +75,7 @@ export default function VideoStack({
     const twitterShareURL = createTwitterIntent({
         url: `${API_BASE_URL}/search/${creatorId}/html`,
         hashtags: 'Vitruveo,VTRUSuite',
-        text: `${language['search.checkoutMyNewVideo']}\n${window.location.origin}?video=${timestamp}`,
+        text: `${language['search.checkoutMyNewVideo']}`,
     });
 
     if (published) {
