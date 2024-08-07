@@ -25,7 +25,9 @@ export default function VideoStack({ selectedAssets, title, selectedAudio, audio
     const creatorId = useSelector((state) => state.creator.id);
     const [isPlaying, setIsPlaying] = useState(false);
     const [published, setPublished] = useState(false);
+    const [timestamp, setTimestamp] = useState('');
     const { loadingVideo, video } = useSelector((state) => state.assets);
+
     const hasVideo = video !== '';
 
     useEffect(() => {
@@ -44,20 +46,25 @@ export default function VideoStack({ selectedAssets, title, selectedAudio, audio
 
     const handleDispatchMakeVideo = () => {
         const data = selectedAssets.map((asset) => asset?.formats?.preview?.path);
+        const id = Date.now().toString();
+        setTimestamp(id);
         dispatch(
             actions.makeVideo({
                 artworks: data,
                 title: title,
-                sound: audios.find((item) => item.value === selectedAudio)?.value,
+                sound: audios.find((item) => item.value === selectedAudio)!.value,
+                fees: 10, // TODO: get fees from the user
+                timestamp: id,
             })
         );
         setPublished(true);
     };
 
     const twitterShareURL = createTwitterIntent({
-        url: `${API_BASE_URL}/creators/search/${creatorId}/html`,
+        url: window.location.origin,
         hashtags: 'Vitruveo,VTRUSuite',
-        text: `${language['search.checkoutMyNewVideo']} ${createBackLink(selectedAssets)}`,
+        text: `${language['search.checkoutMyNewVideo']}`,
+        extra: `video=${timestamp}`,
     });
 
     if (published) {
@@ -78,7 +85,13 @@ export default function VideoStack({ selectedAssets, title, selectedAudio, audio
 
                 {!loadingVideo && (
                     <Box display={'flex'} justifyContent={'center'} mt={2}>
-                        <ShareButton twitterURL={twitterShareURL} url={video} contentToCopy={video} />
+                        <ShareButton
+                            twitterURL={twitterShareURL}
+                            url={video}
+                            downloadable
+                            contentToCopy={createBackLink(timestamp)}
+                            title={title}
+                        />
                     </Box>
                 )}
             </>

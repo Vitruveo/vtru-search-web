@@ -26,6 +26,7 @@ const Search = () => {
     const dispatch = useDispatch();
     const searchParams = useSearchParams();
     const grid = searchParams.get('grid');
+    const video = searchParams.get('video');
 
     useEffect(() => {
         params.forEach((param) => {
@@ -37,6 +38,11 @@ const Search = () => {
 
         if (grid) {
             dispatch(actionsAssets.setGridId(grid));
+            return;
+        }
+
+        if (video) {
+            dispatch(actionsAssets.setVideoId(video));
             return;
         }
 

@@ -31,7 +31,7 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
     useEffect(() => {
         if (isOpen) {
             audio.pause();
-            dispatch(assetActions.setVideo(''));
+            dispatch(assetActions.setVideoUrl(''));
             setTitle('');
         }
     }, [isOpen]);

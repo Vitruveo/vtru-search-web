@@ -99,13 +99,20 @@ const Filters = () => {
 
     const handleResetFilters = () => {
         Array.from(params.keys()).forEach((key) => {
-            if (key !== 'grid') params.delete(key);
+            if (key !== 'grid' && key !== 'video') params.delete(key);
         });
         if (params.get('grid')) {
             window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
             dispatch(actionsAssets.setGridId(params.get('grid')!));
             return;
         }
+
+        if (params.get('video')) {
+            window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+            dispatch(actionsAssets.setVideoId(params.get('video')!));
+            return;
+        }
+
         params.set('sort', 'latest');
         params.set('sold', 'no');
         params.set('taxonomy_aiGeneration', 'full');

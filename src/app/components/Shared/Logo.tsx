@@ -36,11 +36,13 @@ const Logo = () => {
 
     const returnToPageOne = () => {
         const params = new URLSearchParams(window.location.search);
+
+        params.forEach((value, key) => params.delete(key));
+
         params.set('sort', 'latest');
-        params.set('sold', 'false');
+        params.set('sold', 'no');
         params.set('taxonomy_aiGeneration', 'full');
         params.set('taxonomy_nudity', 'no');
-        params.delete('grid');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
 
