@@ -7,7 +7,6 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import audios from '../../../../../../public/data/sounds.json';
 import { actions } from '@/features/assets';
 import { createTwitterIntent } from '@/utils/twitter';
-import { API_BASE_URL } from '@/constants/api';
 import { createBackLink } from '@/utils/url-assets';
 import { Asset } from '@/features/assets/types';
 
@@ -17,16 +16,30 @@ interface VideoStackProps {
     selectedAudio: string;
     audio: HTMLAudioElement;
     setSelectedAudio: Dispatch<SetStateAction<string>>;
+    setGenerating: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function VideoStack({ selectedAssets, title, selectedAudio, audio, setSelectedAudio }: VideoStackProps) {
+export default function VideoStack({
+    selectedAssets,
+    title,
+    selectedAudio,
+    audio,
+    setSelectedAudio,
+    setGenerating,
+}: VideoStackProps) {
     const { language } = useI18n();
     const dispatch = useDispatch();
     const creatorId = useSelector((state) => state.creator.id);
     const [isPlaying, setIsPlaying] = useState(false);
     const [published, setPublished] = useState(false);
+    const [timestamp, setTimestamp] = useState('');
     const { loadingVideo, video } = useSelector((state) => state.assets);
+
     const hasVideo = video !== '';
+
+    useEffect(() => {
+        setGenerating(loadingVideo);
+    }, [loadingVideo]);
 
     useEffect(() => {
         if (isPlaying) {
@@ -44,20 +57,25 @@ export default function VideoStack({ selectedAssets, title, selectedAudio, audio
 
     const handleDispatchMakeVideo = () => {
         const data = selectedAssets.map((asset) => asset?.formats?.preview?.path);
+        const id = Date.now().toString();
+        setTimestamp(id);
         dispatch(
             actions.makeVideo({
                 artworks: data,
                 title: title,
-                sound: audios.find((item) => item.value === selectedAudio)?.value,
+                sound: audios.find((item) => item.value === selectedAudio)!.value,
+                fees: 10, // TODO: get fees from the user
+                timestamp: id,
             })
         );
         setPublished(true);
     };
 
     const twitterShareURL = createTwitterIntent({
-        url: `${API_BASE_URL}/creators/search/${creatorId}/html`,
+        url: window.location.origin,
         hashtags: 'Vitruveo,VTRUSuite',
-        text: `${language['search.checkoutMyNewVideo']} ${createBackLink(selectedAssets)}`,
+        text: `${language['search.checkoutMyNewVideo']}`,
+        extra: `video=${timestamp}`,
     });
 
     if (published) {
@@ -78,7 +96,13 @@ export default function VideoStack({ selectedAssets, title, selectedAudio, audio
 
                 {!loadingVideo && (
                     <Box display={'flex'} justifyContent={'center'} mt={2}>
-                        <ShareButton twitterURL={twitterShareURL} url={video} contentToCopy={video} />
+                        <ShareButton
+                            twitterURL={twitterShareURL}
+                            url={video}
+                            downloadable
+                            contentToCopy={createBackLink(timestamp)}
+                            title={title}
+                        />
                     </Box>
                 )}
             </>

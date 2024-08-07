@@ -160,6 +160,20 @@ export interface ResponseGrid {
     };
 }
 
+export interface ResponseVideo {
+    video: {
+        _id: string;
+        search: {
+            video: {
+                id: string;
+                path: string;
+                assets: string[];
+                createdAt: string;
+            }[];
+        };
+    };
+}
+
 export interface ResponseAsserCreator {
     username: string;
     avatar: string;
@@ -208,4 +222,6 @@ export interface MakeVideoParams {
     artworks: string[];
     title: string;
     sound: string;
+    fees: number;
+    timestamp: string;
 }

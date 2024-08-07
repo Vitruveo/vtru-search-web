@@ -6,17 +6,16 @@ export interface CreateTwitterIntentParams {
 }
 
 export const createTwitterIntent = ({ url, hashtags, text, extra }: CreateTwitterIntentParams) => {
-    const intent = new URL('https://twitter.com/intent/tweet');
+    const intent = new URL('https://x.com/intent/post');
 
-    intent.searchParams.append('url', url + `?c=${Date.now()}` + (extra ? `${extra}` : ''));
+    const timestamp = Date.now().toString();
 
-    if (hashtags) {
-        intent.searchParams.append('hashtags', hashtags);
-    }
+    if (extra) intent.searchParams.append('url', `${url.trim()}?${extra.trim()}&c=${timestamp}\n\n`);
+    else intent.searchParams.append('url', `${url.trim()}?c=${timestamp}\n\n`);
 
-    if (text) {
-        intent.searchParams.append('text', text + '\n');
-    }
+    if (hashtags) intent.searchParams.append('hashtags', `${hashtags.trim()}`);
+
+    if (text) intent.searchParams.append('text', `${text.trim()}\n`);
 
     return intent.toString();
 };

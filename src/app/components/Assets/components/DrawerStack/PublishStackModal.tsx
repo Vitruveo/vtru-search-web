@@ -21,6 +21,7 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
     const [title, setTitle] = useState('');
     const [tabValue, setTabValue] = useState('1');
     const [selectedAudio, setSelectedAudio] = useState(audios[0].value);
+    const [generating, setGenerating] = useState(false);
 
     const audio = useMemo(() => new Audio(`/audios/${selectedAudio}`), [selectedAudio]);
 
@@ -31,7 +32,7 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
     useEffect(() => {
         if (isOpen) {
             audio.pause();
-            dispatch(assetActions.setVideo(''));
+            dispatch(assetActions.setVideoUrl(''));
             setTitle('');
         }
     }, [isOpen]);
@@ -39,7 +40,7 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
     return (
         <Modal
             open={isOpen}
-            onClose={onClose}
+            onClose={!generating ? onClose : () => {}}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
@@ -73,7 +74,11 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
 
                 <TabContext value={tabValue}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <TabList onChange={(_e, value) => setTabValue(value)} variant="scrollable" scrollButtons="auto">
+                        <TabList
+                            onChange={(_e, value) => (!generating ? setTabValue(value) : () => {})}
+                            variant="scrollable"
+                            scrollButtons="auto"
+                        >
                             <Tab label="Video" value="1" />
                             <Tab label="Grid" value="2" />
                         </TabList>
@@ -85,10 +90,11 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
                             selectedAudio={selectedAudio}
                             setSelectedAudio={setSelectedAudio}
                             title={title}
+                            setGenerating={setGenerating}
                         />
                     </TabPanel>
                     <TabPanel value="2">
-                        <GridStack selectedAssets={selectedAssets} title={title} />
+                        <GridStack selectedAssets={selectedAssets} title={title} setGenerating={setGenerating} />
                     </TabPanel>
                 </TabContext>
             </Box>

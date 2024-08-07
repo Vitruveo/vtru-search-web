@@ -41,6 +41,8 @@ const AssetsList = () => {
     const dispatch = useDispatch();
 
     const grid = searchParamsHook.get('grid');
+    const video = searchParamsHook.get('video');
+
     const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
     const [selected, setSelected] = useState<Asset[]>([]);
@@ -116,13 +118,13 @@ const AssetsList = () => {
     }, [currentPage]);
 
     useEffect(() => {
-        if (grid) return;
+        if (grid || video) return;
 
         if (currentPage > totalPage) dispatch(actions.setCurrentPage(totalPage));
     }, [totalPage]);
 
     useEffect(() => {
-        if (grid) return;
+        if (grid || video) return;
 
         setSortOrder(sort.order);
         setIsIncludeSold(sort.sold === 'yes' ? true : false);

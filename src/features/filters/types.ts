@@ -60,4 +60,5 @@ export interface FilterSliceState {
         aiGeneration: string;
     };
     grid: string[];
+    video: string[];
 }
