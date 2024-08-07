@@ -183,7 +183,7 @@ const AssetsList = () => {
         }>
     ) => {
         setSortOrder(e?.value || '');
-        generateQueryParam('order', e?.value || '');
+        generateQueryParam('sort', e?.value || '');
         dispatch(actions.setSort({ order: e?.value || '', sold: isIncludeSold ? 'yes' : 'no' }));
     };
     const handleChangeIsIncludeSold = () => {
