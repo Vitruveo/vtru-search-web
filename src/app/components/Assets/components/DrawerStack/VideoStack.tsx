@@ -9,6 +9,7 @@ import { actions } from '@/features/assets';
 import { createTwitterIntent } from '@/utils/twitter';
 import { createBackLink } from '@/utils/url-assets';
 import { Asset } from '@/features/assets/types';
+import { API_BASE_URL } from '@/constants/api';
 
 interface VideoStackProps {
     selectedAssets: Asset[];
@@ -72,10 +73,9 @@ export default function VideoStack({
     };
 
     const twitterShareURL = createTwitterIntent({
-        url: window.location.origin,
+        url: `${API_BASE_URL}/search/${creatorId}/html`,
         hashtags: 'Vitruveo,VTRUSuite',
-        text: `${language['search.checkoutMyNewVideo']}`,
-        extra: `video=${timestamp}`,
+        text: `${language['search.checkoutMyNewVideo']}\n${window.location.origin}?video=${timestamp}`,
     });
 
     if (published) {
