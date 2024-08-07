@@ -107,12 +107,13 @@ const Filters = () => {
             return;
         }
         params.set('sort', 'latest');
-        params.set('sold', 'false');
+        params.set('sold', 'no');
         params.set('taxonomy_aiGeneration', 'full');
         params.set('taxonomy_nudity', 'no');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
         dispatch(actions.reset({ maxPrice }));
+        dispatch(actionsAssets.setSort({ order: 'latest', sold: 'no' }));
     };
 
     const syncFiltersWithUrl = (changeValue: any, key: string) => {

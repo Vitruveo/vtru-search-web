@@ -1,6 +1,5 @@
 import { useI18n } from '@/app/hooks/useI18n';
 import { Box, Button, Typography, Drawer, useMediaQuery } from '@mui/material';
-import { useSearchParams } from 'next/navigation';
 import { Theme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
 import { AWS_BASE_URL_S3, GENERAL_STORAGE_URL } from '@/constants/aws';
@@ -16,7 +15,6 @@ interface Props {
 }
 
 export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
-    const params = useSearchParams();
     const { language } = useI18n();
 
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
@@ -25,7 +23,8 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
     const creator = useSelector((state) => state.assets.creator);
 
     const handleClickView = () => {
-        const grid = params.has('grid') ? params.get('grid') : '';
+        const searchParams = new URLSearchParams(window.location.search);
+        const grid = searchParams.get('grid');
 
         window.open(`${STORE_BASE_URL}/${creator.username}/${assetView?._id}${grid ? `?grid=${grid}` : ''}`, '_blank');
     };
