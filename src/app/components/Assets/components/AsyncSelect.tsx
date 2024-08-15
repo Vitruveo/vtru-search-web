@@ -25,6 +25,7 @@ interface AsyncSelectProps {
     onChange: (newValue: MultiValue<Option>, actionMeta: ActionMeta<Option>) => void;
     endpoint?: string;
     defaultValue?: Option[];
+    showAdditionalAssets?: boolean;
 }
 
 const styles: StylesConfig<Option, true, GroupBase<Option>> = {
@@ -39,7 +40,7 @@ const styles: StylesConfig<Option, true, GroupBase<Option>> = {
     }),
 };
 
-export const AsyncSelect = ({ onChange, defaultValue, endpoint }: AsyncSelectProps) => {
+export const AsyncSelect = ({ onChange, defaultValue, endpoint, showAdditionalAssets = false }: AsyncSelectProps) => {
     const fetchOptions = async (inputValue: string): Promise<Option[]> => {
         if (inputValue.length < 3 || !endpoint) {
             return [];
@@ -47,7 +48,7 @@ export const AsyncSelect = ({ onChange, defaultValue, endpoint }: AsyncSelectPro
 
         try {
             const res = await api.get<LoadItemResponse>(endpoint, {
-                params: { name: inputValue },
+                params: { name: inputValue, showAdditionalAssets },
             });
 
             const { data } = res.data;

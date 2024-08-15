@@ -6,6 +6,7 @@ import { InputText } from './InputText';
 import { CountOptionLabel } from './CountOptionLabel';
 import type { TaxonomyItem, Option } from '../types';
 import { AsyncSelect } from './AsyncSelect';
+import { useSelector } from '@/store/hooks';
 
 export function TaxonomyItem({
     title,
@@ -19,6 +20,7 @@ export function TaxonomyItem({
 }: TaxonomyItem) {
     const { language } = useI18n();
     const taxonomy = 'search.assetFilter.taxonomy';
+    const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets.value);
 
     return (
         <Box mb={2}>
@@ -100,6 +102,7 @@ export function TaxonomyItem({
                             label: item,
                         })
                     )}
+                    showAdditionalAssets={showAdditionalAssets}
                 />
             )}
         </Box>
