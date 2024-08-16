@@ -7,7 +7,7 @@ import { Theme } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled } from '@mui/material/styles';
-import { IconMenu2 } from '@tabler/icons-react';
+import { IconMenu2, IconMoon, IconSun } from '@tabler/icons-react';
 import { useSelector } from '@/store/hooks';
 import { useDispatch } from 'react-redux';
 import Logo from '../Shared/Logo';
@@ -15,6 +15,7 @@ import Language from '../Language';
 import { AvatarProfile } from '../AvatarProfile';
 import { Rss } from '../Rss';
 import { actions } from '@/features/layout';
+import { customizerActionsCreators } from '@/features/customizer';
 
 const Header = () => {
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
@@ -43,6 +44,10 @@ const Header = () => {
         dispatch(actions.toggleSidebar());
     };
 
+    const handleToggleTheme = () => {
+        dispatch(customizerActionsCreators.setTheme(customizer.activeMode === 'light'));
+    };
+
     return (
         <AppBarStyled position="sticky" color="default" elevation={8}>
             <ToolbarStyled
@@ -62,6 +67,9 @@ const Header = () => {
 
                 <Box flexGrow={1} />
                 <Stack spacing={1} direction="row" alignItems="center">
+                    <IconButton onClick={handleToggleTheme}>
+                        {customizer.activeMode === 'dark' ? <IconSun /> : <IconMoon />}
+                    </IconButton>
                     <Rss />
                     <Language />
                     {isLogged && <AvatarProfile />}
