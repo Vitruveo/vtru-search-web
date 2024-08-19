@@ -93,7 +93,11 @@ export const AsyncSelect = ({ onChange, defaultValue, endpoint, showAdditionalAs
                     color: theme.palette.text.primary,
                     backgroundColor: theme.palette.background.paper,
                 }),
-                singleValue: (base) => ({
+                multiValue: (base) => ({
+                    ...base,
+                    backgroundColor: theme.palette.action.selected,
+                }),
+                multiValueLabel: (base) => ({
                     ...base,
                     color: theme.palette.text.primary,
                 }),

@@ -12,6 +12,7 @@ interface Props {
 
 export function InputSelect({ value, options, onChange }: Props) {
     const theme = useTheme();
+
     return (
         <Select
             isMulti
@@ -30,7 +31,11 @@ export function InputSelect({ value, options, onChange }: Props) {
                     color: theme.palette.text.primary,
                     backgroundColor: theme.palette.background.paper,
                 }),
-                singleValue: (base) => ({
+                multiValue: (base) => ({
+                    ...base,
+                    backgroundColor: theme.palette.action.selected,
+                }),
+                multiValueLabel: (base) => ({
                     ...base,
                     color: theme.palette.text.primary,
                 }),
