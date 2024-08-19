@@ -1,5 +1,6 @@
 import { useSelector } from '@/store/hooks';
 import { Box, Button, Slider, Stack, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { useRef } from 'react';
 interface Props {
     name: string;
@@ -7,24 +8,14 @@ interface Props {
     afterPrecisionChange?: (value: number) => void;
 }
 
-const min = 0;
-const max = 100;
-
-const marks = [
-    {
-        value: min,
-        label: '',
-    },
-    {
-        value: max,
-        label: '',
-    },
-];
+export const minPrecision = 0;
+export const maxPrecision = 100;
 
 export function InputColor({ name, onClick, afterPrecisionChange }: Props) {
+    const theme = useTheme();
     const inputRef = useRef<HTMLInputElement>(null);
-    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
     const defaultPrecisionValue = useSelector((state) => state.filters.colorPrecision.value);
+    const reseted = useSelector((state) => state.filters.reseted);
 
     const handleAddColor = () => {
         if (inputRef.current) {
@@ -32,13 +23,8 @@ export function InputColor({ name, onClick, afterPrecisionChange }: Props) {
         }
     };
 
-    const onChange = (event: Event, newValue: number | number[]) => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-        }
-        timeoutRef.current = setTimeout(() => {
-            afterPrecisionChange?.((newValue as number) / 100);
-        }, 1000);
+    const onChange = (_event: Event, newValue: number | number[]) => {
+        afterPrecisionChange?.((newValue as number) / 100);
     };
 
     return (
@@ -47,18 +33,24 @@ export function InputColor({ name, onClick, afterPrecisionChange }: Props) {
                 <Typography>Precision</Typography>
                 <Box px={1}>
                     <Slider
-                        key={Date.now()}
-                        onChange={onChange}
-                        min={min}
-                        max={max}
+                        key={reseted}
                         defaultValue={defaultPrecisionValue * 100}
-                        marks={marks}
+                        onChange={onChange}
+                        min={minPrecision}
+                        max={maxPrecision}
                         step={10}
                         valueLabelDisplay="auto"
+                        sx={{
+                            color: theme.palette.primary.main,
+                            '& .MuiSlider-valueLabel': {
+                                backgroundColor: theme.palette.secondary.main,
+                                color: theme.palette.common.white,
+                            },
+                        }}
                     />
                     <Box display="flex" justifyContent="space-between">
-                        <Typography fontSize={11}>{min + '%'}</Typography>
-                        <Typography fontSize={11}>{max + '%'}</Typography>
+                        <Typography fontSize={11}>{minPrecision + '%'}</Typography>
+                        <Typography fontSize={11}>{maxPrecision + '%'}</Typography>
                     </Box>
                 </Box>
             </Box>
