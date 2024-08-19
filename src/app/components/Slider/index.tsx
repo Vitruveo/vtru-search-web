@@ -1,6 +1,7 @@
 import React from 'react';
 import Marquee from 'react-fast-marquee';
 import { Box, CardContent, Link, Paper, Stack, Theme, Typography, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 import { useSelector } from '@/store/hooks';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
@@ -11,7 +12,8 @@ import { STORE_BASE_URL } from '@/constants/api';
 
 function Slider() {
     const assets = useSelector((state) => state.assets.lastSold);
-    const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
+    const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
+    const theme = useTheme();
 
     const handleClickItem = (asset: LastSoldAsset) => {
         window.open(`${STORE_BASE_URL}/${asset?.username || 'preview'}/${asset?._id}`);
@@ -43,6 +45,7 @@ function Slider() {
                             m={2}
                             onClick={() => handleClickItem(asset)}
                             sx={{
+                                backgroundColor: theme.palette.grey[100],
                                 ':hover': {
                                     cursor: 'pointer',
                                     boxShadow: '0 0 10px 0px #000',
@@ -60,10 +63,8 @@ function Slider() {
                                 />
                             </Box>
                             <CardContent
-                                color="white"
                                 sx={{ width: 250, p: 3, pt: 2 }}
                                 style={{
-                                    backgroundColor: '#e2e2e2',
                                     borderBottomRightRadius: 10,
                                     borderBottomLeftRadius: 10,
                                 }}

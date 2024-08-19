@@ -35,10 +35,12 @@ import emptyCart from 'public/images/products/empty-shopping-cart.svg';
 import './AssetScroll.css';
 import NumberOfFilters from '../components/numberOfFilters';
 import Slider from '../../../components/Slider';
+import { useTheme } from '@mui/material/styles';
 
 const AssetsList = () => {
     const searchParamsHook = useSearchParams();
     const dispatch = useDispatch();
+    const theme = useTheme();
 
     const grid = searchParamsHook.get('grid');
     const video = searchParamsHook.get('video');
@@ -55,7 +57,7 @@ const AssetsList = () => {
     const curateStack = useToggle();
     const drawerStack = useToggle();
 
-    const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
+    const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const { data: assets, totalPage, page: currentPage } = useSelector((state) => state.assets.data);
     const { sort } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
@@ -237,15 +239,30 @@ const AssetsList = () => {
                             control: (base, state) => ({
                                 ...base,
                                 minWidth: '240px',
-                                borderColor: state.isFocused ? '#00d6f4' : '#E0E0E0',
+                                borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
+                                backgroundColor: theme.palette.background.paper,
                                 boxShadow: '#00d6f4',
-                                '&:hover': {
-                                    borderColor: '#00d6f4',
-                                },
+                                '&:hover': { borderColor: '#00d6f4' },
                             }),
                             menu: (base) => ({
                                 ...base,
                                 zIndex: 1000,
+                                color: theme.palette.text.primary,
+                                backgroundColor: theme.palette.background.paper,
+                            }),
+                            singleValue: (base) => ({
+                                ...base,
+                                color: theme.palette.text.primary,
+                            }),
+                            option: (base, state) => ({
+                                ...base,
+                                color: theme.palette.text.primary,
+                                backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
+                                '&:hover': { backgroundColor: theme.palette.action.hover },
+                            }),
+                            input: (base) => ({
+                                ...base,
+                                color: theme.palette.text.primary,
                             }),
                         }}
                     />
@@ -323,12 +340,31 @@ const AssetsList = () => {
                         styles={{
                             control: (base, state) => ({
                                 ...base,
-                                borderColor: state.isFocused ? '#00d6f4' : '#E0E0E0',
+                                minWidth: '240px',
+                                borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
+                                backgroundColor: theme.palette.background.paper,
                                 boxShadow: '#00d6f4',
-                                '&:hover': {
-                                    borderColor: '#00d6f4',
-                                },
-                                display: totalPage === 0 ? 'none' : 'flex',
+                                '&:hover': { borderColor: '#00d6f4' },
+                            }),
+                            menu: (base) => ({
+                                ...base,
+                                zIndex: 1000,
+                                color: theme.palette.text.primary,
+                                backgroundColor: theme.palette.background.paper,
+                            }),
+                            singleValue: (base) => ({
+                                ...base,
+                                color: theme.palette.text.primary,
+                            }),
+                            option: (base, state) => ({
+                                ...base,
+                                color: theme.palette.text.primary,
+                                backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
+                                '&:hover': { backgroundColor: theme.palette.action.hover },
+                            }),
+                            input: (base) => ({
+                                ...base,
+                                color: theme.palette.text.primary,
                             }),
                         }}
                     />

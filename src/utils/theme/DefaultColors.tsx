@@ -67,7 +67,7 @@ const baseDarkTheme = {
         primary: {
             main: '#00d6f4',
             light: '#ECF2FF',
-            dark: '#4570EA',
+            dark: '#149cb0',
         },
         secondary: {
             main: '#777e89',

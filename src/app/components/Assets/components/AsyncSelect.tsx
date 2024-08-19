@@ -6,6 +6,7 @@ import { Option } from '../types';
 import { MultiValue } from 'react-select';
 import { debounce } from 'lodash';
 import { CSSProperties } from 'react';
+import { useTheme } from '@mui/material/styles';
 
 interface CollectionItem {
     count: number;
@@ -28,19 +29,8 @@ interface AsyncSelectProps {
     showAdditionalAssets?: boolean;
 }
 
-const styles: StylesConfig<Option, true, GroupBase<Option>> = {
-    control: (base, state) => ({
-        ...base,
-        width: '100%',
-        borderColor: state.isFocused ? '#00d6f4' : '#E0E0E0',
-        boxShadow: '#00d6f4',
-        '&:hover': {
-            borderColor: '#00d6f4',
-        },
-    }),
-};
-
 export const AsyncSelect = ({ onChange, defaultValue, endpoint, showAdditionalAssets = false }: AsyncSelectProps) => {
+    const theme = useTheme();
     const fetchOptions = async (inputValue: string): Promise<Option[]> => {
         if (inputValue.length < 3 || !endpoint) {
             return [];
@@ -88,7 +78,36 @@ export const AsyncSelect = ({ onChange, defaultValue, endpoint, showAdditionalAs
             onChange={onChange}
             // defaultValue={defaultValue}
             value={defaultValue}
-            styles={styles}
+            styles={{
+                control: (base, state) => ({
+                    ...base,
+                    minWidth: '240px',
+                    borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
+                    backgroundColor: theme.palette.background.paper,
+                    boxShadow: '#00d6f4',
+                    '&:hover': { borderColor: '#00d6f4' },
+                }),
+                menu: (base) => ({
+                    ...base,
+                    zIndex: 1000,
+                    color: theme.palette.text.primary,
+                    backgroundColor: theme.palette.background.paper,
+                }),
+                singleValue: (base) => ({
+                    ...base,
+                    color: theme.palette.text.primary,
+                }),
+                option: (base, state) => ({
+                    ...base,
+                    color: theme.palette.text.primary,
+                    backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
+                    '&:hover': { backgroundColor: theme.palette.action.hover },
+                }),
+                input: (base) => ({
+                    ...base,
+                    color: theme.palette.text.primary,
+                }),
+            }}
             isMulti
             defaultOptions
             loadOptions={endpoint ? debouncedLoadOptions : undefined}
