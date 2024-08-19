@@ -1,4 +1,5 @@
 import { Box, CardContent, Checkbox, Grid, Link, Paper, Stack, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import BlankCard from '../../Shared/BlankCard';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { Asset } from '@/features/assets/types';
@@ -31,6 +32,7 @@ const AssetItem = ({
     variant = 'active',
 }: Props) => {
     const dispatch = useDispatch();
+    const theme = useTheme();
 
     const hasCreator =
         asset?.assetMetadata?.creators?.formData instanceof Array &&
@@ -73,11 +75,7 @@ const AssetItem = ({
                     />
                 </Box>
 
-                <CardContent
-                    color="white"
-                    sx={{ p: 3, pt: 2 }}
-                    style={{ backgroundColor: isAvailable ? 'white' : '#e2e2e2' }}
-                >
+                <CardContent sx={{ p: 3, pt: 2 }} style={{ backgroundColor: theme.palette.grey[100] }}>
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
                         <Typography
                             title={assetTitle}

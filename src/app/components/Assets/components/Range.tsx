@@ -1,6 +1,7 @@
 import { Box, Slider, Stack, Typography } from '@mui/material';
 import { formatPrice } from '@/utils/assets';
 import { useSelector } from '@/store/hooks';
+import { useTheme } from '@mui/material/styles';
 
 interface RangeProps {
     afterChange?: (minValue: number, maxValue: number) => void;
@@ -10,6 +11,7 @@ export const minPrice = 0;
 export const maxPrice = 10000;
 
 export const Range = ({ afterChange }: RangeProps) => {
+    const theme = useTheme();
     const max = useSelector((state) => state.assets.maxPrice);
     const { reseted, price } = useSelector((state) => state.filters);
 
@@ -32,6 +34,13 @@ export const Range = ({ afterChange }: RangeProps) => {
                 valueLabelDisplay="auto"
                 min={minPrice}
                 max={maxPrice}
+                sx={{
+                    color: theme.palette.primary.main,
+                    '& .MuiSlider-valueLabel': {
+                        backgroundColor: theme.palette.secondary.main,
+                        color: theme.palette.common.white,
+                    },
+                }}
             />
             <Stack direction="row" justifyContent="space-between" p={0}>
                 <Typography fontSize={11}>{formatPrice(minPrice)}</Typography>

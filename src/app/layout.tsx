@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Provider } from 'react-redux';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -18,21 +18,9 @@ import 'react-image-crop/dist/ReactCrop.css';
 const inter = Inter({ subsets: ['latin'] });
 
 const MyApp = ({ children }: { children: React.ReactNode }) => {
-    const useBfcacheDetect = () => {
-        useEffect(() => {
-            const handlePageShow = (event: any) => {
-                if (event.persisted) window.location.reload();
-            };
-            window.addEventListener('pageshow', handlePageShow);
-            return () => {
-                window.removeEventListener('pageshow', handlePageShow);
-            };
-        }, []);
-    };
-
     const theme = ThemeSettings();
     const toastr = useToastr();
-    useBfcacheDetect();
+
     return (
         <NextAppDirEmotionCacheProvider options={{ key: 'modernize' }}>
             <ThemeProvider theme={createTheme(themeConfig(theme))}>

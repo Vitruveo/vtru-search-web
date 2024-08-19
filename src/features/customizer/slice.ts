@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface StateType {
     activeDir?: string | any;
@@ -38,13 +38,18 @@ export const customizerSlice = createSlice({
     name: 'customizer',
     initialState,
     reducers: {
-        setTheme: (state: StateType, action) => {
-            state.activeTheme = action.payload;
+        setTheme: (state: StateType, action: PayloadAction<boolean>) => {
+            if (action.payload) {
+                state.activeTheme = 'BLACK_THEME';
+                state.activeMode = 'dark';
+            } else {
+                state.activeTheme = 'PURPLE_THEME';
+                state.activeMode = 'light';
+            }
         },
         setDarkMode: (state: StateType, action) => {
             state.activeMode = action.payload;
         },
-
         setDir: (state: StateType, action) => {
             state.activeDir = action.payload;
         },

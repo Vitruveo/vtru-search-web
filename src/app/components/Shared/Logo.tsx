@@ -14,9 +14,12 @@ const LogoLtrDark = () => (
             src={'/images/logos/VTRU_Search.png'}
             alt="logo"
             height={35}
-            width={100}
+            width={35}
             priority
         />
+        <Box marginLeft={1}>
+            <VtruTitle vtruRem="1.2rem" studioRem="1.2rem" />
+        </Box>
     </Box>
 );
 
