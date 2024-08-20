@@ -7,9 +7,11 @@ import { InputText } from './InputText';
 import type { CreatorsItem, Option } from '../types';
 import { AsyncSelect } from './AsyncSelect';
 import countriesMapper from '@/utils/countries/mapper';
+import { useSelector } from '@/store/hooks';
 
 export function CreatorsItem({ title, values, hidden, type, options, onChange, loadOptionsEndpoint }: CreatorsItem) {
     const { language } = useI18n();
+    const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets.value);
     const creators = 'search.assetFilter.creators';
 
     return (
@@ -76,6 +78,7 @@ export function CreatorsItem({ title, values, hidden, type, options, onChange, l
                             label: item,
                         })
                     )}
+                    showAdditionalAssets={showAdditionalAssets}
                 />
             )}
         </Box>
