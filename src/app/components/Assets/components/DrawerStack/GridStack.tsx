@@ -68,6 +68,7 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                     position: absolute;
                     top: -9999px;
                     left: -9999px;
+                    objectFit: 'contain',
                 `;
                 document.body.style.overflow = 'hidden';
                 const canvas = await html2canvas(captureRef.current, {
@@ -146,11 +147,20 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                                 height: 630,
                                 width: 1200,
                                 display: 'none',
+                                objectFit: 'contain',
                             }}
                             ref={captureRef}
                         >
                             {Array.from({ length: Number(selected[0]) ** 2 }).map((_, index) => (
-                                <div key={index} style={{ backgroundColor: '#EEEEEE', height: 300, width: 300 }}>
+                                <div
+                                    key={index}
+                                    style={{
+                                        backgroundColor: '#EEEEEE',
+                                        height: 300,
+                                        width: 300,
+                                        objectFit: 'contain',
+                                    }}
+                                >
                                     {updatedAssets[index] && (
                                         <Image
                                             src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
@@ -170,6 +180,7 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                                     backgroundColor: '#EEEEEE',
                                     height: sizes[selected] * 2,
                                     width: sizes[selected] * 2,
+                                    objectFit: 'contain',
                                 }}
                             >
                                 {updatedAssets[index] && (
@@ -225,6 +236,7 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                                 backgroundColor: '#EEEEEE',
                                 height: sizes['2x2'],
                                 width: sizes['2x2'],
+                                objectFit: 'contain',
                             }}
                         >
                             {updatedAssets[index] && (
@@ -253,6 +265,7 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                                 backgroundColor: '#EEEEEE',
                                 height: sizes['3x3'],
                                 width: sizes['3x3'],
+                                objectFit: 'contain',
                             }}
                         >
                             {updatedAssets[index] && (
@@ -281,6 +294,7 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                                 backgroundColor: '#EEEEEE',
                                 height: sizes['4x4'],
                                 width: sizes['4x4'],
+                                objectFit: 'contain',
                             }}
                         >
                             {updatedAssets[index] && (
