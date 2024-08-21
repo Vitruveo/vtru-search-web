@@ -81,7 +81,7 @@ function* reconnect() {
     }
 }
 
-export function* wsSagas() {
+export default function* wsSagas() {
     yield all([
         takeLatest(actions.requestUpload, requestUpload),
         takeLatest(actions.watchEvents, watchEvents),

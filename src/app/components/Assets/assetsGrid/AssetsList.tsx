@@ -22,6 +22,7 @@ import { IconCopy } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/assets';
+import { actions as actionsFilters } from '@/features/filters/slice';
 import { actions as layoutActions } from '@/features/layout';
 import { Asset } from '@/features/assets/types';
 import { DrawerAsset } from '../components/DrawerAsset';
@@ -51,6 +52,7 @@ const AssetsList = () => {
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
     const [sortOrder, setSortOrder] = useState<string>('latest');
     const [isIncludeSold, setIsIncludeSold] = useState<boolean>(false);
+    const [isIncludeGroupByCreator, setIsIncludeGroupByCreator] = useState<boolean>(false);
     const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
@@ -61,7 +63,7 @@ const AssetsList = () => {
     const { data: assets, totalPage, page: currentPage } = useSelector((state) => state.assets.data);
     const { sort } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
-
+    const hasIncludesGroup = useSelector((state) => state.assets.groupByCreator);
     const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets);
     const values = useSelector((state) => state.filters);
 
@@ -132,6 +134,12 @@ const AssetsList = () => {
         setIsIncludeSold(sort.sold === 'yes' ? true : false);
     }, [sort]);
 
+    useEffect(() => {
+        if (grid || video) return;
+
+        setIsIncludeGroupByCreator(hasIncludesGroup);
+    }, [hasIncludesGroup]);
+
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
         assetDrawer.activate();
@@ -196,6 +204,12 @@ const AssetsList = () => {
         dispatch(actions.setSort({ order: sortOrder, sold: isIncludeSold ? 'no' : 'yes' }));
     };
 
+    const handleChangeIsIncludeGroupByCreator = () => {
+        setIsIncludeGroupByCreator(!isIncludeGroupByCreator);
+        generateQueryParam('groupByCreator', isIncludeGroupByCreator ? 'no' : 'yes');
+        dispatch(actions.setGroupByCreator(!isIncludeGroupByCreator));
+    };
+
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
 
     const onAssetDrawerClose = () => {
@@ -203,8 +217,8 @@ const AssetsList = () => {
         setAssetView(undefined);
     };
 
-    const activeAssets = assets.filter((asset) => asset.consignArtwork.status === 'active');
-    const blockedAssets = assets.filter((asset) => asset.consignArtwork.status === 'blocked');
+    const activeAssets = assets.filter((asset) => asset?.consignArtwork?.status === 'active');
+    const blockedAssets = assets.filter((asset) => asset?.consignArtwork?.status === 'blocked');
 
     const isLastPage = currentPage === totalPage;
     const hasActiveAssets = activeAssets.length > 0;
@@ -269,6 +283,16 @@ const AssetsList = () => {
                     <FormControlLabel
                         control={<Checkbox checked={isIncludeSold} onChange={handleChangeIsIncludeSold} />}
                         label="Include Sold"
+                    />
+
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={isIncludeGroupByCreator}
+                                onChange={handleChangeIsIncludeGroupByCreator}
+                            />
+                        }
+                        label="Group by creator"
                     />
                 </Grid>
                 <Box display={'flex'}>
@@ -385,9 +409,21 @@ const AssetsList = () => {
                                             handleCheckCurate(asset);
                                         }}
                                         handleClickImage={() => {
+                                            if (hasIncludesGroup) {
+                                                if (asset?.framework?.createdBy) {
+                                                    dispatch(actionsFilters.changeCreatorId(asset.framework.createdBy));
+                                                    generateQueryParam('creatorId', asset.framework.createdBy);
+                                                    dispatch(actions.resetGroupByCreator());
+                                                    handleScrollToTop();
+                                                }
+
+                                                return;
+                                            }
+
                                             handleAssetImageClick(asset);
                                         }}
                                         price={getAssetPrice(asset)}
+                                        countByCreator={asset.countByCreator}
                                     />
                                 </AssetCardContainer>
                             ))}
@@ -412,6 +448,19 @@ const AssetsList = () => {
                                                 handleCheckCurate(asset);
                                             }}
                                             handleClickImage={() => {
+                                                if (hasIncludesGroup) {
+                                                    if (asset?.framework?.createdBy) {
+                                                        dispatch(
+                                                            actionsFilters.changeCreatorId(asset.framework.createdBy)
+                                                        );
+                                                        generateQueryParam('creatorId', asset.framework.createdBy);
+                                                        dispatch(actions.resetGroupByCreator());
+                                                        handleScrollToTop();
+                                                    }
+
+                                                    return;
+                                                }
+
                                                 handleAssetImageClick(asset);
                                             }}
                                             price={getAssetPrice(asset)}

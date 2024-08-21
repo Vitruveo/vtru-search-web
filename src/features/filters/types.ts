@@ -61,4 +61,5 @@ export interface FilterSliceState {
     };
     grid: string[];
     video: string[];
+    creatorId: string;
 }

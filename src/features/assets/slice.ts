@@ -26,6 +26,7 @@ export const initialState: AssetsSliceState = {
         order: '',
         sold: '',
     },
+    groupByCreator: false,
 };
 
 export const assetsSlice = createSlice({
@@ -37,6 +38,12 @@ export const assetsSlice = createSlice({
         setGridId: (_state, _action: PayloadAction<string>) => {},
         startLoading: (state) => {
             state.loading = true;
+        },
+        setGroupByCreator: (state, action) => {
+            state.groupByCreator = action.payload;
+        },
+        resetGroupByCreator: (state) => {
+            state.groupByCreator = false;
         },
         loadCreator: (_state, _action: PayloadAction<GetCreatorParams>) => {},
         finishLoading: (state) => {

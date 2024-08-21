@@ -18,6 +18,7 @@ export interface AssetsSliceState {
         order: string;
         sold: string;
     };
+    groupByCreator: false;
 }
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';
@@ -101,6 +102,7 @@ export interface Asset {
         listing: string;
         status: 'blocked' | 'active';
     };
+    countByCreator?: number;
 }
 
 export interface Tags {
@@ -144,6 +146,17 @@ export interface ResponseAssets {
     total: number;
     limit: number;
     maxPrice: number;
+}
+
+export interface ResponseAssetGroupByCreator {
+    data: {
+        asset: AssetsSliceState['data']['data'][0];
+        count: number;
+    }[];
+    limit: number;
+    page: number;
+    total: number;
+    totalPage: number;
 }
 
 export interface ResponseGrid {

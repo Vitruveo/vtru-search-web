@@ -69,6 +69,7 @@ export const initialState: FilterSliceState = {
     },
     grid: [],
     video: [],
+    creatorId: '',
 };
 
 export const filterSlice = createSlice({
@@ -135,6 +136,7 @@ export const filterSlice = createSlice({
                 nudity: 'no',
                 aiGeneration: 'full',
             };
+            state.creatorId = '';
             state.grid = [];
             state.video = [];
             state.reseted += 1;
@@ -178,6 +180,9 @@ export const filterSlice = createSlice({
         changeShortCut: (state, action: PayloadAction<{ key: keyof FilterSliceState['shortCuts']; value: string }>) => {
             state.shortCuts[action.payload.key] = action.payload.value;
         },
+        changeCreatorId: (state, action: PayloadAction<string>) => {
+            state.creatorId = action.payload;
+        },
         reset: (state, action: PayloadAction<{ maxPrice: number }>) => {
             state.name = '';
             state.context = initialState.context;
@@ -196,6 +201,7 @@ export const filterSlice = createSlice({
             state.grid = initialState.grid;
             state.video = initialState.video;
             state.reseted += 1;
+            state.creatorId = '';
             clearAssetsFromURL();
         },
 
