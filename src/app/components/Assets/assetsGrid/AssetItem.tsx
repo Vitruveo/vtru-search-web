@@ -1,4 +1,4 @@
-import { Badge, Box, CardContent, Checkbox, Grid, Link, Paper, Stack, Typography } from '@mui/material';
+import { Box, CardContent, Checkbox, Grid, Link, Paper, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import BlankCard from '../../Shared/BlankCard';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
@@ -7,7 +7,8 @@ import { MediaRenderer } from '../components/MediaRenderer';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/filters/slice';
 import { ShowAnimation } from '@/animations';
-import { useRef } from 'react';
+import DeckEffect from '../components/DeckEffect';
+import { useState } from 'react';
 
 interface Props {
     assetView: Asset;
@@ -34,13 +35,11 @@ const AssetItem = ({
     variant = 'active',
     countByCreator = undefined,
 }: Props) => {
+    const theme = useTheme();
     const dispatch = useDispatch();
+    const [isHovered, setIsHovered] = useState(false);
 
     const hasIncludesGroup = useSelector((state) => state.assets.groupByCreator);
-
-    const auxCardBlackRef = useRef<HTMLDivElement>(null);
-    const auxCardGrayRef = useRef<HTMLDivElement>(null);
-    const theme = useTheme();
 
     const hasCreator =
         asset?.assetMetadata?.creators?.formData instanceof Array &&
@@ -65,74 +64,21 @@ const AssetItem = ({
         <div
             style={{
                 border: assetView === asset ? '1px solid #00d6f4' : '',
-                maxWidth: 250,
+                width: 250,
                 cursor: 'pointer',
-                height: '100%',
+                height: 380,
                 marginRight: '32px',
                 position: 'relative',
                 borderRadius: '15px',
             }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
             onClick={() => {
                 if (isCurated) handleChangeCurate();
                 else handleClickImage();
             }}
-            onMouseEnter={() => {
-                if (auxCardBlackRef.current && auxCardGrayRef.current) {
-                    auxCardBlackRef.current.style.marginTop = '-10px';
-                    auxCardGrayRef.current.style.marginTop = '-10px';
-                }
-            }}
-            onMouseLeave={() => {
-                if (auxCardBlackRef.current && auxCardGrayRef.current) {
-                    auxCardBlackRef.current.style.marginTop = '0';
-                    auxCardGrayRef.current.style.marginTop = '0';
-                }
-            }}
         >
-            {hasIncludesGroup && (
-                <Badge
-                    badgeContent={countByCreator}
-                    color="primary"
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        right: 0,
-                    }}
-                />
-            )}
-            {hasIncludesGroup && (
-                <>
-                    <div
-                        ref={auxCardGrayRef}
-                        style={{
-                            position: 'absolute',
-                            background: 'gray',
-                            width: 250,
-                            height: 350,
-                            top: -10,
-                            right: -8,
-                            borderRadius: '15px 15px 0 0',
-                            transform: 'rotate(2deg)',
-                            transition: '0.3s',
-                        }}
-                    ></div>
-                    <div
-                        ref={auxCardBlackRef}
-                        style={{
-                            position: 'absolute',
-                            background: 'black',
-                            width: 250,
-                            height: 350,
-                            top: -20,
-                            right: -15,
-                            borderRadius: '15px 15px 0 0',
-                            zIndex: -1,
-                            transform: 'rotate(4deg)',
-                            transition: '0.3s',
-                        }}
-                    ></div>
-                </>
-            )}
+            {hasIncludesGroup && <DeckEffect countByCreator={countByCreator} isHovered={isHovered} />}
             <BlankCard className="hoverCard">
                 <Box width={250} height={250} onClick={handleClickImage} borderRadius="8px 8px 0 0" position="relative">
                     <MediaRenderer

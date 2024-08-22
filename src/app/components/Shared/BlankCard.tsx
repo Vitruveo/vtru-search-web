@@ -24,6 +24,7 @@ const BlankCard = ({ children, className, sx }: Props) => {
                 sx,
                 height: '100%',
             }}
+            style={{ backgroundColor: theme.palette.grey[100] }}
             className={className}
             elevation={customizer.isCardShadow ? 9 : 0}
             variant={!customizer.isCardShadow ? 'outlined' : undefined}

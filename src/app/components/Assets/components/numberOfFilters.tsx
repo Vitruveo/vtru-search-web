@@ -1,17 +1,20 @@
 import { Paper, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 interface NumberOfFiltersProps {
     value: number | undefined;
     onClick?: () => void;
 }
 export default function NumberOfFilters({ value, onClick }: NumberOfFiltersProps) {
+    const theme = useTheme();
+
     if (!value || value <= 0) return null;
     return (
         <Paper
             variant="elevation"
             sx={{
-                backgroundColor: '#00d6f4',
-                color: 'white',
+                backgroundColor: `${theme.palette.primary.main}`,
+                color: `${theme.palette.primary.contrastText}`,
                 borderRadius: 10,
                 display: 'flex',
                 justifyContent: 'center',
