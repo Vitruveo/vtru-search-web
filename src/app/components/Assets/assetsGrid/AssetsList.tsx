@@ -22,6 +22,7 @@ import { IconCopy } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/assets';
+import { actions as actionsFilters } from '@/features/filters/slice';
 import { actions as layoutActions } from '@/features/layout';
 import { Asset } from '@/features/assets/types';
 import { DrawerAsset } from '../components/DrawerAsset';
@@ -45,6 +46,11 @@ const AssetsList = () => {
     const grid = searchParamsHook.get('grid');
     const video = searchParamsHook.get('video');
 
+    const hasVideo = searchParamsHook.has('video');
+    const hasGrid = searchParamsHook.has('grid');
+
+    const hasCurated = hasVideo || hasGrid;
+
     const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
     const [selected, setSelected] = useState<Asset[]>([]);
@@ -59,7 +65,7 @@ const AssetsList = () => {
 
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const { data: assets, totalPage, page: currentPage } = useSelector((state) => state.assets.data);
-    const { sort } = useSelector((state) => state.assets);
+    const { sort, maxPrice } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
 
     const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets);
@@ -171,6 +177,22 @@ const AssetsList = () => {
                 behavior: 'smooth',
             });
         }
+    };
+
+    const returnToPageOne = () => {
+        const params = new URLSearchParams(window.location.search);
+
+        params.forEach((value, key) => params.delete(key));
+
+        params.set('sort', 'latest');
+        params.set('sold', 'no');
+        params.set('taxonomy_aiGeneration', 'full,partial,none');
+        params.set('taxonomy_nudity', 'no');
+
+        window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+
+        dispatch(actions.setCurrentPage(1));
+        dispatch(actionsFilters.reset({ maxPrice }));
     };
 
     const generateQueryParam = (key: string, value: string) => {
@@ -331,43 +353,72 @@ const AssetsList = () => {
                     {currentPage === 1 && <Slider />}
                 </Grid>
 
-                <Grid item xs={12} sm={'auto'} mr={4} mb={4} minWidth={'16%'}>
-                    <Select
-                        placeholder="Select Page"
-                        options={optionsForSelect}
-                        value={currentPage > 1 ? { value: currentPage, label: currentPage } : null}
-                        onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
-                        styles={{
-                            control: (base, state) => ({
-                                ...base,
-                                minWidth: '240px',
-                                borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
-                                backgroundColor: theme.palette.background.paper,
-                                boxShadow: '#00d6f4',
-                                '&:hover': { borderColor: '#00d6f4' },
-                            }),
-                            menu: (base) => ({
-                                ...base,
-                                zIndex: 1000,
-                                color: theme.palette.text.primary,
-                                backgroundColor: theme.palette.background.paper,
-                            }),
-                            singleValue: (base) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                            }),
-                            option: (base, state) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                                backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
-                                '&:hover': { backgroundColor: theme.palette.action.hover },
-                            }),
-                            input: (base) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                            }),
-                        }}
-                    />
+                <Grid item xs={12} mr={4} mb={4}>
+                    <Box width="100%" display="flex" alignItems="flex-end" justifyContent="space-between">
+                        {hasCurated ? (
+                            <Box display="flex" alignItems="flex-end" gap={2}>
+                                <Typography variant="h4">Curated arts </Typography>
+                                <button
+                                    style={{
+                                        border: 'none',
+                                        background: 'none',
+                                        cursor: 'pointer',
+                                    }}
+                                    onClick={returnToPageOne}
+                                >
+                                    <Typography
+                                        variant="h6"
+                                        color="primary"
+                                        sx={{
+                                            textDecoration: 'underline',
+                                            cursor: 'pointer',
+                                            fontSize: 14,
+                                        }}
+                                    >
+                                        Reset search
+                                    </Typography>
+                                </button>
+                            </Box>
+                        ) : (
+                            <Box />
+                        )}
+                        <Select
+                            placeholder="Select Page"
+                            options={optionsForSelect}
+                            value={currentPage > 1 ? { value: currentPage, label: currentPage } : null}
+                            onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
+                            styles={{
+                                control: (base, state) => ({
+                                    ...base,
+                                    minWidth: '240px',
+                                    borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
+                                    backgroundColor: theme.palette.background.paper,
+                                    boxShadow: '#00d6f4',
+                                    '&:hover': { borderColor: '#00d6f4' },
+                                }),
+                                menu: (base) => ({
+                                    ...base,
+                                    zIndex: 1000,
+                                    color: theme.palette.text.primary,
+                                    backgroundColor: theme.palette.background.paper,
+                                }),
+                                singleValue: (base) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                }),
+                                option: (base, state) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                    backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
+                                    '&:hover': { backgroundColor: theme.palette.action.hover },
+                                }),
+                                input: (base) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                }),
+                            }}
+                        />
+                    </Box>
                 </Grid>
 
                 <Grid container display={'flex'} ml={4} rowGap={3}>
