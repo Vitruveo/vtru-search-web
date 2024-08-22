@@ -57,7 +57,7 @@ export default function VideoStack({
     }, [hasVideo]);
 
     const handleDispatchMakeVideo = () => {
-        const data = selectedAssets.map((asset) => asset?.formats?.preview?.path);
+        const data = selectedAssets.map((asset) => asset?.formats?.preview?.path).slice(0, 16);
         const id = Date.now().toString();
         setTimestamp(id);
         dispatch(

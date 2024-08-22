@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import update from 'immutability-helper';
 import { Box, Button, Typography, Drawer, TextField, useMediaQuery, Theme, IconButton } from '@mui/material';
 import { DndProvider } from 'react-dnd';
@@ -18,11 +18,11 @@ import { CardDnd } from '../CardDnd';
 interface Props {
     drawerStackOpen: boolean;
     selected: Asset[];
-    onRemove(asset: Asset): void;
+    setSelected: Dispatch<SetStateAction<Asset[]>>;
     onClose(): void;
 }
 
-function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Props) {
+function DrawerStack({ drawerStackOpen, selected, onClose, setSelected }: Props) {
     const dispatch = useDispatch();
     const { language } = useI18n();
 
@@ -54,6 +54,8 @@ function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Props) {
         );
     }, []);
 
+    const handleRemove = (asset: Asset) => setSelected((prev) => prev.filter((item) => item._id !== asset._id));
+
     const renderCard = useCallback((asset: Asset, index: number) => {
         return (
             <CardDnd key={asset._id} index={index} id={asset._id} moveCard={handleMoveCard}>
@@ -64,7 +66,7 @@ function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Props) {
                             fallbackSrc={`https://via.placeholder.com/${160}`}
                         />
                         <Box position="absolute" bottom={0} right={0} zIndex={1} m={1} bgcolor="#fff">
-                            <IconButton style={{ color: 'red' }} size="small" onClick={() => onRemove(asset)}>
+                            <IconButton style={{ color: 'red' }} size="small" onClick={() => handleRemove(asset)}>
                                 <DeleteIcon fontSize="small" />
                             </IconButton>
                         </Box>
@@ -178,10 +180,15 @@ function DrawerStack({ drawerStackOpen, selected, onRemove, onClose }: Props) {
     );
 }
 
-export default function DrawerStackHoc({ drawerStackOpen, selected, onRemove, onClose }: Props) {
+export default function DrawerStackHoc({ drawerStackOpen, selected, setSelected, onClose }: Props) {
     return (
         <DndProvider backend={HTML5Backend}>
-            <DrawerStack drawerStackOpen={drawerStackOpen} selected={selected} onRemove={onRemove} onClose={onClose} />
+            <DrawerStack
+                drawerStackOpen={drawerStackOpen}
+                selected={selected}
+                setSelected={setSelected}
+                onClose={onClose}
+            />
         </DndProvider>
     );
 }
