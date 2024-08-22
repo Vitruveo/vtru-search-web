@@ -46,8 +46,10 @@ const AssetsList = () => {
     const grid = searchParamsHook.get('grid');
     const video = searchParamsHook.get('video');
 
-    const hasVideo = searchParamsHook.has('video');
-    const hasGrid = searchParamsHook.has('grid');
+    const paramsToCurate = new URLSearchParams(window.location.search);
+
+    const hasVideo = paramsToCurate.has('video');
+    const hasGrid = paramsToCurate.has('grid');
 
     const hasCurated = hasVideo || hasGrid;
 
