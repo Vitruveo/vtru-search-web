@@ -394,7 +394,7 @@ const AssetsList = () => {
                     />
                 </Grid>
 
-                <Grid container display={'flex'} ml={4} rowGap={3}>
+                <Grid container display={'flex'} ml={4} rowGap={3} overflow={'hidden'}>
                     {assets.length > 0 ? (
                         <>
                             {activeAssets.map((asset) => (
