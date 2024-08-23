@@ -231,8 +231,8 @@ const AssetsList = () => {
             <DrawerStack
                 selected={selected}
                 drawerStackOpen={drawerStack.isActive}
-                onRemove={(asset) => setSelected(selected.filter((item) => item._id !== asset._id))}
                 onClose={drawerStack.deactivate}
+                setSelected={setSelected}
             />
 
             <Stack width="100%" direction="row" display="flex" justifyContent="space-between" alignItems="center" p={3}>
