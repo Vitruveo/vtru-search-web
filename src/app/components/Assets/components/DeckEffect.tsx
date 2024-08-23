@@ -24,11 +24,11 @@ export default function DeckEffect({ countByCreator = 1, isHovered }: DeckEffect
                     position: 'absolute',
                     background: `${theme.palette.grey[400]}`,
                     width: 250,
-                    top: -5,
-                    left: isHovered ? 45 : 30,
+                    top: -10,
+                    left: isHovered ? 45 : 16,
                     height: 360,
                     borderRadius: '15px 15px 15px 0',
-                    transform: isHovered ? 'rotate(16deg)' : 'rotate(10deg)',
+                    transform: isHovered ? 'rotate(16deg)' : 'rotate(5deg)',
                     transition: '0.3',
                 }}
             />
@@ -38,10 +38,10 @@ export default function DeckEffect({ countByCreator = 1, isHovered }: DeckEffect
                     background: `${theme.palette.grey[300]}`,
                     width: 250,
                     top: -8,
-                    left: isHovered ? 25 : 15,
+                    left: isHovered ? 25 : 10,
                     height: 360,
                     borderRadius: '15px 15px 15px 0',
-                    transform: isHovered ? 'rotate(8deg)' : 'rotate(5deg)',
+                    transform: isHovered ? 'rotate(8deg)' : 'rotate(3deg)',
                     transition: '0.3',
                 }}
             />
