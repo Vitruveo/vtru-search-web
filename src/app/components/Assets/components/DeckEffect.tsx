@@ -1,12 +1,13 @@
-import { Box, Theme } from '@mui/material';
+import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 interface DeckEffectProps {
     isHovered?: boolean;
     showFanEffect?: boolean;
+    count?: number;
 }
 
-export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps) {
+export default function DeckEffect({ isHovered, showFanEffect, count }: DeckEffectProps) {
     const theme = useTheme();
 
     const commonStyles = {
@@ -18,25 +19,49 @@ export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps
         transitionDelay: '0.5s, 0.5s',
     };
 
-    const cards = [
+    let cards = [
         {
-            color: 'red',
+            id: 1,
+            image: 'red',
             transform: showFanEffect ? 'rotate(-30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
         },
         {
-            color: 'blue',
+            id: 2,
+            image: 'blue',
             transform: showFanEffect ? 'rotate(-15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
         },
-        { color: 'green', transform: 'rotate(0deg) translateY(0px)' },
+        { id: 3, image: 'green', transform: 'rotate(0deg) translateY(0px)' },
         {
-            color: 'yellow',
+            id: 4,
+            image: 'yellow',
             transform: showFanEffect ? 'rotate(15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
         },
         {
-            color: 'purple',
+            id: 5,
+            image: 'purple',
             transform: showFanEffect ? 'rotate(30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
         },
     ];
+
+    const effectiveCount: number = count || 0;
+    switch (effectiveCount) {
+        case 0:
+        case 1:
+        case 2:
+            cards = cards.slice(0, 2);
+            break;
+        case 3:
+            cards = cards.filter((card) => card.id !== 5 && card.id !== 1);
+            break;
+        case 4:
+            cards = cards.filter((card) => card.id !== 3);
+            break;
+        default:
+            if (count && count > 5) {
+                cards = cards.map((card) => (card.id === 5 ? { ...card, image: 'grey' } : card));
+            }
+            break;
+    }
 
     return (
         <Box mt={4}>
@@ -47,37 +72,33 @@ export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps
                 zIndex={999}
                 style={{
                     left: '10%',
-                    transform: 'translateX(-40%)',
+                    transform: cards.length === 3 ? 'translateX(-35%)' : 'translateX(-40%)',
                     top: showFanEffect ? '-50%' : '0%',
                     transition: 'top 0.5s ease',
                     opacity: showFanEffect ? 1 : 0,
                 }}
             >
-                {cards.map(({ color, transform }, index) => (
-                    <div
-                        key={index}
-                        style={{
-                            ...commonStyles,
-                            background: color,
-                            transform,
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.zIndex = '1000';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.zIndex = 'auto';
-                        }}
-                    />
-                ))}
+                {cards.length >= 3 && (
+                    <>
+                        {cards.map(({ image, transform }, index) => (
+                            <div
+                                key={index}
+                                style={{
+                                    ...commonStyles,
+                                    background: image,
+                                    transform,
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.zIndex = '1000';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.zIndex = 'auto';
+                                }}
+                            />
+                        ))}
+                    </>
+                )}
             </Box>
-            {behindDeck(theme, isHovered)}
-        </Box>
-    );
-}
-
-const behindDeck = (theme: Theme, isHovered?: boolean) => {
-    return (
-        <>
             <div
                 style={{
                     position: 'absolute',
@@ -104,6 +125,6 @@ const behindDeck = (theme: Theme, isHovered?: boolean) => {
                     transition: 'all 0.3s ease',
                 }}
             />
-        </>
+        </Box>
     );
-};
+}

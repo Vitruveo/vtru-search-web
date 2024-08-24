@@ -100,7 +100,7 @@ const AssetItem = ({
                             right: 0,
                         }}
                     />
-                    <DeckEffect isHovered={isHovered} showFanEffect={showFanEffect} />
+                    <DeckEffect isHovered={isHovered} showFanEffect={showFanEffect} count={countByCreator} />
                 </>
             )}
             <BlankCard className="hoverCard">
