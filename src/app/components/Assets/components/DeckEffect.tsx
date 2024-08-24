@@ -16,10 +16,10 @@ export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps
                 position={'absolute'}
                 zIndex={999}
                 style={{
-                    transform: showFanEffect ? 'translateY(0%) translateX(-50%) ' : 'translateY(100%) translateX(-50%)',
-                    left: showFanEffect ? '50%' : '10%',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
                     top: showFanEffect ? '-50%' : '0%',
-                    transition: 'transform 0.5s ease',
+                    transition: 'top 0.5s ease',
                     opacity: showFanEffect ? 1 : 0,
                 }}
             >
@@ -29,17 +29,10 @@ export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps
                         width: showFanEffect ? 200 : 1,
                         height: showFanEffect ? 200 : 1,
                         borderRadius: '15px',
-                        transform: showFanEffect ? 'rotate(-30deg) translateY(150px)' : '',
-                        marginRight: -50,
-                        transition: 'transform 0.3s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.zIndex = '1000';
-                        e.currentTarget.style.transform = 'rotate(-30deg) translateY(100px) scale(1.1)';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.zIndex = 'auto';
-                        e.currentTarget.style.transform = 'rotate(-30deg) translateY(150px)';
+                        marginRight: showFanEffect ? -50 : -200,
+                        transform: showFanEffect ? 'rotate(-30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
+                        transition: 'margin-right 0.5s ease, transform 0.5s ease',
+                        transitionDelay: '0.5s, 0.5s',
                     }}
                 />
                 <div
@@ -48,17 +41,10 @@ export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps
                         width: showFanEffect ? 200 : 1,
                         height: showFanEffect ? 200 : 1,
                         borderRadius: '15px',
-                        transform: showFanEffect ? 'rotate(-15deg) translateY(50px)' : '',
-                        marginRight: -50,
-                        transition: 'transform 0.3s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.zIndex = '1000';
-                        e.currentTarget.style.transform = 'rotate(-15deg) translateY(0px) scale(1.1)';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.zIndex = 'auto';
-                        e.currentTarget.style.transform = 'rotate(-15deg) translateY(50px)';
+                        marginRight: showFanEffect ? -50 : -200,
+                        transform: showFanEffect ? 'rotate(-15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
+                        transition: 'margin-right 0.5s ease, transform 0.5s ease',
+                        transitionDelay: '0.5s, 0.5s',
                     }}
                 />
                 <div
@@ -67,17 +53,10 @@ export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps
                         width: showFanEffect ? 200 : 1,
                         height: showFanEffect ? 200 : 1,
                         borderRadius: '15px',
-                        transform: showFanEffect ? 'rotate(0deg)' : '',
-                        marginRight: -50,
-                        transition: 'transform 0.3s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.zIndex = '1000';
-                        e.currentTarget.style.transform = 'rotate(0deg) translateY(-50px) scale(1.1)';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.zIndex = 'auto';
-                        e.currentTarget.style.transform = 'rotate(0deg)';
+                        marginRight: showFanEffect ? -50 : -200,
+                        transform: showFanEffect ? 'rotate(0deg) translateY(0px)' : 'rotate(0deg) translateY(0px)',
+                        transition: 'margin-right 0.5s ease, transform 0.5s ease',
+                        transitionDelay: '0.5s, 0.5s',
                     }}
                 />
                 <div
@@ -86,17 +65,10 @@ export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps
                         width: showFanEffect ? 200 : 1,
                         height: showFanEffect ? 200 : 1,
                         borderRadius: '15px',
-                        transform: showFanEffect ? 'rotate(15deg) translateY(50px)' : '',
-                        marginRight: -50,
-                        transition: 'transform 0.3s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.zIndex = '1000';
-                        e.currentTarget.style.transform = 'rotate(15deg) translateY(0px) scale(1.1)';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.zIndex = 'auto';
-                        e.currentTarget.style.transform = 'rotate(15deg) translateY(50px)';
+                        marginRight: showFanEffect ? -50 : -200,
+                        transform: showFanEffect ? 'rotate(15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
+                        transition: 'margin-right 0.5s ease, transform 0.5s ease',
+                        transitionDelay: '0.5s, 0.5s',
                     }}
                 />
                 <div
@@ -105,17 +77,10 @@ export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps
                         width: showFanEffect ? 200 : 1,
                         height: showFanEffect ? 200 : 1,
                         borderRadius: '15px',
-                        transform: showFanEffect ? 'rotate(30deg) translateY(150px)' : '',
-                        marginRight: -50,
-                        transition: 'transform 0.2s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.zIndex = '1000';
-                        e.currentTarget.style.transform = 'rotate(30deg) translateY(100px) scale(1.1)';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.zIndex = 'auto';
-                        e.currentTarget.style.transform = 'rotate(30deg) translateY(150px)';
+                        marginRight: showFanEffect ? -50 : -200,
+                        transform: showFanEffect ? 'rotate(30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
+                        transition: 'margin-right 0.5s ease, transform 0.5s ease',
+                        transitionDelay: '0.5s, 0.5s',
                     }}
                 />
             </Box>
