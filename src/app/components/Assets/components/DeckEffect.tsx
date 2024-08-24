@@ -1,12 +1,42 @@
-import { Box } from '@mui/material';
+import { Box, Theme } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 interface DeckEffectProps {
     isHovered?: boolean;
     showFanEffect?: boolean;
 }
+
 export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps) {
     const theme = useTheme();
+
+    const commonStyles = {
+        width: showFanEffect ? 200 : 1,
+        height: showFanEffect ? 200 : 1,
+        borderRadius: '15px',
+        marginRight: showFanEffect ? -50 : -200,
+        transition: 'margin-right 0.5s ease, transform 0.5s ease',
+        transitionDelay: '0.5s, 0.5s',
+    };
+
+    const cards = [
+        {
+            color: 'red',
+            transform: showFanEffect ? 'rotate(-30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
+        },
+        {
+            color: 'blue',
+            transform: showFanEffect ? 'rotate(-15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
+        },
+        { color: 'green', transform: 'rotate(0deg) translateY(0px)' },
+        {
+            color: 'yellow',
+            transform: showFanEffect ? 'rotate(15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
+        },
+        {
+            color: 'purple',
+            transform: showFanEffect ? 'rotate(30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
+        },
+    ];
 
     return (
         <Box mt={4}>
@@ -23,98 +53,31 @@ export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps
                     opacity: showFanEffect ? 1 : 0,
                 }}
             >
-                <div
-                    style={{
-                        background: `red`,
-                        width: showFanEffect ? 200 : 1,
-                        height: showFanEffect ? 200 : 1,
-                        borderRadius: '15px',
-                        marginRight: showFanEffect ? -50 : -200,
-                        transform: showFanEffect ? 'rotate(-30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
-                        transition: 'margin-right 0.5s ease, transform 0.5s ease',
-                        transitionDelay: '0.5s, 0.5s',
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.zIndex = '1000';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.zIndex = 'auto';
-                    }}
-                />
-                <div
-                    style={{
-                        background: `blue`,
-                        width: showFanEffect ? 200 : 1,
-                        height: showFanEffect ? 200 : 1,
-                        borderRadius: '15px',
-                        marginRight: showFanEffect ? -50 : -200,
-                        transform: showFanEffect ? 'rotate(-15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
-                        transition: 'margin-right 0.5s ease, transform 0.5s ease',
-                        transitionDelay: '0.5s, 0.5s',
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.zIndex = '1000';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.zIndex = 'auto';
-                    }}
-                />
-                <div
-                    style={{
-                        background: `green`,
-                        width: showFanEffect ? 200 : 1,
-                        height: showFanEffect ? 200 : 1,
-                        borderRadius: '15px',
-                        marginRight: showFanEffect ? -50 : -200,
-                        transform: showFanEffect ? 'rotate(0deg) translateY(0px)' : 'rotate(0deg) translateY(0px)',
-                        transition: 'margin-right 0.5s ease, transform 0.5s ease',
-                        transitionDelay: '0.5s, 0.5s',
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.zIndex = '1000';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.zIndex = 'auto';
-                    }}
-                />
-                <div
-                    style={{
-                        background: `yellow`,
-                        width: showFanEffect ? 200 : 1,
-                        height: showFanEffect ? 200 : 1,
-                        borderRadius: '15px',
-                        marginRight: showFanEffect ? -50 : -200,
-                        transform: showFanEffect ? 'rotate(15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
-                        transition: 'margin-right 0.5s ease, transform 0.5s ease',
-                        transitionDelay: '0.5s, 0.5s',
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.zIndex = '1000';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.zIndex = 'auto';
-                    }}
-                />
-                <div
-                    style={{
-                        background: `purple`,
-                        width: showFanEffect ? 200 : 1,
-                        height: showFanEffect ? 200 : 1,
-                        borderRadius: '15px',
-                        marginRight: showFanEffect ? -50 : -200,
-                        transform: showFanEffect ? 'rotate(30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
-                        transition: 'margin-right 0.5s ease, transform 0.5s ease',
-                        transitionDelay: '0.5s, 0.5s',
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.zIndex = '1000';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.zIndex = 'auto';
-                    }}
-                />
+                {cards.map(({ color, transform }, index) => (
+                    <div
+                        key={index}
+                        style={{
+                            ...commonStyles,
+                            background: color,
+                            transform,
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.zIndex = '1000';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.zIndex = 'auto';
+                        }}
+                    />
+                ))}
             </Box>
+            {behindDeck(theme, isHovered)}
+        </Box>
+    );
+}
 
+const behindDeck = (theme: Theme, isHovered?: boolean) => {
+    return (
+        <>
             <div
                 style={{
                     position: 'absolute',
@@ -141,6 +104,6 @@ export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps
                     transition: 'all 0.3s ease',
                 }}
             />
-        </Box>
+        </>
     );
-}
+};
