@@ -16,8 +16,8 @@ export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps
                 position={'absolute'}
                 zIndex={999}
                 style={{
-                    left: '50%',
-                    transform: 'translateX(-50%)',
+                    left: '10%',
+                    transform: 'translateX(-40%)',
                     top: showFanEffect ? '-50%' : '0%',
                     transition: 'top 0.5s ease',
                     opacity: showFanEffect ? 1 : 0,
@@ -34,6 +34,12 @@ export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps
                         transition: 'margin-right 0.5s ease, transform 0.5s ease',
                         transitionDelay: '0.5s, 0.5s',
                     }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.zIndex = '1000';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.zIndex = 'auto';
+                    }}
                 />
                 <div
                     style={{
@@ -45,6 +51,12 @@ export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps
                         transform: showFanEffect ? 'rotate(-15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
                         transition: 'margin-right 0.5s ease, transform 0.5s ease',
                         transitionDelay: '0.5s, 0.5s',
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.zIndex = '1000';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.zIndex = 'auto';
                     }}
                 />
                 <div
@@ -58,6 +70,12 @@ export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps
                         transition: 'margin-right 0.5s ease, transform 0.5s ease',
                         transitionDelay: '0.5s, 0.5s',
                     }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.zIndex = '1000';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.zIndex = 'auto';
+                    }}
                 />
                 <div
                     style={{
@@ -70,6 +88,12 @@ export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps
                         transition: 'margin-right 0.5s ease, transform 0.5s ease',
                         transitionDelay: '0.5s, 0.5s',
                     }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.zIndex = '1000';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.zIndex = 'auto';
+                    }}
                 />
                 <div
                     style={{
@@ -81,6 +105,12 @@ export default function DeckEffect({ isHovered, showFanEffect }: DeckEffectProps
                         transform: showFanEffect ? 'rotate(30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
                         transition: 'margin-right 0.5s ease, transform 0.5s ease',
                         transitionDelay: '0.5s, 0.5s',
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.zIndex = '1000';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.zIndex = 'auto';
                     }}
                 />
             </Box>
