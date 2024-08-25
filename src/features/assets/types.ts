@@ -103,6 +103,7 @@ export interface Asset {
         status: 'blocked' | 'active';
     };
     countByCreator?: number;
+    paths?: string[];
 }
 
 export interface Tags {
@@ -152,6 +153,7 @@ export interface ResponseAssetGroupByCreator {
     data: {
         asset: AssetsSliceState['data']['data'][0];
         count: number;
+        paths: string[];
     }[];
     limit: number;
     page: number;
