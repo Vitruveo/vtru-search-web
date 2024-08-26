@@ -81,7 +81,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                 {cards.length >= 3 && (
                     <>
                         {cards.map(({ transform }, index) =>
-                            paths[index].match(/\.(mp4|webm|ogg)$/) != null ? (
+                            paths[index]?.match(/\.(mp4|webm|ogg)$/) != null ? (
                                 <video
                                     key={index}
                                     autoPlay
