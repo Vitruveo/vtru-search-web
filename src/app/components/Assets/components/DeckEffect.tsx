@@ -107,7 +107,9 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                                             transform,
                                             position: 'relative',
                                             minWidth: '200px',
+                                            backgroundColor: 'black',
                                         }}
+                                        width={'100%'}
                                     >
                                         <source src={`${AWS_BASE_URL_S3}/${paths[index]}`} type="video/mp4" />
                                     </video>
