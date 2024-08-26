@@ -1,13 +1,17 @@
+import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { display } from 'html2canvas/dist/types/css/property-descriptors/display';
+import { position } from 'html2canvas/dist/types/css/property-descriptors/position';
 
 interface DeckEffectProps {
     isHovered?: boolean;
     showFanEffect?: boolean;
     count?: number;
+    paths: string[];
 }
 
-export default function DeckEffect({ isHovered, showFanEffect, count }: DeckEffectProps) {
+export default function DeckEffect({ isHovered, showFanEffect, count, paths = [] }: DeckEffectProps) {
     const theme = useTheme();
 
     const commonStyles = {
@@ -17,28 +21,29 @@ export default function DeckEffect({ isHovered, showFanEffect, count }: DeckEffe
         marginRight: showFanEffect ? -50 : -200,
         transition: 'margin-right 0.5s ease, transform 0.5s ease',
         transitionDelay: '0.5s, 0.5s',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
     };
 
     let cards = [
         {
             id: 1,
-            image: 'red',
             transform: showFanEffect ? 'rotate(-30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
         },
         {
             id: 2,
-            image: 'blue',
             transform: showFanEffect ? 'rotate(-15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
         },
-        { id: 3, image: 'green', transform: 'rotate(0deg) translateY(0px)' },
+        {
+            id: 3,
+            transform: 'rotate(0deg) translateY(0px)',
+        },
         {
             id: 4,
-            image: 'yellow',
             transform: showFanEffect ? 'rotate(15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
         },
         {
             id: 5,
-            image: 'purple',
             transform: showFanEffect ? 'rotate(30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
         },
     ];
@@ -51,15 +56,10 @@ export default function DeckEffect({ isHovered, showFanEffect, count }: DeckEffe
             cards = cards.slice(0, 2);
             break;
         case 3:
-            cards = cards.filter((card) => card.id !== 5 && card.id !== 1);
+            cards = cards.filter((card) => card.id !== 1 && card.id !== 5);
             break;
         case 4:
             cards = cards.filter((card) => card.id !== 3);
-            break;
-        default:
-            if (count && count > 5) {
-                cards = cards.map((card) => (card.id === 5 ? { ...card, image: 'grey' } : card));
-            }
             break;
     }
 
@@ -80,22 +80,56 @@ export default function DeckEffect({ isHovered, showFanEffect, count }: DeckEffe
             >
                 {cards.length >= 3 && (
                     <>
-                        {cards.map(({ image, transform }, index) => (
-                            <div
-                                key={index}
-                                style={{
-                                    ...commonStyles,
-                                    background: image,
-                                    transform,
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.zIndex = '1000';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.zIndex = 'auto';
-                                }}
-                            />
-                        ))}
+                        {cards.map(({ transform }, index) =>
+                            paths[index].match(/\.(mp4|webm|ogg)$/) != null ? (
+                                <video
+                                    key={index}
+                                    autoPlay
+                                    muted
+                                    loop
+                                    style={{
+                                        ...commonStyles,
+                                        transform,
+                                        position: 'relative',
+                                    }}
+                                >
+                                    <source src={`${AWS_BASE_URL_S3}/${paths[index]}`} type="video/mp4" />
+                                </video>
+                            ) : (
+                                <div
+                                    key={index}
+                                    style={{
+                                        ...commonStyles,
+                                        backgroundImage: `url(${AWS_BASE_URL_S3}/${paths[index]})`,
+                                        transform,
+                                        position: 'relative',
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.zIndex = '1000';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.zIndex = 'auto';
+                                    }}
+                                >
+                                    {effectiveCount > 5 && index === cards.length - 1 && (
+                                        <p
+                                            style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                color: 'white',
+                                                fontSize: '1.5rem',
+                                                fontWeight: 'bold',
+                                                padding: '10px',
+                                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                            }}
+                                        >
+                                            +{effectiveCount - 5} NFTs
+                                        </p>
+                                    )}
+                                </div>
+                            )
+                        )}
                     </>
                 )}
             </Box>
