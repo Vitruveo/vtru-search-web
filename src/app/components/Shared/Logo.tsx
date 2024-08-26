@@ -51,6 +51,7 @@ const Logo = () => {
 
         dispatch(actions.setCurrentPage(1));
         dispatch(actionsFilters.reset({ maxPrice }));
+        dispatch(actions.resetGroupByCreator());
     };
 
     const dice = {

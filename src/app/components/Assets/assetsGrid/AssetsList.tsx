@@ -204,6 +204,7 @@ const AssetsList = () => {
 
         dispatch(actions.setCurrentPage(1));
         dispatch(actionsFilters.reset({ maxPrice }));
+        dispatch(actions.resetGroupByCreator());
     };
 
     const generateQueryParam = (key: string, value: string) => {
@@ -382,7 +383,7 @@ const AssetsList = () => {
                         paddingTop: 0,
                     }}
                 >
-                    {currentPage === 1 && !grid && !video && !hasIncludesGroup && <Slider />}
+                    {currentPage === 1 && !grid && !video && !hasIncludesGroup.active && <Slider />}
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>
