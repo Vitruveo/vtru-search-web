@@ -74,7 +74,8 @@ const AssetItem = ({
             }}
             onMouseEnter={() => {
                 setIsHovered(true);
-                hoverTimeoutRef.current = setTimeout(() => setShowFanEffect(true), 500);
+                if (asset?.countByCreator && asset?.countByCreator > 1)
+                    hoverTimeoutRef.current = setTimeout(() => setShowFanEffect(true), 500);
             }}
             onMouseLeave={() => {
                 setIsHovered(false);
@@ -105,6 +106,7 @@ const AssetItem = ({
                         showFanEffect={showFanEffect}
                         count={asset?.countByCreator || 0}
                         paths={asset?.paths || []}
+                        handleClickImage={handleClickImage}
                     />
                 </>
             )}

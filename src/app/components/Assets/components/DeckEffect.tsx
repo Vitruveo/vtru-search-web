@@ -1,18 +1,16 @@
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import zIndex from '@mui/material/styles/zIndex';
-import { display } from 'html2canvas/dist/types/css/property-descriptors/display';
-import { position } from 'html2canvas/dist/types/css/property-descriptors/position';
 
 interface DeckEffectProps {
     isHovered?: boolean;
     showFanEffect?: boolean;
     count?: number;
     paths: string[];
+    handleClickImage(): void;
 }
 
-export default function DeckEffect({ isHovered, showFanEffect, count, paths = [] }: DeckEffectProps) {
+export default function DeckEffect({ isHovered, showFanEffect, count, paths = [], handleClickImage }: DeckEffectProps) {
     const theme = useTheme();
 
     const commonStyles = {
@@ -53,8 +51,10 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
     switch (effectiveCount) {
         case 0:
         case 1:
+            cards = cards.slice(0, 1);
+            break;
         case 2:
-            cards = cards.slice(0, 2);
+            cards = cards.filter((card) => card.id !== 1 && card.id !== 3 && card.id !== 5);
             break;
         case 3:
             cards = cards.filter((card) => card.id !== 1 && card.id !== 5);
@@ -73,13 +73,18 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                 zIndex={999}
                 style={{
                     left: '10%',
-                    transform: cards.length === 3 ? 'translateX(-35%)' : 'translateX(-40%)',
-                    top: showFanEffect ? '-50%' : '0%',
+                    transform:
+                        cards.length === 3
+                            ? 'translateX(-35%)'
+                            : cards.length === 2
+                              ? 'translateX(-20%)'
+                              : 'translateX(-40%)',
+                    top: showFanEffect ? '-8%' : '0%',
                     transition: 'top 0.5s ease',
                     opacity: showFanEffect ? 1 : 0,
                 }}
             >
-                {cards.length >= 3 && (
+                {cards.length >= 2 && (
                     <>
                         {cards.map(({ transform }, index) =>
                             paths[index]?.match(/\.(mp4|webm|ogg)$/) != null ? (
@@ -91,6 +96,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                                     onMouseLeave={(e) => {
                                         e.currentTarget.style.zIndex = 'auto';
                                     }}
+                                    onClick={handleClickImage}
                                 >
                                     <video
                                         autoPlay
@@ -100,6 +106,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                                             ...commonStyles,
                                             transform,
                                             position: 'relative',
+                                            minWidth: '200px',
                                         }}
                                     >
                                         <source src={`${AWS_BASE_URL_S3}/${paths[index]}`} type="video/mp4" />
@@ -120,6 +127,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                                     onMouseLeave={(e) => {
                                         e.currentTarget.style.zIndex = 'auto';
                                     }}
+                                    onClick={handleClickImage}
                                 >
                                     {effectiveCount > 5 && index === cards.length - 1 && (
                                         <p
@@ -149,10 +157,10 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                     background: `${theme.palette.grey[400]}`,
                     width: 250,
                     top: -10,
-                    left: isHovered ? 45 : 16,
+                    left: isHovered && !showFanEffect ? 45 : 16,
                     height: 360,
                     borderRadius: '15px',
-                    transform: isHovered ? 'rotate(16deg)' : 'rotate(5deg)',
+                    transform: isHovered && !showFanEffect ? 'rotate(16deg)' : 'rotate(5deg)',
                     transition: 'all 0.3s ease',
                 }}
             />
@@ -162,10 +170,10 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                     background: `${theme.palette.grey[300]}`,
                     width: 250,
                     top: -8,
-                    left: isHovered ? 25 : 10,
+                    left: isHovered && !showFanEffect ? 25 : 10,
                     height: 360,
                     borderRadius: '15px',
-                    transform: isHovered ? 'rotate(8deg)' : 'rotate(3deg)',
+                    transform: isHovered && !showFanEffect ? 'rotate(8deg)' : 'rotate(3deg)',
                     transition: 'all 0.3s ease',
                 }}
             />
