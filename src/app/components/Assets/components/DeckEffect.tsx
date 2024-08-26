@@ -1,6 +1,7 @@
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import zIndex from '@mui/material/styles/zIndex';
 import { display } from 'html2canvas/dist/types/css/property-descriptors/display';
 import { position } from 'html2canvas/dist/types/css/property-descriptors/position';
 
@@ -82,19 +83,28 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                     <>
                         {cards.map(({ transform }, index) =>
                             paths[index]?.match(/\.(mp4|webm|ogg)$/) != null ? (
-                                <video
+                                <div
                                     key={index}
-                                    autoPlay
-                                    muted
-                                    loop
-                                    style={{
-                                        ...commonStyles,
-                                        transform,
-                                        position: 'relative',
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.zIndex = '1000';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.zIndex = 'auto';
                                     }}
                                 >
-                                    <source src={`${AWS_BASE_URL_S3}/${paths[index]}`} type="video/mp4" />
-                                </video>
+                                    <video
+                                        autoPlay
+                                        muted
+                                        loop
+                                        style={{
+                                            ...commonStyles,
+                                            transform,
+                                            position: 'relative',
+                                        }}
+                                    >
+                                        <source src={`${AWS_BASE_URL_S3}/${paths[index]}`} type="video/mp4" />
+                                    </video>
+                                </div>
                             ) : (
                                 <div
                                     key={index}
