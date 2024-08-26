@@ -113,6 +113,7 @@ function* getAssetsGroupByCreator() {
                 data: response.data.data.data.map((item) => ({
                     ...item.asset,
                     countByCreator: item.count,
+                    paths: item.paths,
                 })),
                 limit: response.data.data.limit,
                 page: response.data.data.page,
