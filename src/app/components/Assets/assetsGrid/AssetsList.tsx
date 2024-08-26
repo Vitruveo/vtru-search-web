@@ -46,6 +46,13 @@ const AssetsList = () => {
     const grid = searchParamsHook.get('grid');
     const video = searchParamsHook.get('video');
 
+    const paramsToCurate = new URLSearchParams(window.location.search);
+
+    const hasVideo = paramsToCurate.has('video');
+    const hasGrid = paramsToCurate.has('grid');
+
+    const hasCurated = hasVideo || hasGrid;
+
     const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
     const [selected, setSelected] = useState<Asset[]>([]);
@@ -61,11 +68,13 @@ const AssetsList = () => {
 
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const { data: assets, totalPage, page: currentPage } = useSelector((state) => state.assets.data);
-    const { sort } = useSelector((state) => state.assets);
+    const { sort, maxPrice } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
     const hasIncludesGroup = useSelector((state) => state.assets.groupByCreator);
     const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets);
     const values = useSelector((state) => state.filters);
+    const gridTitle = useSelector((state) => state.filters.grid.title);
+    const videoTitle = useSelector((state) => state.filters.video.title);
 
     const optionsForSelect = useMemo(() => {
         const options: { value: number; label: number }[] = [];
@@ -137,8 +146,8 @@ const AssetsList = () => {
     useEffect(() => {
         if (grid || video) return;
 
-        setIsIncludeGroupByCreator(hasIncludesGroup);
-    }, [hasIncludesGroup]);
+        setIsIncludeGroupByCreator(hasIncludesGroup.active);
+    }, [hasIncludesGroup.active]);
 
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
@@ -181,6 +190,22 @@ const AssetsList = () => {
         }
     };
 
+    const returnToPageOne = () => {
+        const params = new URLSearchParams(window.location.search);
+
+        params.forEach((value, key) => params.delete(key));
+
+        params.set('sort', 'latest');
+        params.set('sold', 'no');
+        params.set('taxonomy_aiGeneration', 'full,partial,none');
+        params.set('taxonomy_nudity', 'no');
+
+        window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+
+        dispatch(actions.setCurrentPage(1));
+        dispatch(actionsFilters.reset({ maxPrice }));
+    };
+
     const generateQueryParam = (key: string, value: string) => {
         const searchParams = new URLSearchParams(window.location.search);
         searchParams.set(key, value);
@@ -207,7 +232,12 @@ const AssetsList = () => {
     const handleChangeIsIncludeGroupByCreator = () => {
         setIsIncludeGroupByCreator(!isIncludeGroupByCreator);
         generateQueryParam('groupByCreator', isIncludeGroupByCreator ? 'no' : 'yes');
-        dispatch(actions.setGroupByCreator(!isIncludeGroupByCreator));
+        dispatch(
+            actions.setGroupByCreator({
+                active: !isIncludeGroupByCreator,
+                name: '',
+            })
+        );
     };
 
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
@@ -355,43 +385,76 @@ const AssetsList = () => {
                     {currentPage === 1 && !grid && !video && !hasIncludesGroup && <Slider />}
                 </Grid>
 
-                <Grid item xs={12} sm={'auto'} mr={4} mb={4} minWidth={'16%'}>
-                    <Select
-                        placeholder="Select Page"
-                        options={optionsForSelect}
-                        value={currentPage > 1 ? { value: currentPage, label: currentPage } : null}
-                        onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
-                        styles={{
-                            control: (base, state) => ({
-                                ...base,
-                                minWidth: '240px',
-                                borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
-                                backgroundColor: theme.palette.background.paper,
-                                boxShadow: '#00d6f4',
-                                '&:hover': { borderColor: '#00d6f4' },
-                            }),
-                            menu: (base) => ({
-                                ...base,
-                                zIndex: 1000,
-                                color: theme.palette.text.primary,
-                                backgroundColor: theme.palette.background.paper,
-                            }),
-                            singleValue: (base) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                            }),
-                            option: (base, state) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                                backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
-                                '&:hover': { backgroundColor: theme.palette.action.hover },
-                            }),
-                            input: (base) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                            }),
-                        }}
-                    />
+                <Grid item xs={12} mr={4} mb={4}>
+                    <Box width="100%" display="flex" alignItems="flex-end" justifyContent="space-between">
+                        {hasCurated ? (
+                            <Box display="flex" alignItems="flex-end" gap={2}>
+                                <Typography variant="h4">{gridTitle || videoTitle || 'Curated arts'}</Typography>
+                                <button
+                                    style={{
+                                        border: 'none',
+                                        background: 'none',
+                                        cursor: 'pointer',
+                                    }}
+                                    onClick={returnToPageOne}
+                                >
+                                    <Typography
+                                        variant="h6"
+                                        color="primary"
+                                        sx={{
+                                            textDecoration: 'underline',
+                                            cursor: 'pointer',
+                                            fontSize: 14,
+                                        }}
+                                    >
+                                        Reset search
+                                    </Typography>
+                                </button>
+                            </Box>
+                        ) : hasIncludesGroup.name ? (
+                            <Box display="flex" alignItems="flex-end" gap={2}>
+                                <Typography variant="h4">{hasIncludesGroup.name}</Typography>
+                            </Box>
+                        ) : (
+                            <Box />
+                        )}
+                        <Select
+                            placeholder="Select Page"
+                            options={optionsForSelect}
+                            value={currentPage > 1 ? { value: currentPage, label: currentPage } : null}
+                            onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
+                            styles={{
+                                control: (base, state) => ({
+                                    ...base,
+                                    minWidth: '240px',
+                                    borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
+                                    backgroundColor: theme.palette.background.paper,
+                                    boxShadow: '#00d6f4',
+                                    '&:hover': { borderColor: '#00d6f4' },
+                                }),
+                                menu: (base) => ({
+                                    ...base,
+                                    zIndex: 1000,
+                                    color: theme.palette.text.primary,
+                                    backgroundColor: theme.palette.background.paper,
+                                }),
+                                singleValue: (base) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                }),
+                                option: (base, state) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                    backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
+                                    '&:hover': { backgroundColor: theme.palette.action.hover },
+                                }),
+                                input: (base) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                }),
+                            }}
+                        />
+                    </Box>
                 </Grid>
 
                 <Grid container display={'flex'} ml={4} rowGap={3} overflow={'hidden'}>
@@ -409,11 +472,22 @@ const AssetsList = () => {
                                             handleCheckCurate(asset);
                                         }}
                                         handleClickImage={() => {
-                                            if (hasIncludesGroup) {
+                                            if (hasIncludesGroup.active) {
                                                 if (asset?.framework?.createdBy) {
                                                     dispatch(actionsFilters.changeCreatorId(asset.framework.createdBy));
                                                     generateQueryParam('creatorId', asset.framework.createdBy);
                                                     dispatch(actions.resetGroupByCreator());
+
+                                                    if (Array.isArray(asset.assetMetadata?.creators.formData)) {
+                                                        dispatch(
+                                                            actions.changeGroupByCreatorName(
+                                                                asset.assetMetadata?.creators.formData[0].name
+                                                            )
+                                                        );
+                                                    } else {
+                                                        dispatch(actions.changeGroupByCreatorName('Unknown'));
+                                                    }
+
                                                     handleScrollToTop();
                                                 }
 
@@ -448,13 +522,23 @@ const AssetsList = () => {
                                                 handleCheckCurate(asset);
                                             }}
                                             handleClickImage={() => {
-                                                if (hasIncludesGroup) {
+                                                if (hasIncludesGroup.active) {
                                                     if (asset?.framework?.createdBy) {
                                                         dispatch(
                                                             actionsFilters.changeCreatorId(asset.framework.createdBy)
                                                         );
                                                         generateQueryParam('creatorId', asset.framework.createdBy);
                                                         dispatch(actions.resetGroupByCreator());
+                                                        if (Array.isArray(asset.assetMetadata?.creators.formData)) {
+                                                            dispatch(
+                                                                actions.changeGroupByCreatorName(
+                                                                    asset.assetMetadata?.creators.formData[0].name
+                                                                )
+                                                            );
+                                                        } else {
+                                                            dispatch(actions.changeGroupByCreatorName('Unknown'));
+                                                        }
+
                                                         handleScrollToTop();
                                                     }
 

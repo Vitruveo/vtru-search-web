@@ -18,7 +18,7 @@ export const ShareButton = ({ twitterURL, url, downloadable = false, title, cont
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [isCopied, setIsCopied] = useState(false);
 
-    // await the menu closes
+    // await the menu closes.
     useEffect(() => {
         setTimeout(() => {
             setIsCopied(false);
