@@ -40,7 +40,7 @@ const AssetItem = ({
     const [isHovered, setIsHovered] = useState(false);
     const [showFanEffect, setShowFanEffect] = useState(false);
     const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const hasIncludesGroup = useSelector((state) => state.assets.groupByCreator);
+    const hasIncludesGroup = useSelector((state) => state.assets.groupByCreator.active);
 
     const hasCreator =
         asset?.assetMetadata?.creators?.formData instanceof Array &&

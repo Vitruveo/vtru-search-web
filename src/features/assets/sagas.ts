@@ -41,7 +41,7 @@ function* getAssetsLastSold() {
 
 function* getAssetsGroupByCreator() {
     try {
-        const groupByCreator: boolean = yield select((state: AppState) => state.assets.groupByCreator);
+        const groupByCreator: boolean = yield select((state: AppState) => state.assets.groupByCreator.active);
 
         if (!groupByCreator) {
             yield put(actions.loadAssets({ page: 1 }));
@@ -130,11 +130,15 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
     yield put(actions.startLoading());
 
     try {
-        const hasIncludesGroup: boolean = yield select((state: AppState) => state.assets.groupByCreator);
+        const hasIncludesGroup: boolean = yield select((state: AppState) => state.assets.groupByCreator.active);
         if (hasIncludesGroup) return;
 
         const ids: string[] = yield select((state: AppState) =>
-            state.filters.grid.length ? state.filters.grid : state.filters.video.length ? state.filters.video : []
+            state.filters.grid.assets.length
+                ? state.filters.grid.assets
+                : state.filters.video.assets.length
+                  ? state.filters.video.assets
+                  : []
         );
         const creatorId: string = yield select((state: AppState) => state.filters.creatorId);
         const name: string = yield select((state: AppState) => state.filters.name);
@@ -249,7 +253,12 @@ function* getGrid(action: PayloadAction<string>) {
             Array.isArray(response.data.data.grid.search.grid[0].assets) &&
             response.data.data.grid.search.grid[0].assets.length > 0
         ) {
-            yield put(actionsFilter.changeGrid(response.data.data.grid.search.grid[0].assets));
+            yield put(
+                actionsFilter.changeGrid({
+                    assets: response.data.data.grid.search.grid[0].assets,
+                    title: response.data.data.grid.search.grid[0].title,
+                })
+            );
             yield put(actions.loadAssets({ page: 1 }));
         }
     } catch (error) {
@@ -273,7 +282,12 @@ function* getVideo(action: PayloadAction<string>) {
             Array.isArray(response.data.data.video.search.video[0].assets) &&
             response.data.data.video.search.video[0].assets.length > 0
         ) {
-            yield put(actionsFilter.changeVideo(response.data.data.video.search.video[0].assets));
+            yield put(
+                actionsFilter.changeVideo({
+                    assets: response.data.data.video.search.video[0].assets,
+                    title: response.data.data.video.search.video[0].title,
+                })
+            );
             yield put(actions.loadAssets({ page: 1 }));
         }
     } catch (error) {

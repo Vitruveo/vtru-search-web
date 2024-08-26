@@ -26,7 +26,10 @@ export const initialState: AssetsSliceState = {
         order: '',
         sold: '',
     },
-    groupByCreator: false,
+    groupByCreator: {
+        active: true,
+        name: '',
+    },
 };
 
 export const assetsSlice = createSlice({
@@ -39,11 +42,23 @@ export const assetsSlice = createSlice({
         startLoading: (state) => {
             state.loading = true;
         },
-        setGroupByCreator: (state, action) => {
+        setGroupByCreator: (
+            state,
+            action: PayloadAction<{
+                active: boolean;
+                name: string;
+            }>
+        ) => {
             state.groupByCreator = action.payload;
         },
         resetGroupByCreator: (state) => {
-            state.groupByCreator = false;
+            state.groupByCreator = {
+                active: false,
+                name: '',
+            };
+        },
+        changeGroupByCreatorName: (state, action: PayloadAction<string>) => {
+            state.groupByCreator.name = action.payload;
         },
         loadCreator: (_state, _action: PayloadAction<GetCreatorParams>) => {},
         finishLoading: (state) => {

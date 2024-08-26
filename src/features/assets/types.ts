@@ -18,7 +18,10 @@ export interface AssetsSliceState {
         order: string;
         sold: string;
     };
-    groupByCreator: false;
+    groupByCreator: {
+        active: boolean;
+        name: string;
+    };
 }
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';
@@ -169,6 +172,7 @@ export interface ResponseGrid {
                 id: string;
                 path: string;
                 assets: string[];
+                title: string;
                 createdAt: string;
             }[];
         };
@@ -183,6 +187,7 @@ export interface ResponseVideo {
                 id: string;
                 path: string;
                 assets: string[];
+                title: string;
                 createdAt: string;
             }[];
         };
