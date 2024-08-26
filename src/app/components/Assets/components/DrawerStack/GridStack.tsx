@@ -97,6 +97,7 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                 actions.requestUpload({
                     assets: selectedAssets.map((item) => item._id),
                     fees: 10,
+                    title,
                 })
             );
         }

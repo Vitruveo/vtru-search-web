@@ -21,4 +21,5 @@ export interface UploadPayload {
 export interface RequestUploadParams {
     assets: string[];
     fees: number;
+    title: string;
 }

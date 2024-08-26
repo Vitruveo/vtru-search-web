@@ -16,7 +16,7 @@ function* requestUpload(action: PayloadAction<RequestUploadParams>) {
         yield call(
             axios.post,
             `${API_BASE_URL}/upload/request`,
-            { assets: action.payload.assets, fees: action.payload.fees },
+            { assets: action.payload.assets, fees: action.payload.fees, title: action.payload.title },
             {
                 headers: {
                     Authorization: `Bearer ${token}`,

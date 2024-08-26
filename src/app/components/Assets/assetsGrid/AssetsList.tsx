@@ -382,7 +382,7 @@ const AssetsList = () => {
                         paddingTop: 0,
                     }}
                 >
-                    {currentPage === 1 && <Slider />}
+                    {currentPage === 1 && !grid && !video && !hasIncludesGroup && <Slider />}
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>
