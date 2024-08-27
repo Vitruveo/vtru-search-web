@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { IconPlus, IconSearch, IconWallet } from '@tabler/icons-react';
+import { IconSearch } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
 import {
     InputAdornment,
@@ -14,9 +14,7 @@ import {
     Checkbox,
     FormGroup,
     FormControlLabel,
-    IconButton,
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import assetsMetadata from '@/mock/assetsMetadata.json';
 import { actions } from '@/features/filters/slice';
 import { actions as actionsAssets } from '@/features/assets/slice';
@@ -37,9 +35,9 @@ import { useSelector } from '@/store/hooks';
 import React, { useEffect, useState } from 'react';
 import { FilterSliceState } from '@/features/filters/types';
 import chunkArray from '@/utils/chunkArray';
+import PortfolioItem from '../components/PortfolioItem';
 
 const Filters = () => {
-    const theme = useTheme();
     const params = new URLSearchParams(window.location.search);
 
     const [isNuditychecked, setIsNudityChecked] = useState(false);
@@ -50,10 +48,11 @@ const Filters = () => {
     const [contextFilters, setContextFilters] = useState<number>();
     const [taxonomyFilters, setTaxonomyFilters] = useState<number>();
     const [creatorsFilters, setCreatorsFilters] = useState<number>();
+    const wallets = ['123', '345'];
 
     const dispatch = useDispatch();
     const { language } = useI18n();
-    const isSmallScreen = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.down('lg'));
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
     const values = useSelector((state) => state.filters);
     const { tags } = useSelector((state) => state.assets);
@@ -164,6 +163,10 @@ const Filters = () => {
         setIsPhotographyChecked(event.target.checked);
         syncFiltersWithUrl(event.target.checked ? ['photography'] : [], 'taxonomy_category');
         dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['photography'] : [] } }));
+    };
+
+    const handleAddWallet = () => {
+        wallets.push('');
     };
 
     return (
@@ -424,38 +427,15 @@ const Filters = () => {
 
             <Divider />
 
-            <AssetFilterAccordion title={language['search.assetFilter.portfolio'] as string} numberOfFilters={1}>
-                <Box display={'flex'} alignItems={'center'} gap={2} mb={1}>
-                    <OutlinedInput
-                        id="outlined-portofolio"
-                        placeholder={language['search.assetFilter.portfolio.placeholder'] as string}
-                        size="small"
-                        type="search"
-                        color="primary"
-                        notched
-                        fullWidth
-                        value={'a'}
-                        onChange={(e) => {}}
-                    />
-                    <InputAdornment position="start">
-                        <IconWallet />
-                    </InputAdornment>
-                </Box>
-                <Box display={'flex'} alignItems={'center'} gap={2}>
-                    <IconButton
-                        style={{
-                            backgroundColor: theme.palette.primary.main,
-                            color: theme.palette.primary.contrastText,
-                            padding: '10px',
-                            borderRadius: '5px',
-                        }}
-                    >
-                        <IconPlus size={15} />
-                    </IconButton>
-                    <Typography variant="inherit">
-                        {language['search.assetFilter.portfolio.addButton'] as string}
-                    </Typography>
-                </Box>
+            <AssetFilterAccordion
+                title={language['search.assetFilter.portfolio'] as string}
+                numberOfFilters={wallets.length}
+            >
+                <PortfolioItem
+                    wallets={wallets}
+                    handleAddWallet={handleAddWallet}
+                    onRemove={(index: number) => wallets.splice(index, 1)}
+                />
             </AssetFilterAccordion>
 
             <Box>
