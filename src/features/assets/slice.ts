@@ -53,7 +53,7 @@ export const assetsSlice = createSlice({
         },
         resetGroupByCreator: (state) => {
             state.groupByCreator = {
-                active: false,
+                active: true,
                 name: '',
             };
         },

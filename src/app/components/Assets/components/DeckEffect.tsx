@@ -84,7 +84,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                     opacity: showFanEffect ? 1 : 0,
                 }}
             >
-                {cards.length >= 2 && (
+                {cards.length > 1 && (
                     <>
                         {cards.map(({ transform }, index) =>
                             paths[index]?.match(/\.(mp4|webm|ogg)$/) != null ? (
@@ -144,7 +144,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                                                 backgroundColor: 'rgba(0, 0, 0, 0.5)',
                                             }}
                                         >
-                                            +{effectiveCount - 5} NFTs
+                                            +{effectiveCount - 5} Digital Assets
                                         </p>
                                     )}
                                 </div>
@@ -153,32 +153,36 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                     </>
                 )}
             </Box>
-            <div
-                style={{
-                    position: 'absolute',
-                    background: `${theme.palette.grey[400]}`,
-                    width: 250,
-                    top: -10,
-                    left: isHovered && !showFanEffect ? 45 : 16,
-                    height: 360,
-                    borderRadius: '15px',
-                    transform: isHovered && !showFanEffect ? 'rotate(16deg)' : 'rotate(5deg)',
-                    transition: 'all 0.3s ease',
-                }}
-            />
-            <div
-                style={{
-                    position: 'absolute',
-                    background: `${theme.palette.grey[300]}`,
-                    width: 250,
-                    top: -8,
-                    left: isHovered && !showFanEffect ? 25 : 10,
-                    height: 360,
-                    borderRadius: '15px',
-                    transform: isHovered && !showFanEffect ? 'rotate(8deg)' : 'rotate(3deg)',
-                    transition: 'all 0.3s ease',
-                }}
-            />
+            {cards.length > 1 && (
+                <>
+                    <div
+                        style={{
+                            position: 'absolute',
+                            background: `${theme.palette.grey[400]}`,
+                            width: 250,
+                            top: -10,
+                            left: isHovered && !showFanEffect ? 45 : 16,
+                            height: 360,
+                            borderRadius: '15px',
+                            transform: isHovered && !showFanEffect ? 'rotate(16deg)' : 'rotate(5deg)',
+                            transition: 'all 0.3s ease',
+                        }}
+                    />
+                    <div
+                        style={{
+                            position: 'absolute',
+                            background: `${theme.palette.grey[300]}`,
+                            width: 250,
+                            top: -8,
+                            left: isHovered && !showFanEffect ? 25 : 10,
+                            height: 360,
+                            borderRadius: '15px',
+                            transform: isHovered && !showFanEffect ? 'rotate(8deg)' : 'rotate(3deg)',
+                            transition: 'all 0.3s ease',
+                        }}
+                    />
+                </>
+            )}
         </Box>
     );
 }

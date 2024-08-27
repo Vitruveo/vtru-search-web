@@ -39,12 +39,14 @@ import Slider from '../../../components/Slider';
 import { useTheme } from '@mui/material/styles';
 
 const AssetsList = () => {
+    const params = new URLSearchParams(window.location.search);
     const searchParamsHook = useSearchParams();
     const dispatch = useDispatch();
     const theme = useTheme();
 
     const grid = searchParamsHook.get('grid');
     const video = searchParamsHook.get('video');
+    const creatorId = params.has('creatorId');
 
     const paramsToCurate = new URLSearchParams(window.location.search);
 
@@ -191,14 +193,14 @@ const AssetsList = () => {
     };
 
     const returnToPageOne = () => {
-        const params = new URLSearchParams(window.location.search);
-
         params.forEach((value, key) => params.delete(key));
 
         params.set('sort', 'latest');
         params.set('sold', 'no');
         params.set('taxonomy_aiGeneration', 'full,partial,none');
         params.set('taxonomy_nudity', 'no');
+        params.set('groupByCreator', 'yes');
+        params.delete('creatorId');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
 
@@ -383,14 +385,17 @@ const AssetsList = () => {
                         paddingTop: 0,
                     }}
                 >
-                    {currentPage === 1 && !grid && !video && !hasIncludesGroup.active && <Slider />}
+                    {currentPage === 1 && !grid && !video && !creatorId && <Slider />}
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>
                     <Box width="100%" display="flex" alignItems="flex-end" justifyContent="space-between">
-                        {hasCurated ? (
+                        {hasCurated || !hasIncludesGroup.active ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
-                                <Typography variant="h4">{gridTitle || videoTitle || 'Curated arts'}</Typography>
+                                {hasCurated && (
+                                    <Typography variant="h4">{gridTitle || videoTitle || 'Curated arts'}</Typography>
+                                )}
+                                {hasIncludesGroup.name && <Typography variant="h4">{hasIncludesGroup.name}</Typography>}
                                 <button
                                     style={{
                                         border: 'none',
@@ -411,10 +416,6 @@ const AssetsList = () => {
                                         Reset search
                                     </Typography>
                                 </button>
-                            </Box>
-                        ) : hasIncludesGroup.name ? (
-                            <Box display="flex" alignItems="flex-end" gap={2}>
-                                <Typography variant="h4">{hasIncludesGroup.name}</Typography>
                             </Box>
                         ) : (
                             <Box />
@@ -477,7 +478,7 @@ const AssetsList = () => {
                                                 if (asset?.framework?.createdBy) {
                                                     dispatch(actionsFilters.changeCreatorId(asset.framework.createdBy));
                                                     generateQueryParam('creatorId', asset.framework.createdBy);
-                                                    dispatch(actions.resetGroupByCreator());
+                                                    dispatch(actions.setGroupByCreator({ active: false, name: '' }));
 
                                                     if (Array.isArray(asset.assetMetadata?.creators.formData)) {
                                                         dispatch(
@@ -505,7 +506,9 @@ const AssetsList = () => {
 
                             {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) && (
                                 <AssetCardContainer key={1}>
-                                    <AdditionalAssetsFilterCard />
+                                    <Box width={'100%'} height={'100%'} mr={4}>
+                                        <AdditionalAssetsFilterCard />
+                                    </Box>
                                 </AssetCardContainer>
                             )}
 

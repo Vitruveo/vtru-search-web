@@ -108,6 +108,7 @@ function* getAssetsGroupByCreator() {
             }
         );
 
+        yield put(actions.loadAssetsLastSold());
         yield put(
             actions.setData({
                 data: response.data.data.data.map((item) => ({

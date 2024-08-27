@@ -46,6 +46,8 @@ const Logo = () => {
         params.set('sold', 'no');
         params.set('taxonomy_aiGeneration', 'full,partial,none');
         params.set('taxonomy_nudity', 'no');
+        params.set('groupByCreator', 'yes');
+        params.delete('creatorId');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
 
