@@ -390,7 +390,7 @@ const AssetsList = () => {
 
                 <Grid item xs={12} mr={4} mb={4}>
                     <Box width="100%" display="flex" alignItems="flex-end" justifyContent="space-between">
-                        {hasCurated || !hasIncludesGroup.active ? (
+                        {hasCurated || hasIncludesGroup.name ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
                                 {hasCurated && (
                                     <Typography variant="h4">{gridTitle || videoTitle || 'Curated arts'}</Typography>
