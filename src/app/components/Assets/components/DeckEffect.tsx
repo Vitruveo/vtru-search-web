@@ -144,7 +144,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                                                 backgroundColor: 'rgba(0, 0, 0, 0.5)',
                                             }}
                                         >
-                                            +{effectiveCount - 5} NFTs
+                                            +{effectiveCount - 5} Digital Assets
                                         </p>
                                     )}
                                 </div>
