@@ -123,7 +123,7 @@ const Filters = () => {
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
 
         dispatch(actionsAssets.resetGroupByCreator());
-        dispatch(actionsAssets.setSort({ order: 'latest', sold: 'no' }));
+        dispatch(actions.reset({ maxPrice }));
     };
 
     const syncFiltersWithUrl = (changeValue: any, key: string) => {

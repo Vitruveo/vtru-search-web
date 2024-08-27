@@ -195,6 +195,9 @@ export const filterSlice = createSlice({
         changeCreatorId: (state, action: PayloadAction<string>) => {
             state.creatorId = action.payload;
         },
+        resetCreatorId: (state) => {
+            state.creatorId = '';
+        },
         reset: (state, action: PayloadAction<{ maxPrice: number }>) => {
             state.name = '';
             state.context = initialState.context;

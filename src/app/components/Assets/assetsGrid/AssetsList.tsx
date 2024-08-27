@@ -46,7 +46,7 @@ const AssetsList = () => {
 
     const grid = searchParamsHook.get('grid');
     const video = searchParamsHook.get('video');
-    const creatorId = params.has('creatorId');
+    const creatorId = params.get('creatorId');
 
     const paramsToCurate = new URLSearchParams(window.location.search);
 
@@ -205,7 +205,7 @@ const AssetsList = () => {
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
 
         dispatch(actions.resetGroupByCreator());
-        dispatch(actions.setSort({ order: 'latest', sold: 'no' }));
+        dispatch(actionsFilters.reset({ maxPrice }));
     };
 
     const generateQueryParam = (key: string, value: string) => {
@@ -232,16 +232,23 @@ const AssetsList = () => {
     };
 
     const handleChangeIsIncludeGroupByCreator = () => {
-        if (!isIncludeGroupByCreator) params.delete('creatorId');
-
         setIsIncludeGroupByCreator(!isIncludeGroupByCreator);
         generateQueryParam('groupByCreator', isIncludeGroupByCreator ? 'no' : 'yes');
+
+        if (!isIncludeGroupByCreator) {
+            generateQueryParam('creatorId', '');
+            dispatch(actions.setInitialPage());
+            dispatch(actionsFilters.resetCreatorId());
+        }
+
         dispatch(
             actions.setGroupByCreator({
                 active: !isIncludeGroupByCreator,
                 name: '',
             })
         );
+
+        if (isIncludeGroupByCreator) dispatch(actions.loadAssets({ page: 1 }));
     };
 
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
@@ -483,6 +490,7 @@ const AssetsList = () => {
                                         handleClickImage={() => {
                                             if (hasIncludesGroup.active) {
                                                 if (asset?.framework?.createdBy) {
+                                                    dispatch(actions.setInitialPage());
                                                     dispatch(actionsFilters.changeCreatorId(asset.framework.createdBy));
                                                     generateQueryParam('creatorId', asset.framework.createdBy);
                                                     dispatch(actions.setGroupByCreator({ active: false, name: '' }));
@@ -595,13 +603,15 @@ const AssetsList = () => {
                     width="100%"
                     alignItems="center"
                 >
-                    <Pagination
-                        count={totalPage}
-                        page={currentPage}
-                        onChange={(_event, value) => dispatch(actions.setCurrentPage(value))}
-                        color="primary"
-                        size="large"
-                    />
+                    {!isLoading && (
+                        <Pagination
+                            count={totalPage}
+                            page={currentPage}
+                            onChange={(_event, value) => dispatch(actions.setCurrentPage(value))}
+                            color="primary"
+                            size="large"
+                        />
+                    )}
                 </Box>
                 <Box display={totalPage === 0 ? 'none' : 'flex'} justifyContent="flex-end" width="100%" mr={4} mb={4}>
                     <Button onClick={handleScrollToTop}>Scroll to top</Button>
