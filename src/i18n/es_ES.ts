@@ -69,7 +69,6 @@ const language: Translation = {
 
     'search.assetFilter.portfolio': 'Cartera',
     'search.assetFilter.portfolio.placeholder': 'dirección de billetera',
-    'search.assetFilter.portfolio.addButton': 'Agregar billetera',
 
     /* Asset List */
     'search.assetList.curateStack': 'Pila de curación',

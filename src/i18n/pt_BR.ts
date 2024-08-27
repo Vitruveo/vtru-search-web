@@ -69,7 +69,6 @@ const language: Translation = {
 
     'search.assetFilter.portfolio': 'Portfólio',
     'search.assetFilter.portfolio.placeholder': 'Endereço da carteira',
-    'search.assetFilter.portfolio.addButton': 'Adicionar Portfólio',
 
     /* Asset List */
     'search.assetList.curateStack': 'Seleção',

@@ -69,7 +69,6 @@ const language: Translation = {
 
     'search.assetFilter.portfolio': 'Портфолио',
     'search.assetFilter.portfolio.placeholder': 'Адрес кошелька',
-    'search.assetFilter.portfolio.addButton': 'Добавить портфолио',
 
     /* Asset List */
     'search.assetList.curateStack': 'Стек Куратора',
