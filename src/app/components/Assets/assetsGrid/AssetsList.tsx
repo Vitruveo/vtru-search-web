@@ -39,12 +39,14 @@ import Slider from '../../../components/Slider';
 import { useTheme } from '@mui/material/styles';
 
 const AssetsList = () => {
+    const params = new URLSearchParams(window.location.search);
     const searchParamsHook = useSearchParams();
     const dispatch = useDispatch();
     const theme = useTheme();
 
     const grid = searchParamsHook.get('grid');
     const video = searchParamsHook.get('video');
+    const creatorId = params.has('creatorId');
 
     const paramsToCurate = new URLSearchParams(window.location.search);
 
@@ -191,14 +193,14 @@ const AssetsList = () => {
     };
 
     const returnToPageOne = () => {
-        const params = new URLSearchParams(window.location.search);
-
         params.forEach((value, key) => params.delete(key));
 
         params.set('sort', 'latest');
         params.set('sold', 'no');
         params.set('taxonomy_aiGeneration', 'full,partial,none');
         params.set('taxonomy_nudity', 'no');
+        params.set('groupByCreator', 'yes');
+        params.delete('creatorId');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
 
@@ -383,7 +385,7 @@ const AssetsList = () => {
                         paddingTop: 0,
                     }}
                 >
-                    {currentPage === 1 && !grid && !video && <Slider />}
+                    {currentPage === 1 && !grid && !video && !creatorId && <Slider />}
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>
