@@ -86,7 +86,7 @@ const AssetItem = ({
                 setShowFanEffect(false);
             }}
             onClick={() => {
-                if (isCurated) handleChangeCurate();
+                if (isCurated && !hasIncludesGroup) handleChangeCurate();
                 else handleClickImage();
             }}
         >

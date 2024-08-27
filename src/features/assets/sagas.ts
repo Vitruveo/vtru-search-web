@@ -40,6 +40,7 @@ function* getAssetsLastSold() {
 }
 
 function* getAssetsGroupByCreator() {
+    yield put(actions.startLoading());
     try {
         const groupByCreator: boolean = yield select((state: AppState) => state.assets.groupByCreator.active);
 
@@ -125,6 +126,7 @@ function* getAssetsGroupByCreator() {
     } catch (error) {
         // Handle error
     }
+    yield put(actions.finishLoading());
 }
 
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
