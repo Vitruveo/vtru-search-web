@@ -504,7 +504,9 @@ const AssetsList = () => {
 
                             {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) && (
                                 <AssetCardContainer key={1}>
-                                    <AdditionalAssetsFilterCard />
+                                    <Box width={'100%'} height={'100%'} mr={4}>
+                                        <AdditionalAssetsFilterCard />
+                                    </Box>
                                 </AssetCardContainer>
                             )}
 
