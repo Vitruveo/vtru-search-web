@@ -67,6 +67,10 @@ const language: Translation = {
     'search.assetFilter.creators.title.ethnicity': 'Etnicidade',
     'search.assetFilter.creators.title.gender': 'Gênero',
 
+    'search.assetFilter.portfolio': 'Portfólio',
+    'search.assetFilter.portfolio.placeholder': 'Endereço da carteira',
+    'search.assetFilter.portfolio.addButton': 'Adicionar Portfólio',
+
     /* Asset List */
     'search.assetList.curateStack': 'Seleção',
     'search.assetList.curateStack.selected': 'Selecionados',
