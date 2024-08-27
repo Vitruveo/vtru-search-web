@@ -47,6 +47,7 @@ function* getAssetsGroupByCreator() {
 
         yield put(actions.startLoading());
 
+        const wallets: string[] = yield select((state: AppState) => state.filters.portfolio.wallets);
         const page: number = yield select((state: AppState) => state.assets.data.page);
         const order: string = yield select((state: AppState) => state.assets.sort.order);
         const sold: string = yield select((state: AppState) => state.assets.sort.sold);
@@ -89,6 +90,12 @@ function* getAssetsGroupByCreator() {
 
             return acc;
         }, {});
+
+        if (wallets.length) {
+            buildQuery['mintExplorer.address'] = {
+                $in: wallets.filter((item) => validateCryptoAddress(item)).filter(Boolean),
+            };
+        }
 
         const response: AxiosResponse<APIResponse<ResponseAssetGroupByCreator>> = yield call(
             axios.get,
@@ -379,6 +386,7 @@ export function* assetsSagas() {
         debounce(500, actions.setCurrentPage.type, getAssetsGroupByCreator),
         takeEvery(actionsFilter.change.type, getAssetsGroupByCreator),
         debounce(1000, actionsFilter.changeName.type, getAssetsGroupByCreator),
+        takeEvery(actionsFilter.changePortfolioWallets.type, getAssetsGroupByCreator),
 
         // Sold
         takeEvery(actions.loadAssetsLastSold.type, getAssetsLastSold),

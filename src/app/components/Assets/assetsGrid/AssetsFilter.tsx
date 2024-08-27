@@ -55,7 +55,7 @@ const Filters = () => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
     const values = useSelector((state) => state.filters);
-    const { tags } = useSelector((state) => state.assets);
+    const { tags, maxPrice } = useSelector((state) => state.assets);
     const { wallets } = useSelector((state) => state.filters.portfolio);
 
     const getTotalFiltersApplied = (fieldName: keyof FilterSliceState) => {
