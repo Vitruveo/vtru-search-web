@@ -388,9 +388,14 @@ const AssetsList = () => {
 
                 <Grid item xs={12} mr={4} mb={4}>
                     <Box width="100%" display="flex" alignItems="flex-end" justifyContent="space-between">
-                        {hasCurated ? (
+                        {hasCurated || hasIncludesGroup.name ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
-                                <Typography variant="h4">{gridTitle || videoTitle || 'Curated arts'}</Typography>
+                                {hasCurated && (
+                                    <Typography variant="h4">{gridTitle || videoTitle || 'Curated arts'}</Typography>
+                                )}
+                                {hasIncludesGroup.active && (
+                                    <Typography variant="h4">{hasIncludesGroup.name}</Typography>
+                                )}
                                 <button
                                     style={{
                                         border: 'none',
@@ -411,10 +416,6 @@ const AssetsList = () => {
                                         Reset search
                                     </Typography>
                                 </button>
-                            </Box>
-                        ) : hasIncludesGroup.name ? (
-                            <Box display="flex" alignItems="flex-end" gap={2}>
-                                <Typography variant="h4">{hasIncludesGroup.name}</Typography>
                             </Box>
                         ) : (
                             <Box />
