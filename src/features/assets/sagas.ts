@@ -23,6 +23,7 @@ import { actions as actionsFilter } from '../filters/slice';
 import { APIResponse } from '../common/types';
 import { AppState } from '@/store';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
+import validateCryptoAddress from '@/utils/adress.validate';
 
 function* getAssetsLastSold() {
     try {
@@ -143,6 +144,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                   ? state.filters.video.assets
                   : []
         );
+        const wallets: string[] = yield select((state: AppState) => state.filters.portfolio.wallets);
         const creatorId: string = yield select((state: AppState) => state.filters.creatorId);
         const name: string = yield select((state: AppState) => state.filters.name);
         const page: number = yield select((state: AppState) => state.assets.data.page);
@@ -200,6 +202,12 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         }
 
         if (creatorId) buildQuery['framework.createdBy'] = creatorId;
+
+        if (wallets.length) {
+            buildQuery['mintExplorer.address'] = {
+                $in: wallets.filter((item) => validateCryptoAddress(item)).filter(Boolean),
+            };
+        }
 
         const URL_ASSETS_SEARCH = `${API_BASE_URL}/assets/public/search`;
 
@@ -365,6 +373,7 @@ export function* assetsSagas() {
         debounce(1000, actionsFilter.changeName.type, getAssets),
         takeEvery(actionsFilter.changeColorPrecision.type, getAssets),
         takeEvery(actionsFilter.changeCreatorId.type, getAssets),
+        takeEvery(actionsFilter.changePortfolioWallets.type, getAssets),
 
         // Group by creator
         takeEvery(actions.setGroupByCreator.type, getAssetsGroupByCreator),
