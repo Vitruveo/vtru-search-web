@@ -121,7 +121,7 @@ const Filters = () => {
         params.delete('creatorId');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
-        dispatch(actions.reset({ maxPrice }));
+
         dispatch(actionsAssets.resetGroupByCreator());
         dispatch(actionsAssets.setSort({ order: 'latest', sold: 'no' }));
     };

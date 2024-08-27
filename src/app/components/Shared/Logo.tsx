@@ -51,9 +51,8 @@ const Logo = () => {
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
 
-        dispatch(actions.setCurrentPage(1));
-        dispatch(actionsFilters.reset({ maxPrice }));
         dispatch(actions.resetGroupByCreator());
+        dispatch(actions.setSort({ order: 'latest', sold: 'no' }));
     };
 
     const dice = {

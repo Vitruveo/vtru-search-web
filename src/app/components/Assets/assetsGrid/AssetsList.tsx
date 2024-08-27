@@ -204,9 +204,8 @@ const AssetsList = () => {
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
 
-        dispatch(actions.setCurrentPage(1));
-        dispatch(actionsFilters.reset({ maxPrice }));
         dispatch(actions.resetGroupByCreator());
+        dispatch(actions.setSort({ order: 'latest', sold: 'no' }));
     };
 
     const generateQueryParam = (key: string, value: string) => {
@@ -233,6 +232,8 @@ const AssetsList = () => {
     };
 
     const handleChangeIsIncludeGroupByCreator = () => {
+        if (!isIncludeGroupByCreator) params.delete('creatorId');
+
         setIsIncludeGroupByCreator(!isIncludeGroupByCreator);
         generateQueryParam('groupByCreator', isIncludeGroupByCreator ? 'no' : 'yes');
         dispatch(
@@ -460,7 +461,13 @@ const AssetsList = () => {
                 </Grid>
 
                 <Grid container display={'flex'} ml={4} rowGap={3} overflow={'hidden'}>
-                    {assets.length > 0 ? (
+                    {isLoading ? (
+                        [...Array(4)].map((_, index) => (
+                            <AssetCardContainer key={index}>
+                                <Skeleton variant="rectangular" width={250} height={250} />
+                            </AssetCardContainer>
+                        ))
+                    ) : assets.length > 0 ? (
                         <>
                             {activeAssets.map((asset) => (
                                 <AssetCardContainer key={asset._id}>
@@ -556,12 +563,6 @@ const AssetsList = () => {
                                     </AssetCardContainer>
                                 ))}
                         </>
-                    ) : isLoading ? (
-                        [...Array(3)].map((_, index) => (
-                            <AssetCardContainer key={index}>
-                                <Skeleton variant="rectangular" width={250} height={250} />
-                            </AssetCardContainer>
-                        ))
                     ) : (
                         <Grid
                             item

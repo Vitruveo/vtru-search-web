@@ -56,6 +56,7 @@ export const assetsSlice = createSlice({
                 active: true,
                 name: '',
             };
+            state.data.page = 1;
         },
         changeGroupByCreatorName: (state, action: PayloadAction<string>) => {
             state.groupByCreator.name = action.payload;
