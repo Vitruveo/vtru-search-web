@@ -41,14 +41,11 @@ function* getAssetsLastSold() {
 }
 
 function* getAssetsGroupByCreator() {
-    yield put(actions.startLoading());
     try {
         const groupByCreator: boolean = yield select((state: AppState) => state.assets.groupByCreator.active);
+        if (!groupByCreator) return;
 
-        if (!groupByCreator) {
-            yield put(actions.loadAssets({ page: 1 }));
-            return;
-        }
+        yield put(actions.startLoading());
 
         const page: number = yield select((state: AppState) => state.assets.data.page);
         const order: string = yield select((state: AppState) => state.assets.sort.order);
@@ -131,11 +128,11 @@ function* getAssetsGroupByCreator() {
 }
 
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
-    yield put(actions.startLoading());
-
     try {
         const hasIncludesGroup: boolean = yield select((state: AppState) => state.assets.groupByCreator.active);
         if (hasIncludesGroup) return;
+
+        yield put(actions.startLoading());
 
         const ids: string[] = yield select((state: AppState) =>
             state.filters.grid.assets.length
@@ -376,6 +373,7 @@ export function* assetsSagas() {
         takeEvery(actionsFilter.changePortfolioWallets.type, getAssets),
 
         // Group by creator
+        takeEvery(actionsFilter.reset.type, getAssetsGroupByCreator),
         takeEvery(actions.setGroupByCreator.type, getAssetsGroupByCreator),
         takeEvery(actions.setSort.type, getAssetsGroupByCreator),
         debounce(500, actions.setCurrentPage.type, getAssetsGroupByCreator),

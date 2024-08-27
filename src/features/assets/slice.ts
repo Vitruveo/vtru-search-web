@@ -57,6 +57,8 @@ export const assetsSlice = createSlice({
                 name: '',
             };
             state.data.page = 1;
+            state.sort.order = 'latest';
+            state.sort.sold = 'no';
         },
         changeGroupByCreatorName: (state, action: PayloadAction<string>) => {
             state.groupByCreator.name = action.payload;
@@ -93,6 +95,9 @@ export const assetsSlice = createSlice({
         },
         setCurrentPage: (state, action: PayloadAction<number>) => {
             state.data.page = action.payload;
+        },
+        setInitialPage: (state) => {
+            state.data.page = 1;
         },
         setLastSold: (state, action: PayloadAction<LastSoldAsset[]>) => {
             state.lastSold = action.payload;

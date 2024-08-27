@@ -131,7 +131,7 @@ const AssetItem = ({
                         >
                             {assetTitle}
                         </Typography>
-                        {isCurated && <Checkbox style={{ padding: 0 }} checked={checkedCurate} />}
+                        {isCurated && !hasIncludesGroup && <Checkbox style={{ padding: 0 }} checked={checkedCurate} />}
                     </Stack>
 
                     <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>

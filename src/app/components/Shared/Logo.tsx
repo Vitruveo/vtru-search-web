@@ -52,7 +52,7 @@ const Logo = () => {
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
 
         dispatch(actions.resetGroupByCreator());
-        dispatch(actions.setSort({ order: 'latest', sold: 'no' }));
+        dispatch(actionsFilters.reset({ maxPrice }));
     };
 
     const dice = {
