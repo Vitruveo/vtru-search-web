@@ -2,46 +2,35 @@ import { Box, IconButton, InputAdornment, OutlinedInput, Typography } from '@mui
 import { IconPlus, IconWallet } from '@tabler/icons-react';
 import { useTheme } from '@mui/material/styles';
 import { useI18n } from '@/app/hooks/useI18n';
-import { useDispatch } from '@/store/hooks';
-import { actions } from '@/features/filters/slice';
+import { useRef } from 'react';
 
 interface PortfolioItemProps {
-    wallets: string[];
-    handleAddWallet?: () => void;
-    onRemove?: (index: number) => void;
+    handleAddWallet: (value?: string) => void;
 }
 
-export default function PortfolioItem({ wallets, handleAddWallet, onRemove }: PortfolioItemProps) {
-    const dispatch = useDispatch();
+export default function PortfolioItem({ handleAddWallet }: PortfolioItemProps) {
     const theme = useTheme();
     const { language } = useI18n();
-
-    const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => {
-        const value = e.target.value;
-        dispatch(actions.changePortfolio({ wallet: value, index }));
-        if (value === '') onRemove?.(index);
-    };
+    const inputRef = useRef<HTMLInputElement>(null);
 
     return (
         <>
-            {wallets?.map((wallet, index) => (
-                <Box key={index} display={'flex'} alignItems={'center'} gap={2} mb={1}>
-                    <OutlinedInput
-                        id="outlined-portofolio"
-                        placeholder={language['search.assetFilter.portfolio.placeholder'] as string}
-                        size="small"
-                        type="search"
-                        color="primary"
-                        value={wallet}
-                        notched
-                        fullWidth
-                        onChange={(e) => handleChangeValue(e, index)}
-                    />
-                    <InputAdornment position="start">
-                        <IconWallet />
-                    </InputAdornment>
-                </Box>
-            ))}
+            <Box display={'flex'} alignItems={'center'} gap={2} mb={1}>
+                <OutlinedInput
+                    id="outlined-portofolio"
+                    placeholder={language['search.assetFilter.portfolio.placeholder'] as string}
+                    size="small"
+                    type="search"
+                    color="primary"
+                    notched
+                    fullWidth
+                    inputRef={inputRef}
+                />
+                <InputAdornment position="start">
+                    <IconWallet />
+                </InputAdornment>
+            </Box>
+
             <Box display={'flex'} alignItems={'center'} gap={2}>
                 <IconButton
                     style={{
@@ -50,7 +39,10 @@ export default function PortfolioItem({ wallets, handleAddWallet, onRemove }: Po
                         padding: '10px',
                         borderRadius: '5px',
                     }}
-                    onClick={handleAddWallet}
+                    onClick={() => {
+                        handleAddWallet(inputRef.current?.value);
+                        inputRef.current!.value = '';
+                    }}
                 >
                     <IconPlus size={15} />
                 </IconButton>

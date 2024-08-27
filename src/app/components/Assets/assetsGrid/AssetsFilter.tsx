@@ -36,6 +36,7 @@ import React, { useEffect, useState } from 'react';
 import { FilterSliceState } from '@/features/filters/types';
 import chunkArray from '@/utils/chunkArray';
 import PortfolioItem from '../components/PortfolioItem';
+import { Wallets } from '../components/Wallets';
 
 const Filters = () => {
     const params = new URLSearchParams(window.location.search);
@@ -165,8 +166,10 @@ const Filters = () => {
         dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['photography'] : [] } }));
     };
 
-    const handleAddWallet = () => {
-        dispatch(actions.changePortfolio({ wallet: '' }));
+    const handleAddWallet = (value?: string) => {
+        if (value) {
+            dispatch(actions.changePortfolioWallets({ wallets: [...wallets, value] }));
+        }
     };
 
     return (
@@ -431,10 +434,12 @@ const Filters = () => {
                 title={language['search.assetFilter.portfolio'] as string}
                 numberOfFilters={wallets.length}
             >
-                <PortfolioItem
+                <PortfolioItem handleAddWallet={(value?: string) => handleAddWallet(value)} />
+                <Wallets
                     wallets={wallets}
-                    handleAddWallet={handleAddWallet}
-                    onRemove={(index: number) => dispatch(actions.changePortfolio({ index }))}
+                    onRemove={(wallet: string) =>
+                        dispatch(actions.changePortfolioWallets({ wallets: wallets.filter((item) => item !== wallet) }))
+                    }
                 />
             </AssetFilterAccordion>
 
