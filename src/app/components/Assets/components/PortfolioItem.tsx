@@ -2,6 +2,8 @@ import { Box, IconButton, InputAdornment, OutlinedInput, Typography } from '@mui
 import { IconPlus, IconWallet } from '@tabler/icons-react';
 import { useTheme } from '@mui/material/styles';
 import { useI18n } from '@/app/hooks/useI18n';
+import { useDispatch } from '@/store/hooks';
+import { actions } from '@/features/filters/slice';
 
 interface PortfolioItemProps {
     wallets: string[];
@@ -10,11 +12,14 @@ interface PortfolioItemProps {
 }
 
 export default function PortfolioItem({ wallets, handleAddWallet, onRemove }: PortfolioItemProps) {
+    const dispatch = useDispatch();
     const theme = useTheme();
     const { language } = useI18n();
 
     const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => {
-        if (e.target.value === '') onRemove?.(index);
+        const value = e.target.value;
+        dispatch(actions.changePortfolio({ wallet: value, index }));
+        if (value === '') onRemove?.(index);
     };
 
     return (

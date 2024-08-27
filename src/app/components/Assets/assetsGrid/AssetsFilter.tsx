@@ -48,7 +48,6 @@ const Filters = () => {
     const [contextFilters, setContextFilters] = useState<number>();
     const [taxonomyFilters, setTaxonomyFilters] = useState<number>();
     const [creatorsFilters, setCreatorsFilters] = useState<number>();
-    const wallets = ['123', '345'];
 
     const dispatch = useDispatch();
     const { language } = useI18n();
@@ -56,6 +55,7 @@ const Filters = () => {
 
     const values = useSelector((state) => state.filters);
     const { tags } = useSelector((state) => state.assets);
+    const { wallets } = useSelector((state) => state.filters.portfolio);
 
     const getTotalFiltersApplied = (fieldName: keyof FilterSliceState) => {
         return Object.entries(values[fieldName]).reduce((acc, [_key, arrayfield]) => {
@@ -166,7 +166,7 @@ const Filters = () => {
     };
 
     const handleAddWallet = () => {
-        wallets.push('');
+        dispatch(actions.changePortfolio({ wallet: '' }));
     };
 
     return (
@@ -434,7 +434,7 @@ const Filters = () => {
                 <PortfolioItem
                     wallets={wallets}
                     handleAddWallet={handleAddWallet}
-                    onRemove={(index: number) => wallets.splice(index, 1)}
+                    onRemove={(index: number) => dispatch(actions.changePortfolio({ index }))}
                 />
             </AssetFilterAccordion>
 

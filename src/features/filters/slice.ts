@@ -76,6 +76,9 @@ export const initialState: FilterSliceState = {
         title: '',
     },
     creatorId: '',
+    portfolio: {
+        wallets: [''],
+    },
 };
 
 export const filterSlice = createSlice({
@@ -151,6 +154,9 @@ export const filterSlice = createSlice({
                 assets: [],
                 title: '',
             };
+            state.portfolio = {
+                wallets: [''],
+            };
             state.reseted += 1;
 
             const payload = extractObjects(initialState);
@@ -214,9 +220,9 @@ export const filterSlice = createSlice({
             state.video = initialState.video;
             state.reseted += 1;
             state.creatorId = '';
+            state.portfolio = initialState.portfolio;
             clearAssetsFromURL();
         },
-
         changePrice: (state, action: PayloadAction<{ min: number; max: number }>) => {
             state.price = {
                 min: action.payload.min,
@@ -280,6 +286,18 @@ export const filterSlice = createSlice({
             };
             state.reseted += 1;
             clearAssetsFromURL();
+        },
+        changePortfolio: (state, action: PayloadAction<{ wallet?: string; index?: number }>) => {
+            const { wallet, index } = action.payload;
+            if (wallet !== undefined) {
+                if (index) {
+                    state.portfolio.wallets[index] = wallet;
+                } else {
+                    state.portfolio.wallets.push(wallet);
+                }
+            } else if (index) {
+                state.portfolio.wallets.splice(index, 1);
+            }
         },
     },
 });
