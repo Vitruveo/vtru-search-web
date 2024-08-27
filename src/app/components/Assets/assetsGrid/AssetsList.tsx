@@ -388,14 +388,12 @@ const AssetsList = () => {
 
                 <Grid item xs={12} mr={4} mb={4}>
                     <Box width="100%" display="flex" alignItems="flex-end" justifyContent="space-between">
-                        {hasCurated || hasIncludesGroup.name ? (
+                        {hasCurated || !hasIncludesGroup.active ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
                                 {hasCurated && (
                                     <Typography variant="h4">{gridTitle || videoTitle || 'Curated arts'}</Typography>
                                 )}
-                                {hasIncludesGroup.active && (
-                                    <Typography variant="h4">{hasIncludesGroup.name}</Typography>
-                                )}
+                                {hasIncludesGroup.name && <Typography variant="h4">{hasIncludesGroup.name}</Typography>}
                                 <button
                                     style={{
                                         border: 'none',
@@ -478,7 +476,7 @@ const AssetsList = () => {
                                                 if (asset?.framework?.createdBy) {
                                                     dispatch(actionsFilters.changeCreatorId(asset.framework.createdBy));
                                                     generateQueryParam('creatorId', asset.framework.createdBy);
-                                                    dispatch(actions.resetGroupByCreator());
+                                                    dispatch(actions.setGroupByCreator({ active: false, name: '' }));
 
                                                     if (Array.isArray(asset.assetMetadata?.creators.formData)) {
                                                         dispatch(
