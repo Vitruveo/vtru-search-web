@@ -156,6 +156,7 @@ function* getGrid(action: PayloadAction<string>) {
             response.data.data.grid.search.grid[0].assets.length > 0
         ) {
             yield put(actionsFilter.changeGrid(response.data.data.grid.search.grid[0].assets));
+            yield put(actions.initialPage());
             yield put(actions.loadAssets({ page: 1 }));
         }
     } catch (error) {
@@ -180,6 +181,7 @@ function* getVideo(action: PayloadAction<string>) {
             response.data.data.video.search.video[0].assets.length > 0
         ) {
             yield put(actionsFilter.changeVideo(response.data.data.video.search.video[0].assets));
+            yield put(actions.initialPage());
             yield put(actions.loadAssets({ page: 1 }));
         }
     } catch (error) {

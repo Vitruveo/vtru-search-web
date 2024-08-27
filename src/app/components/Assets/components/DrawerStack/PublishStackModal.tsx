@@ -89,12 +89,12 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
                             audio={audio}
                             selectedAudio={selectedAudio}
                             setSelectedAudio={setSelectedAudio}
-                            title={title}
+                            title={title.trim()}
                             setGenerating={setGenerating}
                         />
                     </TabPanel>
                     <TabPanel value="2">
-                        <GridStack selectedAssets={selectedAssets} title={title} setGenerating={setGenerating} />
+                        <GridStack selectedAssets={selectedAssets} title={title.trim()} setGenerating={setGenerating} />
                     </TabPanel>
                 </TabContext>
             </Box>
