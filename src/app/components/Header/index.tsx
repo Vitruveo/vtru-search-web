@@ -72,8 +72,9 @@ const Header = () => {
                         onClick={() => {
                             window.open(`${STUDIO_BASE_URL}/login`, '_blank');
                         }}
+                        sx={{ borderRadius: 0.5, display: 'flex', gap: 0.4 }}
                     >
-                        <IconPlus size={18} />
+                        <IconPlus size={16} />
                         <Image src="/images/logos/VTRU_Studio.png" width={18} height={18} alt="studio logo" />
                     </Button>
                     <Rss />
