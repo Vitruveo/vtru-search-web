@@ -1,21 +1,18 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Stack from '@mui/material/Stack';
-import { Theme } from '@mui/material/styles';
-import Toolbar from '@mui/material/Toolbar';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { styled } from '@mui/material/styles';
-import { IconMenu2, IconMoon, IconSun } from '@tabler/icons-react';
-import { useSelector } from '@/store/hooks';
+import Image from 'next/image';
 import { useDispatch } from 'react-redux';
-import Logo from '../Shared/Logo';
-import Language from '../Language';
-import { AvatarProfile } from '../AvatarProfile';
-import { Rss } from '../Rss';
+import { AppBar, Box, Button, IconButton, Stack, Toolbar } from '@mui/material';
+import { styled, Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { IconMenu2, IconMoon, IconPlus, IconSun } from '@tabler/icons-react';
+import { useSelector } from '@/store/hooks';
 import { actions } from '@/features/layout';
 import { customizerActionsCreators } from '@/features/customizer';
+import { STUDIO_BASE_URL } from '@/constants/api';
+import Language from '../Language';
+import { AvatarProfile } from '../AvatarProfile';
+import Logo from '../Shared/Logo';
+import { Rss } from '../Rss';
 
 const Header = () => {
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
@@ -70,6 +67,15 @@ const Header = () => {
                     <IconButton onClick={handleToggleTheme}>
                         {customizer.activeMode === 'dark' ? <IconSun /> : <IconMoon />}
                     </IconButton>
+                    <Button
+                        variant="contained"
+                        onClick={() => {
+                            window.open(`${STUDIO_BASE_URL}/login`, '_blank');
+                        }}
+                    >
+                        <IconPlus size={18} />
+                        <Image src="/images/logos/VTRU_Studio.png" width={18} height={18} alt="studio logo" />
+                    </Button>
                     <Rss />
                     <Language />
                     {isLogged && <AvatarProfile />}
