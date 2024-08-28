@@ -39,21 +39,15 @@ import Slider from '../../../components/Slider';
 import { useTheme } from '@mui/material/styles';
 
 const AssetsList = () => {
-    const params = new URLSearchParams(window.location.search);
-    const searchParamsHook = useSearchParams();
     const dispatch = useDispatch();
     const theme = useTheme();
+    const params = new URLSearchParams(window.location.search);
 
-    const grid = searchParamsHook.get('grid');
-    const video = searchParamsHook.get('video');
+    const grid = params.get('grid');
+    const video = params.get('video');
     const creatorId = params.get('creatorId');
 
-    const paramsToCurate = new URLSearchParams(window.location.search);
-
-    const hasVideo = paramsToCurate.has('video');
-    const hasGrid = paramsToCurate.has('grid');
-
-    const hasCurated = hasVideo || hasGrid;
+    const hasCurated = grid || video;
 
     const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
@@ -61,7 +55,7 @@ const AssetsList = () => {
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
     const [sortOrder, setSortOrder] = useState<string>('latest');
     const [isIncludeSold, setIsIncludeSold] = useState<boolean>(false);
-    const [isIncludeGroupByCreator, setIsIncludeGroupByCreator] = useState<boolean>(false);
+    const [isIncludeGroupByCreator, setIsIncludeGroupByCreator] = useState<boolean>(true);
     const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
@@ -126,6 +120,10 @@ const AssetsList = () => {
             curateStack.activate();
             setSelected(assets.filter((asset) => idsFromURL.includes(asset._id)));
         }
+    }, []);
+
+    useEffect(() => {
+        if (grid || video) setIsIncludeGroupByCreator(false);
     }, []);
 
     useEffect(() => {
@@ -237,8 +235,14 @@ const AssetsList = () => {
 
         if (!isIncludeGroupByCreator) {
             generateQueryParam('creatorId', '');
+            generateQueryParam('grid', '');
+            generateQueryParam('video', '');
+
             dispatch(actions.setInitialPage());
             dispatch(actionsFilters.resetCreatorId());
+
+            dispatch(actionsFilters.clearGrid());
+            dispatch(actionsFilters.clearVideo());
         }
 
         dispatch(

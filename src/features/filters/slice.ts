@@ -195,6 +195,18 @@ export const filterSlice = createSlice({
         changeCreatorId: (state, action: PayloadAction<string>) => {
             state.creatorId = action.payload;
         },
+        clearGrid: (state) => {
+            state.grid = {
+                assets: [],
+                title: '',
+            };
+        },
+        clearVideo: (state) => {
+            state.video = {
+                assets: [],
+                title: '',
+            };
+        },
         resetCreatorId: (state) => {
             state.creatorId = '';
         },

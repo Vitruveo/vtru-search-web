@@ -51,6 +51,15 @@ export const assetsSlice = createSlice({
         ) => {
             state.groupByCreator = action.payload;
         },
+        noGroupByCreator: (state) => {
+            state.groupByCreator = {
+                active: false,
+                name: '',
+            };
+            state.data.page = 1;
+            state.sort.order = 'latest';
+            state.sort.sold = 'no';
+        },
         resetGroupByCreator: (state) => {
             state.groupByCreator = {
                 active: true,
