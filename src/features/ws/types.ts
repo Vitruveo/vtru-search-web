@@ -1,6 +1,7 @@
 export interface InitialState {
     grid: {
         path: string;
+        url: string;
         loading: boolean;
     };
 }

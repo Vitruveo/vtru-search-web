@@ -4,6 +4,7 @@ import { InitialState, GridUploadParams } from './types';
 const initialState: InitialState = {
     grid: {
         path: '',
+        url: '',
         loading: false,
     },
 };
@@ -15,9 +16,17 @@ export const wsSlice = createSlice({
         watchEvents: () => {},
         clearGrid: (state) => {
             state.grid.path = '';
+            state.grid.url = '';
         },
-        setGrid: (state, action: PayloadAction<string>) => {
-            state.grid.path = action.payload;
+        setGrid: (state, action: PayloadAction<Omit<InitialState['grid'], 'loading'>>) => {
+            state.grid.path = action.payload.path;
+            state.grid.url = action.payload.url;
+        },
+        startLoading: (state) => {
+            state.grid.loading = true;
+        },
+        stopLoading: (state) => {
+            state.grid.loading = false;
         },
         gridUpload: (_state, _action: PayloadAction<GridUploadParams>) => {},
     },

@@ -5,13 +5,11 @@ import { Box, Button, Grid, Typography } from '@mui/material';
 import Image from 'next/image';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { ShareButton } from './ShareButton';
-import html2canvas from 'html2canvas';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/ws';
 import { socket } from '@/services/socket';
 import { createTwitterIntent } from '@/utils/twitter';
 import { API_BASE_URL } from '@/constants/api';
-import LinearProgressWithLabel from '../LinearProgressWithLabel';
 
 interface GridStackProps {
     selectedAssets: Asset[];
@@ -33,7 +31,6 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
     const { grid } = useSelector((state) => state.ws);
     const [selected, setSelected] = useState('2x2');
     const [confirmedGrid, setConfirmedGrid] = useState(false);
-    const [loadingRequest, setLoadingRequest] = useState(false);
 
     useEffect(() => {
         if (socket.io) dispatch(actions.watchEvents());
@@ -147,13 +144,13 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                         ))}
                     </Box>
                 </Box>
-                {grid.loading && <Typography variant="caption">Request upload image grid...</Typography>}
+                {grid.loading && <Typography variant="caption">Generating image grid...</Typography>}
                 {grid.path && (
                     <Box display={'flex'} justifyContent={'center'}>
                         <ShareButton
                             twitterURL={twitterShareURL}
                             contentToCopy={`${url}?c=${Date.now()}${extra}`}
-                            url={''}
+                            url={grid.url}
                             downloadable
                             title={title}
                         />

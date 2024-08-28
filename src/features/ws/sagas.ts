@@ -12,6 +12,7 @@ import store from '@/store';
 function* gridUpload(action: PayloadAction<GridUploadParams>) {
     try {
         yield put(actions.clearGrid());
+        yield put(actions.startLoading());
 
         const token: string = yield select((state) => state.creator.token);
         yield call(axios.post, `${API_BASE_URL}/upload/grid`, action.payload, {
@@ -26,7 +27,13 @@ function* gridUpload(action: PayloadAction<GridUploadParams>) {
 
 function* watchEvents() {
     yield socket.io?.on('userNotification', (data: FinishedGridPayload) => {
-        store.dispatch(actions.setGrid(data.notification.path));
+        store.dispatch(
+            actions.setGrid({
+                path: data.notification.path,
+                url: data.notification.url,
+            })
+        );
+        store.dispatch(actions.stopLoading());
     });
 }
 
