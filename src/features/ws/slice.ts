@@ -1,32 +1,34 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { InitialState, RequestUploadParams, UploadPayload } from './types';
+import { InitialState, GridUploadParams } from './types';
 
 const initialState: InitialState = {
-    preSignedURL: '',
-    shareAvailable: false,
-    path: '',
-    uploadProgress: 0,
+    grid: {
+        path: '',
+        url: '',
+        loading: false,
+    },
 };
 
 export const wsSlice = createSlice({
     name: 'ws',
     initialState,
     reducers: {
-        requestUpload: (_state, _action: PayloadAction<RequestUploadParams>) => {},
         watchEvents: () => {},
-        setPresignedURL: (state, action: PayloadAction<string>) => {
-            state.preSignedURL = action.payload;
+        clearGrid: (state) => {
+            state.grid.path = '';
+            state.grid.url = '';
         },
-        setPath: (state, action: PayloadAction<string>) => {
-            state.path = action.payload;
+        setGrid: (state, action: PayloadAction<Omit<InitialState['grid'], 'loading'>>) => {
+            state.grid.path = action.payload.path;
+            state.grid.url = action.payload.url;
         },
-        setShareAvailable: (state, action: PayloadAction<boolean>) => {
-            state.shareAvailable = action.payload;
+        startLoading: (state) => {
+            state.grid.loading = true;
         },
-        setUploadProgress: (state, action: PayloadAction<number>) => {
-            state.uploadProgress = action.payload;
+        stopLoading: (state) => {
+            state.grid.loading = false;
         },
-        upload: (_state, _action: PayloadAction<UploadPayload>) => {},
+        gridUpload: (_state, _action: PayloadAction<GridUploadParams>) => {},
     },
 });
 

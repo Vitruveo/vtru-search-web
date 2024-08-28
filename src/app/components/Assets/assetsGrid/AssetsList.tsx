@@ -63,6 +63,7 @@ const AssetsList = () => {
     const drawerStack = useToggle();
 
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
     const { data: assets, totalPage, page: currentPage } = useSelector((state) => state.assets.data);
     const { sort, maxPrice } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
@@ -297,7 +298,8 @@ const AssetsList = () => {
                         styles={{
                             control: (base, state) => ({
                                 ...base,
-                                minWidth: '240px',
+                                minWidth: lgUp ? '240px' : '100px',
+                                maxWidth: lgUp ? '' : '150px',
                                 borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                                 backgroundColor: theme.palette.background.paper,
                                 boxShadow: '#00d6f4',
@@ -359,7 +361,7 @@ const AssetsList = () => {
                             )}
 
                             {!lgUp && (
-                                <Badge badgeContent={selected.length} color="primary">
+                                <Badge badgeContent={selected.length} color="primary" style={{ marginLeft: 2 }}>
                                     <IconCopy width={20} color={iconColor} />
                                 </Badge>
                             )}
@@ -369,7 +371,7 @@ const AssetsList = () => {
                     <Box display="flex" alignItems="center">
                         <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
                         <Box display={'flex'} gap={1}>
-                            <Typography variant={lgUp ? 'h4' : 'h5'}>
+                            <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
                                 {language['search.assetList.curateStack'] as string}
                             </Typography>
                             {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
@@ -440,7 +442,7 @@ const AssetsList = () => {
                             styles={{
                                 control: (base, state) => ({
                                     ...base,
-                                    minWidth: '240px',
+                                    minWidth: '250px',
                                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                                     backgroundColor: theme.palette.background.paper,
                                     boxShadow: '#00d6f4',
@@ -602,6 +604,7 @@ const AssetsList = () => {
                 </Grid>
                 <Box
                     mt={4}
+                    mb={2}
                     display={totalPage === 0 ? 'none' : 'flex'}
                     justifyContent="center"
                     width="100%"
@@ -617,7 +620,13 @@ const AssetsList = () => {
                         />
                     )}
                 </Box>
-                <Box display={totalPage === 0 ? 'none' : 'flex'} justifyContent="flex-end" width="100%" mr={4} mb={4}>
+                <Box
+                    display={totalPage === 0 ? 'none' : 'flex'}
+                    justifyContent="flex-end"
+                    width="100%"
+                    mr={4}
+                    mb={lgUp ? 4 : 8}
+                >
                     <Button onClick={handleScrollToTop}>Scroll to top</Button>
                 </Box>
             </Grid>
