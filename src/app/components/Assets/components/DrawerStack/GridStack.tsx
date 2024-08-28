@@ -28,17 +28,16 @@ const sizes = {
 export default function GridStack({ selectedAssets, title, setGenerating }: GridStackProps) {
     const captureRef = useRef<HTMLDivElement | null>(null);
     const dispatch = useDispatch();
-    const { preSignedURL, shareAvailable, path, uploadProgress } = useSelector((state) => state.ws);
-    const [selected, setSelected] = useState('2x2');
-    const [confirmedGrid, setConfirmedGrid] = useState(false);
-    const [screenShot, setScreenShot] = useState('');
-    const [loadingSreenshot, setLoadingScreenshot] = useState(false);
-    const [loadingRequest, setLoadingRequest] = useState(false);
     const { language } = useI18n();
 
+    const { grid } = useSelector((state) => state.ws);
+    const [selected, setSelected] = useState('2x2');
+    const [confirmedGrid, setConfirmedGrid] = useState(false);
+    const [loadingRequest, setLoadingRequest] = useState(false);
+
     useEffect(() => {
-        if (confirmedGrid) setGenerating(!shareAvailable);
-    }, [confirmedGrid, shareAvailable]);
+        if (socket.io) dispatch(actions.watchEvents());
+    }, [socket]);
 
     const updatedAssets = selectedAssets.map((asset) => {
         const isVideo = asset?.formats?.preview?.path?.match(/\.(mp4|webm|ogg)$/) != null;
@@ -57,71 +56,23 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
         return asset;
     });
 
-    const captureScreenshot = async () => {
-        try {
-            setLoadingScreenshot(true);
-            if (captureRef.current) {
-                captureRef.current.style.cssText = `
-                    display: grid;
-                    gap: 20px;
-                    grid-template-columns: repeat(${selected[0]}, 1fr);
-                    position: absolute;
-                    top: -9999px;
-                    left: -9999px;
-                    objectFit: 'contain',
-                `;
-                document.body.style.overflow = 'hidden';
-                const canvas = await html2canvas(captureRef.current, {
-                    backgroundColor: null,
-                });
-                captureRef.current!.style.display = 'none';
-                setScreenShot(canvas.toDataURL());
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoadingScreenshot(false);
-        }
+    const handleConfirmGrid = async () => {
+        setConfirmedGrid(true);
+
+        dispatch(
+            actions.gridUpload({
+                assetsId: selectedAssets.map((item) => item._id.toLowerCase()),
+                assets: selectedAssets.map((item) => item.formats.preview.path),
+                fees: 10,
+                size: selected === '2x2' ? 2 : selected === '3x3' ? 3 : 4,
+                title,
+            })
+        );
+
+        await new Promise((resolve) => setTimeout(resolve, 2000));
     };
 
-    useEffect(() => {
-        dispatch(actions.setUploadProgress(0));
-        dispatch(actions.setShareAvailable(false));
-        if (confirmedGrid) captureScreenshot();
-    }, [confirmedGrid]);
-
-    useEffect(() => {
-        if (screenShot) {
-            setLoadingRequest(true);
-            dispatch(
-                actions.requestUpload({
-                    assets: selectedAssets.map((item) => item._id),
-                    fees: 10,
-                    title,
-                })
-            );
-        }
-    }, [screenShot]);
-
-    useEffect(() => {
-        if (socket.io) dispatch(actions.watchEvents());
-    }, [socket]);
-
-    useEffect(() => {
-        if (preSignedURL && screenShot) {
-            setLoadingRequest(false);
-            dispatch(
-                actions.upload({
-                    preSignedURL,
-                    screenShot,
-                })
-            );
-        }
-    }, [preSignedURL, screenShot]);
-
-    const handleConfirmGrid = () => setConfirmedGrid(true);
-
-    const [creatorId, type, timestamp] = path.split('/');
+    const [creatorId, type, timestamp] = grid.path.split('/');
 
     const url = `${API_BASE_URL}/search/grid`;
     const extra = `title=${encodeURIComponent(title)}&creatorId=${encodeURIComponent(creatorId)}&type=${encodeURIComponent(type)}&timestamp=${encodeURIComponent(timestamp)}`;
@@ -196,20 +147,17 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                         ))}
                     </Box>
                 </Box>
-                {loadingSreenshot && <Typography variant="caption">Creating image grid...</Typography>}
-                {loadingRequest && <Typography variant="caption">Request upload image grid...</Typography>}
-                {shareAvailable ? (
+                {grid.loading && <Typography variant="caption">Request upload image grid...</Typography>}
+                {grid.path && (
                     <Box display={'flex'} justifyContent={'center'}>
                         <ShareButton
                             twitterURL={twitterShareURL}
                             contentToCopy={`${url}?c=${Date.now()}${extra}`}
-                            url={screenShot}
+                            url={''}
                             downloadable
                             title={title}
                         />
                     </Box>
-                ) : (
-                    <LinearProgressWithLabel value={uploadProgress} />
                 )}
             </>
         );
