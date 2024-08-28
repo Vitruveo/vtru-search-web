@@ -6,8 +6,7 @@ import { IconPlayerPause, IconPlayerPlay } from '@tabler/icons-react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import audios from '../../../../../../public/data/sounds.json';
 import { actions } from '@/features/assets';
-import { createTwitterIntent } from '@/utils/twitter';
-import { createBackLink } from '@/utils/url-assets';
+import { createTwitterIntent, generateUrlToCopyOnTwitter } from '@/utils/twitter';
 import { Asset } from '@/features/assets/types';
 import { API_BASE_URL } from '@/constants/api';
 
@@ -72,10 +71,13 @@ export default function VideoStack({
         setPublished(true);
     };
 
+    const url = `${API_BASE_URL}/search/${creatorId}/html`;
+    const extra = `timestamp=${encodeURIComponent(timestamp)}`;
+
     const twitterShareURL = createTwitterIntent({
-        url: `${API_BASE_URL}/search/${creatorId}/html`,
+        url,
+        extra,
         hashtags: 'Vitruveo,VTRUSuite',
-        extra: `timestamp=${encodeURIComponent(timestamp)}`,
         text: `${language['search.checkoutMyNewVideo']}`,
     });
 
@@ -101,7 +103,7 @@ export default function VideoStack({
                             twitterURL={twitterShareURL}
                             url={video}
                             downloadable
-                            contentToCopy={createBackLink(timestamp)}
+                            contentToCopy={generateUrlToCopyOnTwitter({ url, timestamp, extra })}
                             title={title}
                         />
                     </Box>
