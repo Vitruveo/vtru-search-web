@@ -1,16 +1,16 @@
 export interface InitialState {
-    preSignedURL: string | null;
-    shareAvailable: boolean;
-    path: string;
-    uploadProgress: number;
+    grid: {
+        path: string;
+        url: string;
+        loading: boolean;
+    };
 }
 
-export interface PreSignedURLPayload {
-    preSignedURL: string;
-    transactionId: string;
-    path: string;
-    origin: 'asset' | 'profile';
-    method: 'PUT' | 'DELETE';
+export interface FinishedGridPayload {
+    notification: {
+        path: string;
+        url: string;
+    };
 }
 
 export interface UploadPayload {
@@ -18,7 +18,10 @@ export interface UploadPayload {
     screenShot: string;
 }
 
-export interface RequestUploadParams {
+export interface GridUploadParams {
+    assetsId: string[];
     assets: string[];
     fees: number;
+    size: number;
+    title: string;
 }
