@@ -1,7 +1,7 @@
 import { useI18n } from '@/app/hooks/useI18n';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { Asset } from '@/features/assets/types';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import Image from 'next/image';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { ShareButton } from './ShareButton';
@@ -209,7 +209,7 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                 <Typography fontWeight={'bold'}> 🖼️ An image grid looks great on social media</Typography>
             </Box>
 
-            <Box display={'flex'} flexDirection={'row'} gap={5} mt={6} mb={6}>
+            <Grid container mt={4} mb={4} gap={4} justifyContent={'center'}>
                 <Box
                     display={'grid'}
                     gridTemplateColumns={'repeat(2, 1fr)'}
@@ -294,7 +294,7 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                         </div>
                     ))}
                 </Box>
-            </Box>
+            </Grid>
 
             <Typography variant="caption">Note: Grid is limited to the first 16 curated items.</Typography>
             <Button
