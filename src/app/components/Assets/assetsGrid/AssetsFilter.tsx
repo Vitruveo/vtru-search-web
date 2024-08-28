@@ -434,7 +434,12 @@ const Filters = () => {
                 title={language['search.assetFilter.portfolio'] as string}
                 numberOfFilters={wallets.length}
             >
-                <PortfolioItem handleAddWallet={(value?: string) => handleAddWallet(value)} />
+                <PortfolioItem
+                    handleAddWallet={(value?: string) => {
+                        handleAddWallet(value);
+                        syncFiltersWithUrl([...wallets, value!], 'portfolio_wallets');
+                    }}
+                />
                 <Wallets
                     wallets={wallets}
                     onRemove={(wallet: string) =>
