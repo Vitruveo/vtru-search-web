@@ -8,7 +8,7 @@ import { PERSIST_KEY, PERSIST_VERSION } from '@/constants/store';
 // sagas
 import { assetsSagas } from '@/features/assets';
 import { creatorSagas } from '@/features/creator';
-import { wsSagas } from '@/features/ws';
+import wsSagas from '@/features/ws/sagas';
 
 // slices
 import { filterSlice } from '@/features/filters';
