@@ -94,11 +94,16 @@ const AssetItem = ({
                 <>
                     <Badge
                         badgeContent={countByCreator}
+                        max={99}
                         color="primary"
-                        style={{
+                        sx={{
                             position: 'absolute',
-                            top: 0,
-                            right: 0,
+                            right: -10,
+                            top: -10,
+                            '& .MuiBadge-badge': {
+                                transform: 'scale(1.5)',
+                                fontSize: '1rem',
+                            },
                         }}
                     />
                     <DeckEffect
