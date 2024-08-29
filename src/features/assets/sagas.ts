@@ -256,9 +256,10 @@ function* getGrid(action: PayloadAction<string>) {
             yield put(
                 actionsFilter.changeGrid({
                     assets: response.data.data.grid.search.grid[0].assets,
-                    title: response.data.data.grid.search.grid[0].title,
+                    title: response.data.data.grid.search.grid[0]?.title || '',
                 })
             );
+            yield put(actionsFilter.resetCreatorId());
             yield put(actions.noGroupByCreator());
             yield put(actions.setInitialPage());
             yield put(actions.loadAssets({ page: 1 }));
@@ -287,9 +288,10 @@ function* getVideo(action: PayloadAction<string>) {
             yield put(
                 actionsFilter.changeVideo({
                     assets: response.data.data.video.search.video[0].assets,
-                    title: response.data.data.video.search.video[0].title,
+                    title: response.data.data.video.search.video[0]?.title || '',
                 })
             );
+            yield put(actionsFilter.resetCreatorId());
             yield put(actions.noGroupByCreator());
             yield put(actions.setInitialPage());
             yield put(actions.loadAssets({ page: 1 }));
