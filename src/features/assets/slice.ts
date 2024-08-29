@@ -76,6 +76,9 @@ export const assetsSlice = createSlice({
         finishLoading: (state) => {
             state.loading = false;
         },
+        initialPage: (state) => {
+            state.data.page = 1;
+        },
         setError: (state, action) => {
             state.error = action.payload;
         },

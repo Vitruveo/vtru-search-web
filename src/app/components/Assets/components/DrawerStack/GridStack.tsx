@@ -1,17 +1,15 @@
 import { useI18n } from '@/app/hooks/useI18n';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { Asset } from '@/features/assets/types';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import Image from 'next/image';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { ShareButton } from './ShareButton';
-import html2canvas from 'html2canvas';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/ws';
 import { socket } from '@/services/socket';
-import { createTwitterIntent } from '@/utils/twitter';
+import { createTwitterIntent, generateUrlToCopyOnTwitter } from '@/utils/twitter';
 import { API_BASE_URL } from '@/constants/api';
-import LinearProgressWithLabel from '../LinearProgressWithLabel';
 
 interface GridStackProps {
     selectedAssets: Asset[];
@@ -28,17 +26,15 @@ const sizes = {
 export default function GridStack({ selectedAssets, title, setGenerating }: GridStackProps) {
     const captureRef = useRef<HTMLDivElement | null>(null);
     const dispatch = useDispatch();
-    const { preSignedURL, shareAvailable, path, uploadProgress } = useSelector((state) => state.ws);
-    const [selected, setSelected] = useState('2x2');
-    const [confirmedGrid, setConfirmedGrid] = useState(false);
-    const [screenShot, setScreenShot] = useState('');
-    const [loadingSreenshot, setLoadingScreenshot] = useState(false);
-    const [loadingRequest, setLoadingRequest] = useState(false);
     const { language } = useI18n();
 
+    const { grid } = useSelector((state) => state.ws);
+    const [selected, setSelected] = useState('2x2');
+    const [confirmedGrid, setConfirmedGrid] = useState(false);
+
     useEffect(() => {
-        if (confirmedGrid) setGenerating(!shareAvailable);
-    }, [confirmedGrid, shareAvailable]);
+        if (socket.io) dispatch(actions.watchEvents());
+    }, [socket]);
 
     const updatedAssets = selectedAssets.map((asset) => {
         const isVideo = asset?.formats?.preview?.path?.match(/\.(mp4|webm|ogg)$/) != null;
@@ -57,71 +53,21 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
         return asset;
     });
 
-    const captureScreenshot = async () => {
-        try {
-            setLoadingScreenshot(true);
-            if (captureRef.current) {
-                captureRef.current.style.cssText = `
-                    display: grid;
-                    gap: 20px;
-                    grid-template-columns: repeat(${selected[0]}, 1fr);
-                    position: absolute;
-                    top: -9999px;
-                    left: -9999px;
-                    objectFit: 'contain',
-                `;
-                document.body.style.overflow = 'hidden';
-                const canvas = await html2canvas(captureRef.current, {
-                    backgroundColor: null,
-                });
-                captureRef.current!.style.display = 'none';
-                setScreenShot(canvas.toDataURL());
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoadingScreenshot(false);
-        }
+    const handleConfirmGrid = async () => {
+        setConfirmedGrid(true);
+
+        dispatch(
+            actions.gridUpload({
+                assetsId: selectedAssets.map((item) => item._id.toLowerCase()),
+                assets: selectedAssets.map((item) => item.formats.preview.path),
+                fees: 10,
+                size: selected === '2x2' ? 2 : selected === '3x3' ? 3 : 4,
+                title,
+            })
+        );
     };
 
-    useEffect(() => {
-        dispatch(actions.setUploadProgress(0));
-        dispatch(actions.setShareAvailable(false));
-        if (confirmedGrid) captureScreenshot();
-    }, [confirmedGrid]);
-
-    useEffect(() => {
-        if (screenShot) {
-            setLoadingRequest(true);
-            dispatch(
-                actions.requestUpload({
-                    assets: selectedAssets.map((item) => item._id),
-                    fees: 10,
-                    title,
-                })
-            );
-        }
-    }, [screenShot]);
-
-    useEffect(() => {
-        if (socket.io) dispatch(actions.watchEvents());
-    }, [socket]);
-
-    useEffect(() => {
-        if (preSignedURL && screenShot) {
-            setLoadingRequest(false);
-            dispatch(
-                actions.upload({
-                    preSignedURL,
-                    screenShot,
-                })
-            );
-        }
-    }, [preSignedURL, screenShot]);
-
-    const handleConfirmGrid = () => setConfirmedGrid(true);
-
-    const [creatorId, type, timestamp] = path.split('/');
+    const [creatorId, type, timestamp] = grid.path.split('/');
 
     const url = `${API_BASE_URL}/search/grid`;
     const extra = `title=${encodeURIComponent(title)}&creatorId=${encodeURIComponent(creatorId)}&type=${encodeURIComponent(type)}&timestamp=${encodeURIComponent(timestamp)}`;
@@ -159,7 +105,6 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                                         backgroundColor: '#EEEEEE',
                                         height: 300,
                                         width: 300,
-                                        objectFit: 'contain',
                                     }}
                                 >
                                     {updatedAssets[index] && (
@@ -167,7 +112,7 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                                             src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
                                             width={300}
                                             height={300}
-                                            alt={`asset in grid ${selected}`}
+                                            alt={''}
                                         />
                                     )}
                                 </div>
@@ -196,20 +141,17 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                         ))}
                     </Box>
                 </Box>
-                {loadingSreenshot && <Typography variant="caption">Creating image grid...</Typography>}
-                {loadingRequest && <Typography variant="caption">Request upload image grid...</Typography>}
-                {shareAvailable ? (
+                {grid.loading && <Typography variant="caption">Generating image grid...</Typography>}
+                {grid.path && (
                     <Box display={'flex'} justifyContent={'center'}>
                         <ShareButton
                             twitterURL={twitterShareURL}
-                            contentToCopy={`${url}?c=${Date.now()}${extra}`}
-                            url={screenShot}
+                            contentToCopy={generateUrlToCopyOnTwitter({ url, timestamp, extra })}
+                            url={grid.url}
                             downloadable
                             title={title}
                         />
                     </Box>
-                ) : (
-                    <LinearProgressWithLabel value={uploadProgress} />
                 )}
             </>
         );
@@ -221,7 +163,7 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                 <Typography fontWeight={'bold'}> 🖼️ An image grid looks great on social media</Typography>
             </Box>
 
-            <Box display={'flex'} flexDirection={'row'} gap={5} mt={6} mb={6}>
+            <Grid container mt={4} mb={4} gap={4} justifyContent={'center'}>
                 <Box
                     display={'grid'}
                     gridTemplateColumns={'repeat(2, 1fr)'}
@@ -309,7 +251,7 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                         </div>
                     ))}
                 </Box>
-            </Box>
+            </Grid>
 
             <Typography variant="caption">Note: Grid is limited to the first 16 curated items.</Typography>
             <Button

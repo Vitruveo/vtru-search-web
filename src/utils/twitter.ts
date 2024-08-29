@@ -19,3 +19,13 @@ export const createTwitterIntent = ({ url, hashtags, text, extra }: CreateTwitte
 
     return intent.toString();
 };
+
+export interface GenerateUrlToCopyOnTwitterParams {
+    url: string;
+    timestamp: string;
+    extra?: string;
+}
+export const generateUrlToCopyOnTwitter = ({ url, timestamp, extra }: GenerateUrlToCopyOnTwitterParams) => {
+    if (extra) return `${url.trim()}?${extra.trim()}&c=${timestamp}`;
+    return `${url.trim()}?c=${timestamp}`;
+};
