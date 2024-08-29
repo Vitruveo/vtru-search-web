@@ -274,7 +274,8 @@ function* getGrid(action: PayloadAction<string>) {
                     title: response.data.data.grid.search.grid[0].title,
                 })
             );
-            yield put(actions.resetGroupByCreator());
+            yield put(actions.noGroupByCreator());
+            yield put(actions.setInitialPage());
             yield put(actions.loadAssets({ page: 1 }));
         }
     } catch (error) {
@@ -304,7 +305,8 @@ function* getVideo(action: PayloadAction<string>) {
                     title: response.data.data.video.search.video[0].title,
                 })
             );
-            yield put(actions.resetGroupByCreator());
+            yield put(actions.noGroupByCreator());
+            yield put(actions.setInitialPage());
             yield put(actions.loadAssets({ page: 1 }));
         }
     } catch (error) {

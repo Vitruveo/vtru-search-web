@@ -39,21 +39,15 @@ import Slider from '../../../components/Slider';
 import { useTheme } from '@mui/material/styles';
 
 const AssetsList = () => {
-    const params = new URLSearchParams(window.location.search);
-    const searchParamsHook = useSearchParams();
     const dispatch = useDispatch();
     const theme = useTheme();
+    const params = new URLSearchParams(window.location.search);
 
-    const grid = searchParamsHook.get('grid');
-    const video = searchParamsHook.get('video');
+    const grid = params.get('grid');
+    const video = params.get('video');
     const creatorId = params.get('creatorId');
 
-    const paramsToCurate = new URLSearchParams(window.location.search);
-
-    const hasVideo = paramsToCurate.has('video');
-    const hasGrid = paramsToCurate.has('grid');
-
-    const hasCurated = hasVideo || hasGrid;
+    const hasCurated = grid || video;
 
     const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
@@ -61,7 +55,7 @@ const AssetsList = () => {
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
     const [sortOrder, setSortOrder] = useState<string>('latest');
     const [isIncludeSold, setIsIncludeSold] = useState<boolean>(false);
-    const [isIncludeGroupByCreator, setIsIncludeGroupByCreator] = useState<boolean>(false);
+    const [isIncludeGroupByCreator, setIsIncludeGroupByCreator] = useState<boolean>(true);
     const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
@@ -69,6 +63,7 @@ const AssetsList = () => {
     const drawerStack = useToggle();
 
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
     const { data: assets, totalPage, page: currentPage } = useSelector((state) => state.assets.data);
     const { sort, maxPrice } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
@@ -126,6 +121,10 @@ const AssetsList = () => {
             curateStack.activate();
             setSelected(assets.filter((asset) => idsFromURL.includes(asset._id)));
         }
+    }, []);
+
+    useEffect(() => {
+        if (grid || video) setIsIncludeGroupByCreator(false);
     }, []);
 
     useEffect(() => {
@@ -237,8 +236,14 @@ const AssetsList = () => {
 
         if (!isIncludeGroupByCreator) {
             generateQueryParam('creatorId', '');
+            generateQueryParam('grid', '');
+            generateQueryParam('video', '');
+
             dispatch(actions.setInitialPage());
             dispatch(actionsFilters.resetCreatorId());
+
+            dispatch(actionsFilters.clearGrid());
+            dispatch(actionsFilters.clearVideo());
         }
 
         dispatch(
@@ -293,7 +298,8 @@ const AssetsList = () => {
                         styles={{
                             control: (base, state) => ({
                                 ...base,
-                                minWidth: '240px',
+                                minWidth: lgUp ? '240px' : '100px',
+                                maxWidth: lgUp ? '' : '150px',
                                 borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                                 backgroundColor: theme.palette.background.paper,
                                 boxShadow: '#00d6f4',
@@ -355,7 +361,7 @@ const AssetsList = () => {
                             )}
 
                             {!lgUp && (
-                                <Badge badgeContent={selected.length} color="primary">
+                                <Badge badgeContent={selected.length} color="primary" style={{ marginLeft: 2 }}>
                                     <IconCopy width={20} color={iconColor} />
                                 </Badge>
                             )}
@@ -365,7 +371,7 @@ const AssetsList = () => {
                     <Box display="flex" alignItems="center">
                         <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
                         <Box display={'flex'} gap={1}>
-                            <Typography variant={lgUp ? 'h4' : 'h5'}>
+                            <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
                                 {language['search.assetList.curateStack'] as string}
                             </Typography>
                             {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
@@ -397,8 +403,13 @@ const AssetsList = () => {
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>
-                    <Box width="100%" display="flex" alignItems="flex-end" justifyContent="space-between">
-                        {hasCurated || hasIncludesGroup.name ? (
+                    <Box
+                        width="100%"
+                        display="flex"
+                        alignItems="flex-end"
+                        justifyContent={lgUp || smUp ? 'space-between' : 'center'}
+                    >
+                        {hasCurated || !hasIncludesGroup.active ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
                                 {hasCurated && (
                                     <Typography variant="h4">{gridTitle || videoTitle || 'Curated arts'}</Typography>
@@ -436,7 +447,7 @@ const AssetsList = () => {
                             styles={{
                                 control: (base, state) => ({
                                     ...base,
-                                    minWidth: '240px',
+                                    minWidth: '250px',
                                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                                     backgroundColor: theme.palette.background.paper,
                                     boxShadow: '#00d6f4',
@@ -598,6 +609,7 @@ const AssetsList = () => {
                 </Grid>
                 <Box
                     mt={4}
+                    mb={2}
                     display={totalPage === 0 ? 'none' : 'flex'}
                     justifyContent="center"
                     width="100%"
@@ -609,11 +621,17 @@ const AssetsList = () => {
                             page={currentPage}
                             onChange={(_event, value) => dispatch(actions.setCurrentPage(value))}
                             color="primary"
-                            size="large"
+                            size={lgUp ? 'large' : 'medium'}
                         />
                     )}
                 </Box>
-                <Box display={totalPage === 0 ? 'none' : 'flex'} justifyContent="flex-end" width="100%" mr={4} mb={4}>
+                <Box
+                    display={totalPage === 0 ? 'none' : 'flex'}
+                    justifyContent="flex-end"
+                    width="100%"
+                    mr={4}
+                    mb={lgUp ? 4 : 8}
+                >
                     <Button onClick={handleScrollToTop}>Scroll to top</Button>
                 </Box>
             </Grid>

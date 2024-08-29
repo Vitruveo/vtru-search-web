@@ -23,6 +23,7 @@ const BlankCard = ({ children, className, sx }: Props) => {
                 position: 'relative',
                 sx,
                 height: '100%',
+                backgroundColor: theme.palette.grey[100],
             }}
             style={{ backgroundColor: theme.palette.grey[100] }}
             className={className}
