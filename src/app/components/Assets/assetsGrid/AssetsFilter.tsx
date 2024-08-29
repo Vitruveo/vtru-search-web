@@ -41,10 +41,8 @@ const Filters = () => {
 
     const [isHideNuditychecked, setIsHideNudityChecked] = useState(false);
     const [isHideAIchecked, setIsHideAIChecked] = useState(false);
-    const [isPhotographyChecked, setIsPhotographyChecked] = useState(false);
-    const [isPhysicalArtChecked, setIsPhysicalArtChecked] = useState(false);
-    const [isAnimationChecked, setIsAnimationChecked] = useState(false);
-    const [isDigitalArtChecked, setIsDigitalArtChecked] = useState(false);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    const [selectedObjectTypes, setSelectedObjectTypes] = useState<string[]>([]);
 
     const [contextFilters, setContextFilters] = useState<number>();
     const [taxonomyFilters, setTaxonomyFilters] = useState<number>();
@@ -79,8 +77,18 @@ const Filters = () => {
         setIsHideAIChecked(
             values.taxonomy.aiGeneration.includes('partial') && values.taxonomy.aiGeneration.includes('none')
         );
-        setIsPhotographyChecked(values.taxonomy.category.includes('photography'));
-        setIsPhysicalArtChecked(values.taxonomy.objectType.includes('physicalart'));
+        setSelectedCategories(
+            [
+                values.taxonomy.category.includes('photography') && 'photography',
+                values.taxonomy.category.includes('video') && 'video',
+            ].filter(Boolean) as string[]
+        );
+        setSelectedObjectTypes(
+            [
+                values.taxonomy.objectType.includes('physicalart') && 'physicalart',
+                values.taxonomy.objectType.includes('digitalArt') && 'digitalArt',
+            ].filter(Boolean) as string[]
+        );
     }, [values.context, values.taxonomy, values.creators, values.shortCuts]);
 
     const generateQueryParam = (key: string, value: string) => {
@@ -155,28 +163,36 @@ const Filters = () => {
         );
     };
     const handleChangePhysicalArt = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsPhysicalArtChecked(event.target.checked);
-        syncFiltersWithUrl(event.target.checked ? ['physicalart'] : [], 'taxonomy_objectType');
-        dispatch(
-            actions.change({ key: 'taxonomy', value: { objectType: event.target.checked ? ['physicalart'] : [] } })
-        );
+        const updatedObjectTypes = event.target.checked
+            ? [...selectedObjectTypes, 'physicalart']
+            : selectedObjectTypes.filter((type) => type !== 'physicalart');
+        setSelectedObjectTypes(updatedObjectTypes);
+        syncFiltersWithUrl(updatedObjectTypes, 'taxonomy_objectType');
+        dispatch(actions.change({ key: 'taxonomy', value: { objectType: updatedObjectTypes } }));
     };
     const handleChangePhotography = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsPhotographyChecked(event.target.checked);
-        syncFiltersWithUrl(event.target.checked ? ['photography'] : [], 'taxonomy_category');
-        dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['photography'] : [] } }));
+        const updatedCategories = event.target.checked
+            ? [...selectedCategories, 'photography']
+            : selectedCategories.filter((type) => type !== 'photography');
+        setSelectedCategories(updatedCategories);
+        syncFiltersWithUrl(updatedCategories, 'taxonomy_category');
+        dispatch(actions.change({ key: 'taxonomy', value: { category: updatedCategories } }));
     };
     const handleChangeAnimation = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsAnimationChecked(event.target.checked);
-        syncFiltersWithUrl(event.target.checked ? ['video'] : [], 'taxonomy_category');
-        dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['video'] : [] } }));
+        const updatedCategories = event.target.checked
+            ? [...selectedCategories, 'video']
+            : selectedCategories.filter((type) => type !== 'video');
+        setSelectedCategories(updatedCategories);
+        syncFiltersWithUrl(updatedCategories, 'taxonomy_category');
+        dispatch(actions.change({ key: 'taxonomy', value: { category: updatedCategories } }));
     };
     const handleChangeDigitalArt = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsDigitalArtChecked(event.target.checked);
-        syncFiltersWithUrl(event.target.checked ? ['digitalart'] : [], 'taxonomy_objectType');
-        dispatch(
-            actions.change({ key: 'taxonomy', value: { objectType: event.target.checked ? ['digitalart'] : [] } })
-        );
+        const updatedObjectTypes = event.target.checked
+            ? [...selectedObjectTypes, 'digitalArt']
+            : selectedObjectTypes.filter((type) => type !== 'digitalArt');
+        setSelectedObjectTypes(updatedObjectTypes);
+        syncFiltersWithUrl(updatedObjectTypes, 'taxonomy_objectType');
+        dispatch(actions.change({ key: 'taxonomy', value: { objectType: updatedObjectTypes } }));
     };
 
     return (
@@ -209,11 +225,21 @@ const Filters = () => {
                     />
 
                     <FormControlLabel
-                        control={<Checkbox onChange={handleChangePhotography} checked={isPhotographyChecked} />}
+                        control={
+                            <Checkbox
+                                onChange={handleChangePhotography}
+                                checked={selectedCategories.includes('photography')}
+                            />
+                        }
                         label={'Photography'}
                     />
                     <FormControlLabel
-                        control={<Checkbox onChange={handleChangePhysicalArt} checked={isPhysicalArtChecked} />}
+                        control={
+                            <Checkbox
+                                onChange={handleChangePhysicalArt}
+                                checked={selectedObjectTypes.includes('physicalart')}
+                            />
+                        }
                         label={'Physical Art'}
                     />
                 </Box>
@@ -223,11 +249,18 @@ const Filters = () => {
                         label={'Hide AI'}
                     />
                     <FormControlLabel
-                        control={<Checkbox onChange={handleChangeAnimation} checked={isAnimationChecked} />}
-                        label={'Animation'}
+                        control={
+                            <Checkbox onChange={handleChangeAnimation} checked={selectedCategories.includes('video')} />
+                        }
+                        label={'animation'}
                     />
                     <FormControlLabel
-                        control={<Checkbox onChange={handleChangeDigitalArt} checked={isDigitalArtChecked} />}
+                        control={
+                            <Checkbox
+                                onChange={handleChangeDigitalArt}
+                                checked={selectedObjectTypes.includes('digitalArt')}
+                            />
+                        }
                         label={'Digital Art'}
                     />
                 </Box>
