@@ -259,6 +259,7 @@ function* getGrid(action: PayloadAction<string>) {
                     title: response.data.data.grid.search.grid[0]?.title || '',
                 })
             );
+            yield put(actionsFilter.clearVideo());
             yield put(actionsFilter.resetCreatorId());
             yield put(actions.noGroupByCreator());
             yield put(actions.setInitialPage());
@@ -291,6 +292,7 @@ function* getVideo(action: PayloadAction<string>) {
                     title: response.data.data.video.search.video[0]?.title || '',
                 })
             );
+            yield put(actionsFilter.clearGrid());
             yield put(actionsFilter.resetCreatorId());
             yield put(actions.noGroupByCreator());
             yield put(actions.setInitialPage());
