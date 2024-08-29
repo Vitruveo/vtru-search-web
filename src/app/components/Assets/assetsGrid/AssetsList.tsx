@@ -409,7 +409,7 @@ const AssetsList = () => {
                         alignItems="flex-end"
                         justifyContent={lgUp || smUp ? 'space-between' : 'center'}
                     >
-                        {hasCurated ? (
+                        {hasCurated || !hasIncludesGroup.active ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
                                 {hasCurated && (
                                     <Typography variant="h4">{gridTitle || videoTitle || 'Curated arts'}</Typography>
