@@ -415,26 +415,28 @@ const AssetsList = () => {
                                     <Typography variant="h4">{gridTitle || videoTitle || 'Curated arts'}</Typography>
                                 )}
                                 {hasIncludesGroup.name && <Typography variant="h4">{hasIncludesGroup.name}</Typography>}
-                                <button
-                                    style={{
-                                        border: 'none',
-                                        background: 'none',
-                                        cursor: 'pointer',
-                                    }}
-                                    onClick={returnToPageOne}
-                                >
-                                    <Typography
-                                        variant="h6"
-                                        color="primary"
-                                        sx={{
-                                            textDecoration: 'underline',
+                                {(hasCurated || hasIncludesGroup.name) && (
+                                    <button
+                                        style={{
+                                            border: 'none',
+                                            background: 'none',
                                             cursor: 'pointer',
-                                            fontSize: 14,
                                         }}
+                                        onClick={returnToPageOne}
                                     >
-                                        Reset search
-                                    </Typography>
-                                </button>
+                                        <Typography
+                                            variant="h6"
+                                            color="primary"
+                                            sx={{
+                                                textDecoration: 'underline',
+                                                cursor: 'pointer',
+                                                fontSize: 14,
+                                            }}
+                                        >
+                                            Reset search
+                                        </Typography>
+                                    </button>
+                                )}
                             </Box>
                         ) : (
                             <Box />

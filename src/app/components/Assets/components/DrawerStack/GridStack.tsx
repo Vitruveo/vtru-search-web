@@ -14,7 +14,6 @@ import { API_BASE_URL } from '@/constants/api';
 interface GridStackProps {
     selectedAssets: Asset[];
     title: string;
-    setGenerating: Dispatch<SetStateAction<boolean>>;
 }
 
 const sizes = {
@@ -23,7 +22,7 @@ const sizes = {
     '4x4': 19,
 } as { [key: string]: number };
 
-export default function GridStack({ selectedAssets, title, setGenerating }: GridStackProps) {
+export default function GridStack({ selectedAssets, title }: GridStackProps) {
     const captureRef = useRef<HTMLDivElement | null>(null);
     const dispatch = useDispatch();
     const { language } = useI18n();
@@ -55,13 +54,14 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
 
     const handleConfirmGrid = async () => {
         setConfirmedGrid(true);
+        const size = selected === '2x2' ? 2 : selected === '3x3' ? 3 : 4;
 
         dispatch(
             actions.gridUpload({
-                assetsId: selectedAssets.map((item) => item._id.toLowerCase()),
-                assets: selectedAssets.map((item) => item.formats.preview.path),
+                assetsId: selectedAssets.map((item) => item._id.toLowerCase()).slice(0, size ** 2),
+                assets: selectedAssets.map((item) => item.formats.preview.path).slice(0, size ** 2),
                 fees: 10,
-                size: selected === '2x2' ? 2 : selected === '3x3' ? 3 : 4,
+                size,
                 title,
             })
         );

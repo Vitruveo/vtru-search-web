@@ -94,11 +94,16 @@ const AssetItem = ({
                 <>
                     <Badge
                         badgeContent={countByCreator}
+                        max={99}
                         color="primary"
-                        style={{
+                        sx={{
                             position: 'absolute',
-                            top: 0,
-                            right: 0,
+                            right: -10,
+                            top: -10,
+                            '& .MuiBadge-badge': {
+                                transform: 'scale(1.5)',
+                                fontSize: '0.8rem',
+                            },
                         }}
                     />
                     <DeckEffect
@@ -110,8 +115,8 @@ const AssetItem = ({
                     />
                 </>
             )}
-            <BlankCard className="hoverCard">
-                <Box width={250} height={250} onClick={handleClickImage} borderRadius="8px 8px 0 0" position="relative">
+            <BlankCard className="hoverCard" onClick={handleClickImage}>
+                <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
                     <MediaRenderer
                         src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
                         fallbackSrc={'https://via.placeholder.com/250'}
