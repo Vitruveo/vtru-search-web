@@ -39,10 +39,12 @@ import chunkArray from '@/utils/chunkArray';
 const Filters = () => {
     const params = new URLSearchParams(window.location.search);
 
-    const [isNuditychecked, setIsNudityChecked] = useState(false);
-    const [isAIchecked, setIsAIChecked] = useState(false);
+    const [isHideNuditychecked, setIsHideNudityChecked] = useState(false);
+    const [isHideAIchecked, setIsHideAIChecked] = useState(false);
     const [isPhotographyChecked, setIsPhotographyChecked] = useState(false);
     const [isPhysicalArtChecked, setIsPhysicalArtChecked] = useState(false);
+    const [isAnimationChecked, setIsAnimationChecked] = useState(false);
+    const [isDigitalArtChecked, setIsDigitalArtChecked] = useState(false);
 
     const [contextFilters, setContextFilters] = useState<number>();
     const [taxonomyFilters, setTaxonomyFilters] = useState<number>();
@@ -73,8 +75,10 @@ const Filters = () => {
         updateFilters('context', setContextFilters);
         updateFilters('taxonomy', setTaxonomyFilters);
         updateFilters('creators', setCreatorsFilters);
-        setIsNudityChecked(values.taxonomy.nudity.includes('yes'));
-        setIsAIChecked(values.taxonomy.aiGeneration.includes('full'));
+        setIsHideNudityChecked(values.taxonomy.nudity.includes('no'));
+        setIsHideAIChecked(
+            values.taxonomy.aiGeneration.includes('partial') && values.taxonomy.aiGeneration.includes('none')
+        );
         setIsPhotographyChecked(values.taxonomy.category.includes('photography'));
         setIsPhysicalArtChecked(values.taxonomy.objectType.includes('physicalart'));
     }, [values.context, values.taxonomy, values.creators, values.shortCuts]);
@@ -115,7 +119,7 @@ const Filters = () => {
 
         params.set('sort', 'latest');
         params.set('sold', 'no');
-        params.set('taxonomy_aiGeneration', 'full,partial,none');
+        params.set('taxonomy_aiGeneration', 'partial,none');
         params.set('taxonomy_nudity', 'no');
         params.set('groupByCreator', 'yes');
         params.delete('creatorId');
@@ -136,17 +140,17 @@ const Filters = () => {
     };
 
     const handleChangeNudity = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsNudityChecked(event.target.checked);
-        generateQueryParam('taxonomy_nudity', event.target.checked ? 'yes,no' : 'no');
-        dispatch(actions.change({ key: 'taxonomy', value: { nudity: event.target.checked ? ['yes', 'no'] : ['no'] } }));
+        setIsHideNudityChecked(event.target.checked);
+        generateQueryParam('taxonomy_nudity', event.target.checked ? 'no' : '');
+        dispatch(actions.change({ key: 'taxonomy', value: { nudity: event.target.checked ? ['no'] : [] } }));
     };
     const handleChangeAI = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsAIChecked(event.target.checked);
-        generateQueryParam('taxonomy_aiGeneration', event.target.checked ? 'full,partial,none' : 'none');
+        setIsHideAIChecked(event.target.checked);
+        syncFiltersWithUrl(event.target.checked ? ['partial', 'none'] : [], 'taxonomy_aiGeneration');
         dispatch(
             actions.change({
                 key: 'taxonomy',
-                value: { aiGeneration: event.target.checked ? ['full', 'partial', 'none'] : ['none'] },
+                value: { aiGeneration: event.target.checked ? ['partial', 'none'] : [] },
             })
         );
     };
@@ -161,6 +165,18 @@ const Filters = () => {
         setIsPhotographyChecked(event.target.checked);
         syncFiltersWithUrl(event.target.checked ? ['photography'] : [], 'taxonomy_category');
         dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['photography'] : [] } }));
+    };
+    const handleChangeAnimation = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIsAnimationChecked(event.target.checked);
+        syncFiltersWithUrl(event.target.checked ? ['video'] : [], 'taxonomy_category');
+        dispatch(actions.change({ key: 'taxonomy', value: { category: event.target.checked ? ['video'] : [] } }));
+    };
+    const handleChangeDigitalArt = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIsDigitalArtChecked(event.target.checked);
+        syncFiltersWithUrl(event.target.checked ? ['digitalart'] : [], 'taxonomy_objectType');
+        dispatch(
+            actions.change({ key: 'taxonomy', value: { objectType: event.target.checked ? ['digitalart'] : [] } })
+        );
     };
 
     return (
@@ -188,22 +204,31 @@ const Filters = () => {
             <FormGroup sx={{ display: 'flex', flexDirection: 'row', marginLeft: '8%' }}>
                 <Box display={'flex'} flexDirection={'column'}>
                     <FormControlLabel
-                        control={<Checkbox onChange={handleChangeNudity} checked={isNuditychecked} />}
-                        label={'Nudity'}
+                        control={<Checkbox onChange={handleChangeNudity} checked={isHideNuditychecked} />}
+                        label={'Hide Nudity'}
                     />
+
                     <FormControlLabel
-                        control={<Checkbox onChange={handleChangeAI} checked={isAIchecked} />}
-                        label={'AI'}
+                        control={<Checkbox onChange={handleChangePhotography} checked={isPhotographyChecked} />}
+                        label={'Photography'}
                     />
-                </Box>
-                <Box display={'flex'} flexDirection={'column'}>
                     <FormControlLabel
                         control={<Checkbox onChange={handleChangePhysicalArt} checked={isPhysicalArtChecked} />}
                         label={'Physical Art'}
                     />
+                </Box>
+                <Box display={'flex'} flexDirection={'column'}>
                     <FormControlLabel
-                        control={<Checkbox onChange={handleChangePhotography} checked={isPhotographyChecked} />}
-                        label={'Photography'}
+                        control={<Checkbox onChange={handleChangeAI} checked={isHideAIchecked} />}
+                        label={'Hide AI'}
+                    />
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangeAnimation} checked={isAnimationChecked} />}
+                        label={'Animation'}
+                    />
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangeDigitalArt} checked={isDigitalArtChecked} />}
+                        label={'Digital Art'}
                     />
                 </Box>
             </FormGroup>
