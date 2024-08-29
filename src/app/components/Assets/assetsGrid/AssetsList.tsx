@@ -39,19 +39,15 @@ import Slider from '../../../components/Slider';
 import { useTheme } from '@mui/material/styles';
 
 const AssetsList = () => {
-    const searchParamsHook = useSearchParams();
     const dispatch = useDispatch();
     const theme = useTheme();
+    const params = new URLSearchParams(window.location.search);
 
-    const grid = searchParamsHook.get('grid');
-    const video = searchParamsHook.get('video');
+    const grid = params.get('grid');
+    const video = params.get('video');
+    const creatorId = params.get('creatorId');
 
-    const paramsToCurate = new URLSearchParams(window.location.search);
-
-    const hasVideo = paramsToCurate.has('video');
-    const hasGrid = paramsToCurate.has('grid');
-
-    const hasCurated = hasVideo || hasGrid;
+    const hasCurated = grid || video;
 
     const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
@@ -59,6 +55,7 @@ const AssetsList = () => {
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
     const [sortOrder, setSortOrder] = useState<string>('latest');
     const [isIncludeSold, setIsIncludeSold] = useState<boolean>(false);
+    const [isIncludeGroupByCreator, setIsIncludeGroupByCreator] = useState<boolean>(true);
     const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
@@ -70,9 +67,11 @@ const AssetsList = () => {
     const { data: assets, totalPage, page: currentPage } = useSelector((state) => state.assets.data);
     const { sort, maxPrice } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
-
+    const hasIncludesGroup = useSelector((state) => state.assets.groupByCreator);
     const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets);
     const values = useSelector((state) => state.filters);
+    const gridTitle = useSelector((state) => state.filters.grid.title);
+    const videoTitle = useSelector((state) => state.filters.video.title);
 
     const optionsForSelect = useMemo(() => {
         const options: { value: number; label: number }[] = [];
@@ -125,6 +124,10 @@ const AssetsList = () => {
     }, []);
 
     useEffect(() => {
+        if (grid || video) setIsIncludeGroupByCreator(false);
+    }, []);
+
+    useEffect(() => {
         handleScrollToTop();
     }, [currentPage]);
 
@@ -140,6 +143,12 @@ const AssetsList = () => {
         setSortOrder(sort.order);
         setIsIncludeSold(sort.sold === 'yes' ? true : false);
     }, [sort]);
+
+    useEffect(() => {
+        if (grid || video) return;
+
+        setIsIncludeGroupByCreator(hasIncludesGroup.active);
+    }, [hasIncludesGroup.active]);
 
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
@@ -183,18 +192,18 @@ const AssetsList = () => {
     };
 
     const returnToPageOne = () => {
-        const params = new URLSearchParams(window.location.search);
-
         params.forEach((value, key) => params.delete(key));
 
         params.set('sort', 'latest');
         params.set('sold', 'no');
         params.set('taxonomy_aiGeneration', 'full,partial,none');
         params.set('taxonomy_nudity', 'no');
+        params.set('groupByCreator', 'yes');
+        params.delete('creatorId');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
 
-        dispatch(actions.setCurrentPage(1));
+        dispatch(actions.resetGroupByCreator());
         dispatch(actionsFilters.reset({ maxPrice }));
     };
 
@@ -221,6 +230,32 @@ const AssetsList = () => {
         dispatch(actions.setSort({ order: sortOrder, sold: isIncludeSold ? 'no' : 'yes' }));
     };
 
+    const handleChangeIsIncludeGroupByCreator = () => {
+        setIsIncludeGroupByCreator(!isIncludeGroupByCreator);
+        generateQueryParam('groupByCreator', isIncludeGroupByCreator ? 'no' : 'yes');
+
+        if (!isIncludeGroupByCreator) {
+            generateQueryParam('creatorId', '');
+            generateQueryParam('grid', '');
+            generateQueryParam('video', '');
+
+            dispatch(actions.setInitialPage());
+            dispatch(actionsFilters.resetCreatorId());
+
+            dispatch(actionsFilters.clearGrid());
+            dispatch(actionsFilters.clearVideo());
+        }
+
+        dispatch(
+            actions.setGroupByCreator({
+                active: !isIncludeGroupByCreator,
+                name: '',
+            })
+        );
+
+        if (isIncludeGroupByCreator) dispatch(actions.loadAssets({ page: 1 }));
+    };
+
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
 
     const onAssetDrawerClose = () => {
@@ -228,8 +263,8 @@ const AssetsList = () => {
         setAssetView(undefined);
     };
 
-    const activeAssets = assets.filter((asset) => asset.consignArtwork.status === 'active');
-    const blockedAssets = assets.filter((asset) => asset.consignArtwork.status === 'blocked');
+    const activeAssets = assets.filter((asset) => asset?.consignArtwork?.status === 'active');
+    const blockedAssets = assets.filter((asset) => asset?.consignArtwork?.status === 'blocked');
 
     const isLastPage = currentPage === totalPage;
     const hasActiveAssets = activeAssets.length > 0;
@@ -242,8 +277,8 @@ const AssetsList = () => {
             <DrawerStack
                 selected={selected}
                 drawerStackOpen={drawerStack.isActive}
-                setSelected={setSelected}
                 onClose={drawerStack.deactivate}
+                setSelected={setSelected}
             />
 
             <Stack width="100%" direction="row" display="flex" justifyContent="space-between" alignItems="center" p={3}>
@@ -295,6 +330,16 @@ const AssetsList = () => {
                     <FormControlLabel
                         control={<Checkbox checked={isIncludeSold} onChange={handleChangeIsIncludeSold} />}
                         label="Include Sold"
+                    />
+
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={isIncludeGroupByCreator}
+                                onChange={handleChangeIsIncludeGroupByCreator}
+                            />
+                        }
+                        label="Group by creator"
                     />
                 </Grid>
                 <Box display={'flex'}>
@@ -354,7 +399,7 @@ const AssetsList = () => {
                         paddingTop: 0,
                     }}
                 >
-                    {currentPage === 1 && <Slider />}
+                    {currentPage === 1 && !grid && !video && !creatorId && <Slider />}
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>
@@ -366,7 +411,10 @@ const AssetsList = () => {
                     >
                         {hasCurated ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
-                                <Typography variant="h4">Curated arts </Typography>
+                                {hasCurated && (
+                                    <Typography variant="h4">{gridTitle || videoTitle || 'Curated arts'}</Typography>
+                                )}
+                                {hasIncludesGroup.name && <Typography variant="h4">{hasIncludesGroup.name}</Typography>}
                                 <button
                                     style={{
                                         border: 'none',
@@ -430,8 +478,14 @@ const AssetsList = () => {
                     </Box>
                 </Grid>
 
-                <Grid container display={'flex'} ml={4} rowGap={3}>
-                    {assets.length > 0 ? (
+                <Grid container display={'flex'} ml={4} rowGap={3} overflow={'hidden'}>
+                    {isLoading ? (
+                        [...Array(4)].map((_, index) => (
+                            <AssetCardContainer key={index}>
+                                <Skeleton variant="rectangular" width={250} height={250} />
+                            </AssetCardContainer>
+                        ))
+                    ) : assets.length > 0 ? (
                         <>
                             {activeAssets.map((asset) => (
                                 <AssetCardContainer key={asset._id}>
@@ -445,16 +499,42 @@ const AssetsList = () => {
                                             handleCheckCurate(asset);
                                         }}
                                         handleClickImage={() => {
+                                            if (hasIncludesGroup.active) {
+                                                if (asset?.framework?.createdBy) {
+                                                    dispatch(actions.setInitialPage());
+                                                    dispatch(actionsFilters.changeCreatorId(asset.framework.createdBy));
+                                                    generateQueryParam('creatorId', asset.framework.createdBy);
+                                                    dispatch(actions.setGroupByCreator({ active: false, name: '' }));
+
+                                                    if (Array.isArray(asset.assetMetadata?.creators.formData)) {
+                                                        dispatch(
+                                                            actions.changeGroupByCreatorName(
+                                                                asset.assetMetadata?.creators.formData[0].name
+                                                            )
+                                                        );
+                                                    } else {
+                                                        dispatch(actions.changeGroupByCreatorName('Unknown'));
+                                                    }
+
+                                                    handleScrollToTop();
+                                                }
+
+                                                return;
+                                            }
+
                                             handleAssetImageClick(asset);
                                         }}
                                         price={getAssetPrice(asset)}
+                                        countByCreator={asset.countByCreator}
                                     />
                                 </AssetCardContainer>
                             ))}
 
                             {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) && (
                                 <AssetCardContainer key={1}>
-                                    <AdditionalAssetsFilterCard />
+                                    <Box width={'100%'} height={'100%'} mr={4}>
+                                        <AdditionalAssetsFilterCard />
+                                    </Box>
                                 </AssetCardContainer>
                             )}
 
@@ -472,6 +552,29 @@ const AssetsList = () => {
                                                 handleCheckCurate(asset);
                                             }}
                                             handleClickImage={() => {
+                                                if (hasIncludesGroup.active) {
+                                                    if (asset?.framework?.createdBy) {
+                                                        dispatch(
+                                                            actionsFilters.changeCreatorId(asset.framework.createdBy)
+                                                        );
+                                                        generateQueryParam('creatorId', asset.framework.createdBy);
+                                                        dispatch(actions.resetGroupByCreator());
+                                                        if (Array.isArray(asset.assetMetadata?.creators.formData)) {
+                                                            dispatch(
+                                                                actions.changeGroupByCreatorName(
+                                                                    asset.assetMetadata?.creators.formData[0].name
+                                                                )
+                                                            );
+                                                        } else {
+                                                            dispatch(actions.changeGroupByCreatorName('Unknown'));
+                                                        }
+
+                                                        handleScrollToTop();
+                                                    }
+
+                                                    return;
+                                                }
+
                                                 handleAssetImageClick(asset);
                                             }}
                                             price={getAssetPrice(asset)}
@@ -479,12 +582,6 @@ const AssetsList = () => {
                                     </AssetCardContainer>
                                 ))}
                         </>
-                    ) : isLoading ? (
-                        [...Array(3)].map((_, index) => (
-                            <AssetCardContainer key={index}>
-                                <Skeleton variant="rectangular" width={250} height={250} />
-                            </AssetCardContainer>
-                        ))
                     ) : (
                         <Grid
                             item
@@ -518,13 +615,15 @@ const AssetsList = () => {
                     width="100%"
                     alignItems="center"
                 >
-                    <Pagination
-                        count={totalPage}
-                        page={currentPage}
-                        onChange={(_event, value) => dispatch(actions.setCurrentPage(value))}
-                        color="primary"
-                        size={lgUp ? 'large' : 'medium'}
-                    />
+                    {!isLoading && (
+                        <Pagination
+                            count={totalPage}
+                            page={currentPage}
+                            onChange={(_event, value) => dispatch(actions.setCurrentPage(value))}
+                            color="primary"
+                            size={lgUp ? 'large' : 'medium'}
+                        />
+                    )}
                 </Box>
                 <Box
                     display={totalPage === 0 ? 'none' : 'flex'}

@@ -1,12 +1,14 @@
-import { Box, CardContent, Checkbox, Grid, Link, Paper, Stack, Typography } from '@mui/material';
+import { Badge, Box, CardContent, Checkbox, Grid, Link, Paper, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import BlankCard from '../../Shared/BlankCard';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { Asset } from '@/features/assets/types';
 import { MediaRenderer } from '../components/MediaRenderer';
-import { useDispatch } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/filters/slice';
 import { ShowAnimation } from '@/animations';
+import DeckEffect from '../components/DeckEffect';
+import { useRef, useState } from 'react';
 
 interface Props {
     assetView: Asset;
@@ -18,6 +20,7 @@ interface Props {
     isAvailable?: boolean;
     price?: string;
     variant?: 'active' | 'blocked';
+    countByCreator?: number;
 }
 
 const AssetItem = ({
@@ -30,9 +33,14 @@ const AssetItem = ({
     isAvailable = true,
     price,
     variant = 'active',
+    countByCreator = undefined,
 }: Props) => {
-    const dispatch = useDispatch();
     const theme = useTheme();
+    const dispatch = useDispatch();
+    const [isHovered, setIsHovered] = useState(false);
+    const [showFanEffect, setShowFanEffect] = useState(false);
+    const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const hasIncludesGroup = useSelector((state) => state.assets.groupByCreator.active);
 
     const hasCreator =
         asset?.assetMetadata?.creators?.formData instanceof Array &&
@@ -54,19 +62,54 @@ const AssetItem = ({
     };
 
     return (
-        <Box
-            sx={{
+        <div
+            style={{
                 border: assetView === asset ? '1px solid #00d6f4' : '',
-                maxWidth: 250,
+                width: 250,
                 cursor: 'pointer',
-                height: '100%',
+                height: 380,
                 marginRight: '32px',
+                position: 'relative',
+                borderRadius: '15px',
+            }}
+            onMouseEnter={() => {
+                setIsHovered(true);
+                if (asset?.countByCreator && asset?.countByCreator > 1)
+                    hoverTimeoutRef.current = setTimeout(() => setShowFanEffect(true), 500);
+            }}
+            onMouseLeave={() => {
+                setIsHovered(false);
+                if (hoverTimeoutRef.current) {
+                    clearTimeout(hoverTimeoutRef.current);
+                    hoverTimeoutRef.current = null;
+                }
+                setShowFanEffect(false);
             }}
             onClick={() => {
-                if (isCurated) handleChangeCurate();
+                if (isCurated && !hasIncludesGroup) handleChangeCurate();
                 else handleClickImage();
             }}
         >
+            {hasIncludesGroup && (
+                <>
+                    <Badge
+                        badgeContent={countByCreator}
+                        color="primary"
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            right: 0,
+                        }}
+                    />
+                    <DeckEffect
+                        isHovered={isHovered}
+                        showFanEffect={showFanEffect}
+                        count={asset?.countByCreator || 0}
+                        paths={asset?.paths || []}
+                        handleClickImage={handleClickImage}
+                    />
+                </>
+            )}
             <BlankCard className="hoverCard">
                 <Box width={250} height={250} onClick={handleClickImage} borderRadius="8px 8px 0 0" position="relative">
                     <MediaRenderer
@@ -88,7 +131,7 @@ const AssetItem = ({
                         >
                             {assetTitle}
                         </Typography>
-                        {isCurated && <Checkbox style={{ padding: 0 }} checked={checkedCurate} />}
+                        {isCurated && !hasIncludesGroup && <Checkbox style={{ padding: 0 }} checked={checkedCurate} />}
                     </Stack>
 
                     <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
@@ -139,7 +182,7 @@ const AssetItem = ({
                     </Stack>
                 </CardContent>
             </BlankCard>
-        </Box>
+        </div>
     );
 };
 

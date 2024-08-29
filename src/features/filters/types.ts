@@ -59,6 +59,13 @@ export interface FilterSliceState {
         nudity: string;
         aiGeneration: string;
     };
-    grid: string[];
-    video: string[];
+    grid: {
+        assets: string[];
+        title: string
+    }
+    video: {
+        assets: string[];
+        title: string   
+    }
+    creatorId: string;
 }

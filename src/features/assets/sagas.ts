@@ -12,6 +12,7 @@ import type {
     MakeVideoParams,
     MakeVideoResponse,
     ResponseAsserCreator,
+    ResponseAssetGroupByCreator,
     ResponseAssets,
     ResponseAssetsLastSold,
     ResponseGrid,
@@ -38,13 +39,108 @@ function* getAssetsLastSold() {
     }
 }
 
-function* getAssets(action: PayloadAction<GetAssetsParams>) {
-    yield put(actions.startLoading());
-
+function* getAssetsGroupByCreator() {
     try {
-        const ids: string[] = yield select((state: AppState) =>
-            state.filters.grid.length ? state.filters.grid : state.filters.video.length ? state.filters.video : []
+        const groupByCreator: boolean = yield select((state: AppState) => state.assets.groupByCreator.active);
+        if (!groupByCreator) return;
+
+        yield put(actions.startLoading());
+
+        const page: number = yield select((state: AppState) => state.assets.data.page);
+        const order: string = yield select((state: AppState) => state.assets.sort.order);
+        const sold: string = yield select((state: AppState) => state.assets.sort.sold);
+        const name: string = yield select((state: AppState) => state.filters.name);
+
+        const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
+        const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
+        const filtersCreators: FilterSliceState['creators'] = yield select((state: AppState) => state.filters.creators);
+
+        const buildFilters = {
+            context: filtersContext,
+            taxonomy: filtersTaxonomy,
+            creators: filtersCreators,
+        };
+
+        const buildQuery = Object.entries(buildFilters).reduce<BuidlQuery>((acc, cur) => {
+            const [key, value] = cur;
+
+            Object.entries(value).forEach((item) => {
+                const [keyFilter, valueFilter] = item as [string, string | string[]];
+                if (!valueFilter) return;
+                if (Array.isArray(valueFilter) && !valueFilter.length) return;
+
+                if (Array.isArray(valueFilter)) {
+                    acc[`assetMetadata.${key}.formData.${keyFilter}`] = {
+                        $in: valueFilter,
+                    };
+                    return;
+                }
+                acc[`assetMetadata.${key}.formData.${keyFilter}`] = valueFilter;
+            });
+
+            const assetsIds = getAssetsIdsFromURL();
+
+            if (assetsIds && assetsIds?.length > 0 && assetsIds[0] != '') {
+                acc['_id'] = {
+                    $in: assetsIds,
+                };
+            }
+
+            return acc;
+        }, {});
+
+        const response: AxiosResponse<APIResponse<ResponseAssetGroupByCreator>> = yield call(
+            axios.get,
+            `${API_BASE_URL}/assets/public/groupByCreator`,
+            {
+                params: {
+                    query: buildQuery,
+                    limit: 24,
+                    page: page || 1,
+                    name: name.trim() || null,
+                    sort: {
+                        order,
+                        isIncludeSold: sold === 'yes' ? true : false,
+                    },
+                },
+            }
         );
+
+        yield put(actions.loadAssetsLastSold());
+        yield put(
+            actions.setData({
+                data: response.data.data.data.map((item) => ({
+                    ...item.asset,
+                    countByCreator: item.count,
+                    paths: item.paths,
+                })),
+                limit: response.data.data.limit,
+                page: response.data.data.page,
+                total: response.data.data.total,
+                totalPage: response.data.data.totalPage,
+            })
+        );
+    } catch (error) {
+        // Handle error
+    }
+    yield put(actions.finishLoading());
+}
+
+function* getAssets(action: PayloadAction<GetAssetsParams>) {
+    try {
+        const hasIncludesGroup: boolean = yield select((state: AppState) => state.assets.groupByCreator.active);
+        if (hasIncludesGroup) return;
+
+        yield put(actions.startLoading());
+
+        const ids: string[] = yield select((state: AppState) =>
+            state.filters.grid.assets.length
+                ? state.filters.grid.assets
+                : state.filters.video.assets.length
+                  ? state.filters.video.assets
+                  : []
+        );
+        const creatorId: string = yield select((state: AppState) => state.filters.creatorId);
         const name: string = yield select((state: AppState) => state.filters.name);
         const page: number = yield select((state: AppState) => state.assets.data.page);
         const order: string = yield select((state: AppState) => state.assets.sort.order);
@@ -99,6 +195,8 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 $in: ids,
             };
         }
+
+        if (creatorId) buildQuery['framework.createdBy'] = creatorId;
 
         const URL_ASSETS_SEARCH = `${API_BASE_URL}/assets/public/search`;
 
@@ -155,8 +253,14 @@ function* getGrid(action: PayloadAction<string>) {
             Array.isArray(response.data.data.grid.search.grid[0].assets) &&
             response.data.data.grid.search.grid[0].assets.length > 0
         ) {
-            yield put(actionsFilter.changeGrid(response.data.data.grid.search.grid[0].assets));
-            yield put(actions.initialPage());
+            yield put(
+                actionsFilter.changeGrid({
+                    assets: response.data.data.grid.search.grid[0].assets,
+                    title: response.data.data.grid.search.grid[0].title,
+                })
+            );
+            yield put(actions.noGroupByCreator());
+            yield put(actions.setInitialPage());
             yield put(actions.loadAssets({ page: 1 }));
         }
     } catch (error) {
@@ -180,8 +284,14 @@ function* getVideo(action: PayloadAction<string>) {
             Array.isArray(response.data.data.video.search.video[0].assets) &&
             response.data.data.video.search.video[0].assets.length > 0
         ) {
-            yield put(actionsFilter.changeVideo(response.data.data.video.search.video[0].assets));
-            yield put(actions.initialPage());
+            yield put(
+                actionsFilter.changeVideo({
+                    assets: response.data.data.video.search.video[0].assets,
+                    title: response.data.data.video.search.video[0].title,
+                })
+            );
+            yield put(actions.noGroupByCreator());
+            yield put(actions.setInitialPage());
             yield put(actions.loadAssets({ page: 1 }));
         }
     } catch (error) {
@@ -244,18 +354,31 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
 
 export function* assetsSagas() {
     yield all([
+        // Assets
         takeEvery(actionsFilter.reset.type, getAssets),
         takeEvery(actions.loadAssets.type, getAssets),
-        takeEvery(actions.loadAssetsLastSold.type, getAssetsLastSold),
-        takeEvery(actions.loadCreator.type, getCreator),
-        takeEvery(actions.makeVideo.type, makeVideo),
         takeEvery(actions.setSort.type, getAssets),
         takeEvery(actionsFilter.change.type, getAssets),
-        takeEvery(actions.setGridId.type, getGrid),
-        takeEvery(actions.setVideoId.type, getVideo),
-        debounce(1000, actionsFilter.changeName.type, getAssets),
         debounce(500, actions.setCurrentPage.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),
+        debounce(1000, actionsFilter.changeName.type, getAssets),
         takeEvery(actionsFilter.changeColorPrecision.type, getAssets),
+        takeEvery(actionsFilter.changeCreatorId.type, getAssets),
+
+        // Group by creator
+        takeEvery(actionsFilter.reset.type, getAssetsGroupByCreator),
+        takeEvery(actions.setGroupByCreator.type, getAssetsGroupByCreator),
+        takeEvery(actions.setSort.type, getAssetsGroupByCreator),
+        debounce(500, actions.setCurrentPage.type, getAssetsGroupByCreator),
+        takeEvery(actionsFilter.change.type, getAssetsGroupByCreator),
+        debounce(1000, actionsFilter.changeName.type, getAssetsGroupByCreator),
+
+        // Sold
+        takeEvery(actions.loadAssetsLastSold.type, getAssetsLastSold),
+
+        takeEvery(actions.loadCreator.type, getCreator),
+        takeEvery(actions.makeVideo.type, makeVideo),
+        takeEvery(actions.setGridId.type, getGrid),
+        takeEvery(actions.setVideoId.type, getVideo),
     ]);
 }

@@ -26,6 +26,10 @@ export const initialState: AssetsSliceState = {
         order: '',
         sold: '',
     },
+    groupByCreator: {
+        active: true,
+        name: '',
+    },
 };
 
 export const assetsSlice = createSlice({
@@ -37,6 +41,36 @@ export const assetsSlice = createSlice({
         setGridId: (_state, _action: PayloadAction<string>) => {},
         startLoading: (state) => {
             state.loading = true;
+        },
+        setGroupByCreator: (
+            state,
+            action: PayloadAction<{
+                active: boolean;
+                name: string;
+            }>
+        ) => {
+            state.groupByCreator = action.payload;
+        },
+        noGroupByCreator: (state) => {
+            state.groupByCreator = {
+                active: false,
+                name: '',
+            };
+            state.data.page = 1;
+            state.sort.order = 'latest';
+            state.sort.sold = 'no';
+        },
+        resetGroupByCreator: (state) => {
+            state.groupByCreator = {
+                active: true,
+                name: '',
+            };
+            state.data.page = 1;
+            state.sort.order = 'latest';
+            state.sort.sold = 'no';
+        },
+        changeGroupByCreatorName: (state, action: PayloadAction<string>) => {
+            state.groupByCreator.name = action.payload;
         },
         loadCreator: (_state, _action: PayloadAction<GetCreatorParams>) => {},
         finishLoading: (state) => {
@@ -73,6 +107,9 @@ export const assetsSlice = createSlice({
         },
         setCurrentPage: (state, action: PayloadAction<number>) => {
             state.data.page = action.payload;
+        },
+        setInitialPage: (state) => {
+            state.data.page = 1;
         },
         setLastSold: (state, action: PayloadAction<LastSoldAsset[]>) => {
             state.lastSold = action.payload;

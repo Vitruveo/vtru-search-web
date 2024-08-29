@@ -18,6 +18,10 @@ export interface AssetsSliceState {
         order: string;
         sold: string;
     };
+    groupByCreator: {
+        active: boolean;
+        name: string;
+    };
 }
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';
@@ -101,6 +105,8 @@ export interface Asset {
         listing: string;
         status: 'blocked' | 'active';
     };
+    countByCreator?: number;
+    paths?: string[];
 }
 
 export interface Tags {
@@ -146,6 +152,18 @@ export interface ResponseAssets {
     maxPrice: number;
 }
 
+export interface ResponseAssetGroupByCreator {
+    data: {
+        asset: AssetsSliceState['data']['data'][0];
+        count: number;
+        paths: string[];
+    }[];
+    limit: number;
+    page: number;
+    total: number;
+    totalPage: number;
+}
+
 export interface ResponseGrid {
     grid: {
         _id: string;
@@ -154,6 +172,7 @@ export interface ResponseGrid {
                 id: string;
                 path: string;
                 assets: string[];
+                title: string;
                 createdAt: string;
             }[];
         };
@@ -168,6 +187,7 @@ export interface ResponseVideo {
                 id: string;
                 path: string;
                 assets: string[];
+                title: string;
                 createdAt: string;
             }[];
         };

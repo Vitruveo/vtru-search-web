@@ -180,14 +180,14 @@ function DrawerStack({ drawerStackOpen, selected, onClose, setSelected }: Props)
     );
 }
 
-export default function DrawerStackHoc({ drawerStackOpen, selected, setSelected, onClose }: Props) {
+export default function DrawerStackHoc({ drawerStackOpen, selected, onClose, setSelected }: Props) {
     return (
         <DndProvider backend={HTML5Backend}>
             <DrawerStack
                 drawerStackOpen={drawerStackOpen}
                 selected={selected}
-                setSelected={setSelected}
                 onClose={onClose}
+                setSelected={setSelected}
             />
         </DndProvider>
     );

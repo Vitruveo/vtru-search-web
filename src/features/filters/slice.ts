@@ -67,8 +67,15 @@ export const initialState: FilterSliceState = {
         nudity: 'no',
         aiGeneration: 'full',
     },
-    grid: [],
-    video: [],
+    grid: {
+        assets: [],
+        title: '',
+    },
+    video: {
+        assets: [],
+        title: '',
+    },
+    creatorId: '',
 };
 
 export const filterSlice = createSlice({
@@ -135,8 +142,15 @@ export const filterSlice = createSlice({
                 nudity: 'no',
                 aiGeneration: 'full',
             };
-            state.grid = [];
-            state.video = [];
+            state.creatorId = '';
+            state.grid = {
+                assets: [],
+                title: '',
+            };
+            state.video = {
+                assets: [],
+                title: '',
+            };
             state.reseted += 1;
 
             const payload = extractObjects(initialState);
@@ -178,6 +192,24 @@ export const filterSlice = createSlice({
         changeShortCut: (state, action: PayloadAction<{ key: keyof FilterSliceState['shortCuts']; value: string }>) => {
             state.shortCuts[action.payload.key] = action.payload.value;
         },
+        changeCreatorId: (state, action: PayloadAction<string>) => {
+            state.creatorId = action.payload;
+        },
+        clearGrid: (state) => {
+            state.grid = {
+                assets: [],
+                title: '',
+            };
+        },
+        clearVideo: (state) => {
+            state.video = {
+                assets: [],
+                title: '',
+            };
+        },
+        resetCreatorId: (state) => {
+            state.creatorId = '';
+        },
         reset: (state, action: PayloadAction<{ maxPrice: number }>) => {
             state.name = '';
             state.context = initialState.context;
@@ -196,6 +228,7 @@ export const filterSlice = createSlice({
             state.grid = initialState.grid;
             state.video = initialState.video;
             state.reseted += 1;
+            state.creatorId = '';
             clearAssetsFromURL();
         },
 
@@ -213,7 +246,13 @@ export const filterSlice = createSlice({
         changeShowAdditionalAssets: (state, action: PayloadAction<boolean>) => {
             state.showAdditionalAssets.value = action.payload;
         },
-        changeGrid: (state, action: PayloadAction<string[] | null>) => {
+        changeGrid: (
+            state,
+            action: PayloadAction<{
+                assets: string[];
+                title: string;
+            }>
+        ) => {
             if (action.payload) {
                 state.grid = action.payload;
             }
@@ -232,7 +271,13 @@ export const filterSlice = createSlice({
             state.reseted += 1;
             clearAssetsFromURL();
         },
-        changeVideo: (state, action: PayloadAction<string[] | null>) => {
+        changeVideo: (
+            state,
+            action: PayloadAction<{
+                assets: string[];
+                title: string;
+            }>
+        ) => {
             if (action.payload) {
                 state.video = action.payload;
             }

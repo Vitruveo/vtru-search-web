@@ -94,6 +94,7 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                                 height: 630,
                                 width: 1200,
                                 display: 'none',
+                                objectFit: 'contain',
                             }}
                             ref={captureRef}
                         >
@@ -125,6 +126,7 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                                     backgroundColor: '#EEEEEE',
                                     height: sizes[selected] * 2,
                                     width: sizes[selected] * 2,
+                                    objectFit: 'contain',
                                 }}
                             >
                                 {updatedAssets[index] && (
