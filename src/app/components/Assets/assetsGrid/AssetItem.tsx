@@ -102,7 +102,7 @@ const AssetItem = ({
                             top: -10,
                             '& .MuiBadge-badge': {
                                 transform: 'scale(1.5)',
-                                fontSize: '1rem',
+                                fontSize: '0.8rem',
                             },
                         }}
                     />
