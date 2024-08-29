@@ -19,6 +19,7 @@ interface PublishStackModalProps {
 export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishStackModalProps) => {
     const theme = useTheme();
     const dispatch = useDispatch();
+    const theme = useTheme();
     const { language } = useI18n();
     const [title, setTitle] = useState('');
     const [tabValue, setTabValue] = useState('1');

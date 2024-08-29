@@ -8,7 +8,7 @@ import { ShareButton } from './ShareButton';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/ws';
 import { socket } from '@/services/socket';
-import { createTwitterIntent } from '@/utils/twitter';
+import { createTwitterIntent, generateUrlToCopyOnTwitter } from '@/utils/twitter';
 import { API_BASE_URL } from '@/constants/api';
 
 interface GridStackProps {
@@ -65,8 +65,6 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                 title,
             })
         );
-
-        await new Promise((resolve) => setTimeout(resolve, 2000));
     };
 
     const [creatorId, type, timestamp] = grid.path.split('/');
@@ -107,7 +105,6 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                                         backgroundColor: '#EEEEEE',
                                         height: 300,
                                         width: 300,
-                                        objectFit: 'contain',
                                     }}
                                 >
                                     {updatedAssets[index] && (
@@ -115,7 +112,7 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                                             src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
                                             width={300}
                                             height={300}
-                                            alt={`asset in grid ${selected}`}
+                                            alt={''}
                                         />
                                     )}
                                 </div>
@@ -149,7 +146,7 @@ export default function GridStack({ selectedAssets, title, setGenerating }: Grid
                     <Box display={'flex'} justifyContent={'center'}>
                         <ShareButton
                             twitterURL={twitterShareURL}
-                            contentToCopy={`${url}?c=${Date.now()}${extra}`}
+                            contentToCopy={generateUrlToCopyOnTwitter({ url, timestamp, extra })}
                             url={grid.url}
                             downloadable
                             title={title}

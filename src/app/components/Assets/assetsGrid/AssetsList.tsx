@@ -403,8 +403,13 @@ const AssetsList = () => {
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>
-                    <Box width="100%" display="flex" alignItems="flex-end" justifyContent="space-between">
-                        {hasCurated || hasIncludesGroup.name ? (
+                    <Box
+                        width="100%"
+                        display="flex"
+                        alignItems="flex-end"
+                        justifyContent={lgUp || smUp ? 'space-between' : 'center'}
+                    >
+                        {hasCurated ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
                                 {hasCurated && (
                                     <Typography variant="h4">{gridTitle || videoTitle || 'Curated arts'}</Typography>
@@ -616,7 +621,7 @@ const AssetsList = () => {
                             page={currentPage}
                             onChange={(_event, value) => dispatch(actions.setCurrentPage(value))}
                             color="primary"
-                            size="large"
+                            size={lgUp ? 'large' : 'medium'}
                         />
                     )}
                 </Box>
