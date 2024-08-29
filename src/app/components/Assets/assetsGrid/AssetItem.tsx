@@ -115,8 +115,8 @@ const AssetItem = ({
                     />
                 </>
             )}
-            <BlankCard className="hoverCard">
-                <Box width={250} height={250} onClick={handleClickImage} borderRadius="8px 8px 0 0" position="relative">
+            <BlankCard className="hoverCard" onClick={handleClickImage}>
+                <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
                     <MediaRenderer
                         src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
                         fallbackSrc={'https://via.placeholder.com/250'}
