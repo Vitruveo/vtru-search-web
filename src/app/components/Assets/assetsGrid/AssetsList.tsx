@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Select, { SingleValue } from 'react-select';
 import { useSelector } from '@/store/hooks';
-import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import {
     Pagination,
@@ -46,6 +45,7 @@ const AssetsList = () => {
     const grid = params.get('grid');
     const video = params.get('video');
     const creatorId = params.get('creatorId');
+    const groupBycreator = params.get('groupByCreator');
 
     const hasCurated = grid || video;
 
@@ -149,6 +149,12 @@ const AssetsList = () => {
 
         setIsIncludeGroupByCreator(hasIncludesGroup.active);
     }, [hasIncludesGroup.active]);
+
+    useEffect(() => {
+        if (grid || video) return;
+
+        setIsIncludeGroupByCreator(groupBycreator === 'yes');
+    }, [groupBycreator]);
 
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);

@@ -76,6 +76,9 @@ export const initialState: FilterSliceState = {
         title: '',
     },
     creatorId: '',
+    portfolio: {
+        wallets: [],
+    },
 };
 
 export const filterSlice = createSlice({
@@ -150,6 +153,9 @@ export const filterSlice = createSlice({
             state.video = {
                 assets: [],
                 title: '',
+            };
+            state.portfolio = {
+                wallets: [],
             };
             state.reseted += 1;
 
@@ -229,9 +235,9 @@ export const filterSlice = createSlice({
             state.video = initialState.video;
             state.reseted += 1;
             state.creatorId = '';
+            state.portfolio = initialState.portfolio;
             clearAssetsFromURL();
         },
-
         changePrice: (state, action: PayloadAction<{ min: number; max: number }>) => {
             state.price = {
                 min: action.payload.min,
@@ -295,6 +301,9 @@ export const filterSlice = createSlice({
             };
             state.reseted += 1;
             clearAssetsFromURL();
+        },
+        changePortfolioWallets: (state, action: PayloadAction<{ wallets: string[] }>) => {
+            state.portfolio.wallets = action.payload.wallets;
         },
     },
 });

@@ -73,11 +73,8 @@ export default function VideoStack({
     };
 
     const url = `${STACK_BASE_URL}/video/${timestamp}`;
-    const extra = `timestamp=${encodeURIComponent(timestamp)}`;
-
     const twitterShareURL = createTwitterIntent({
         url,
-        extra,
         hashtags: 'Vitruveo,VTRUSuite',
         text: `${language['search.checkoutMyNewVideo']}`,
     });
@@ -104,7 +101,7 @@ export default function VideoStack({
                             twitterURL={twitterShareURL}
                             url={video}
                             downloadable
-                            contentToCopy={generateUrlToCopyOnTwitter({ url, timestamp, extra })}
+                            contentToCopy={generateUrlToCopyOnTwitter({ url, timestamp })}
                             title={title}
                         />
                     </Box>
