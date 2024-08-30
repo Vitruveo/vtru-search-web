@@ -68,11 +68,10 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
         );
     };
 
-    const [creatorId, type, timestamp] = grid.path.split('/');
+    const [_creatorId, _type, timestamp] = grid.path.split('/');
 
     const url = `${STACK_BASE_URL}/grid/${timestamp}`;
-    const extra = `title=${encodeURIComponent(title)}&creatorId=${encodeURIComponent(creatorId)}&type=${encodeURIComponent(type)}&timestamp=${encodeURIComponent(timestamp)}`;
-    const twitterShareURL = createTwitterIntent({ url, extra, hashtags: 'Vitruveo,VTRUSuite' });
+    const twitterShareURL = createTwitterIntent({ url, hashtags: 'Vitruveo,VTRUSuite' });
 
     if (confirmedGrid) {
         return (
@@ -95,7 +94,6 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                                 height: 630,
                                 width: 1200,
                                 display: 'none',
-                                objectFit: 'contain',
                             }}
                             ref={captureRef}
                         >
@@ -127,7 +125,6 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                                     backgroundColor: '#EEEEEE',
                                     height: sizes[selected] * 2,
                                     width: sizes[selected] * 2,
-                                    objectFit: 'contain',
                                 }}
                             >
                                 {updatedAssets[index] && (
@@ -135,7 +132,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                                         src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
                                         width={sizes[selected] * 2}
                                         height={sizes[selected] * 2}
-                                        alt={`asset in grid ${selected}`}
+                                        alt={''}
                                     />
                                 )}
                             </div>
@@ -147,7 +144,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                     <Box display={'flex'} justifyContent={'center'}>
                         <ShareButton
                             twitterURL={twitterShareURL}
-                            contentToCopy={generateUrlToCopyOnTwitter({ url, timestamp, extra })}
+                            contentToCopy={generateUrlToCopyOnTwitter({ url, timestamp })}
                             url={grid.url}
                             downloadable
                             title={title}
@@ -180,7 +177,6 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                                 backgroundColor: '#EEEEEE',
                                 height: sizes['2x2'],
                                 width: sizes['2x2'],
-                                objectFit: 'contain',
                             }}
                         >
                             {updatedAssets[index] && (
@@ -188,7 +184,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                                     src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
                                     width={sizes['2x2']}
                                     height={sizes['2x2']}
-                                    alt={'asset in grid 2x2'}
+                                    alt={''}
                                 />
                             )}
                         </div>
@@ -209,7 +205,6 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                                 backgroundColor: '#EEEEEE',
                                 height: sizes['3x3'],
                                 width: sizes['3x3'],
-                                objectFit: 'contain',
                             }}
                         >
                             {updatedAssets[index] && (
@@ -217,7 +212,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                                     src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
                                     width={sizes['3x3']}
                                     height={sizes['3x3']}
-                                    alt={'asset in grid 3x3'}
+                                    alt={''}
                                 />
                             )}
                         </div>
@@ -238,7 +233,6 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                                 backgroundColor: '#EEEEEE',
                                 height: sizes['4x4'],
                                 width: sizes['4x4'],
-                                objectFit: 'contain',
                             }}
                         >
                             {updatedAssets[index] && (
@@ -246,7 +240,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
                                     src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
                                     width={sizes['4x4']}
                                     height={sizes['4x4']}
-                                    alt={'asset in grid 4x4'}
+                                    alt={''}
                                 />
                             )}
                         </div>
