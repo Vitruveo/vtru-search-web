@@ -40,11 +40,11 @@ const Logo = () => {
     const returnToPageOne = () => {
         const params = new URLSearchParams(window.location.search);
 
-        params.forEach((value, key) => params.delete(key));
+        params.forEach((_, key) => params.delete(key));
 
         params.set('sort', 'latest');
         params.set('sold', 'no');
-        params.set('taxonomy_aiGeneration', 'full,partial,none');
+        params.set('taxonomy_aiGeneration', 'partial,none');
         params.set('taxonomy_nudity', 'no');
         params.set('groupByCreator', 'yes');
         params.delete('creatorId');

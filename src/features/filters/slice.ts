@@ -143,7 +143,7 @@ export const filterSlice = createSlice({
             };
             state.shortCuts = {
                 nudity: 'no',
-                aiGeneration: 'full',
+                aiGeneration: 'partial,none',
             };
             state.creatorId = '';
             state.grid = {
@@ -222,7 +222,7 @@ export const filterSlice = createSlice({
             state.taxonomy = {
                 ...initialState.taxonomy,
                 nudity: ['no'],
-                aiGeneration: ['full', 'partial', 'none'],
+                aiGeneration: ['partial', 'none'],
             };
             state.creators = initialState.creators;
             state.provenance = initialState.provenance;

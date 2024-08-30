@@ -7,9 +7,10 @@ type Props = {
     className?: string;
     children: JSX.Element | JSX.Element[];
     sx?: any;
+    onClick?: () => void;
 };
 
-const BlankCard = ({ children, className, sx }: Props) => {
+const BlankCard = ({ children, className, sx, onClick }: Props) => {
     const customizer = useSelector((state) => state.customizer);
 
     const theme = useTheme();
@@ -25,6 +26,7 @@ const BlankCard = ({ children, className, sx }: Props) => {
                 height: '100%',
                 backgroundColor: theme.palette.grey[100],
             }}
+            onClick={onClick}
             style={{ backgroundColor: theme.palette.grey[100] }}
             className={className}
             elevation={customizer.isCardShadow ? 9 : 0}
