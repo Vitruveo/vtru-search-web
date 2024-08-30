@@ -261,7 +261,7 @@ const Filters = () => {
                         control={
                             <Checkbox onChange={handleChangeAnimation} checked={selectedCategories.includes('video')} />
                         }
-                        label={'animation'}
+                        label={'Animation'}
                     />
                     <FormControlLabel
                         control={
@@ -500,9 +500,15 @@ const Filters = () => {
                 />
                 <Wallets
                     wallets={wallets}
-                    onRemove={(wallet: string) =>
-                        dispatch(actions.changePortfolioWallets({ wallets: wallets.filter((item) => item !== wallet) }))
-                    }
+                    onRemove={(wallet: string) => {
+                        dispatch(
+                            actions.changePortfolioWallets({ wallets: wallets.filter((item) => item !== wallet) })
+                        );
+                        syncFiltersWithUrl(
+                            wallets.filter((item) => item !== wallet),
+                            'portfolio_wallets'
+                        );
+                    }}
                 />
             </AssetFilterAccordion>
 

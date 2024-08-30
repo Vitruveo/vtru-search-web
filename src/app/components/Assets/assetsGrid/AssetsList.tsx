@@ -46,6 +46,7 @@ const AssetsList = () => {
     const video = params.get('video');
     const creatorId = params.get('creatorId');
     const groupBycreator = params.get('groupByCreator');
+    const portfolioWallets = params.get('portfolio_wallets');
 
     const hasCurated = grid || video;
 
@@ -152,8 +153,8 @@ const AssetsList = () => {
 
     useEffect(() => {
         if (grid || video) return;
-
-        setIsIncludeGroupByCreator(groupBycreator === 'yes');
+        if (params.has('groupByCreator')) setIsIncludeGroupByCreator(groupBycreator === 'yes');
+        else setIsIncludeGroupByCreator(true);
     }, [groupBycreator]);
 
     const openAssetDrawer = (asset: Asset) => {
@@ -405,7 +406,7 @@ const AssetsList = () => {
                         paddingTop: 0,
                     }}
                 >
-                    {currentPage === 1 && !grid && !video && !creatorId && <Slider />}
+                    {currentPage === 1 && !grid && !video && !creatorId && !portfolioWallets && <Slider />}
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>

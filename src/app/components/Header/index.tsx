@@ -1,7 +1,7 @@
-import * as React from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { useDispatch } from 'react-redux';
-import { AppBar, Box, Button, IconButton, Stack, Toolbar } from '@mui/material';
+import { AppBar, Box, Button, IconButton, Stack, Toolbar, Typography } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { IconMenu2, IconMoon, IconPlus, IconSun } from '@tabler/icons-react';
@@ -20,6 +20,7 @@ const Header = () => {
     const customizer = useSelector((state) => state.customizer);
     const isLogged = useSelector((state) => state.creator.token !== '');
     const dispatch = useDispatch();
+    const [isHovered, setIsHovered] = useState(false);
 
     const AppBarStyled = styled(AppBar)(({ theme }) => ({
         background: theme.palette.background.paper,
@@ -69,13 +70,19 @@ const Header = () => {
                     </IconButton>
                     <Button
                         variant="contained"
-                        onClick={() => {
-                            window.open(`${STUDIO_BASE_URL}/login`, '_blank');
-                        }}
-                        sx={{ borderRadius: 0.5, display: 'flex', gap: 0.4 }}
+                        onClick={() => window.open(`${STUDIO_BASE_URL}/login`, '_blank')}
+                        sx={{ borderRadius: 0.5, display: 'flex', gap: 0.8 }}
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
                     >
-                        <IconPlus size={16} />
-                        <Image src="/images/logos/VTRU_Studio.png" width={18} height={18} alt="studio logo" />
+                        {isHovered ? (
+                            <Typography variant="body2">Join Vitruveo</Typography>
+                        ) : (
+                            <>
+                                <IconPlus size={16} />
+                                <Image src="/images/logos/VTRU_Studio.png" width={18} height={18} alt="studio logo" />
+                            </>
+                        )}
                     </Button>
                     <Rss />
                     <Language />
