@@ -1,15 +1,16 @@
+import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { useI18n } from '@/app/hooks/useI18n';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
-import { Asset } from '@/features/assets/types';
 import { Box, Button, Grid, Typography } from '@mui/material';
-import Image from 'next/image';
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-import { ShareButton } from './ShareButton';
-import { useDispatch, useSelector } from '@/store/hooks';
+
+import { STACK_BASE_URL } from '@/constants/api';
+import { Asset } from '@/features/assets/types';
 import { actions } from '@/features/ws';
 import { socket } from '@/services/socket';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { createTwitterIntent, generateUrlToCopyOnTwitter } from '@/utils/twitter';
-import { API_BASE_URL } from '@/constants/api';
+import { ShareButton } from './ShareButton';
 
 interface GridStackProps {
     selectedAssets: Asset[];
@@ -69,7 +70,7 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
 
     const [creatorId, type, timestamp] = grid.path.split('/');
 
-    const url = `${API_BASE_URL}/search/grid`;
+    const url = `${STACK_BASE_URL}/grid/${timestamp}`;
     const extra = `title=${encodeURIComponent(title)}&creatorId=${encodeURIComponent(creatorId)}&type=${encodeURIComponent(type)}&timestamp=${encodeURIComponent(timestamp)}`;
     const twitterShareURL = createTwitterIntent({ url, extra, hashtags: 'Vitruveo,VTRUSuite' });
 
