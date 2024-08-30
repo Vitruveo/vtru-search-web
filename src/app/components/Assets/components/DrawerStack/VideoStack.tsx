@@ -1,14 +1,15 @@
-import { Box, Button, CircularProgress, MenuItem, Select, Typography } from '@mui/material';
-import { ShareButton } from './ShareButton';
-import { useDispatch, useSelector } from '@/store/hooks';
-import { useI18n } from '@/app/hooks/useI18n';
-import { IconPlayerPause, IconPlayerPlay } from '@tabler/icons-react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import audios from '../../../../../../public/data/sounds.json';
+import { Box, Button, CircularProgress, MenuItem, Select, Typography } from '@mui/material';
+import { IconPlayerPause, IconPlayerPlay } from '@tabler/icons-react';
+
+import { STACK_BASE_URL } from '@/constants/api';
 import { actions } from '@/features/assets';
-import { createTwitterIntent, generateUrlToCopyOnTwitter } from '@/utils/twitter';
 import { Asset } from '@/features/assets/types';
-import { API_BASE_URL } from '@/constants/api';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { createTwitterIntent, generateUrlToCopyOnTwitter } from '@/utils/twitter';
+import { useI18n } from '@/app/hooks/useI18n';
+import { ShareButton } from './ShareButton';
+import audios from '../../../../../../public/data/sounds.json';
 
 interface VideoStackProps {
     selectedAssets: Asset[];
@@ -71,7 +72,7 @@ export default function VideoStack({
         setPublished(true);
     };
 
-    const url = `${API_BASE_URL}/search/${creatorId}/html`;
+    const url = `${STACK_BASE_URL}/video/${timestamp}`;
     const extra = `timestamp=${encodeURIComponent(timestamp)}`;
 
     const twitterShareURL = createTwitterIntent({
