@@ -21,6 +21,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
     const creator = useSelector((state) => state.assets.creator);
+    const paused = useSelector((state) => state.assets.paused);
 
     const handleClickView = () => {
         const searchParams = new URLSearchParams(window.location.search);
@@ -66,7 +67,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                         {assetView?.assetMetadata?.context?.formData?.description}
                     </Typography>
                 </Box>
-                <Button disabled={!creator.username} fullWidth variant="contained" onClick={handleClickView}>
+                <Button disabled={paused || !creator.username} fullWidth variant="contained" onClick={handleClickView}>
                     {language['search.assetList.visualization.view'] as string}
                 </Button>
             </Box>
