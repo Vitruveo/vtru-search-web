@@ -61,11 +61,14 @@ export interface FilterSliceState {
     };
     grid: {
         assets: string[];
-        title: string
-    }
+        title: string;
+    };
     video: {
         assets: string[];
-        title: string   
-    }
+        title: string;
+    };
     creatorId: string;
+    portfolio: {
+        wallets: string[];
+    };
 }

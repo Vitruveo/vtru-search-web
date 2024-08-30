@@ -35,6 +35,8 @@ import { useSelector } from '@/store/hooks';
 import React, { useEffect, useState } from 'react';
 import { FilterSliceState } from '@/features/filters/types';
 import chunkArray from '@/utils/chunkArray';
+import PortfolioItem from '../components/PortfolioItem';
+import { Wallets } from '../components/Wallets';
 
 const Filters = () => {
     const params = new URLSearchParams(window.location.search);
@@ -54,6 +56,7 @@ const Filters = () => {
 
     const values = useSelector((state) => state.filters);
     const { tags, maxPrice } = useSelector((state) => state.assets);
+    const { wallets } = useSelector((state) => state.filters.portfolio);
 
     const getTotalFiltersApplied = (fieldName: keyof FilterSliceState) => {
         return Object.entries(values[fieldName]).reduce((acc, [_key, arrayfield]) => {
@@ -193,6 +196,12 @@ const Filters = () => {
         setSelectedObjectTypes(updatedObjectTypes);
         syncFiltersWithUrl(updatedObjectTypes, 'taxonomy_objectType');
         dispatch(actions.change({ key: 'taxonomy', value: { objectType: updatedObjectTypes } }));
+    };
+
+    const handleAddWallet = (value?: string) => {
+        if (value) {
+            dispatch(actions.changePortfolioWallets({ wallets: [...wallets, value] }));
+        }
     };
 
     return (
@@ -475,6 +484,26 @@ const Filters = () => {
                         />
                     );
                 })}
+            </AssetFilterAccordion>
+
+            <Divider />
+
+            <AssetFilterAccordion
+                title={language['search.assetFilter.portfolio'] as string}
+                numberOfFilters={wallets.length}
+            >
+                <PortfolioItem
+                    handleAddWallet={(value?: string) => {
+                        handleAddWallet(value);
+                        syncFiltersWithUrl([...wallets, value!], 'portfolio_wallets');
+                    }}
+                />
+                <Wallets
+                    wallets={wallets}
+                    onRemove={(wallet: string) =>
+                        dispatch(actions.changePortfolioWallets({ wallets: wallets.filter((item) => item !== wallet) }))
+                    }
+                />
             </AssetFilterAccordion>
 
             <Box>
