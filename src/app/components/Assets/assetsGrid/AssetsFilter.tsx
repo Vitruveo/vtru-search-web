@@ -37,6 +37,7 @@ import { FilterSliceState } from '@/features/filters/types';
 import chunkArray from '@/utils/chunkArray';
 import PortfolioItem from '../components/PortfolioItem';
 import { Wallets } from '../components/Wallets';
+import validateCryptoAddress from '@/utils/adress.validate';
 
 const Filters = () => {
     const params = new URLSearchParams(window.location.search);
@@ -261,7 +262,7 @@ const Filters = () => {
                         control={
                             <Checkbox onChange={handleChangeAnimation} checked={selectedCategories.includes('video')} />
                         }
-                        label={'animation'}
+                        label={'Animation'}
                     />
                     <FormControlLabel
                         control={
@@ -495,14 +496,23 @@ const Filters = () => {
                 <PortfolioItem
                     handleAddWallet={(value?: string) => {
                         handleAddWallet(value);
-                        syncFiltersWithUrl([...wallets, value!], 'portfolio_wallets');
+                        syncFiltersWithUrl(
+                            [...wallets, value!].filter((item) => validateCryptoAddress(item)),
+                            'portfolio_wallets'
+                        );
                     }}
                 />
                 <Wallets
                     wallets={wallets}
-                    onRemove={(wallet: string) =>
-                        dispatch(actions.changePortfolioWallets({ wallets: wallets.filter((item) => item !== wallet) }))
-                    }
+                    onRemove={(wallet: string) => {
+                        dispatch(
+                            actions.changePortfolioWallets({ wallets: wallets.filter((item) => item !== wallet) })
+                        );
+                        syncFiltersWithUrl(
+                            wallets.filter((item) => item !== wallet && validateCryptoAddress(item)),
+                            'portfolio_wallets'
+                        );
+                    }}
                 />
             </AssetFilterAccordion>
 
