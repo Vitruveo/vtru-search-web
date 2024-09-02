@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Select, { SingleValue } from 'react-select';
 import { useSelector } from '@/store/hooks';
-import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import {
     Pagination,
@@ -46,6 +45,8 @@ const AssetsList = () => {
     const grid = params.get('grid');
     const video = params.get('video');
     const creatorId = params.get('creatorId');
+    const groupBycreator = params.get('groupByCreator');
+    const portfolioWallets = params.get('portfolio_wallets');
 
     const hasCurated = grid || video;
 
@@ -150,6 +151,12 @@ const AssetsList = () => {
         setIsIncludeGroupByCreator(hasIncludesGroup.active);
     }, [hasIncludesGroup.active]);
 
+    useEffect(() => {
+        if (grid || video) return;
+        if (params.has('groupByCreator')) setIsIncludeGroupByCreator(groupBycreator === 'yes');
+        else setIsIncludeGroupByCreator(true);
+    }, [groupBycreator]);
+
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
         assetDrawer.activate();
@@ -192,11 +199,11 @@ const AssetsList = () => {
     };
 
     const returnToPageOne = () => {
-        params.forEach((value, key) => params.delete(key));
+        params.forEach((_, key) => params.delete(key));
 
         params.set('sort', 'latest');
         params.set('sold', 'no');
-        params.set('taxonomy_aiGeneration', 'full,partial,none');
+        params.set('taxonomy_aiGeneration', 'partial,none');
         params.set('taxonomy_nudity', 'no');
         params.set('groupByCreator', 'yes');
         params.delete('creatorId');
@@ -399,7 +406,7 @@ const AssetsList = () => {
                         paddingTop: 0,
                     }}
                 >
-                    {currentPage === 1 && !grid && !video && !creatorId && <Slider />}
+                    {currentPage === 1 && !grid && !video && !creatorId && !portfolioWallets && <Slider />}
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>

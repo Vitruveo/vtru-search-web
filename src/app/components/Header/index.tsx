@@ -1,7 +1,6 @@
-import * as React from 'react';
 import Image from 'next/image';
 import { useDispatch } from 'react-redux';
-import { AppBar, Box, Button, IconButton, Stack, Toolbar } from '@mui/material';
+import { AppBar, Box, Button, IconButton, Stack, Toolbar, Tooltip } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { IconMenu2, IconMoon, IconPlus, IconSun } from '@tabler/icons-react';
@@ -67,16 +66,24 @@ const Header = () => {
                     <IconButton onClick={handleToggleTheme}>
                         {customizer.activeMode === 'dark' ? <IconSun /> : <IconMoon />}
                     </IconButton>
-                    <Button
-                        variant="contained"
-                        onClick={() => {
-                            window.open(`${STUDIO_BASE_URL}/login`, '_blank');
+                    <Tooltip
+                        title="Join Vitruveo"
+                        arrow
+                        componentsProps={{
+                            tooltip: {
+                                sx: { fontSize: '0.8rem' },
+                            },
                         }}
-                        sx={{ borderRadius: 0.5, display: 'flex', gap: 0.4 }}
                     >
-                        <IconPlus size={16} />
-                        <Image src="/images/logos/VTRU_Studio.png" width={18} height={18} alt="studio logo" />
-                    </Button>
+                        <Button
+                            variant="contained"
+                            onClick={() => window.open(`${STUDIO_BASE_URL}/login`, '_blank')}
+                            sx={{ borderRadius: 0.5, display: 'flex', gap: 1.2, padding: '0.35rem 0.4rem' }}
+                        >
+                            <IconPlus size={16} />
+                            <Image src="/images/logos/VTRU_Studio.png" width={18} height={18} alt="studio logo" />
+                        </Button>
+                    </Tooltip>
                     <Rss />
                     <Language />
                     {isLogged && <AvatarProfile />}

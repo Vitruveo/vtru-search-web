@@ -56,7 +56,15 @@ export function InputColor({ name, onClick, afterPrecisionChange }: Props) {
             </Box>
             <Box width="100%" display="flex" justifyContent="space-between">
                 <input ref={inputRef} type="color" id={name} name={name} />
-                <Button onClick={handleAddColor}>Add Color</Button>
+                <Button
+                    onClick={handleAddColor}
+                    sx={{
+                        backgroundColor: theme.palette.primary.main,
+                        color: theme.palette.primary.contrastText,
+                    }}
+                >
+                    Add Color
+                </Button>
             </Box>
         </Stack>
     );
