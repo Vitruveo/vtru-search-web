@@ -12,15 +12,11 @@ import Header from './components/Header';
 import { actions, initialState } from '@/features/filters/slice';
 import { actions as actionsAssets, initialState as initialStateAsset } from '@/features/assets/slice';
 import { extractObjects } from '@/utils/extractObjects';
-import { AssetsSliceState } from '@/features/assets/types';
 
 const params = Object.keys(extractObjects(initialState));
 const initialParams: Record<string, string> = {};
-const paramsSortAsset = Object.keys(extractObjects(initialStateAsset.sort));
-const initialParamsSortAsset: Record<string, string> = {
-    order: 'latest',
-    sold: 'no',
-};
+const paramsAsset = Object.keys(extractObjects(initialStateAsset));
+const initialParamsAsset: Record<string, string> = {};
 
 const Search = () => {
     const dispatch = useDispatch();
@@ -32,8 +28,8 @@ const Search = () => {
         params.forEach((param) => {
             if (searchParams.has(param)) initialParams[param] = searchParams.get(param)!;
         });
-        paramsSortAsset.forEach((param) => {
-            if (searchParams.has(param)) initialParamsSortAsset[param] = searchParams.get(param)!;
+        paramsAsset.forEach((param) => {
+            if (searchParams.has(param)) initialParamsAsset[param] = searchParams.get(param)!;
         });
 
         if (grid) {
@@ -49,10 +45,12 @@ const Search = () => {
         if (Object.keys(initialParams).length === 0) {
             initialParams.taxonomy_aiGeneration = 'partial,none';
             initialParams.taxonomy_nudity = 'no';
+            initialParamsAsset.sort_order = 'latest';
+            initialParamsAsset.sort_sold = 'no';
         }
 
         dispatch(actions.initialParams(initialParams));
-        dispatch(actionsAssets.setSort(initialParamsSortAsset as unknown as AssetsSliceState['sort']));
+        dispatch(actionsAssets.initialParams(initialParamsAsset));
     }, [searchParams]);
 
     return (

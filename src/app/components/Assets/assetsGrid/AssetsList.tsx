@@ -151,12 +151,6 @@ const AssetsList = () => {
         setIsIncludeGroupByCreator(hasIncludesGroup.active);
     }, [hasIncludesGroup.active]);
 
-    useEffect(() => {
-        if (grid || video) return;
-        if (params.has('groupByCreator')) setIsIncludeGroupByCreator(groupBycreator === 'yes');
-        else setIsIncludeGroupByCreator(true);
-    }, [groupBycreator]);
-
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
         assetDrawer.activate();
