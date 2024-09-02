@@ -38,51 +38,6 @@ export const assetsSlice = createSlice({
     name: 'assets',
     initialState,
     reducers: {
-        initialParams: (state, action: PayloadAction<Record<string, string>>) => {
-            state.loading = false;
-            state.error = null;
-            state.data = {
-                data: [],
-                limit: 0,
-                page: 0,
-                total: 0,
-                totalPage: 0,
-            };
-            state.lastSold = [];
-            state.tags = [];
-            state.creator = {
-                username: '',
-                avatar: '',
-            };
-            state.video = '';
-            state.loadingVideo = false;
-            state.maxPrice = 0;
-            state.sort = {
-                order: '',
-                sold: '',
-            };
-            state.groupByCreator = {
-                active: true,
-                name: '',
-            };
-            state.paused = false;
-
-            const payload = extractObjects(initialState);
-
-            Object.entries(action.payload).forEach(([key, value]) => {
-                if (typeof payload[key] === 'string') {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    state[key] = action.payload[key];
-                } else if (Array.isArray(payload[key]) || typeof payload[key] === 'number') {
-                    const [parent, item] = key.split('_');
-
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    state[parent][item] = action.payload[key].split(',');
-                }
-            });
-        },
         loadAssets: (_state, _action: PayloadAction<GetAssetsParams | null>) => {},
         loadAssetsLastSold: (_state, _action: PayloadAction) => {},
         setGridId: (_state, _action: PayloadAction<string>) => {},
@@ -163,6 +118,17 @@ export const assetsSlice = createSlice({
         },
         setLastSold: (state, action: PayloadAction<LastSoldAsset[]>) => {
             state.lastSold = action.payload;
+        },
+        startNormal: (state) => {
+            state.groupByCreator.active = false;
+            state.groupByCreator.name = '';
+        },
+        startGrouped: (state) => {
+            state.groupByCreator.active = true;
+            state.groupByCreator.name = '';
+        },
+        initialSort: (state, action: PayloadAction<AssetsSliceState['sort']>) => {
+            state.sort = action.payload;
         },
     },
 });
