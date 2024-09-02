@@ -67,6 +67,9 @@ const language: Translation = {
     'search.assetFilter.creators.title.ethnicity': 'نژاد',
     'search.assetFilter.creators.title.gender': 'جنسیت',
 
+    'search.assetFilter.portfolio': 'نمونه کارها',
+    'search.assetFilter.portfolio.placeholder': 'آدرس کیف پول',
+
     /* Asset List */
     'search.assetList.curateStack': 'پشته نگهداری',
     'search.assetList.curateStack.selected': 'انتخاب شده',
