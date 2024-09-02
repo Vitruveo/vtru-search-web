@@ -2,6 +2,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import type { AssetsSliceState, GetAssetsParams, GetCreatorParams, LastSoldAsset, MakeVideoParams } from './types';
+import { extractObjects } from '@/utils/extractObjects';
 
 export const initialState: AssetsSliceState = {
     loading: false,
@@ -117,6 +118,17 @@ export const assetsSlice = createSlice({
         },
         setLastSold: (state, action: PayloadAction<LastSoldAsset[]>) => {
             state.lastSold = action.payload;
+        },
+        startNormal: (state) => {
+            state.groupByCreator.active = false;
+            state.groupByCreator.name = '';
+        },
+        startGrouped: (state) => {
+            state.groupByCreator.active = true;
+            state.groupByCreator.name = '';
+        },
+        initialSort: (state, action: PayloadAction<AssetsSliceState['sort']>) => {
+            state.sort = action.payload;
         },
     },
 });

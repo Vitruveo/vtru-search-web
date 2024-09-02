@@ -12,28 +12,22 @@ import Header from './components/Header';
 import { actions, initialState } from '@/features/filters/slice';
 import { actions as actionsAssets, initialState as initialStateAsset } from '@/features/assets/slice';
 import { extractObjects } from '@/utils/extractObjects';
-import { AssetsSliceState } from '@/features/assets/types';
 
 const params = Object.keys(extractObjects(initialState));
 const initialParams: Record<string, string> = {};
-const paramsSortAsset = Object.keys(extractObjects(initialStateAsset.sort));
-const initialParamsSortAsset: Record<string, string> = {
-    order: 'latest',
-    sold: 'no',
-};
 
 const Search = () => {
     const dispatch = useDispatch();
     const searchParams = useSearchParams();
     const grid = searchParams.get('grid');
     const video = searchParams.get('video');
+    const groupByCreator = searchParams.get('groupByCreator');
+    const sort_sold = searchParams.get('sort_sold');
+    const sort_order = searchParams.get('sort_order');
 
     useEffect(() => {
         params.forEach((param) => {
             if (searchParams.has(param)) initialParams[param] = searchParams.get(param)!;
-        });
-        paramsSortAsset.forEach((param) => {
-            if (searchParams.has(param)) initialParamsSortAsset[param] = searchParams.get(param)!;
         });
 
         if (grid) {
@@ -52,7 +46,10 @@ const Search = () => {
         }
 
         dispatch(actions.initialParams(initialParams));
-        dispatch(actionsAssets.setSort(initialParamsSortAsset as unknown as AssetsSliceState['sort']));
+        dispatch(actionsAssets.initialSort({ order: sort_order || 'latest', sold: sort_sold || 'no' }));
+
+        if (groupByCreator === 'no') dispatch(actionsAssets.startNormal());
+        else dispatch(actionsAssets.startGrouped());
     }, [searchParams]);
 
     return (

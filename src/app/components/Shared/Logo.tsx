@@ -42,8 +42,8 @@ const Logo = () => {
 
         params.forEach((_, key) => params.delete(key));
 
-        params.set('sort', 'latest');
-        params.set('sold', 'no');
+        params.set('sort_order', 'latest');
+        params.set('sort_sold', 'no');
         params.set('taxonomy_aiGeneration', 'partial,none');
         params.set('taxonomy_nudity', 'no');
         params.set('groupByCreator', 'yes');

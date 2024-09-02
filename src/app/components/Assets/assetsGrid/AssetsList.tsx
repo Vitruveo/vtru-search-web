@@ -151,12 +151,6 @@ const AssetsList = () => {
         setIsIncludeGroupByCreator(hasIncludesGroup.active);
     }, [hasIncludesGroup.active]);
 
-    useEffect(() => {
-        if (grid || video) return;
-        if (params.has('groupByCreator')) setIsIncludeGroupByCreator(groupBycreator === 'yes');
-        else setIsIncludeGroupByCreator(true);
-    }, [groupBycreator]);
-
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
         assetDrawer.activate();
@@ -201,8 +195,8 @@ const AssetsList = () => {
     const returnToPageOne = () => {
         params.forEach((_, key) => params.delete(key));
 
-        params.set('sort', 'latest');
-        params.set('sold', 'no');
+        params.set('sort_order', 'latest');
+        params.set('sort_sold', 'no');
         params.set('taxonomy_aiGeneration', 'partial,none');
         params.set('taxonomy_nudity', 'no');
         params.set('groupByCreator', 'yes');
@@ -228,12 +222,12 @@ const AssetsList = () => {
         }>
     ) => {
         setSortOrder(e?.value || '');
-        generateQueryParam('sort', e?.value || '');
+        generateQueryParam('sort_order', e?.value || '');
         dispatch(actions.setSort({ order: e?.value || '', sold: isIncludeSold ? 'yes' : 'no' }));
     };
     const handleChangeIsIncludeSold = () => {
         setIsIncludeSold(!isIncludeSold);
-        generateQueryParam('sold', isIncludeSold ? 'no' : 'yes');
+        generateQueryParam('sort_sold', isIncludeSold ? 'no' : 'yes');
         dispatch(actions.setSort({ order: sortOrder, sold: isIncludeSold ? 'no' : 'yes' }));
     };
 

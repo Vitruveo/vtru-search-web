@@ -387,6 +387,7 @@ function* setup() {
 export function* assetsSagas() {
     yield all([
         // Assets
+        takeEvery(actions.startNormal.type, getAssets),
         takeEvery(actionsFilter.reset.type, getAssets),
         takeEvery(actions.loadAssets.type, getAssets),
         takeEvery(actions.setSort.type, getAssets),
@@ -399,6 +400,7 @@ export function* assetsSagas() {
         takeEvery(actionsFilter.changePortfolioWallets.type, getAssets),
 
         // Group by creator
+        takeEvery(actions.startGrouped.type, getAssetsGroupByCreator),
         takeEvery(actionsFilter.reset.type, getAssetsGroupByCreator),
         takeEvery(actions.setGroupByCreator.type, getAssetsGroupByCreator),
         takeEvery(actions.setSort.type, getAssetsGroupByCreator),
