@@ -22,6 +22,7 @@ export interface AssetsSliceState {
         active: boolean;
         name: string;
     };
+    paused: boolean;
 }
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';

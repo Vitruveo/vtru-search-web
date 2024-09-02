@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useDispatch } from 'react-redux';
-import { AppBar, Box, Button, IconButton, Stack, Toolbar, Tooltip } from '@mui/material';
+import { AppBar, Box, Button, IconButton, Stack, Toolbar, Tooltip, Typography } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { IconMenu2, IconMoon, IconPlus, IconSun } from '@tabler/icons-react';
@@ -17,6 +17,7 @@ const Header = () => {
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
     const customizer = useSelector((state) => state.customizer);
+    const paused = useSelector((state) => state.assets.paused);
     const isLogged = useSelector((state) => state.creator.token !== '');
     const dispatch = useDispatch();
 
@@ -34,6 +35,9 @@ const Header = () => {
         margin: '0 auto',
         width: '100%',
         color: `${theme.palette.text.secondary} !important`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     }));
 
     const onMenuClick = () => {
@@ -61,7 +65,10 @@ const Header = () => {
                     </Box>
                 )}
 
-                <Box flexGrow={1} />
+                <Box flexGrow={1} display="flex" alignItems="center" justifyContent="center">
+                    {paused && <Typography variant="h3">⚠️ Store currently undergoing maintenance</Typography>}
+                </Box>
+
                 <Stack spacing={1} direction="row" alignItems="center">
                     <IconButton onClick={handleToggleTheme}>
                         {customizer.activeMode === 'dark' ? <IconSun /> : <IconMoon />}

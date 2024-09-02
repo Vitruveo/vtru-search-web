@@ -30,6 +30,7 @@ export const initialState: AssetsSliceState = {
         active: true,
         name: '',
     },
+    paused: false,
 };
 
 export const assetsSlice = createSlice({
@@ -41,6 +42,9 @@ export const assetsSlice = createSlice({
         setGridId: (_state, _action: PayloadAction<string>) => {},
         startLoading: (state) => {
             state.loading = true;
+        },
+        setPaused: (state, action: PayloadAction<boolean>) => {
+            state.paused = action.payload;
         },
         setGroupByCreator: (
             state,

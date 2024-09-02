@@ -3,7 +3,7 @@ import { all, call, put, takeEvery, select, debounce } from 'redux-saga/effects'
 import { PayloadAction } from '@reduxjs/toolkit';
 import { confetti } from '@tsparticles/confetti';
 
-import { API_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, BATCH_BASE_URL } from '@/constants/api';
 import type { FilterSliceState } from '../filters/types';
 import type {
     BuidlQuery,
@@ -371,6 +371,19 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
     yield put(actions.setLoadingVideo(false));
 }
 
+function* setup() {
+    try {
+        const response: AxiosResponse<APIResponse<boolean>> = yield call(
+            axios.get,
+            `${BATCH_BASE_URL}/issueLicense/status`
+        );
+
+        yield put(actions.setPaused(response.data.data));
+    } catch (error) {
+        //
+    }
+}
+
 export function* assetsSagas() {
     yield all([
         // Assets
@@ -401,5 +414,8 @@ export function* assetsSagas() {
         takeEvery(actions.makeVideo.type, makeVideo),
         takeEvery(actions.setGridId.type, getGrid),
         takeEvery(actions.setVideoId.type, getVideo),
+
+        // setup
+        setup(),
     ]);
 }
