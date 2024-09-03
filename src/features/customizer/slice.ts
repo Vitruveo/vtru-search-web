@@ -82,6 +82,9 @@ export const customizerSlice = createSlice({
         setHidden: (state: StateType, action: PayloadAction<{ key: string; hidden: boolean }>) => {
             if (state.hidden) state.hidden[action.payload.key] = action.payload.hidden;
         },
+        reset: (state: StateType) => {
+            state.hidden = { filter: false, order: false, header: false, recentlySold: false };
+        },
     },
 });
 
@@ -98,6 +101,7 @@ export const {
     setLanguage,
     setCardShadow,
     setHidden,
+    reset,
 } = customizerSlice.actions;
 
 export const customizerActionsCreators = customizerSlice.actions;

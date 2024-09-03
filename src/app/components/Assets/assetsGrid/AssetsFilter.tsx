@@ -18,6 +18,7 @@ import {
 import assetsMetadata from '@/mock/assetsMetadata.json';
 import { actions } from '@/features/filters/slice';
 import { actions as actionsAssets } from '@/features/assets/slice';
+import * as actionsCustomizer from '@/features/customizer/slice';
 import { ContextItem } from '../components/ContextItem';
 import { TaxonomyItem } from '../components/TaxonomyItem';
 import { CreatorsItem } from '../components/CreatorsItem';
@@ -38,6 +39,7 @@ import chunkArray from '@/utils/chunkArray';
 import PortfolioItem from '../components/PortfolioItem';
 import { Wallets } from '../components/Wallets';
 import validateCryptoAddress from '@/utils/adress.validate';
+import generateQueryParam from '@/utils/generate.queryParam';
 
 const Filters = () => {
     const params = new URLSearchParams(window.location.search);
@@ -95,13 +97,6 @@ const Filters = () => {
         );
     }, [values.context, values.taxonomy, values.creators, values.shortCuts]);
 
-    const generateQueryParam = (key: string, value: string) => {
-        const searchParams = new URLSearchParams(window.location.search);
-        searchParams.set(key, value);
-        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
-        window.history.pushState({ path: newUrl }, '', newUrl);
-    };
-
     const afterPriceChange = (min: number, max: number) => {
         generateQueryParam('price_min', min.toString());
         generateQueryParam('price_max', max.toString());
@@ -140,6 +135,7 @@ const Filters = () => {
 
         dispatch(actionsAssets.resetGroupByCreator());
         dispatch(actions.reset({ maxPrice }));
+        dispatch(actionsCustomizer.reset());
     };
 
     const syncFiltersWithUrl = (changeValue: any, key: string) => {

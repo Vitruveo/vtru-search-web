@@ -1,10 +1,19 @@
-import { setHidden } from '@/features/customizer/slice';
+import { reset, setHidden } from '@/features/customizer/slice';
 import { useDispatch, useSelector } from '@/store/hooks';
+import generateQueryParam from '@/utils/generate.queryParam';
 import { Button, Divider, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material';
 import { IconCopy, IconSettings } from '@tabler/icons-react';
 import { MouseEvent, useEffect, useState } from 'react';
 
 export default function StyleElements() {
+    const params = new URLSearchParams(window.location.search);
+    const paramsHidden: { [key: string]: string } = {};
+    params.forEach((value, key) => {
+        if (key.includes('_hidden')) {
+            paramsHidden[key] = value;
+        }
+    });
+
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -24,6 +33,7 @@ export default function StyleElements() {
         if (key === 'header') setHeaderCheck(hidden);
         if (key === 'recentlySold') setRecentlySoldCheck(hidden);
 
+        generateQueryParam(`${key}_hidden`, hidden ? 'yes' : 'no');
         dispatch(setHidden({ key, hidden }));
     };
 
@@ -35,6 +45,14 @@ export default function StyleElements() {
             setRecentlySoldCheck(hiddenElement.recentlySold);
         }
     }, [hiddenElement]);
+
+    useEffect(() => {
+        if (Object.keys(paramsHidden).length === 0) dispatch(reset());
+        else
+            Object.entries(paramsHidden).forEach(([key, value]) => {
+                dispatch(setHidden({ key: key.replace('_hidden', ''), hidden: value === 'yes' }));
+            });
+    }, []);
 
     return (
         <>

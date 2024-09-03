@@ -23,6 +23,7 @@ import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/assets';
 import { actions as actionsFilters } from '@/features/filters/slice';
 import { actions as layoutActions } from '@/features/layout';
+import * as actionsCustomizer from '@/features/customizer/slice';
 import { Asset } from '@/features/assets/types';
 import { DrawerAsset } from '../components/DrawerAsset';
 import DrawerStack from '../components/DrawerStack/DrawerStack';
@@ -37,6 +38,7 @@ import NumberOfFilters from '../components/numberOfFilters';
 import Slider from '../../../components/Slider';
 import { useTheme } from '@mui/material/styles';
 import StyleElements from '../components/StyleElements';
+import generateQueryParam from '@/utils/generate.queryParam';
 
 const AssetsList = () => {
     const dispatch = useDispatch();
@@ -206,13 +208,7 @@ const AssetsList = () => {
 
         dispatch(actions.resetGroupByCreator());
         dispatch(actionsFilters.reset({ maxPrice }));
-    };
-
-    const generateQueryParam = (key: string, value: string) => {
-        const searchParams = new URLSearchParams(window.location.search);
-        searchParams.set(key, value);
-        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
-        window.history.pushState({ path: newUrl }, '', newUrl);
+        dispatch(actionsCustomizer.reset());
     };
 
     const handleChangeSelectSortOrder = (
