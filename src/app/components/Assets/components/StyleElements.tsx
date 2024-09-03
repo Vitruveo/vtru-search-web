@@ -1,12 +1,40 @@
+import { setHidden } from '@/features/customizer/slice';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { Button, Divider, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material';
 import { IconCopy, IconSettings } from '@tabler/icons-react';
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 
 export default function StyleElements() {
+    const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
+
+    const hiddenElement = useSelector((state) => state.customizer.hidden);
+
+    const [filterCheck, setFilterCheck] = useState(false);
+    const [orderCheck, setOrderCheck] = useState(false);
+    const [headerCheck, setHeaderCheck] = useState(false);
+    const [recentlySoldCheck, setRecentlySoldCheck] = useState(false);
+
+    const handleChange = (key: string, hidden: boolean) => {
+        if (key === 'filter') setFilterCheck(hidden);
+        if (key === 'order') setOrderCheck(hidden);
+        if (key === 'header') setHeaderCheck(hidden);
+        if (key === 'recentlySold') setRecentlySoldCheck(hidden);
+
+        dispatch(setHidden({ key, hidden }));
+    };
+
+    useEffect(() => {
+        if (hiddenElement) {
+            setFilterCheck(hiddenElement.filter);
+            setOrderCheck(hiddenElement.order);
+            setHeaderCheck(hiddenElement.header);
+            setRecentlySoldCheck(hiddenElement.recentlySold);
+        }
+    }, [hiddenElement]);
 
     return (
         <>
@@ -32,16 +60,23 @@ export default function StyleElements() {
                 sx={{ marginTop: '1rem' }}
             >
                 <MenuItem>
-                    <Switch /> Hide Filters
+                    <Switch onChange={(e) => handleChange('filter', e.target.checked)} checked={filterCheck} />
+                    Hide Filters
                 </MenuItem>
                 <MenuItem>
-                    <Switch /> Hide Order
+                    <Switch onChange={(e) => handleChange('order', e.target.checked)} checked={orderCheck} />
+                    Hide Order
                 </MenuItem>
                 <MenuItem>
-                    <Switch /> Hide Header
+                    <Switch onChange={(e) => handleChange('header', e.target.checked)} checked={headerCheck} />
+                    Hide Header
                 </MenuItem>
                 <MenuItem>
-                    <Switch /> Hide Recently Sold
+                    <Switch
+                        onChange={(e) => handleChange('recentlySold', e.target.checked)}
+                        checked={recentlySoldCheck}
+                    />
+                    Hide Recently Sold
                 </MenuItem>
                 <Divider />
                 <MenuItem>

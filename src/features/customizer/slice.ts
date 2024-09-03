@@ -15,6 +15,7 @@ interface StateType {
     currentLanguage: 'en_US' | 'pt_BR' | 'es_ES';
     isCardShadow?: boolean;
     borderRadius?: number | any;
+    hidden?: { [key: string]: boolean };
 }
 
 const initialState: StateType = {
@@ -32,6 +33,7 @@ const initialState: StateType = {
     currentLanguage: 'en_US',
     isCardShadow: true,
     borderRadius: 7,
+    hidden: { filter: false, order: false, header: false, recentlySold: false },
 };
 
 export const customizerSlice = createSlice({
@@ -77,6 +79,9 @@ export const customizerSlice = createSlice({
         setBorderRadius: (state: StateType, action) => {
             state.borderRadius = action.payload;
         },
+        setHidden: (state: StateType, action: PayloadAction<{ key: string; hidden: boolean }>) => {
+            if (state.hidden) state.hidden[action.payload.key] = action.payload.hidden;
+        },
     },
 });
 
@@ -92,6 +97,7 @@ export const {
     toggleHorizontal,
     setLanguage,
     setCardShadow,
+    setHidden,
 } = customizerSlice.actions;
 
 export const customizerActionsCreators = customizerSlice.actions;
