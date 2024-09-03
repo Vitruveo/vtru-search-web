@@ -36,6 +36,7 @@ import './AssetScroll.css';
 import NumberOfFilters from '../components/numberOfFilters';
 import Slider from '../../../components/Slider';
 import { useTheme } from '@mui/material/styles';
+import StyleElements from '../components/StyleElements';
 
 const AssetsList = () => {
     const dispatch = useDispatch();
@@ -45,7 +46,6 @@ const AssetsList = () => {
     const grid = params.get('grid');
     const video = params.get('video');
     const creatorId = params.get('creatorId');
-    const groupBycreator = params.get('groupByCreator');
     const portfolioWallets = params.get('portfolio_wallets');
 
     const hasCurated = grid || video;
@@ -408,7 +408,7 @@ const AssetsList = () => {
                         width="100%"
                         display="flex"
                         alignItems="flex-end"
-                        justifyContent={lgUp || smUp ? 'space-between' : 'center'}
+                        justifyContent={lgUp || smUp ? 'flex-end' : 'center'}
                     >
                         {hasCurated || !hasIncludesGroup.active ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
@@ -478,6 +478,9 @@ const AssetsList = () => {
                                 }),
                             }}
                         />
+                        <Box ml={1}>
+                            <StyleElements />
+                        </Box>
                     </Box>
                 </Grid>
 
