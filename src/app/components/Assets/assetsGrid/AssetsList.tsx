@@ -37,8 +37,8 @@ import './AssetScroll.css';
 import NumberOfFilters from '../components/numberOfFilters';
 import Slider from '../../../components/Slider';
 import { useTheme } from '@mui/material/styles';
-import StyleElements from '../components/StyleElements';
 import generateQueryParam from '@/utils/generate.queryParam';
+import StyleElements from '../components/StyleElements';
 
 const AssetsList = () => {
     const dispatch = useDispatch();
@@ -459,42 +459,46 @@ const AssetsList = () => {
                         ) : (
                             <Box />
                         )}
-                        <Select
-                            placeholder="Select Page"
-                            options={optionsForSelect}
-                            value={currentPage > 1 ? { value: currentPage, label: currentPage } : null}
-                            onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    minWidth: '250px',
-                                    borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
-                                    backgroundColor: theme.palette.background.paper,
-                                    boxShadow: '#00d6f4',
-                                    '&:hover': { borderColor: '#00d6f4' },
-                                }),
-                                menu: (base) => ({
-                                    ...base,
-                                    zIndex: 1000,
-                                    color: theme.palette.text.primary,
-                                    backgroundColor: theme.palette.background.paper,
-                                }),
-                                singleValue: (base) => ({
-                                    ...base,
-                                    color: theme.palette.text.primary,
-                                }),
-                                option: (base, state) => ({
-                                    ...base,
-                                    color: theme.palette.text.primary,
-                                    backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
-                                    '&:hover': { backgroundColor: theme.palette.action.hover },
-                                }),
-                                input: (base) => ({
-                                    ...base,
-                                    color: theme.palette.text.primary,
-                                }),
-                            }}
-                        />
+                        {!isHidden?.pageNavigation && (
+                            <Select
+                                placeholder="Select Page"
+                                options={optionsForSelect}
+                                value={currentPage > 1 ? { value: currentPage, label: currentPage } : null}
+                                onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
+                                styles={{
+                                    control: (base, state) => ({
+                                        ...base,
+                                        minWidth: '250px',
+                                        borderColor: state.isFocused
+                                            ? theme.palette.primary.main
+                                            : theme.palette.grey[200],
+                                        backgroundColor: theme.palette.background.paper,
+                                        boxShadow: '#00d6f4',
+                                        '&:hover': { borderColor: '#00d6f4' },
+                                    }),
+                                    menu: (base) => ({
+                                        ...base,
+                                        zIndex: 1000,
+                                        color: theme.palette.text.primary,
+                                        backgroundColor: theme.palette.background.paper,
+                                    }),
+                                    singleValue: (base) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                    }),
+                                    option: (base, state) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                        backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
+                                        '&:hover': { backgroundColor: theme.palette.action.hover },
+                                    }),
+                                    input: (base) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                    }),
+                                }}
+                            />
+                        )}
                         <Box ml={1}>
                             <StyleElements />
                         </Box>
@@ -630,33 +634,37 @@ const AssetsList = () => {
                         </Grid>
                     )}
                 </Grid>
-                <Box
-                    mt={4}
-                    mb={2}
-                    display={totalPage === 0 ? 'none' : 'flex'}
-                    justifyContent="center"
-                    width="100%"
-                    alignItems="center"
-                >
-                    {!isLoading && (
-                        <Pagination
-                            count={totalPage}
-                            page={currentPage}
-                            onChange={(_event, value) => dispatch(actions.setCurrentPage(value))}
-                            color="primary"
-                            size={lgUp ? 'large' : 'medium'}
-                        />
-                    )}
-                </Box>
-                <Box
-                    display={totalPage === 0 ? 'none' : 'flex'}
-                    justifyContent="flex-end"
-                    width="100%"
-                    mr={4}
-                    mb={lgUp ? 4 : 8}
-                >
-                    <Button onClick={handleScrollToTop}>Scroll to top</Button>
-                </Box>
+                {!isHidden?.pageNavigation && (
+                    <>
+                        <Box
+                            mt={4}
+                            mb={2}
+                            display={totalPage === 0 ? 'none' : 'flex'}
+                            justifyContent="center"
+                            width="100%"
+                            alignItems="center"
+                        >
+                            {!isLoading && (
+                                <Pagination
+                                    count={totalPage}
+                                    page={currentPage}
+                                    onChange={(_event, value) => dispatch(actions.setCurrentPage(value))}
+                                    color="primary"
+                                    size={lgUp ? 'large' : 'medium'}
+                                />
+                            )}
+                        </Box>
+                        <Box
+                            display={totalPage === 0 ? 'none' : 'flex'}
+                            justifyContent="flex-end"
+                            width="100%"
+                            mr={4}
+                            mb={lgUp ? 4 : 8}
+                        >
+                            <Button onClick={handleScrollToTop}>Scroll to top</Button>
+                        </Box>
+                    </>
+                )}
             </Grid>
         </Box>
     );

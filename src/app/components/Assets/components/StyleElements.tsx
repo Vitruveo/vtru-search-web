@@ -29,6 +29,8 @@ export default function StyleElements() {
     const [orderCheck, setOrderCheck] = useState(false);
     const [headerCheck, setHeaderCheck] = useState(false);
     const [recentlySoldCheck, setRecentlySoldCheck] = useState(false);
+    const [pageNavigationCheck, setPageNavigationCheck] = useState(false);
+    const [cardDetailCheck, setCardDetailCheck] = useState(false);
     const [copyMessage, setCopyMessage] = useState('Copy URL');
 
     const handleChange = (key: string, hidden: boolean) => {
@@ -36,6 +38,8 @@ export default function StyleElements() {
         if (key === 'order') setOrderCheck(hidden);
         if (key === 'header') setHeaderCheck(hidden);
         if (key === 'recentlySold') setRecentlySoldCheck(hidden);
+        if (key === 'pageNavigation') setPageNavigationCheck(hidden);
+        if (key === 'cardDetail') setCardDetailCheck(hidden);
 
         generateQueryParam(`${key}_hidden`, hidden ? 'yes' : 'no');
         dispatch(setHidden({ key, hidden }));
@@ -47,6 +51,8 @@ export default function StyleElements() {
             setOrderCheck(hiddenElement.order);
             setHeaderCheck(hiddenElement.header);
             setRecentlySoldCheck(hiddenElement.recentlySold);
+            setPageNavigationCheck(hiddenElement.pageNavigation);
+            setCardDetailCheck(hiddenElement.cardDetail);
         }
     }, [hiddenElement]);
 
@@ -99,6 +105,17 @@ export default function StyleElements() {
                         checked={recentlySoldCheck}
                     />
                     Hide Recently Sold
+                </MenuItem>
+                <MenuItem>
+                    <Switch
+                        onChange={(e) => handleChange('pageNavigation', e.target.checked)}
+                        checked={pageNavigationCheck}
+                    />
+                    Hide Page Navigation
+                </MenuItem>
+                <MenuItem>
+                    <Switch onChange={(e) => handleChange('cardDetail', e.target.checked)} checked={cardDetailCheck} />
+                    Hide Card Detail
                 </MenuItem>
                 <Divider />
                 <MenuItem>

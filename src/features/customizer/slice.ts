@@ -33,7 +33,14 @@ const initialState: StateType = {
     currentLanguage: 'en_US',
     isCardShadow: true,
     borderRadius: 7,
-    hidden: { filter: false, order: false, header: false, recentlySold: false },
+    hidden: {
+        filter: false,
+        order: false,
+        header: false,
+        recentlySold: false,
+        pageNavigation: false,
+        cardDetail: false,
+    },
 };
 
 export const customizerSlice = createSlice({
@@ -83,7 +90,14 @@ export const customizerSlice = createSlice({
             if (state.hidden) state.hidden[action.payload.key] = action.payload.hidden;
         },
         reset: (state: StateType) => {
-            state.hidden = { filter: false, order: false, header: false, recentlySold: false };
+            state.hidden = {
+                filter: false,
+                order: false,
+                header: false,
+                recentlySold: false,
+                pageNavigation: false,
+                cardDetail: false,
+            };
         },
     },
 });
