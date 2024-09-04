@@ -58,10 +58,10 @@ export function TaxonomyItem({
                 />
             )}
 
-            {type === 'textarea' && (
+            {typeof values['taxonomy'][title] === 'string' && type === 'textarea' && (
                 <InputText
                     name={title}
-                    value={values['taxonomy'][title] as string}
+                    value={values['taxonomy'][title] as unknown as string}
                     onChange={(event) => onChange(event.target.value)}
                 />
             )}
@@ -82,10 +82,10 @@ export function TaxonomyItem({
                 />
             )}
 
-            {type === 'text' && (
+            {typeof values['taxonomy'][title] === 'string' && type === 'text' && (
                 <InputText
                     name={title}
-                    value={values['taxonomy'][title] as string}
+                    value={values['taxonomy'][title] as unknown as string}
                     onChange={(event) => onChange(event.target.value)}
                 />
             )}

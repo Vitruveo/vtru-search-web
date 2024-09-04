@@ -90,7 +90,7 @@ const Filters = () => {
         setSelectedObjectTypes(
             [
                 values.taxonomy.objectType.includes('physicalart') && 'physicalart',
-                values.taxonomy.objectType.includes('digitalArt') && 'digitalArt',
+                values.taxonomy.objectType.includes('digitalart') && 'digitalart',
             ].filter(Boolean) as string[]
         );
     }, [values.context, values.taxonomy, values.creators, values.shortCuts]);
@@ -192,8 +192,8 @@ const Filters = () => {
     };
     const handleChangeDigitalArt = (event: React.ChangeEvent<HTMLInputElement>) => {
         const updatedObjectTypes = event.target.checked
-            ? [...selectedObjectTypes, 'digitalArt']
-            : selectedObjectTypes.filter((type) => type !== 'digitalArt');
+            ? [...selectedObjectTypes, 'digitalart']
+            : selectedObjectTypes.filter((type) => type !== 'digitalart');
         setSelectedObjectTypes(updatedObjectTypes);
         syncFiltersWithUrl(updatedObjectTypes, 'taxonomy_objectType');
         dispatch(actions.change({ key: 'taxonomy', value: { objectType: updatedObjectTypes } }));
@@ -268,7 +268,7 @@ const Filters = () => {
                         control={
                             <Checkbox
                                 onChange={handleChangeDigitalArt}
-                                checked={selectedObjectTypes.includes('digitalArt')}
+                                checked={selectedObjectTypes.includes('digitalart')}
                             />
                         }
                         label={'Digital Art'}

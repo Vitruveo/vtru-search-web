@@ -37,12 +37,12 @@ export interface Taxonomy {
     aiGeneration: string[];
     arenabled: string[];
     category: string[];
-    collections: string;
+    collections: string[];
     medium: string[];
     nudity: string[];
     objectType: string[];
     style: string[];
-    subject: string;
+    subject: string[];
     tags: string[];
 }
 
