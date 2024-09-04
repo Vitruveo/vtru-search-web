@@ -75,8 +75,7 @@ const AssetsList = () => {
     const values = useSelector((state) => state.filters);
     const gridTitle = useSelector((state) => state.filters.grid.title);
     const videoTitle = useSelector((state) => state.filters.video.title);
-    const isHiddenOrder = useSelector((state) => state.customizer.hidden?.order);
-    const isHiddenRecentlySold = useSelector((state) => state.customizer.hidden?.recentlySold);
+    const isHidden = useSelector((state) => state.customizer.hidden);
 
     const optionsForSelect = useMemo(() => {
         const options: { value: number; label: number }[] = [];
@@ -280,7 +279,7 @@ const AssetsList = () => {
                 setSelected={setSelected}
             />
 
-            {!isHiddenOrder && (
+            {!isHidden?.order && (
                 <Stack
                     width="100%"
                     direction="row"
@@ -396,7 +395,12 @@ const AssetsList = () => {
                 pr={0}
                 sx={{
                     overflow: 'auto',
-                    maxHeight: '85vh',
+                    maxHeight:
+                        isHidden?.order && isHidden?.header
+                            ? '105vh'
+                            : isHidden?.order || isHidden?.header
+                              ? '95vh'
+                              : '85vh',
                     justifyContent: 'flex-end',
                 }}
                 ref={topRef}
@@ -413,7 +417,7 @@ const AssetsList = () => {
                         !video &&
                         !creatorId &&
                         !portfolioWallets &&
-                        !isHiddenRecentlySold && <Slider />}
+                        !isHidden?.recentlySold && <Slider />}
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>

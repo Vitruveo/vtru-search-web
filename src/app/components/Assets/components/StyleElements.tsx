@@ -18,7 +18,10 @@ export default function StyleElements() {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
-    const handleClose = () => setAnchorEl(null);
+    const handleClose = () => {
+        setAnchorEl(null);
+        setCopyMessage('Copy URL');
+    };
 
     const hiddenElement = useSelector((state) => state.customizer.hidden);
 
@@ -26,6 +29,7 @@ export default function StyleElements() {
     const [orderCheck, setOrderCheck] = useState(false);
     const [headerCheck, setHeaderCheck] = useState(false);
     const [recentlySoldCheck, setRecentlySoldCheck] = useState(false);
+    const [copyMessage, setCopyMessage] = useState('Copy URL');
 
     const handleChange = (key: string, hidden: boolean) => {
         if (key === 'filter') setFilterCheck(hidden);
@@ -98,8 +102,16 @@ export default function StyleElements() {
                 </MenuItem>
                 <Divider />
                 <MenuItem>
-                    <Button startIcon={<IconCopy size={18} />} fullWidth variant="contained">
-                        <Typography variant="caption">Copy URL</Typography>
+                    <Button
+                        startIcon={<IconCopy size={18} />}
+                        fullWidth
+                        variant="contained"
+                        onClick={() => {
+                            navigator.clipboard.writeText(window.location.href);
+                            setCopyMessage('Copied!');
+                        }}
+                    >
+                        <Typography variant="caption">{copyMessage}</Typography>
                     </Button>
                 </MenuItem>
             </Menu>
