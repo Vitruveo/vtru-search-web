@@ -13,14 +13,14 @@ export interface FilterSliceState {
     taxonomy: {
         objectType: string[];
         tags: string[];
-        collections: string;
+        collections: string[];
         aiGeneration: string[];
         arenabled: string[];
         nudity: string[];
         category: string[];
         medium: string[];
         style: string[];
-        subject: string;
+        subject: string[];
     };
     creators: {
         name: string[];
