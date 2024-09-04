@@ -269,7 +269,7 @@ const AssetsList = () => {
     const hasBlockedAssets = blockedAssets.length > 0;
 
     return (
-        <Box position="fixed">
+        <Box position="fixed" width={isHidden?.filter ? '100%' : '84%'}>
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
 
             <DrawerStack
@@ -421,12 +421,7 @@ const AssetsList = () => {
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>
-                    <Box
-                        width="100%"
-                        display="flex"
-                        alignItems="flex-end"
-                        justifyContent={lgUp || smUp ? 'flex-end' : 'center'}
-                    >
+                    <Box width="100%" display="flex" alignItems="flex-end" justifyContent={'space-between'}>
                         {hasCurated || !hasIncludesGroup.active ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
                                 {hasCurated && (
@@ -459,47 +454,49 @@ const AssetsList = () => {
                         ) : (
                             <Box />
                         )}
-                        {!isHidden?.pageNavigation && (
-                            <Select
-                                placeholder="Select Page"
-                                options={optionsForSelect}
-                                value={currentPage > 1 ? { value: currentPage, label: currentPage } : null}
-                                onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
-                                styles={{
-                                    control: (base, state) => ({
-                                        ...base,
-                                        minWidth: '250px',
-                                        borderColor: state.isFocused
-                                            ? theme.palette.primary.main
-                                            : theme.palette.grey[200],
-                                        backgroundColor: theme.palette.background.paper,
-                                        boxShadow: '#00d6f4',
-                                        '&:hover': { borderColor: '#00d6f4' },
-                                    }),
-                                    menu: (base) => ({
-                                        ...base,
-                                        zIndex: 1000,
-                                        color: theme.palette.text.primary,
-                                        backgroundColor: theme.palette.background.paper,
-                                    }),
-                                    singleValue: (base) => ({
-                                        ...base,
-                                        color: theme.palette.text.primary,
-                                    }),
-                                    option: (base, state) => ({
-                                        ...base,
-                                        color: theme.palette.text.primary,
-                                        backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
-                                        '&:hover': { backgroundColor: theme.palette.action.hover },
-                                    }),
-                                    input: (base) => ({
-                                        ...base,
-                                        color: theme.palette.text.primary,
-                                    }),
-                                }}
-                            />
-                        )}
-                        <Box ml={1}>
+                        <Box display={'flex'} gap={1}>
+                            {!isHidden?.pageNavigation && (
+                                <Select
+                                    placeholder="Select Page"
+                                    options={optionsForSelect}
+                                    value={currentPage > 1 ? { value: currentPage, label: currentPage } : null}
+                                    onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
+                                    styles={{
+                                        control: (base, state) => ({
+                                            ...base,
+                                            minWidth: '250px',
+                                            borderColor: state.isFocused
+                                                ? theme.palette.primary.main
+                                                : theme.palette.grey[200],
+                                            backgroundColor: theme.palette.background.paper,
+                                            boxShadow: '#00d6f4',
+                                            '&:hover': { borderColor: '#00d6f4' },
+                                        }),
+                                        menu: (base) => ({
+                                            ...base,
+                                            zIndex: 1000,
+                                            color: theme.palette.text.primary,
+                                            backgroundColor: theme.palette.background.paper,
+                                        }),
+                                        singleValue: (base) => ({
+                                            ...base,
+                                            color: theme.palette.text.primary,
+                                        }),
+                                        option: (base, state) => ({
+                                            ...base,
+                                            color: theme.palette.text.primary,
+                                            backgroundColor: state.isFocused
+                                                ? theme.palette.action.hover
+                                                : 'transparent',
+                                            '&:hover': { backgroundColor: theme.palette.action.hover },
+                                        }),
+                                        input: (base) => ({
+                                            ...base,
+                                            color: theme.palette.text.primary,
+                                        }),
+                                    }}
+                                />
+                            )}
                             <StyleElements />
                         </Box>
                     </Box>
@@ -634,7 +631,7 @@ const AssetsList = () => {
                         </Grid>
                     )}
                 </Grid>
-                {!isHidden?.pageNavigation && (
+                {!isHidden?.pageNavigation ? (
                     <>
                         <Box
                             mt={4}
@@ -664,6 +661,8 @@ const AssetsList = () => {
                             <Button onClick={handleScrollToTop}>Scroll to top</Button>
                         </Box>
                     </>
+                ) : (
+                    <Box mb={4} />
                 )}
             </Grid>
         </Box>
