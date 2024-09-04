@@ -202,7 +202,7 @@ const Filters = () => {
     };
 
     return (
-        <Stack gap={2} p={1} pb={2} mt={1} pt={isSmallScreen ? 8 : 1} height="92vh" overflow="auto">
+        <Stack gap={2} p={1} pb={2} mt={1} pt={isSmallScreen ? 8 : 1} height="100vh" overflow="auto">
             <OutlinedInput
                 id="outlined-search"
                 placeholder={language['search.assetFilter.search.placeholder'] as string}

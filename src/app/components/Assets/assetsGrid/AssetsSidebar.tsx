@@ -33,9 +33,7 @@ const AssetsSidebar = () => {
                 [`& .MuiDrawer-paper`]: { position: 'relative' },
             }}
         >
-            <Box>
-                <AssetsFilter />
-            </Box>
+            <AssetsFilter />
         </Drawer>
     );
 };
