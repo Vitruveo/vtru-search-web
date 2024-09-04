@@ -21,14 +21,14 @@ export const initialState: FilterSliceState = {
     taxonomy: {
         objectType: [],
         tags: [],
-        collections: '',
+        collections: [],
         aiGeneration: [],
         arenabled: [],
         nudity: [],
         category: [],
         medium: [],
         style: [],
-        subject: '',
+        subject: [],
     },
     creators: {
         name: [],
@@ -99,14 +99,14 @@ export const filterSlice = createSlice({
             state.taxonomy = {
                 objectType: [],
                 tags: [],
-                collections: '',
+                collections: [],
                 aiGeneration: [],
                 arenabled: [],
                 nudity: [],
                 category: [],
                 medium: [],
                 style: [],
-                subject: '',
+                subject: [],
             };
             state.creators = {
                 name: [],
