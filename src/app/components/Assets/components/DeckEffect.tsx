@@ -1,4 +1,5 @@
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import { useSelector } from '@/store/hooks';
 import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
@@ -12,6 +13,7 @@ interface DeckEffectProps {
 
 export default function DeckEffect({ isHovered, showFanEffect, count, paths = [], handleClickImage }: DeckEffectProps) {
     const theme = useTheme();
+    const isHiddenCardDetail = useSelector((state) => state.customizer.hidden?.cardDetail);
 
     const commonStyles = {
         width: showFanEffect ? 200 : 1,
@@ -162,7 +164,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                             width: 250,
                             top: -10,
                             left: isHovered && !showFanEffect ? 45 : 16,
-                            height: 360,
+                            height: isHiddenCardDetail ? 250 : 380,
                             borderRadius: '15px',
                             transform: isHovered && !showFanEffect ? 'rotate(16deg)' : 'rotate(5deg)',
                             transition: 'all 0.3s ease',
@@ -175,7 +177,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                             width: 250,
                             top: -8,
                             left: isHovered && !showFanEffect ? 25 : 10,
-                            height: 360,
+                            height: isHiddenCardDetail ? 250 : 380,
                             borderRadius: '15px',
                             transform: isHovered && !showFanEffect ? 'rotate(8deg)' : 'rotate(3deg)',
                             transition: 'all 0.3s ease',

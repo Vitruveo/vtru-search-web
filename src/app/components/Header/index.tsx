@@ -14,12 +14,14 @@ import Logo from '../Shared/Logo';
 import { Rss } from '../Rss';
 
 const Header = () => {
+    const dispatch = useDispatch();
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
     const customizer = useSelector((state) => state.customizer);
     const paused = useSelector((state) => state.assets.paused);
     const isLogged = useSelector((state) => state.creator.token !== '');
-    const dispatch = useDispatch();
+    const isHidden = useSelector((state) => state.customizer.hidden?.header);
+    if (isHidden) return null;
 
     const AppBarStyled = styled(AppBar)(({ theme }) => ({
         background: theme.palette.background.paper,

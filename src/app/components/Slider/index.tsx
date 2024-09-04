@@ -12,6 +12,7 @@ import { STORE_BASE_URL } from '@/constants/api';
 
 function Slider() {
     const assets = useSelector((state) => state.assets.lastSold);
+    const isFilterHidden = useSelector((state) => state.customizer.hidden?.filter);
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const theme = useTheme();
 
@@ -20,7 +21,7 @@ function Slider() {
     };
 
     return (
-        <Box sx={{ width: lgUp ? 'calc(100vw - 350px)' : 'calc(100vw - 65px)' }}>
+        <Box sx={{ width: lgUp && !isFilterHidden ? 'calc(100vw - 350px)' : 'calc(100vw - 65px)' }}>
             <Typography variant="h1" mb={4} fontWeight={500}>
                 Recently Sold
             </Typography>
