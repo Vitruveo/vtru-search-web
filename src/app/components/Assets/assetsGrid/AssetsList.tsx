@@ -38,7 +38,6 @@ import NumberOfFilters from '../components/numberOfFilters';
 import Slider from '../../../components/Slider';
 import { useTheme } from '@mui/material/styles';
 import generateQueryParam from '@/utils/generate.queryParam';
-import StyleElements from '../components/StyleElements';
 
 const AssetsList = () => {
     const dispatch = useDispatch();
@@ -286,6 +285,7 @@ const AssetsList = () => {
                     display="flex"
                     justifyContent="space-between"
                     alignItems="center"
+                    mt={1}
                     p={3}
                 >
                     <Grid
@@ -497,7 +497,6 @@ const AssetsList = () => {
                                     }}
                                 />
                             )}
-                            <StyleElements />
                         </Box>
                     </Box>
                 </Grid>

@@ -1,8 +1,8 @@
 import { reset, setHidden } from '@/features/customizer/slice';
 import { useDispatch, useSelector } from '@/store/hooks';
 import generateQueryParam from '@/utils/generate.queryParam';
-import { Button, Divider, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material';
-import { IconCopy, IconSettings } from '@tabler/icons-react';
+import { Box, Button, Divider, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material';
+import { IconCopy, IconSettingsFilled } from '@tabler/icons-react';
 import { MouseEvent, useEffect, useState } from 'react';
 
 export default function StyleElements() {
@@ -65,7 +65,7 @@ export default function StyleElements() {
     }, []);
 
     return (
-        <>
+        <Box>
             <Tooltip
                 title="Settings"
                 arrow
@@ -76,7 +76,7 @@ export default function StyleElements() {
                 }}
             >
                 <IconButton onClick={handleClick}>
-                    <IconSettings />
+                    <IconSettingsFilled />
                 </IconButton>
             </Tooltip>
             <Menu
@@ -132,6 +132,6 @@ export default function StyleElements() {
                     </Button>
                 </MenuItem>
             </Menu>
-        </>
+        </Box>
     );
 }
