@@ -11,12 +11,14 @@ import { actions } from '@/features/layout';
 const drawerWidth = 300;
 
 const AssetsSidebar = () => {
-    const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
-    const isSidebarOpen = useSelector(state => state.layout.isSidebarOpen)
     const dispatch = useDispatch();
+    const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
+    const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
+    const isHiddenFilter = useSelector((state) => state.customizer.hidden?.filter);
+    if (isHiddenFilter) return null;
 
     const onSidebarClose = () => {
-        dispatch(actions.closeSidebar())
+        dispatch(actions.closeSidebar());
     };
 
     return (

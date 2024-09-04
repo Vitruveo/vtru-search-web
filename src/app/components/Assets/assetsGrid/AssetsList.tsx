@@ -75,6 +75,8 @@ const AssetsList = () => {
     const values = useSelector((state) => state.filters);
     const gridTitle = useSelector((state) => state.filters.grid.title);
     const videoTitle = useSelector((state) => state.filters.video.title);
+    const isHiddenOrder = useSelector((state) => state.customizer.hidden?.order);
+    const isHiddenRecentlySold = useSelector((state) => state.customizer.hidden?.recentlySold);
 
     const optionsForSelect = useMemo(() => {
         const options: { value: number; label: number }[] = [];
@@ -278,104 +280,114 @@ const AssetsList = () => {
                 setSelected={setSelected}
             />
 
-            <Stack width="100%" direction="row" display="flex" justifyContent="space-between" alignItems="center" p={3}>
-                <Grid
-                    item
-                    xs={12}
-                    sm={'auto'}
-                    display={'flex'}
-                    gap={lgUp ? 4 : 0}
-                    flexDirection={lgUp ? 'row' : 'column'}
+            {!isHiddenOrder && (
+                <Stack
+                    width="100%"
+                    direction="row"
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    p={3}
                 >
-                    <Select
-                        placeholder="Sort"
-                        options={optionsForSelectSort}
-                        value={optionsForSelectSort.find((option) => option.value === sortOrder)}
-                        onChange={(e) => handleChangeSelectSortOrder(e)}
-                        styles={{
-                            control: (base, state) => ({
-                                ...base,
-                                minWidth: lgUp ? '240px' : '100px',
-                                maxWidth: lgUp ? '' : '150px',
-                                borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
-                                backgroundColor: theme.palette.background.paper,
-                                boxShadow: '#00d6f4',
-                                '&:hover': { borderColor: '#00d6f4' },
-                            }),
-                            menu: (base) => ({
-                                ...base,
-                                zIndex: 1000,
-                                color: theme.palette.text.primary,
-                                backgroundColor: theme.palette.background.paper,
-                            }),
-                            singleValue: (base) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                            }),
-                            option: (base, state) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                                backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
-                                '&:hover': { backgroundColor: theme.palette.action.hover },
-                            }),
-                            input: (base) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                            }),
-                        }}
-                    />
-                    <FormControlLabel
-                        control={<Checkbox checked={isIncludeSold} onChange={handleChangeIsIncludeSold} />}
-                        label="Include Sold"
-                    />
+                    <Grid
+                        item
+                        xs={12}
+                        sm={'auto'}
+                        display={'flex'}
+                        gap={lgUp ? 4 : 0}
+                        flexDirection={lgUp ? 'row' : 'column'}
+                    >
+                        <Select
+                            placeholder="Sort"
+                            options={optionsForSelectSort}
+                            value={optionsForSelectSort.find((option) => option.value === sortOrder)}
+                            onChange={(e) => handleChangeSelectSortOrder(e)}
+                            styles={{
+                                control: (base, state) => ({
+                                    ...base,
+                                    minWidth: lgUp ? '240px' : '100px',
+                                    maxWidth: lgUp ? '' : '150px',
+                                    borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
+                                    backgroundColor: theme.palette.background.paper,
+                                    boxShadow: '#00d6f4',
+                                    '&:hover': { borderColor: '#00d6f4' },
+                                }),
+                                menu: (base) => ({
+                                    ...base,
+                                    zIndex: 1000,
+                                    color: theme.palette.text.primary,
+                                    backgroundColor: theme.palette.background.paper,
+                                }),
+                                singleValue: (base) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                }),
+                                option: (base, state) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                    backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
+                                    '&:hover': { backgroundColor: theme.palette.action.hover },
+                                }),
+                                input: (base) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                }),
+                            }}
+                        />
+                        <FormControlLabel
+                            control={<Checkbox checked={isIncludeSold} onChange={handleChangeIsIncludeSold} />}
+                            label="Include Sold"
+                        />
 
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={isIncludeGroupByCreator}
-                                onChange={handleChangeIsIncludeGroupByCreator}
-                            />
-                        }
-                        label="Group by creator"
-                    />
-                </Grid>
-                <Box display={'flex'}>
-                    {curateStack.isActive && (
-                        <Box
-                            sx={{ cursor: 'pointer' }}
-                            display="flex"
-                            alignItems="center"
-                            gap={1}
-                            onClick={drawerStack.activate}
-                        >
-                            {lgUp && (
-                                <Box display="flex" alignItems="center" gap={2}>
-                                    <Typography variant="h4">
-                                        {selected.length} {language['search.assetList.curateStack.selected'] as string}
-                                    </Typography>
-                                    <IconCopy width={20} />
-                                </Box>
-                            )}
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={isIncludeGroupByCreator}
+                                    onChange={handleChangeIsIncludeGroupByCreator}
+                                />
+                            }
+                            label="Group by creator"
+                        />
+                    </Grid>
+                    <Box display={'flex'}>
+                        {curateStack.isActive && (
+                            <Box
+                                sx={{ cursor: 'pointer' }}
+                                display="flex"
+                                alignItems="center"
+                                gap={1}
+                                onClick={drawerStack.activate}
+                            >
+                                {lgUp && (
+                                    <Box display="flex" alignItems="center" gap={2}>
+                                        <Typography variant="h4">
+                                            {selected.length}{' '}
+                                            {language['search.assetList.curateStack.selected'] as string}
+                                        </Typography>
+                                        <IconCopy width={20} />
+                                    </Box>
+                                )}
 
-                            {!lgUp && (
-                                <Badge badgeContent={selected.length} color="primary" style={{ marginLeft: 2 }}>
-                                    <IconCopy width={20} color={iconColor} />
-                                </Badge>
-                            )}
-                        </Box>
-                    )}
+                                {!lgUp && (
+                                    <Badge badgeContent={selected.length} color="primary" style={{ marginLeft: 2 }}>
+                                        <IconCopy width={20} color={iconColor} />
+                                    </Badge>
+                                )}
+                            </Box>
+                        )}
 
-                    <Box display="flex" alignItems="center">
-                        <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
-                        <Box display={'flex'} gap={1}>
-                            <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
-                                {language['search.assetList.curateStack'] as string}
-                            </Typography>
-                            {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
+                        <Box display="flex" alignItems="center">
+                            <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
+                            <Box display={'flex'} gap={1}>
+                                <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
+                                    {language['search.assetList.curateStack'] as string}
+                                </Typography>
+                                {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
+                            </Box>
                         </Box>
                     </Box>
-                </Box>
-            </Stack>
+                </Stack>
+            )}
 
             <Grid
                 container
@@ -396,7 +408,12 @@ const AssetsList = () => {
                         paddingTop: 0,
                     }}
                 >
-                    {currentPage === 1 && !grid && !video && !creatorId && !portfolioWallets && <Slider />}
+                    {currentPage === 1 &&
+                        !grid &&
+                        !video &&
+                        !creatorId &&
+                        !portfolioWallets &&
+                        !isHiddenRecentlySold && <Slider />}
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>
