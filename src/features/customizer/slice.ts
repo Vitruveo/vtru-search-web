@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export type StateKeys = 'filter' | 'order' | 'header' | 'recentlySold' | 'pageNavigation' | 'cardDetail';
 interface StateType {
     activeDir?: string | any;
     activeMode?: string; // This can be light or dark
@@ -15,7 +16,7 @@ interface StateType {
     currentLanguage: 'en_US' | 'pt_BR' | 'es_ES';
     isCardShadow?: boolean;
     borderRadius?: number | any;
-    hidden?: { [key: string]: boolean };
+    hidden?: { [key in StateKeys]: boolean };
 }
 
 const initialState: StateType = {
@@ -86,7 +87,7 @@ export const customizerSlice = createSlice({
         setBorderRadius: (state: StateType, action) => {
             state.borderRadius = action.payload;
         },
-        setHidden: (state: StateType, action: PayloadAction<{ key: string; hidden: boolean }>) => {
+        setHidden: (state: StateType, action: PayloadAction<{ key: StateKeys; hidden: boolean }>) => {
             if (state.hidden) state.hidden[action.payload.key] = action.payload.hidden;
         },
         reset: (state: StateType) => {

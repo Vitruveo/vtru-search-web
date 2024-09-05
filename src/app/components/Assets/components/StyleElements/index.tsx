@@ -1,12 +1,10 @@
-import { reset, setHidden } from '@/features/customizer/slice';
+import { reset, setHidden, StateKeys } from '@/features/customizer/slice';
 import { useDispatch, useSelector } from '@/store/hooks';
 import generateQueryParam from '@/utils/generate.queryParam';
 import { Box, Button, Divider, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material';
 import { IconCopy, IconSettingsFilled } from '@tabler/icons-react';
 import { MouseEvent, useEffect, useReducer, useState } from 'react';
 import { initialState, reducer, TypeAction } from './slice';
-
-type StateKeys = 'filter' | 'order' | 'header' | 'recentlySold' | 'pageNavigation' | 'cardDetail';
 
 export default function StyleElements() {
     const params = new URLSearchParams(window.location.search);
@@ -50,7 +48,7 @@ export default function StyleElements() {
         if (Object.keys(paramsHidden).length === 0) dispatch(reset());
         else
             Object.entries(paramsHidden).forEach(([key, value]) => {
-                dispatch(setHidden({ key: key.replace('_hidden', ''), hidden: value === 'yes' }));
+                dispatch(setHidden({ key: key.replace('_hidden', '') as StateKeys, hidden: value === 'yes' }));
             });
     }, []);
 
