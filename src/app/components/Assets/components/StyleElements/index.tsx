@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import generateQueryParam from '@/utils/generate.queryParam';
 import { Box, Button, Divider, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material';
 import { IconCopy, IconSettingsFilled } from '@tabler/icons-react';
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useReducer, useState } from 'react';
+import { initialState, reducer, TypeAction } from './slice';
+
+type StateKeys = 'filter' | 'order' | 'header' | 'recentlySold' | 'pageNavigation' | 'cardDetail';
 
 export default function StyleElements() {
     const params = new URLSearchParams(window.location.search);
@@ -24,35 +27,22 @@ export default function StyleElements() {
     };
 
     const hiddenElement = useSelector((state) => state.customizer.hidden);
-
-    const [filterCheck, setFilterCheck] = useState(false);
-    const [orderCheck, setOrderCheck] = useState(false);
-    const [headerCheck, setHeaderCheck] = useState(false);
-    const [recentlySoldCheck, setRecentlySoldCheck] = useState(false);
-    const [pageNavigationCheck, setPageNavigationCheck] = useState(false);
-    const [cardDetailCheck, setCardDetailCheck] = useState(false);
+    const [state, dispatchAction] = useReducer(reducer, initialState);
     const [copyMessage, setCopyMessage] = useState('Copy URL');
 
-    const handleChange = (key: string, hidden: boolean) => {
-        if (key === 'filter') setFilterCheck(hidden);
-        if (key === 'order') setOrderCheck(hidden);
-        if (key === 'header') setHeaderCheck(hidden);
-        if (key === 'recentlySold') setRecentlySoldCheck(hidden);
-        if (key === 'pageNavigation') setPageNavigationCheck(hidden);
-        if (key === 'cardDetail') setCardDetailCheck(hidden);
-
-        generateQueryParam(`${key}_hidden`, hidden ? 'yes' : 'no');
-        dispatch(setHidden({ key, hidden }));
+    const handleChange = (key: StateKeys, action: TypeAction) => {
+        dispatchAction({ type: action });
+        generateQueryParam(`${key}_hidden`, !state[key] ? 'yes' : 'no');
+        dispatch(setHidden({ key, hidden: !state[key] }));
     };
 
     useEffect(() => {
         if (hiddenElement) {
-            setFilterCheck(hiddenElement.filter);
-            setOrderCheck(hiddenElement.order);
-            setHeaderCheck(hiddenElement.header);
-            setRecentlySoldCheck(hiddenElement.recentlySold);
-            setPageNavigationCheck(hiddenElement.pageNavigation);
-            setCardDetailCheck(hiddenElement.cardDetail);
+            Object.entries(hiddenElement).forEach((item) => {
+                const [key, _value] = item as [StateKeys, boolean];
+                if (state[key] !== hiddenElement[key])
+                    dispatchAction({ type: `SET_${key.toUpperCase()}` as TypeAction });
+            });
         }
     }, [hiddenElement]);
 
@@ -88,33 +78,36 @@ export default function StyleElements() {
                 sx={{ marginTop: '1rem' }}
             >
                 <MenuItem>
-                    <Switch onChange={(e) => handleChange('filter', e.target.checked)} checked={filterCheck} />
+                    <Switch onChange={() => handleChange('filter', TypeAction.SET_FILTER)} checked={state.filter} />
                     Hide Filters
                 </MenuItem>
                 <MenuItem>
-                    <Switch onChange={(e) => handleChange('order', e.target.checked)} checked={orderCheck} />
+                    <Switch onChange={() => handleChange('order', TypeAction.SET_ORDER)} checked={state.order} />
                     Hide Order
                 </MenuItem>
                 <MenuItem>
-                    <Switch onChange={(e) => handleChange('header', e.target.checked)} checked={headerCheck} />
+                    <Switch onChange={() => handleChange('header', TypeAction.SET_HEADER)} checked={state.header} />
                     Hide Header
                 </MenuItem>
                 <MenuItem>
                     <Switch
-                        onChange={(e) => handleChange('recentlySold', e.target.checked)}
-                        checked={recentlySoldCheck}
+                        onChange={() => handleChange('recentlySold', TypeAction.SET_RECENTLYSOLD)}
+                        checked={state.recentlySold}
                     />
                     Hide Recently Sold
                 </MenuItem>
                 <MenuItem>
                     <Switch
-                        onChange={(e) => handleChange('pageNavigation', e.target.checked)}
-                        checked={pageNavigationCheck}
+                        onChange={() => handleChange('pageNavigation', TypeAction.SET_PAGENAVIGATION)}
+                        checked={state.pageNavigation}
                     />
                     Hide Page Navigation
                 </MenuItem>
                 <MenuItem>
-                    <Switch onChange={(e) => handleChange('cardDetail', e.target.checked)} checked={cardDetailCheck} />
+                    <Switch
+                        onChange={() => handleChange('cardDetail', TypeAction.SET_CARDDETAIL)}
+                        checked={state.cardDetail}
+                    />
                     Hide Card Detail
                 </MenuItem>
                 <Divider />
