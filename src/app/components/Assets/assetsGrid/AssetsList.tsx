@@ -268,7 +268,7 @@ const AssetsList = () => {
     const hasBlockedAssets = blockedAssets.length > 0;
 
     return (
-        <Box position="fixed" width={isHidden?.filter ? '100%' : '84%'}>
+        <Box position="fixed">
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
 
             <DrawerStack
