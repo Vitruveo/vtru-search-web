@@ -55,6 +55,8 @@ const Search = () => {
         else dispatch(actionsAssets.startGrouped());
     }, [searchParams]);
 
+    const isInIframe = window.self !== window.top;
+
     return (
         <div>
             <Header />
@@ -66,9 +68,18 @@ const Search = () => {
                     </Box>
                 </AppCard>
             </PageContainer>
-            <Box position={'fixed'} top={64} right={-32} bgcolor={theme.palette.grey[100]} width={100} zIndex={9999}>
-                <StyleElements />
-            </Box>
+            {!isInIframe && (
+                <Box
+                    position={'fixed'}
+                    top={64}
+                    right={-32}
+                    bgcolor={theme.palette.grey[100]}
+                    width={100}
+                    zIndex={9999}
+                >
+                    <StyleElements />
+                </Box>
+            )}
         </div>
     );
 };
