@@ -266,6 +266,7 @@ const AssetsList = () => {
     const isLastPage = currentPage === totalPage;
     const hasActiveAssets = activeAssets.length > 0;
     const hasBlockedAssets = blockedAssets.length > 0;
+    const isInIframe = window.self !== window.top;
 
     return (
         <Box position="fixed">
@@ -553,13 +554,14 @@ const AssetsList = () => {
                                 </AssetCardContainer>
                             ))}
 
-                            {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) && (
-                                <AssetCardContainer key={1}>
-                                    <Box width={'100%'} height={'100%'} mr={4}>
-                                        <AdditionalAssetsFilterCard />
-                                    </Box>
-                                </AssetCardContainer>
-                            )}
+                            {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) &&
+                                !isInIframe && (
+                                    <AssetCardContainer key={1}>
+                                        <Box width={'100%'} height={'100%'} mr={4}>
+                                            <AdditionalAssetsFilterCard />
+                                        </Box>
+                                    </AssetCardContainer>
+                                )}
 
                             {showAdditionalAssets.value &&
                                 blockedAssets.map((asset) => (
