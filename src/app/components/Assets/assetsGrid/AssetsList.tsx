@@ -36,6 +36,7 @@ import './AssetScroll.css';
 import NumberOfFilters from '../components/numberOfFilters';
 import Slider from '../../../components/Slider';
 import { useTheme } from '@mui/material/styles';
+import generateQueryParam from '@/utils/generate.queryParam';
 
 const AssetsList = () => {
     const dispatch = useDispatch();
@@ -206,13 +207,6 @@ const AssetsList = () => {
 
         dispatch(actions.resetGroupByCreator());
         dispatch(actionsFilters.reset({ maxPrice }));
-    };
-
-    const generateQueryParam = (key: string, value: string) => {
-        const searchParams = new URLSearchParams(window.location.search);
-        searchParams.set(key, value);
-        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
-        window.history.pushState({ path: newUrl }, '', newUrl);
     };
 
     const handleChangeSelectSortOrder = (
