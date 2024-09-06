@@ -18,6 +18,7 @@ import {
 import assetsMetadata from '@/mock/assetsMetadata.json';
 import { actions } from '@/features/filters/slice';
 import { actions as actionsAssets } from '@/features/assets/slice';
+import * as actionsCustomizer from '@/features/customizer/slice';
 import { ContextItem } from '../components/ContextItem';
 import { TaxonomyItem } from '../components/TaxonomyItem';
 import { CreatorsItem } from '../components/CreatorsItem';
@@ -134,6 +135,7 @@ const Filters = () => {
 
         dispatch(actionsAssets.resetGroupByCreator());
         dispatch(actions.reset({ maxPrice }));
+        dispatch(actionsCustomizer.reset());
     };
 
     const syncFiltersWithUrl = (changeValue: any, key: string) => {
@@ -200,7 +202,7 @@ const Filters = () => {
     };
 
     return (
-        <Stack gap={2} p={1} pb={2} mt={1} pt={isSmallScreen ? 8 : 1} height="92vh" overflow="auto">
+        <Stack gap={2} p={1} pb={2} mt={1} pt={isSmallScreen ? 8 : 1} height="100vh" overflow="auto">
             <OutlinedInput
                 id="outlined-search"
                 placeholder={language['search.assetFilter.search.placeholder'] as string}

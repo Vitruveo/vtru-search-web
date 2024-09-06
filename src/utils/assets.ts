@@ -3,7 +3,11 @@ import { Asset, LastSoldAsset } from '@/features/assets/types';
 export const isAssetAvailable = (asset: Asset) => asset.licenses.nft.availableLicenses > 0;
 
 export const getAssetPrice = (asset: Asset | LastSoldAsset) => {
-    const license = 'username' in asset ? asset.licenses : asset.licenses.nft;
+    // const license = 'username' in asset ? asset.licenses : asset.licenses.nft;
+
+    // eslint-disable-next-line
+    // @ts-ignore
+    const license = asset?.licenses?.nft ? asset.licenses.nft : asset.licenses;
 
     switch (license.editionOption) {
         case 'elastic':

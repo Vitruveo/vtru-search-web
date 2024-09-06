@@ -41,6 +41,7 @@ const AssetItem = ({
     const [showFanEffect, setShowFanEffect] = useState(false);
     const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const hasIncludesGroup = useSelector((state) => state.assets.groupByCreator.active);
+    const isHiddenCardDetail = useSelector((state) => state.customizer.hidden?.cardDetail);
 
     const hasCreator =
         asset?.assetMetadata?.creators?.formData instanceof Array &&
@@ -67,7 +68,7 @@ const AssetItem = ({
                 border: assetView === asset ? '1px solid #00d6f4' : '',
                 width: 250,
                 cursor: 'pointer',
-                height: 380,
+                height: isHiddenCardDetail ? 250 : 380,
                 marginRight: '32px',
                 position: 'relative',
                 borderRadius: '15px',
@@ -116,76 +117,97 @@ const AssetItem = ({
                 </>
             )}
             <BlankCard className="hoverCard" onClick={handleClickImage}>
-                <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
+                {!isHiddenCardDetail ? (
+                    <>
+                        <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
+                            <MediaRenderer
+                                src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
+                                fallbackSrc={'https://via.placeholder.com/250'}
+                            />
+                        </Box>
+
+                        <CardContent sx={{ p: 3, pt: 2 }} style={{ backgroundColor: theme.palette.grey[100] }}>
+                            <Stack direction="row" alignItems="center" justifyContent="space-between">
+                                <Typography
+                                    title={assetTitle}
+                                    variant="h6"
+                                    sx={{ cursor: 'pointer' }}
+                                    width="100%"
+                                    whiteSpace="nowrap"
+                                    overflow="hidden"
+                                    textOverflow="ellipsis"
+                                >
+                                    {assetTitle}
+                                </Typography>
+                                {isCurated && !hasIncludesGroup && (
+                                    <Checkbox style={{ padding: 0 }} checked={checkedCurate} />
+                                )}
+                            </Stack>
+
+                            <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
+                                <Link
+                                    title={creatorName}
+                                    padding={0}
+                                    overflow="hidden"
+                                    whiteSpace="nowrap"
+                                    textOverflow="ellipsis"
+                                    href="#"
+                                    onClick={onCreatorNameClick}
+                                >
+                                    {creatorName}
+                                </Link>
+                            </Stack>
+
+                            <Stack flexDirection="row" justifyContent="space-between" alignItems="end">
+                                <Box>
+                                    {!isAvailable && (
+                                        <Typography
+                                            variant="h6"
+                                            overflow="hidden"
+                                            whiteSpace="nowrap"
+                                            textOverflow="ellipsis"
+                                        >
+                                            Last Sold
+                                        </Typography>
+                                    )}
+                                    <Typography
+                                        variant="h6"
+                                        overflow="hidden"
+                                        whiteSpace="nowrap"
+                                        textOverflow="ellipsis"
+                                    >
+                                        {price}
+                                    </Typography>
+                                </Box>
+                                <Typography
+                                    title={price}
+                                    variant="h6"
+                                    overflow="hidden"
+                                    whiteSpace="nowrap"
+                                    textOverflow="ellipsis"
+                                    color="red"
+                                >
+                                    {variant == 'blocked' ? 'Blocked' : ''}
+                                </Typography>
+                                {!isAvailable && (
+                                    <Paper
+                                        sx={{
+                                            backgroundColor: 'red',
+                                            borderRadius: '100%',
+                                            height: 40,
+                                            width: 40,
+                                        }}
+                                    />
+                                )}
+                            </Stack>
+                        </CardContent>
+                    </>
+                ) : (
                     <MediaRenderer
                         src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
                         fallbackSrc={'https://via.placeholder.com/250'}
                     />
-                </Box>
-
-                <CardContent sx={{ p: 3, pt: 2 }} style={{ backgroundColor: theme.palette.grey[100] }}>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                        <Typography
-                            title={assetTitle}
-                            variant="h6"
-                            sx={{ cursor: 'pointer' }}
-                            width="100%"
-                            whiteSpace="nowrap"
-                            overflow="hidden"
-                            textOverflow="ellipsis"
-                        >
-                            {assetTitle}
-                        </Typography>
-                        {isCurated && !hasIncludesGroup && <Checkbox style={{ padding: 0 }} checked={checkedCurate} />}
-                    </Stack>
-
-                    <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
-                        <Link
-                            title={creatorName}
-                            padding={0}
-                            overflow="hidden"
-                            whiteSpace="nowrap"
-                            textOverflow="ellipsis"
-                            href="#"
-                            onClick={onCreatorNameClick}
-                        >
-                            {creatorName}
-                        </Link>
-                    </Stack>
-
-                    <Stack flexDirection="row" justifyContent="space-between" alignItems="end">
-                        <Box>
-                            {!isAvailable && (
-                                <Typography variant="h6" overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis">
-                                    Last Sold
-                                </Typography>
-                            )}
-                            <Typography variant="h6" overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis">
-                                {price}
-                            </Typography>
-                        </Box>
-                        <Typography
-                            title={price}
-                            variant="h6"
-                            overflow="hidden"
-                            whiteSpace="nowrap"
-                            textOverflow="ellipsis"
-                            color="red"
-                        >
-                            {variant == 'blocked' ? 'Blocked' : ''}
-                        </Typography>
-                        {!isAvailable && (
-                            <Paper
-                                sx={{
-                                    backgroundColor: 'red',
-                                    borderRadius: '100%',
-                                    height: 40,
-                                    width: 40,
-                                }}
-                            />
-                        )}
-                    </Stack>
-                </CardContent>
+                )}
             </BlankCard>
         </div>
     );

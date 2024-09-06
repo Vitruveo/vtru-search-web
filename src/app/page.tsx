@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Box } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 import { useDispatch } from '@/store/hooks';
 import AssetsSidebar from './components/Assets/assetsGrid/AssetsSidebar';
@@ -10,13 +11,15 @@ import PageContainer from './components/Container/PageContainer';
 import AppCard from './components/Shared/AppCard';
 import Header from './components/Header';
 import { actions, initialState } from '@/features/filters/slice';
-import { actions as actionsAssets, initialState as initialStateAsset } from '@/features/assets/slice';
+import { actions as actionsAssets } from '@/features/assets/slice';
 import { extractObjects } from '@/utils/extractObjects';
+import StyleElements from './components/Assets/components/StyleElements';
 
 const params = Object.keys(extractObjects(initialState));
 const initialParams: Record<string, string> = {};
 
 const Search = () => {
+    const theme = useTheme();
     const dispatch = useDispatch();
     const searchParams = useSearchParams();
     const grid = searchParams.get('grid');
@@ -52,6 +55,8 @@ const Search = () => {
         else dispatch(actionsAssets.startGrouped());
     }, [searchParams]);
 
+    const isInIframe = window.self !== window.top;
+
     return (
         <div>
             <Header />
@@ -63,6 +68,17 @@ const Search = () => {
                     </Box>
                 </AppCard>
             </PageContainer>
+            <Box
+                display={isInIframe ? 'none' : 'inherit'}
+                position={'fixed'}
+                top={64}
+                right={-32}
+                bgcolor={theme.palette.grey[100]}
+                width={100}
+                zIndex={9999}
+            >
+                <StyleElements />
+            </Box>
         </div>
     );
 };
