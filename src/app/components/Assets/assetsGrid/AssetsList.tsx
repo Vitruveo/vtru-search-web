@@ -38,6 +38,7 @@ import NumberOfFilters from '../components/numberOfFilters';
 import Slider from '../../../components/Slider';
 import { useTheme } from '@mui/material/styles';
 import generateQueryParam from '@/utils/generate.queryParam';
+import { STORE_BASE_URL } from '@/constants/api';
 
 const AssetsList = () => {
     const dispatch = useDispatch();
@@ -523,6 +524,12 @@ const AssetsList = () => {
                                             handleCheckCurate(asset);
                                         }}
                                         handleClickImage={() => {
+                                            if (isInIframe) {
+                                                window.open(`${STORE_BASE_URL}/${asset.username}/${asset._id}`);
+
+                                                return;
+                                            }
+
                                             if (hasIncludesGroup.active) {
                                                 if (asset?.framework?.createdBy) {
                                                     dispatch(actions.setInitialPage());
@@ -577,6 +584,12 @@ const AssetsList = () => {
                                                 handleCheckCurate(asset);
                                             }}
                                             handleClickImage={() => {
+                                                if (isInIframe) {
+                                                    window.open(`${STORE_BASE_URL}/${asset.username}/${asset._id}`);
+
+                                                    return;
+                                                }
+
                                                 if (hasIncludesGroup.active) {
                                                     if (asset?.framework?.createdBy) {
                                                         dispatch(
