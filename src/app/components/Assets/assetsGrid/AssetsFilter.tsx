@@ -38,8 +38,8 @@ import { FilterSliceState } from '@/features/filters/types';
 import chunkArray from '@/utils/chunkArray';
 import PortfolioItem from '../components/PortfolioItem';
 import { Wallets } from '../components/Wallets';
-import validateCryptoAddress from '@/utils/adress.validate';
-import generateQueryParam from '@/utils/generate.queryParam';
+import validateCryptoAddress from '@/utils/adressValidate';
+import generateQueryParam from '@/utils/generateQueryParam';
 
 const Filters = () => {
     const params = new URLSearchParams(window.location.search);

@@ -23,7 +23,7 @@ import { actions as actionsFilter } from '../filters/slice';
 import { APIResponse } from '../common/types';
 import { AppState } from '@/store';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
-import validateCryptoAddress from '@/utils/adress.validate';
+import validateCryptoAddress from '@/utils/adressValidate';
 
 function* getAssetsLastSold() {
     try {
