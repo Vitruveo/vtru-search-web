@@ -108,6 +108,7 @@ export interface Asset {
     };
     countByCreator?: number;
     paths?: string[];
+    username: string;
 }
 
 export interface Tags {
@@ -158,6 +159,7 @@ export interface ResponseAssetGroupByCreator {
         asset: AssetsSliceState['data']['data'][0];
         count: number;
         paths: string[];
+        username: string;
     }[];
     limit: number;
     page: number;
