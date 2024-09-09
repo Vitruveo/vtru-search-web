@@ -106,6 +106,7 @@ const AssetItem = ({
                                 fontSize: '0.8rem',
                             },
                         }}
+                        onClick={handleClickImage}
                     />
                     <DeckEffect
                         isHovered={isHovered}
