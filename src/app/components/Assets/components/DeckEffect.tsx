@@ -156,7 +156,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                 )}
             </Box>
             {cards.length > 1 && (
-                <>
+                <Box onClick={handleClickImage}>
                     <div
                         style={{
                             position: 'absolute',
@@ -183,7 +183,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                             transition: 'all 0.3s ease',
                         }}
                     />
-                </>
+                </Box>
             )}
         </Box>
     );
