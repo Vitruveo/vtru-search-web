@@ -1,7 +1,14 @@
 'use client';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import type { AssetsSliceState, GetAssetsParams, GetCreatorParams, LastSoldAsset, MakeVideoParams } from './types';
+import type {
+    AssetsSliceState,
+    GenerateSlideshowParams,
+    GetAssetsParams,
+    GetCreatorParams,
+    LastSoldAsset,
+    MakeVideoParams,
+} from './types';
 import { extractObjects } from '@/utils/extractObjects';
 
 export const initialState: AssetsSliceState = {
@@ -20,6 +27,7 @@ export const initialState: AssetsSliceState = {
         username: '',
         avatar: '',
     },
+    slideshow: '',
     video: '',
     loadingVideo: false,
     maxPrice: 0, // this is used to mark the max price of the price range slider.
@@ -88,6 +96,7 @@ export const assetsSlice = createSlice({
             state.error = action.payload;
         },
         setVideoId: (state, action: PayloadAction<string>) => {},
+        setSlideshowId: (state, action: PayloadAction<string>) => {},
         setVideoUrl: (state, action: PayloadAction<string>) => {
             state.video = action.payload;
         },
@@ -129,6 +138,10 @@ export const assetsSlice = createSlice({
         },
         initialSort: (state, action: PayloadAction<AssetsSliceState['sort']>) => {
             state.sort = action.payload;
+        },
+        generateSlideshow: (state, action: PayloadAction<GenerateSlideshowParams>) => {},
+        setSlideshow: (state, action: PayloadAction<string>) => {
+            state.slideshow = action.payload;
         },
     },
 });

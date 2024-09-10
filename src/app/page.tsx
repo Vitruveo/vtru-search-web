@@ -24,6 +24,7 @@ const Search = () => {
     const searchParams = useSearchParams();
     const grid = searchParams.get('grid');
     const video = searchParams.get('video');
+    const slideshow = searchParams.get('slideshow');
     const groupByCreator = searchParams.get('groupByCreator');
     const sort_sold = searchParams.get('sort_sold');
     const sort_order = searchParams.get('sort_order');
@@ -40,6 +41,11 @@ const Search = () => {
 
         if (video) {
             dispatch(actionsAssets.setVideoId(video));
+            return;
+        }
+
+        if (slideshow) {
+            dispatch(actionsAssets.setSlideshowId(slideshow));
             return;
         }
 
