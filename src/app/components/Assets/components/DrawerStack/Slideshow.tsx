@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/assets';
 import { useState } from 'react';
 import { ShareButton } from './ShareButton';
+import { SLIDESHOW_BASE_URL } from '@/constants/api';
 
 interface VideoStackProps {
     selectedAssets: Asset[];
@@ -47,7 +48,7 @@ export default function Slideshow({ selectedAssets, title }: VideoStackProps) {
                 <Box mt={2}>
                     <a
                         style={{ color: '#00d6f4', textDecoration: 'underline' }}
-                        href={`http://localhost:5173?slideshow=${slideshow}`}
+                        href={`${SLIDESHOW_BASE_URL}?slideshow=${slideshow}`}
                         target="_blank"
                         rel="noreferrer"
                     >
