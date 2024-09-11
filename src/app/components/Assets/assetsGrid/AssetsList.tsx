@@ -46,11 +46,12 @@ const AssetsList = () => {
     const params = new URLSearchParams(window.location.search);
 
     const grid = params.get('grid');
+    const slideshow = params.get('slideshow');
     const video = params.get('video');
     const creatorId = params.get('creatorId');
     const portfolioWallets = params.get('portfolio_wallets');
 
-    const hasCurated = grid || video;
+    const hasCurated = grid || video || slideshow;
 
     const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
@@ -75,6 +76,7 @@ const AssetsList = () => {
     const values = useSelector((state) => state.filters);
     const gridTitle = useSelector((state) => state.filters.grid.title);
     const videoTitle = useSelector((state) => state.filters.video.title);
+    const slideshowTitle = useSelector((state) => state.filters.slideshow.title);
     const isHidden = useSelector((state) => state.customizer.hidden);
 
     const optionsForSelect = useMemo(() => {
@@ -128,7 +130,7 @@ const AssetsList = () => {
     }, []);
 
     useEffect(() => {
-        if (grid || video) setIsIncludeGroupByCreator(false);
+        if (grid || video || slideshow) setIsIncludeGroupByCreator(false);
     }, []);
 
     useEffect(() => {
@@ -136,20 +138,20 @@ const AssetsList = () => {
     }, [currentPage]);
 
     useEffect(() => {
-        if (grid || video) return;
+        if (grid || video || slideshow) return;
 
         if (currentPage > totalPage) dispatch(actions.setCurrentPage(totalPage));
     }, [totalPage]);
 
     useEffect(() => {
-        if (grid || video) return;
+        if (grid || video || slideshow) return;
 
         setSortOrder(sort.order);
         setIsIncludeSold(sort.sold === 'yes' ? true : false);
     }, [sort]);
 
     useEffect(() => {
-        if (grid || video) return;
+        if (grid || video || slideshow) return;
 
         setIsIncludeGroupByCreator(hasIncludesGroup.active);
     }, [hasIncludesGroup.active]);
@@ -236,12 +238,14 @@ const AssetsList = () => {
             generateQueryParam('creatorId', '');
             generateQueryParam('grid', '');
             generateQueryParam('video', '');
+            generateQueryParam('slideshow', '');
 
             dispatch(actions.setInitialPage());
             dispatch(actionsFilters.resetCreatorId());
 
             dispatch(actionsFilters.clearGrid());
             dispatch(actionsFilters.clearVideo());
+            dispatch(actionsFilters.clearSlideshow());
         }
 
         dispatch(
@@ -417,6 +421,7 @@ const AssetsList = () => {
                     {currentPage === 1 &&
                         !grid &&
                         !video &&
+                        !slideshow &&
                         !creatorId &&
                         !portfolioWallets &&
                         !isHidden?.recentlySold && <Slider />}
@@ -427,7 +432,9 @@ const AssetsList = () => {
                         {hasCurated || !hasIncludesGroup.active ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
                                 {hasCurated && (
-                                    <Typography variant="h4">{gridTitle || videoTitle || 'Curated arts'}</Typography>
+                                    <Typography variant="h4">
+                                        {gridTitle || videoTitle || slideshowTitle || 'Curated arts'}
+                                    </Typography>
                                 )}
                                 {hasIncludesGroup.name && <Typography variant="h4">{hasIncludesGroup.name}</Typography>}
                                 {(hasCurated || hasIncludesGroup.name) && (

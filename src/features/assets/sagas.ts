@@ -7,6 +7,7 @@ import { API_BASE_URL, BATCH_BASE_URL } from '@/constants/api';
 import type { FilterSliceState } from '../filters/types';
 import type {
     BuidlQuery,
+    GenerateSlideshowParams,
     GetAssetsParams,
     GetCreatorParams,
     MakeVideoParams,
@@ -16,6 +17,7 @@ import type {
     ResponseAssets,
     ResponseAssetsLastSold,
     ResponseGrid,
+    ResponseSlideshow,
     ResponseVideo,
 } from './types';
 import { actions } from './slice';
@@ -142,13 +144,20 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
 
         yield put(actions.startLoading());
 
-        const ids: string[] = yield select((state: AppState) =>
-            state.filters.grid.assets.length
-                ? state.filters.grid.assets
-                : state.filters.video.assets.length
-                  ? state.filters.video.assets
-                  : []
-        );
+        let ids: string[] = [];
+
+        const video: FilterSliceState['video'] = yield select((state: AppState) => state.filters.video);
+        const slideshow: FilterSliceState['slideshow'] = yield select((state: AppState) => state.filters.slideshow);
+        const grid: FilterSliceState['grid'] = yield select((state: AppState) => state.filters.grid);
+
+        if (video.assets.length > 0) {
+            ids = video.assets;
+        } else if (slideshow.assets.length > 0) {
+            ids = slideshow.assets;
+        } else if (grid.assets.length > 0) {
+            ids = grid.assets;
+        }
+
         const wallets: string[] = yield select((state: AppState) => state.filters.portfolio.wallets);
         const creatorId: string = yield select((state: AppState) => state.filters.creatorId);
         const name: string = yield select((state: AppState) => state.filters.name);
@@ -276,6 +285,43 @@ function* getGrid(action: PayloadAction<string>) {
                 })
             );
             yield put(actionsFilter.clearVideo());
+            yield put(actionsFilter.clearSlideshow());
+
+            yield put(actionsFilter.resetCreatorId());
+            yield put(actions.noGroupByCreator());
+            yield put(actions.setInitialPage());
+            yield put(actions.loadAssets({ page: 1 }));
+        }
+    } catch (error) {
+        // handle error
+    }
+    yield put(actions.finishLoading());
+}
+
+function* getSlideshow(action: PayloadAction<string>) {
+    yield put(actions.startLoading());
+    try {
+        const response: AxiosResponse<APIResponse<ResponseSlideshow>> = yield call(
+            axios.get,
+            `${API_BASE_URL}/assets/public/slideshow/${action.payload}`
+        );
+
+        if (
+            response.status === 200 &&
+            Array.isArray(response.data.data.slideshow.search.slideshow) &&
+            response.data.data.slideshow.search.slideshow.length > 0 &&
+            Array.isArray(response.data.data.slideshow.search.slideshow[0].assets) &&
+            response.data.data.slideshow.search.slideshow[0].assets.length > 0
+        ) {
+            yield put(
+                actionsFilter.changeSlideshow({
+                    assets: response.data.data.slideshow.search.slideshow[0].assets,
+                    title: response.data.data.slideshow.search.slideshow[0]?.title || '',
+                })
+            );
+            yield put(actionsFilter.clearVideo());
+            yield put(actionsFilter.clearGrid());
+
             yield put(actionsFilter.resetCreatorId());
             yield put(actions.noGroupByCreator());
             yield put(actions.setInitialPage());
@@ -309,6 +355,8 @@ function* getVideo(action: PayloadAction<string>) {
                 })
             );
             yield put(actionsFilter.clearGrid());
+            yield put(actionsFilter.clearSlideshow());
+
             yield put(actionsFilter.resetCreatorId());
             yield put(actions.noGroupByCreator());
             yield put(actions.setInitialPage());
@@ -372,6 +420,33 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
     yield put(actions.setLoadingVideo(false));
 }
 
+function* generateSlideshow(action: PayloadAction<GenerateSlideshowParams>) {
+    try {
+        const token: string = yield select((state: AppState) => state.creator.token);
+
+        const response: AxiosResponse<APIResponse<string>> = yield call(
+            axios.post,
+            `${API_BASE_URL}/creators/stack/slideshow`,
+            {
+                assets: action.payload.assets,
+                title: action.payload.title,
+                fees: action.payload.fees,
+                display: action.payload.display,
+                interval: action.payload.interval,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        yield put(actions.setSlideshow(response.data.data));
+    } catch (error) {
+        // something
+    }
+}
+
 function* setup() {
     try {
         const response: AxiosResponse<APIResponse<boolean>> = yield call(
@@ -417,6 +492,9 @@ export function* assetsSagas() {
         takeEvery(actions.makeVideo.type, makeVideo),
         takeEvery(actions.setGridId.type, getGrid),
         takeEvery(actions.setVideoId.type, getVideo),
+        takeEvery(actions.setSlideshowId.type, getSlideshow),
+
+        takeEvery(actions.generateSlideshow.type, generateSlideshow),
 
         // setup
         setup(),
