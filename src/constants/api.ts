@@ -3,3 +3,4 @@ export const STACK_BASE_URL = process.env.NEXT_PUBLIC_STACK_BASE_URL || 'http://
 export const BATCH_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL_BATCH || 'http://127.0.0.1:5001';
 export const STORE_BASE_URL = process.env.NEXT_PUBLIC_STORE_BASE_URL || '';
 export const STUDIO_BASE_URL = process.env.NEXT_PUBLIC_STUDIO_BASE_URL || '';
+export const SLIDESHOW_BASE_URL = process.env.NEXT_PUBLIC_SLIDESHOW_BASE_URL || '';

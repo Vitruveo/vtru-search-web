@@ -11,6 +11,7 @@ export interface AssetsSliceState {
     tags: Tags[];
     lastSold: LastSoldAsset[];
     creator: Creator;
+    slideshow: string;
     video: string;
     loadingVideo: boolean;
     maxPrice: number;
@@ -197,6 +198,22 @@ export interface ResponseVideo {
     };
 }
 
+export interface ResponseSlideshow {
+    slideshow: {
+        _id: string;
+        search: {
+            slideshow: {
+                id: string;
+                path: string;
+                assets: string[];
+                title: string;
+                createdAt: string;
+                interval: number;
+                display: string;
+            }[];
+        };
+    };
+}
 export interface ResponseAsserCreator {
     username: string;
     avatar: string;
@@ -247,4 +264,12 @@ export interface MakeVideoParams {
     sound: string;
     fees: number;
     timestamp: string;
+}
+
+export interface GenerateSlideshowParams {
+    assets: string[];
+    title: string;
+    fees: number;
+    display: string;
+    interval: number;
 }

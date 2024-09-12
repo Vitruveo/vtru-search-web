@@ -75,6 +75,10 @@ export const initialState: FilterSliceState = {
         assets: [],
         title: '',
     },
+    slideshow: {
+        assets: [],
+        title: '',
+    },
     creatorId: '',
     portfolio: {
         wallets: [],
@@ -213,6 +217,12 @@ export const filterSlice = createSlice({
                 title: '',
             };
         },
+        clearSlideshow: (state) => {
+            state.slideshow = {
+                assets: [],
+                title: '',
+            };
+        },
         resetCreatorId: (state) => {
             state.creatorId = '';
         },
@@ -261,6 +271,34 @@ export const filterSlice = createSlice({
         ) => {
             if (action.payload) {
                 state.grid = action.payload;
+            }
+
+            // clear other filters
+            state.name = '';
+            state.context = initialState.context;
+            state.taxonomy = initialState.taxonomy;
+            state.creators = initialState.creators;
+            state.provenance = initialState.provenance;
+            state.price = initialState.price;
+            state.shortCuts = {
+                nudity: 'no',
+                aiGeneration: 'no',
+            };
+            state.reseted += 1;
+            clearAssetsFromURL();
+        },
+        changeSlideshow: (
+            state,
+            action: PayloadAction<{
+                assets: string[];
+                title: string;
+            }>
+        ) => {
+            if (action.payload) {
+                state.slideshow = {
+                    assets: action.payload.assets,
+                    title: action.payload.title,
+                };
             }
 
             // clear other filters

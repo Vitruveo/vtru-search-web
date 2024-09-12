@@ -9,6 +9,7 @@ import { actions as assetActions } from '@/features/assets';
 import { Asset } from '@/features/assets/types';
 import VideoStack from './VideoStack';
 import GridStack from './GridStack';
+import Slideshow from './Slideshow';
 
 interface PublishStackModalProps {
     selectedAssets: Asset[];
@@ -36,6 +37,7 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
             audio.pause();
             dispatch(assetActions.setVideoUrl(''));
             setTitle('');
+            dispatch(assetActions.setSlideshow(''));
         }
     }, [isOpen]);
 
@@ -86,6 +88,7 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
                         >
                             <Tab label="Video" value="1" />
                             <Tab label="Grid" value="2" />
+                            <Tab label="Slideshow" value="3" />
                         </TabList>
                     </Box>
                     <TabPanel value="1">
@@ -100,6 +103,9 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
                     </TabPanel>
                     <TabPanel value="2">
                         <GridStack selectedAssets={selectedAssets} title={title.trim()} />
+                    </TabPanel>
+                    <TabPanel value="3">
+                        <Slideshow selectedAssets={selectedAssets} title={title.trim()} />
                     </TabPanel>
                 </TabContext>
             </Box>
