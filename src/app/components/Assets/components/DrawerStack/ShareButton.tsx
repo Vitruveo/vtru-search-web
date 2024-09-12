@@ -7,7 +7,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import { IconDownload } from '@tabler/icons-react';
 
 interface ShareButtonProps {
-    twitterURL: string;
+    twitterURL?: string;
     url: string;
     downloadable?: boolean;
     title?: string;
@@ -59,12 +59,14 @@ export const ShareButton = ({ twitterURL, url, downloadable = false, title, cont
             <Menu open={open} onClose={onClose} anchorEl={anchorEl}>
                 <Box width={200}>
                     <MenuList>
-                        <MenuItem onClick={onTwitterClick}>
-                            <ListItemIcon>
-                                <XIcon fontSize="small" />
-                            </ListItemIcon>
-                            <ListItemText>Twitter</ListItemText>
-                        </MenuItem>
+                        {twitterURL && (
+                            <MenuItem onClick={onTwitterClick}>
+                                <ListItemIcon>
+                                    <XIcon fontSize="small" />
+                                </ListItemIcon>
+                                <ListItemText>Twitter</ListItemText>
+                            </MenuItem>
+                        )}
                         {downloadable && (
                             <MenuItem onClick={onDownloadClick}>
                                 <ListItemIcon>
