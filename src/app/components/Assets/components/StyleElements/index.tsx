@@ -31,7 +31,7 @@ export default function StyleElements() {
     const [copyUrl, setCopyUrl] = useState('Copy URL');
     const [copyEmbed, setCopyEmbed] = useState('Copy Embed');
 
-    const generateIframe = () => {
+    const handleGenerateIframeTag = () => {
         const url = window.location.href;
         const iframeTag = `<iframe src="${url}" style="width: 100%; height: 100%"></iframe>`;
         navigator.clipboard.writeText(iframeTag);
@@ -42,6 +42,11 @@ export default function StyleElements() {
         dispatchAction({ type: action });
         generateQueryParam(`${key}_hidden`, !state[key] ? 'yes' : 'no');
         dispatch(setHidden({ key, hidden: !state[key] }));
+    };
+
+    const handleReset = () => {
+        dispatch(reset());
+        Object.keys(paramsHidden).forEach((key) => generateQueryParam(key, ''));
     };
 
     useEffect(() => {
@@ -133,18 +138,18 @@ export default function StyleElements() {
                     </Button>
                 </MenuItem>
                 <MenuItem>
-                    <Button startIcon={<IconCode size={18} />} fullWidth variant="contained" onClick={generateIframe}>
+                    <Button
+                        startIcon={<IconCode size={18} />}
+                        fullWidth
+                        variant="contained"
+                        onClick={handleGenerateIframeTag}
+                    >
                         <Typography variant="caption">{copyEmbed}</Typography>
                     </Button>
                 </MenuItem>
                 <Divider />
                 <MenuItem>
-                    <Button
-                        startIcon={<IconRestore size={18} />}
-                        fullWidth
-                        variant="contained"
-                        onClick={() => dispatch(reset())}
-                    >
+                    <Button startIcon={<IconRestore size={18} />} fullWidth variant="contained" onClick={handleReset}>
                         <Typography variant="caption">Reset</Typography>
                     </Button>
                 </MenuItem>
