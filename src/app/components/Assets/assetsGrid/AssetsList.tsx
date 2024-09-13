@@ -271,7 +271,7 @@ const AssetsList = () => {
     const isInIframe = window.self !== window.top;
 
     return (
-        <Box position="fixed">
+        <Box>
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
 
             <DrawerStack
@@ -674,7 +674,7 @@ const AssetsList = () => {
                             justifyContent="flex-end"
                             width="100%"
                             mr={4}
-                            mb={lgUp ? 4 : 8}
+                            mb={lgUp ? 4 : 12}
                         >
                             <Button onClick={handleScrollToTop}>Scroll to top</Button>
                         </Box>
