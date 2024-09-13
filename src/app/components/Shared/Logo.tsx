@@ -6,7 +6,6 @@ import VtruTitle from '../VtruTitle';
 import { useDispatch } from 'react-redux';
 import { actions } from '@/features/assets';
 import { actions as actionsFilters } from '@/features/filters/slice';
-import * as actionsCustomizer from '@/features/customizer/slice';
 
 const LogoLtrDark = () => (
     <Box display="flex" marginTop={2} alignItems="center">
@@ -54,7 +53,6 @@ const Logo = () => {
 
         dispatch(actions.resetGroupByCreator());
         dispatch(actionsFilters.reset({ maxPrice }));
-        dispatch(actionsCustomizer.reset());
     };
 
     const dice = {

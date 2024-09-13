@@ -18,7 +18,6 @@ import {
 import assetsMetadata from '@/mock/assetsMetadata.json';
 import { actions } from '@/features/filters/slice';
 import { actions as actionsAssets } from '@/features/assets/slice';
-import * as actionsCustomizer from '@/features/customizer/slice';
 import { ContextItem } from '../components/ContextItem';
 import { TaxonomyItem } from '../components/TaxonomyItem';
 import { CreatorsItem } from '../components/CreatorsItem';
@@ -135,7 +134,6 @@ const Filters = () => {
 
         dispatch(actionsAssets.resetGroupByCreator());
         dispatch(actions.reset({ maxPrice }));
-        dispatch(actionsCustomizer.reset());
     };
 
     const syncFiltersWithUrl = (changeValue: any, key: string) => {

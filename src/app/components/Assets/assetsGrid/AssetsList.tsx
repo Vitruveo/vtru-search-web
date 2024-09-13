@@ -23,7 +23,6 @@ import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/assets';
 import { actions as actionsFilters } from '@/features/filters/slice';
 import { actions as layoutActions } from '@/features/layout';
-import * as actionsCustomizer from '@/features/customizer/slice';
 import { Asset } from '@/features/assets/types';
 import { DrawerAsset } from '../components/DrawerAsset';
 import DrawerStack from '../components/DrawerStack/DrawerStack';
@@ -67,7 +66,6 @@ const AssetsList = () => {
     const drawerStack = useToggle();
 
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
-    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
     const { data: assets, totalPage, page: currentPage } = useSelector((state) => state.assets.data);
     const { sort, maxPrice } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
@@ -211,7 +209,6 @@ const AssetsList = () => {
 
         dispatch(actions.resetGroupByCreator());
         dispatch(actionsFilters.reset({ maxPrice }));
-        dispatch(actionsCustomizer.reset());
     };
 
     const handleChangeSelectSortOrder = (

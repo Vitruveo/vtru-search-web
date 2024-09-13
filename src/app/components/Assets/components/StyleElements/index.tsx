@@ -2,9 +2,10 @@ import { reset, setHidden, StateKeys } from '@/features/customizer/slice';
 import { useDispatch, useSelector } from '@/store/hooks';
 import generateQueryParam from '@/utils/generate.queryParam';
 import { Box, Button, Divider, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material';
-import { IconCopy, IconSettingsFilled } from '@tabler/icons-react';
+import { IconCode, IconCopy, IconSettingsFilled } from '@tabler/icons-react';
 import { MouseEvent, useEffect, useReducer, useState } from 'react';
 import { initialState, reducer, TypeAction } from './slice';
+import { IconRestore } from '@tabler/icons-react';
 
 export default function StyleElements() {
     const params = new URLSearchParams(window.location.search);
@@ -21,12 +22,21 @@ export default function StyleElements() {
     const handleClick = (event: MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
     const handleClose = () => {
         setAnchorEl(null);
-        setCopyMessage('Copy URL');
+        setCopyUrl('Copy URL');
+        setCopyEmbed('Copy Embed');
     };
 
     const hiddenElement = useSelector((state) => state.customizer.hidden);
     const [state, dispatchAction] = useReducer(reducer, initialState);
-    const [copyMessage, setCopyMessage] = useState('Copy URL');
+    const [copyUrl, setCopyUrl] = useState('Copy URL');
+    const [copyEmbed, setCopyEmbed] = useState('Copy Embed');
+
+    const generateIframe = () => {
+        const url = window.location.href;
+        const iframeTag = `<iframe src="${url}" style="width: 100%; height: 100%"></iframe>`;
+        navigator.clipboard.writeText(iframeTag);
+        setCopyEmbed('Copied!');
+    };
 
     const handleChange = (key: StateKeys, action: TypeAction) => {
         dispatchAction({ type: action });
@@ -116,10 +126,26 @@ export default function StyleElements() {
                         variant="contained"
                         onClick={() => {
                             navigator.clipboard.writeText(window.location.href);
-                            setCopyMessage('Copied!');
+                            setCopyUrl('Copied!');
                         }}
                     >
-                        <Typography variant="caption">{copyMessage}</Typography>
+                        <Typography variant="caption">{copyUrl}</Typography>
+                    </Button>
+                </MenuItem>
+                <MenuItem>
+                    <Button startIcon={<IconCode size={18} />} fullWidth variant="contained" onClick={generateIframe}>
+                        <Typography variant="caption">{copyEmbed}</Typography>
+                    </Button>
+                </MenuItem>
+                <Divider />
+                <MenuItem>
+                    <Button
+                        startIcon={<IconRestore size={18} />}
+                        fullWidth
+                        variant="contained"
+                        onClick={() => dispatch(reset())}
+                    >
+                        <Typography variant="caption">Reset</Typography>
                     </Button>
                 </MenuItem>
             </Menu>
