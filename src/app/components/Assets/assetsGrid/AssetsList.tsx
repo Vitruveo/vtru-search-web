@@ -36,7 +36,7 @@ import './AssetScroll.css';
 import NumberOfFilters from '../components/numberOfFilters';
 import Slider from '../../../components/Slider';
 import { useTheme } from '@mui/material/styles';
-import generateQueryParam from '@/utils/generate.queryParam';
+import generateQueryParam from '@/utils/generateQueryParam';
 import { STORE_BASE_URL } from '@/constants/api';
 
 const AssetsList = () => {

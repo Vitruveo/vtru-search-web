@@ -1,4 +1,4 @@
-import validateCryptoAddress from '@/utils/adress.validate';
+import validateCryptoAddress from '@/utils/adressValidate';
 import { Box, Typography } from '@mui/material';
 import { IconWallet, IconWalletOff } from '@tabler/icons-react';
 import { IconTrash } from '@tabler/icons-react';

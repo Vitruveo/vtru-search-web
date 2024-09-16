@@ -1,6 +1,6 @@
 import { reset, setHidden, StateKeys } from '@/features/customizer/slice';
 import { useDispatch, useSelector } from '@/store/hooks';
-import generateQueryParam from '@/utils/generate.queryParam';
+import generateQueryParam from '@/utils/generateQueryParam';
 import { Box, Button, Divider, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material';
 import { IconCode, IconCopy, IconSettingsFilled } from '@tabler/icons-react';
 import { MouseEvent, useEffect, useReducer, useState } from 'react';
