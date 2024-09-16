@@ -23,7 +23,6 @@ import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/assets';
 import { actions as actionsFilters } from '@/features/filters/slice';
 import { actions as layoutActions } from '@/features/layout';
-import * as actionsCustomizer from '@/features/customizer/slice';
 import { Asset } from '@/features/assets/types';
 import { DrawerAsset } from '../components/DrawerAsset';
 import DrawerStack from '../components/DrawerStack/DrawerStack';
@@ -37,7 +36,7 @@ import './AssetScroll.css';
 import NumberOfFilters from '../components/numberOfFilters';
 import Slider from '../../../components/Slider';
 import { useTheme } from '@mui/material/styles';
-import generateQueryParam from '@/utils/generate.queryParam';
+import generateQueryParam from '@/utils/generateQueryParam';
 import { STORE_BASE_URL } from '@/constants/api';
 
 const AssetsList = () => {
@@ -67,7 +66,6 @@ const AssetsList = () => {
     const drawerStack = useToggle();
 
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
-    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
     const { data: assets, totalPage, page: currentPage } = useSelector((state) => state.assets.data);
     const { sort, maxPrice } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
@@ -198,7 +196,10 @@ const AssetsList = () => {
     };
 
     const returnToPageOne = () => {
-        params.forEach((_, key) => params.delete(key));
+        params.forEach((_, key) => {
+            if (!key.includes('_hidden')) params.delete(key);
+            else params.set(key, params.get(key) || '');
+        });
 
         params.set('sort_order', 'latest');
         params.set('sort_sold', 'no');
@@ -211,7 +212,6 @@ const AssetsList = () => {
 
         dispatch(actions.resetGroupByCreator());
         dispatch(actionsFilters.reset({ maxPrice }));
-        dispatch(actionsCustomizer.reset());
     };
 
     const handleChangeSelectSortOrder = (
@@ -274,7 +274,7 @@ const AssetsList = () => {
     const isInIframe = window.self !== window.top;
 
     return (
-        <Box position="fixed">
+        <Box>
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
 
             <DrawerStack
@@ -677,7 +677,7 @@ const AssetsList = () => {
                             justifyContent="flex-end"
                             width="100%"
                             mr={4}
-                            mb={lgUp ? 4 : 8}
+                            mb={lgUp ? 4 : 12}
                         >
                             <Button onClick={handleScrollToTop}>Scroll to top</Button>
                         </Box>

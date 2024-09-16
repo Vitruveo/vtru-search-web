@@ -47,7 +47,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                     />
                 </Box>
 
-                <Typography variant="h4" mt={2}>
+                <Typography variant="h4" mt={2} maxWidth={lgUp ? undefined : 230} sx={{ wordBreak: 'break-word' }}>
                     {assetView?.assetMetadata?.context?.formData?.title}
                 </Typography>
                 <Box mt={3} mb={3} display="flex" alignItems="center" gap={1}>

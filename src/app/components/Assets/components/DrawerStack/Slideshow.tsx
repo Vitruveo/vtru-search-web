@@ -95,7 +95,12 @@ export default function Slideshow({ selectedAssets, title }: VideoStackProps) {
                     <FormControlLabel value="Hide" control={<Radio />} label="Hide" />
                 </RadioGroup>
             </FormControl>
-            <Button disabled={false} variant="contained" fullWidth onClick={handleSubmit}>
+            <Button
+                disabled={title.length === 0 || selectedAssets.length === 0}
+                variant="contained"
+                fullWidth
+                onClick={handleSubmit}
+            >
                 Generate slideshow
             </Button>
         </>

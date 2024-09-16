@@ -3,7 +3,6 @@ import Drawer from '@mui/material/Drawer';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import AssetsFilter from './AssetsFilter';
-import { Box } from '@mui/material';
 import { useSelector } from '@/store/hooks';
 import { useDispatch } from 'react-redux';
 import { actions } from '@/features/layout';
