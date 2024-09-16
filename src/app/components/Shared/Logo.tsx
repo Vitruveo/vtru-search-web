@@ -40,7 +40,10 @@ const Logo = () => {
     const returnToPageOne = () => {
         const params = new URLSearchParams(window.location.search);
 
-        params.forEach((_, key) => params.delete(key));
+        params.forEach((_, key) => {
+            if (!key.includes('_hidden')) params.delete(key);
+            else params.set(key, params.get(key) || '');
+        });
 
         params.set('sort_order', 'latest');
         params.set('sort_sold', 'no');

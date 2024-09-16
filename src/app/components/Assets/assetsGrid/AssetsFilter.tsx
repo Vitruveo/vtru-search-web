@@ -109,7 +109,8 @@ const Filters = () => {
 
     const handleResetFilters = () => {
         Array.from(params.keys()).forEach((key) => {
-            if (key !== 'grid' && key !== 'video') params.delete(key);
+            if (key !== 'grid' && key !== 'video' && !key.includes('_hidden')) params.delete(key);
+            if (key.includes('_hidden')) params.set(key, params.get(key) || '');
         });
         if (params.get('grid')) {
             window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
