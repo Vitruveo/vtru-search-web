@@ -18,7 +18,6 @@ import {
 import assetsMetadata from '@/mock/assetsMetadata.json';
 import { actions } from '@/features/filters/slice';
 import { actions as actionsAssets } from '@/features/assets/slice';
-import * as actionsCustomizer from '@/features/customizer/slice';
 import { ContextItem } from '../components/ContextItem';
 import { TaxonomyItem } from '../components/TaxonomyItem';
 import { CreatorsItem } from '../components/CreatorsItem';
@@ -38,8 +37,8 @@ import { FilterSliceState } from '@/features/filters/types';
 import chunkArray from '@/utils/chunkArray';
 import PortfolioItem from '../components/PortfolioItem';
 import { Wallets } from '../components/Wallets';
-import validateCryptoAddress from '@/utils/adress.validate';
-import generateQueryParam from '@/utils/generate.queryParam';
+import validateCryptoAddress from '@/utils/adressValidate';
+import generateQueryParam from '@/utils/generateQueryParam';
 
 const Filters = () => {
     const params = new URLSearchParams(window.location.search);
@@ -110,7 +109,8 @@ const Filters = () => {
 
     const handleResetFilters = () => {
         Array.from(params.keys()).forEach((key) => {
-            if (key !== 'grid' && key !== 'video') params.delete(key);
+            if (key !== 'grid' && key !== 'video' && !key.includes('_hidden')) params.delete(key);
+            if (key.includes('_hidden')) params.set(key, params.get(key) || '');
         });
         if (params.get('grid')) {
             window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
@@ -135,7 +135,6 @@ const Filters = () => {
 
         dispatch(actionsAssets.resetGroupByCreator());
         dispatch(actions.reset({ maxPrice }));
-        dispatch(actionsCustomizer.reset());
     };
 
     const syncFiltersWithUrl = (changeValue: any, key: string) => {
@@ -202,7 +201,7 @@ const Filters = () => {
     };
 
     return (
-        <Stack gap={2} p={1} pb={2} mt={1} pt={isSmallScreen ? 8 : 1} height="100vh" overflow="auto">
+        <Stack gap={2} p={1} pb={2} mt={1} pt={isSmallScreen ? 8 : 1} height="92vh" overflow="auto">
             <OutlinedInput
                 id="outlined-search"
                 placeholder={language['search.assetFilter.search.placeholder'] as string}

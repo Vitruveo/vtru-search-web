@@ -6,7 +6,6 @@ import VtruTitle from '../VtruTitle';
 import { useDispatch } from 'react-redux';
 import { actions } from '@/features/assets';
 import { actions as actionsFilters } from '@/features/filters/slice';
-import * as actionsCustomizer from '@/features/customizer/slice';
 
 const LogoLtrDark = () => (
     <Box display="flex" marginTop={2} alignItems="center">
@@ -41,7 +40,10 @@ const Logo = () => {
     const returnToPageOne = () => {
         const params = new URLSearchParams(window.location.search);
 
-        params.forEach((_, key) => params.delete(key));
+        params.forEach((_, key) => {
+            if (!key.includes('_hidden')) params.delete(key);
+            else params.set(key, params.get(key) || '');
+        });
 
         params.set('sort_order', 'latest');
         params.set('sort_sold', 'no');
@@ -54,7 +56,6 @@ const Logo = () => {
 
         dispatch(actions.resetGroupByCreator());
         dispatch(actionsFilters.reset({ maxPrice }));
-        dispatch(actionsCustomizer.reset());
     };
 
     const dice = {
