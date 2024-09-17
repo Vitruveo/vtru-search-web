@@ -8,8 +8,8 @@ import type {
     GetCreatorParams,
     LastSoldAsset,
     MakeVideoParams,
+    SpotlightAsset,
 } from './types';
-import { extractObjects } from '@/utils/extractObjects';
 
 export const initialState: AssetsSliceState = {
     loading: false,
@@ -21,6 +21,7 @@ export const initialState: AssetsSliceState = {
         total: 0,
         totalPage: 0,
     },
+    spotlight: [],
     lastSold: [],
     tags: [],
     creator: {
@@ -124,6 +125,9 @@ export const assetsSlice = createSlice({
         },
         setInitialPage: (state) => {
             state.data.page = 1;
+        },
+        setSpotlight: (state, action: PayloadAction<SpotlightAsset[]>) => {
+            state.spotlight = action.payload;
         },
         setLastSold: (state, action: PayloadAction<LastSoldAsset[]>) => {
             state.lastSold = action.payload;
