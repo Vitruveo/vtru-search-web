@@ -428,7 +428,14 @@ const AssetsList = () => {
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>
-                    <Box width="100%" display="flex" alignItems="flex-end" justifyContent={'space-between'}>
+                    <Box
+                        width="100%"
+                        display="flex"
+                        flexDirection={lgUp ? 'row' : 'column'}
+                        alignItems={lgUp ? 'flex-end' : 'flex-start'}
+                        justifyContent={'space-between'}
+                        gap={1}
+                    >
                         {hasCurated || !hasIncludesGroup.active ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
                                 {hasCurated && (
@@ -436,7 +443,11 @@ const AssetsList = () => {
                                         {gridTitle || videoTitle || slideshowTitle || 'Curated arts'}
                                     </Typography>
                                 )}
-                                {hasIncludesGroup.name && <Typography variant="h4">{hasIncludesGroup.name}</Typography>}
+                                {hasIncludesGroup.name && (
+                                    <Typography variant="h4" maxWidth={230} sx={{ wordBreak: 'break-word' }}>
+                                        {hasIncludesGroup.name}
+                                    </Typography>
+                                )}
                                 {(hasCurated || hasIncludesGroup.name) && (
                                     <button
                                         style={{

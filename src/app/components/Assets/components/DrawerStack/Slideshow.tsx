@@ -16,6 +16,7 @@ import { actions } from '@/features/assets';
 import { useState } from 'react';
 import { ShareButton } from './ShareButton';
 import { SLIDESHOW_BASE_URL } from '@/constants/api';
+import { createTwitterIntent } from '@/utils/twitter';
 
 interface VideoStackProps {
     selectedAssets: Asset[];
@@ -29,6 +30,13 @@ export default function Slideshow({ selectedAssets, title }: VideoStackProps) {
 
     const [display, setDisplay] = useState('Alternate');
     const [interval, setInterval] = useState(10);
+
+    const url = `${SLIDESHOW_BASE_URL}?slideshow=${slideshow}`;
+    const twitterShareURL = createTwitterIntent({
+        url,
+        hashtags: 'Vitruveo,VTRUSuite',
+        text: 'Check out this slideshow!',
+    });
 
     const handleSubmit = () => {
         dispatch(
@@ -48,7 +56,7 @@ export default function Slideshow({ selectedAssets, title }: VideoStackProps) {
                 <Box mt={2}>
                     <a
                         style={{ color: '#00d6f4', textDecoration: 'underline' }}
-                        href={`${SLIDESHOW_BASE_URL}?slideshow=${slideshow}`}
+                        href={url}
                         target="_blank"
                         rel="noreferrer"
                     >
@@ -57,7 +65,7 @@ export default function Slideshow({ selectedAssets, title }: VideoStackProps) {
                 </Box>
 
                 <Box display={'flex'} justifyContent={'center'} mt={2}>
-                    <ShareButton twitterURL={''} url={''} downloadable contentToCopy={''} title={title} />
+                    <ShareButton twitterURL={twitterShareURL} url={url} contentToCopy={url} title={title} />
                 </Box>
             </>
         );
