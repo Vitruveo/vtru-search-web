@@ -20,7 +20,7 @@ export interface AssetsSliceState {
         sold: string;
     };
     groupByCreator: {
-        active: boolean;
+        active: string;
         name: string;
     };
     paused: boolean;

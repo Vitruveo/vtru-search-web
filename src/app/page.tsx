@@ -57,7 +57,7 @@ const Search = () => {
         dispatch(actions.initialParams(initialParams));
         dispatch(actionsAssets.initialSort({ order: sort_order || 'latest', sold: sort_sold || 'no' }));
 
-        if (groupByCreator === 'no') dispatch(actionsAssets.startNormal());
+        if (!groupByCreator || groupByCreator === 'no') dispatch(actionsAssets.startNormal());
         else dispatch(actionsAssets.startGrouped());
     }, [searchParams]);
 

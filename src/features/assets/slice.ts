@@ -36,7 +36,7 @@ export const initialState: AssetsSliceState = {
         sold: '',
     },
     groupByCreator: {
-        active: true,
+        active: 'no',
         name: '',
     },
     paused: false,
@@ -58,7 +58,7 @@ export const assetsSlice = createSlice({
         setGroupByCreator: (
             state,
             action: PayloadAction<{
-                active: boolean;
+                active: string;
                 name: string;
             }>
         ) => {
@@ -66,7 +66,7 @@ export const assetsSlice = createSlice({
         },
         noGroupByCreator: (state) => {
             state.groupByCreator = {
-                active: false,
+                active: 'no',
                 name: '',
             };
             state.data.page = 1;
@@ -75,7 +75,7 @@ export const assetsSlice = createSlice({
         },
         resetGroupByCreator: (state) => {
             state.groupByCreator = {
-                active: true,
+                active: 'no',
                 name: '',
             };
             state.data.page = 1;
@@ -129,11 +129,11 @@ export const assetsSlice = createSlice({
             state.lastSold = action.payload;
         },
         startNormal: (state) => {
-            state.groupByCreator.active = false;
+            state.groupByCreator.active = 'no';
             state.groupByCreator.name = '';
         },
         startGrouped: (state) => {
-            state.groupByCreator.active = true;
+            state.groupByCreator.active = 'no';
             state.groupByCreator.name = '';
         },
         initialSort: (state, action: PayloadAction<AssetsSliceState['sort']>) => {

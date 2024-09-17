@@ -44,8 +44,8 @@ function* getAssetsLastSold() {
 
 function* getAssetsGroupByCreator() {
     try {
-        const groupByCreator: boolean = yield select((state: AppState) => state.assets.groupByCreator.active);
-        if (!groupByCreator) return;
+        const groupByCreator: string = yield select((state: AppState) => state.assets.groupByCreator.active);
+        if (groupByCreator === 'no') return;
 
         yield put(actions.startLoading());
 
@@ -99,6 +99,8 @@ function* getAssetsGroupByCreator() {
             };
         }
 
+        buildQuery.grouped = groupByCreator;
+
         const response: AxiosResponse<APIResponse<ResponseAssetGroupByCreator>> = yield call(
             axios.get,
             `${API_BASE_URL}/assets/public/groupByCreator`,
@@ -139,8 +141,8 @@ function* getAssetsGroupByCreator() {
 
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
     try {
-        const hasIncludesGroup: boolean = yield select((state: AppState) => state.assets.groupByCreator.active);
-        if (hasIncludesGroup) return;
+        const hasIncludesGroup: string = yield select((state: AppState) => state.assets.groupByCreator.active);
+        if (['noSales', 'all'].includes(hasIncludesGroup)) return;
 
         yield put(actions.startLoading());
 
