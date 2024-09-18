@@ -73,7 +73,6 @@ const AssetsList = () => {
     const [selected, setSelected] = useState<Asset[]>([]);
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
     const [sortOrder, setSortOrder] = useState<string>('latest');
-    const [isIncludeSold, setIsIncludeSold] = useState<boolean>(false);
     const [groupByCreator, setGroupByCreator] = useState<string>('no');
     const topRef = useRef<HTMLDivElement>(null);
 
@@ -151,7 +150,6 @@ const AssetsList = () => {
         if (grid || video || slideshow) return;
 
         setSortOrder(sort.order);
-        setIsIncludeSold(sort.sold === 'yes' ? true : false);
     }, [sort]);
 
     useEffect(() => {
@@ -228,7 +226,7 @@ const AssetsList = () => {
     ) => {
         setSortOrder(e?.value || '');
         generateQueryParam('sort_order', e?.value || '');
-        dispatch(actions.setSort({ order: e?.value || '', sold: isIncludeSold ? 'yes' : 'no' }));
+        dispatch(actions.setSort({ order: e?.value || '', sold: sort.sold === 'yes' ? 'yes' : 'no' }));
     };
 
     const handleChangeSelectGroupByCreator = (
@@ -266,12 +264,6 @@ const AssetsList = () => {
         if (['no'].includes(value)) dispatch(actions.loadAssets({ page: 1 }));
     };
 
-    const handleChangeIsIncludeSold = () => {
-        setIsIncludeSold(!isIncludeSold);
-        generateQueryParam('sort_sold', isIncludeSold ? 'no' : 'yes');
-        dispatch(actions.setSort({ order: sortOrder, sold: isIncludeSold ? 'no' : 'yes' }));
-    };
-
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
 
     const onAssetDrawerClose = () => {
@@ -286,7 +278,7 @@ const AssetsList = () => {
     const hasActiveAssets = activeAssets.length > 0;
     const hasBlockedAssets = blockedAssets.length > 0;
     const isInIframe = window.self !== window.top;
-
+    const hasIncludesGroupActive = hasIncludesGroup.active === 'all' || hasIncludesGroup.active === 'noSales';
     return (
         <Box>
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
@@ -361,11 +353,6 @@ const AssetsList = () => {
                             />
                         </Box>
 
-                        <FormControlLabel
-                            control={<Checkbox checked={isIncludeSold} onChange={handleChangeIsIncludeSold} />}
-                            label="Include Sold"
-                        />
-
                         <Box display="flex" flexDirection="column" gap={1}>
                             <Typography variant="h4">Creators</Typography>
                             <Select
@@ -420,11 +407,10 @@ const AssetsList = () => {
                             >
                                 {lgUp && (
                                     <Box display="flex" alignItems="center" gap={2}>
-                                        <Typography variant="h4">
+                                        <Button variant="contained" fullWidth>
                                             {selected.length}{' '}
                                             {language['search.assetList.curateStack.selected'] as string}
-                                        </Typography>
-                                        <IconCopy width={20} />
+                                        </Button>
                                     </Box>
                                 )}
 
@@ -491,7 +477,7 @@ const AssetsList = () => {
                         justifyContent={'space-between'}
                         gap={1}
                     >
-                        {hasCurated || hasIncludesGroup.active === 'no' ? (
+                        {hasCurated || !hasIncludesGroupActive ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
                                 {hasCurated && (
                                     <Typography variant="h4">
@@ -603,7 +589,7 @@ const AssetsList = () => {
                                                 return;
                                             }
 
-                                            if (hasIncludesGroup.active !== 'no') {
+                                            if (hasIncludesGroupActive) {
                                                 if (asset?.framework?.createdBy) {
                                                     dispatch(actions.setInitialPage());
                                                     dispatch(actionsFilters.changeCreatorId(asset.framework.createdBy));
@@ -663,7 +649,7 @@ const AssetsList = () => {
                                                     return;
                                                 }
 
-                                                if (hasIncludesGroup.active !== 'no') {
+                                                if (hasIncludesGroupActive) {
                                                     if (asset?.framework?.createdBy) {
                                                         dispatch(
                                                             actionsFilters.changeCreatorId(asset.framework.createdBy)

@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { IconSearch } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -15,12 +16,16 @@ import {
     FormGroup,
     FormControlLabel,
 } from '@mui/material';
+
+import chunkArray from '@/utils/chunkArray';
+import validateCryptoAddress from '@/utils/adressValidate';
+import generateQueryParam from '@/utils/generateQueryParam';
 import assetsMetadata from '@/mock/assetsMetadata.json';
+import { useSelector } from '@/store/hooks';
 import { actions } from '@/features/filters/slice';
 import { actions as actionsAssets } from '@/features/assets/slice';
-import { ContextItem } from '../components/ContextItem';
-import { TaxonomyItem } from '../components/TaxonomyItem';
-import { CreatorsItem } from '../components/CreatorsItem';
+import { FilterSliceState } from '@/features/filters/types';
+
 import type {
     AssetsMetadata,
     ItemsOrCultureOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrEthnicityOrGenderOrBlockchain,
@@ -28,20 +33,21 @@ import type {
     NationalityOrResidenceOrCountry,
 } from './types';
 import type { Context, Taxonomy, Creators } from '../types';
-import Version from '../../Version';
-import { AssetFilterAccordion } from './AssetFilterAccordion';
-import { Range } from '../components/Range';
-import { useSelector } from '@/store/hooks';
-import React, { useEffect, useState } from 'react';
-import { FilterSliceState } from '@/features/filters/types';
-import chunkArray from '@/utils/chunkArray';
 import PortfolioItem from '../components/PortfolioItem';
+import { ContextItem } from '../components/ContextItem';
+import { TaxonomyItem } from '../components/TaxonomyItem';
+import { CreatorsItem } from '../components/CreatorsItem';
+import { Range } from '../components/Range';
 import { Wallets } from '../components/Wallets';
-import validateCryptoAddress from '@/utils/adressValidate';
-import generateQueryParam from '@/utils/generateQueryParam';
+import { AssetFilterAccordion } from './AssetFilterAccordion';
+import Version from '../../Version';
 
 const Filters = () => {
     const params = new URLSearchParams(window.location.search);
+
+    const grid = params.get('grid');
+    const slideshow = params.get('slideshow');
+    const video = params.get('video');
 
     const [isHideNuditychecked, setIsHideNudityChecked] = useState(false);
     const [isHideAIchecked, setIsHideAIChecked] = useState(false);
@@ -51,13 +57,14 @@ const Filters = () => {
     const [contextFilters, setContextFilters] = useState<number>();
     const [taxonomyFilters, setTaxonomyFilters] = useState<number>();
     const [creatorsFilters, setCreatorsFilters] = useState<number>();
+    const [isIncludeSold, setIsIncludeSold] = useState<boolean>(false);
 
     const dispatch = useDispatch();
     const { language } = useI18n();
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
     const values = useSelector((state) => state.filters);
-    const { tags, maxPrice } = useSelector((state) => state.assets);
+    const { tags, maxPrice, sort } = useSelector((state) => state.assets);
     const { wallets } = useSelector((state) => state.filters.portfolio);
 
     const getTotalFiltersApplied = (fieldName: keyof FilterSliceState) => {
@@ -65,6 +72,12 @@ const Filters = () => {
             return Array.isArray(arrayfield) ? acc + arrayfield.length : acc;
         }, 0);
     };
+
+    useEffect(() => {
+        if (grid || video || slideshow) return;
+
+        setIsIncludeSold(sort.sold === 'yes' ? true : false);
+    }, [sort]);
 
     useEffect(() => {
         const updateFilters = (
@@ -200,6 +213,12 @@ const Filters = () => {
         }
     };
 
+    const handleChangeIsIncludeSold = () => {
+        setIsIncludeSold(!isIncludeSold);
+        generateQueryParam('sort_sold', isIncludeSold ? 'no' : 'yes');
+        dispatch(actionsAssets.setSort({ order: sort.order, sold: isIncludeSold ? 'no' : 'yes' }));
+    };
+
     return (
         <Stack gap={2} p={1} pb={2} mt={1} pt={isSmallScreen ? 8 : 1} height="92vh" overflow="auto">
             <OutlinedInput
@@ -222,13 +241,24 @@ const Filters = () => {
                 }}
             />
 
-            <FormGroup sx={{ display: 'flex', flexDirection: 'row', marginLeft: '8%' }}>
-                <Box display={'flex'} flexDirection={'column'}>
+            <FormGroup sx={{ display: 'flex', flexDirection: 'column', marginLeft: '8%' }}>
+                <Typography variant="h4">Filters</Typography>
+                <FormControlLabel
+                    control={<Checkbox onChange={handleChangeIsIncludeSold} checked={isIncludeSold} />}
+                    label={'Include Sold'}
+                />
+                <Box display={'grid'} gridTemplateColumns="130px 130px">
                     <FormControlLabel
                         control={<Checkbox onChange={handleChangeNudity} checked={isHideNuditychecked} />}
                         label={'Hide Nudity'}
                     />
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangeAI} checked={isHideAIchecked} />}
+                        label={'Hide AI'}
+                    />
+                </Box>
 
+                <Box display={'grid'} gridTemplateColumns="130px 130px">
                     <FormControlLabel
                         control={
                             <Checkbox
@@ -240,24 +270,20 @@ const Filters = () => {
                     />
                     <FormControlLabel
                         control={
+                            <Checkbox onChange={handleChangeAnimation} checked={selectedCategories.includes('video')} />
+                        }
+                        label={'Animation'}
+                    />
+                </Box>
+                <Box display={'grid'} gridTemplateColumns="130px 130px">
+                    <FormControlLabel
+                        control={
                             <Checkbox
                                 onChange={handleChangePhysicalArt}
                                 checked={selectedObjectTypes.includes('physicalart')}
                             />
                         }
                         label={'Physical Art'}
-                    />
-                </Box>
-                <Box display={'flex'} flexDirection={'column'}>
-                    <FormControlLabel
-                        control={<Checkbox onChange={handleChangeAI} checked={isHideAIchecked} />}
-                        label={'Hide AI'}
-                    />
-                    <FormControlLabel
-                        control={
-                            <Checkbox onChange={handleChangeAnimation} checked={selectedCategories.includes('video')} />
-                        }
-                        label={'Animation'}
                     />
                     <FormControlLabel
                         control={
