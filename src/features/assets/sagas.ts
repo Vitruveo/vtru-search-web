@@ -30,11 +30,18 @@ import validateCryptoAddress from '@/utils/adressValidate';
 
 function* getAssetsSpotlight() {
     try {
+        const nudity: string[] = yield select((state: AppState) => state.filters.taxonomy.nudity);
+
         const URL_ASSETS_SPOTLIGHT = `${API_BASE_URL}/assets/public/spotlight`;
 
         const response: AxiosResponse<APIResponse<ResponseAssetsSpotlight>> = yield call(
             axios.get,
-            URL_ASSETS_SPOTLIGHT
+            URL_ASSETS_SPOTLIGHT,
+            {
+                params: {
+                    nudity: nudity[0] || 'yes',
+                },
+            }
         );
 
         yield put(actions.setSpotlight(response.data.data));
