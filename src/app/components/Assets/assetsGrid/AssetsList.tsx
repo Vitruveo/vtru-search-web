@@ -211,7 +211,7 @@ const AssetsList = () => {
         params.set('sort_sold', 'no');
         params.set('taxonomy_aiGeneration', 'partial,none');
         params.set('taxonomy_nudity', 'no');
-        params.set('groupByCreator', 'yes');
+        params.set('groupByCreator', 'no');
         params.delete('creatorId');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
@@ -603,7 +603,7 @@ const AssetsList = () => {
                                                 return;
                                             }
 
-                                            if (hasIncludesGroup.active) {
+                                            if (hasIncludesGroup.active !== 'no') {
                                                 if (asset?.framework?.createdBy) {
                                                     dispatch(actions.setInitialPage());
                                                     dispatch(actionsFilters.changeCreatorId(asset.framework.createdBy));
@@ -663,7 +663,7 @@ const AssetsList = () => {
                                                     return;
                                                 }
 
-                                                if (hasIncludesGroup.active) {
+                                                if (hasIncludesGroup.active !== 'no') {
                                                     if (asset?.framework?.createdBy) {
                                                         dispatch(
                                                             actionsFilters.changeCreatorId(asset.framework.createdBy)

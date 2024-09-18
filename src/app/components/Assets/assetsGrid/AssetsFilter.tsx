@@ -128,7 +128,7 @@ const Filters = () => {
         params.set('sort_sold', 'no');
         params.set('taxonomy_aiGeneration', 'partial,none');
         params.set('taxonomy_nudity', 'no');
-        params.set('groupByCreator', 'yes');
+        params.set('groupByCreator', 'no');
         params.delete('creatorId');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
