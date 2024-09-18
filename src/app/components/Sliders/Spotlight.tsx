@@ -1,38 +1,29 @@
 import React from 'react';
 import Marquee from 'react-fast-marquee';
-import { Box, CardContent, Link, Paper, Stack, Theme, Typography, useMediaQuery } from '@mui/material';
+import { Box, CardContent, Link, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 import { useSelector } from '@/store/hooks';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { getAssetPrice } from '@/utils/assets';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
-import { LastSoldAsset } from '@/features/assets/types';
+import { SpotlightAsset } from '@/features/assets/types';
 import { STORE_BASE_URL } from '@/constants/api';
 
-function Slider() {
-    const assets = useSelector((state) => state.assets.lastSold);
-    const isFilterHidden = useSelector((state) => state.customizer.hidden?.filter);
-    const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
+function SpotlightSlider() {
+    const assets = useSelector((state) => state.assets.spotlight);
     const theme = useTheme();
 
-    const handleClickItem = (asset: LastSoldAsset) => {
-        window.open(`${STORE_BASE_URL}/${asset?.username || 'preview'}/${asset?._id}`);
+    const handleClickItem = (asset: SpotlightAsset) => {
+        window.open(`${STORE_BASE_URL}/${asset?.author || 'preview'}/${asset?._id}`);
     };
 
     return (
-        <Box sx={{ width: lgUp && !isFilterHidden ? 'calc(100vw - 350px)' : 'calc(100vw - 65px)' }}>
-            <Typography variant="h1" mb={4} fontWeight={500}>
-                Recently Sold
-            </Typography>
+        <Box>
             <Marquee>
                 {assets.map((asset, index) => {
-                    const assetTitle = asset?.assetMetadata?.context?.formData?.title || 'No Title';
-
-                    const hasCreator =
-                        asset?.assetMetadata?.creators?.formData instanceof Array &&
-                        asset?.assetMetadata?.creators?.formData?.length > 0;
-                    const creatorName = hasCreator ? asset!.assetMetadata!.creators!.formData![0]!.name : 'No creator';
+                    const assetTitle = asset?.title || 'No Title';
+                    const creatorName = asset?.author || 'No creator';
 
                     const price = getAssetPrice(asset);
 
@@ -56,10 +47,10 @@ function Slider() {
                         >
                             <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
                                 <MediaRenderer
-                                    src={`${AWS_BASE_URL_S3}/${asset?.formats?.path}`}
+                                    src={`${AWS_BASE_URL_S3}/${asset?.preview}`}
                                     fallbackSrc={'https://via.placeholder.com/250'}
                                     preSource={
-                                        nextAssetExists ? `${AWS_BASE_URL_S3}/${assets[index + 1]?.formats?.path}` : ''
+                                        nextAssetExists ? `${AWS_BASE_URL_S3}/${assets[index + 1]?.preview}` : ''
                                     }
                                 />
                             </Box>
@@ -97,34 +88,15 @@ function Slider() {
                                         {creatorName}
                                     </Link>
                                 </Box>
-                                <Stack direction="row" justifyContent="space-between" mt={2}>
-                                    <Box>
-                                        <Typography
-                                            variant="h6"
-                                            overflow="hidden"
-                                            whiteSpace="nowrap"
-                                            textOverflow="ellipsis"
-                                        >
-                                            Last Sold
-                                        </Typography>
-                                        <Typography
-                                            variant="h6"
-                                            overflow="hidden"
-                                            whiteSpace="nowrap"
-                                            textOverflow="ellipsis"
-                                        >
-                                            {price}
-                                        </Typography>
-                                    </Box>
-
-                                    <Paper
-                                        sx={{
-                                            backgroundColor: 'red',
-                                            borderRadius: '100%',
-                                            height: 40,
-                                            width: 40,
-                                        }}
-                                    />
+                                <Stack mt={2}>
+                                    <Typography
+                                        variant="h6"
+                                        overflow="hidden"
+                                        whiteSpace="nowrap"
+                                        textOverflow="ellipsis"
+                                    >
+                                        {price}
+                                    </Typography>
                                 </Stack>
                             </CardContent>
                         </Box>
@@ -135,4 +107,4 @@ function Slider() {
     );
 }
 
-export default Slider;
+export default SpotlightSlider;

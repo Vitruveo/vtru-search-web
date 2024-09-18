@@ -16,6 +16,7 @@ import type {
     ResponseAssetGroupByCreator,
     ResponseAssets,
     ResponseAssetsLastSold,
+    ResponseAssetsSpotlight,
     ResponseGrid,
     ResponseSlideshow,
     ResponseVideo,
@@ -26,6 +27,21 @@ import { APIResponse } from '../common/types';
 import { AppState } from '@/store';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
 import validateCryptoAddress from '@/utils/adressValidate';
+
+function* getAssetsSpotlight() {
+    try {
+        const URL_ASSETS_SPOTLIGHT = `${API_BASE_URL}/assets/public/spotlight`;
+
+        const response: AxiosResponse<APIResponse<ResponseAssetsSpotlight>> = yield call(
+            axios.get,
+            URL_ASSETS_SPOTLIGHT
+        );
+
+        yield put(actions.setSpotlight(response.data.data));
+    } catch (error) {
+        // Handle error
+    }
+}
 
 function* getAssetsLastSold() {
     try {
@@ -489,6 +505,7 @@ export function* assetsSagas() {
 
         // Sold
         takeEvery(actions.loadAssetsLastSold.type, getAssetsLastSold),
+        takeEvery(actions.loadAssetsLastSold.type, getAssetsSpotlight),
 
         takeEvery(actions.loadCreator.type, getCreator),
         takeEvery(actions.makeVideo.type, makeVideo),

@@ -34,10 +34,10 @@ import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
 import './AssetScroll.css';
 import NumberOfFilters from '../components/numberOfFilters';
-import Slider from '../../../components/Slider';
 import { useTheme } from '@mui/material/styles';
 import generateQueryParam from '@/utils/generateQueryParam';
 import { STORE_BASE_URL } from '@/constants/api';
+import TabSliders from '../../Sliders/TabSliders';
 
 const optionsForSelectSort = [
     { value: 'latest', label: 'Latest' },
@@ -479,7 +479,7 @@ const AssetsList = () => {
                         !slideshow &&
                         !creatorId &&
                         !portfolioWallets &&
-                        !isHidden?.recentlySold && <Slider />}
+                        !isHidden?.recentlySold && <TabSliders />}
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>
