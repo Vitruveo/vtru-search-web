@@ -57,8 +57,9 @@ const Search = () => {
         dispatch(actions.initialParams(initialParams));
         dispatch(actionsAssets.initialSort({ order: sort_order || 'latest', sold: sort_sold || 'no' }));
 
-        if (!groupByCreator || groupByCreator === 'no') dispatch(actionsAssets.startNormal());
-        else dispatch(actionsAssets.startGrouped());
+        if (!groupByCreator || groupByCreator === 'no' || !['noSales', 'all'].includes(groupByCreator))
+            dispatch(actionsAssets.startNormal());
+        else dispatch(actionsAssets.startGrouped(groupByCreator));
     }, [searchParams]);
 
     const isInIframe = window.self !== window.top;

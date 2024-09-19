@@ -136,8 +136,8 @@ export const assetsSlice = createSlice({
             state.groupByCreator.active = 'no';
             state.groupByCreator.name = '';
         },
-        startGrouped: (state) => {
-            state.groupByCreator.active = 'no';
+        startGrouped: (state, action: PayloadAction<string>) => {
+            state.groupByCreator.active = action.payload;
             state.groupByCreator.name = '';
         },
         initialSort: (state, action: PayloadAction<AssetsSliceState['sort']>) => {
