@@ -8,8 +8,8 @@ import type {
     GetCreatorParams,
     LastSoldAsset,
     MakeVideoParams,
+    SpotlightAsset,
 } from './types';
-import { extractObjects } from '@/utils/extractObjects';
 
 export const initialState: AssetsSliceState = {
     loading: false,
@@ -21,6 +21,7 @@ export const initialState: AssetsSliceState = {
         total: 0,
         totalPage: 0,
     },
+    spotlight: [],
     lastSold: [],
     tags: [],
     creator: {
@@ -36,7 +37,7 @@ export const initialState: AssetsSliceState = {
         sold: '',
     },
     groupByCreator: {
-        active: true,
+        active: 'no',
         name: '',
     },
     paused: false,
@@ -58,7 +59,7 @@ export const assetsSlice = createSlice({
         setGroupByCreator: (
             state,
             action: PayloadAction<{
-                active: boolean;
+                active: string;
                 name: string;
             }>
         ) => {
@@ -66,7 +67,7 @@ export const assetsSlice = createSlice({
         },
         noGroupByCreator: (state) => {
             state.groupByCreator = {
-                active: false,
+                active: 'no',
                 name: '',
             };
             state.data.page = 1;
@@ -75,7 +76,7 @@ export const assetsSlice = createSlice({
         },
         resetGroupByCreator: (state) => {
             state.groupByCreator = {
-                active: true,
+                active: 'no',
                 name: '',
             };
             state.data.page = 1;
@@ -125,15 +126,18 @@ export const assetsSlice = createSlice({
         setInitialPage: (state) => {
             state.data.page = 1;
         },
+        setSpotlight: (state, action: PayloadAction<SpotlightAsset[]>) => {
+            state.spotlight = action.payload;
+        },
         setLastSold: (state, action: PayloadAction<LastSoldAsset[]>) => {
             state.lastSold = action.payload;
         },
         startNormal: (state) => {
-            state.groupByCreator.active = false;
+            state.groupByCreator.active = 'no';
             state.groupByCreator.name = '';
         },
-        startGrouped: (state) => {
-            state.groupByCreator.active = true;
+        startGrouped: (state, action: PayloadAction<string>) => {
+            state.groupByCreator.active = action.payload;
             state.groupByCreator.name = '';
         },
         initialSort: (state, action: PayloadAction<AssetsSliceState['sort']>) => {

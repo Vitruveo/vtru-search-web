@@ -17,6 +17,7 @@ interface StateType {
     isCardShadow?: boolean;
     borderRadius?: number | any;
     hidden?: { [key in StateKeys]: boolean };
+    activeSlider: 'spotlight' | 'recentlySold';
 }
 
 const initialState: StateType = {
@@ -42,6 +43,7 @@ const initialState: StateType = {
         pageNavigation: false,
         cardDetail: false,
     },
+    activeSlider: 'spotlight',
 };
 
 export const customizerSlice = createSlice({
@@ -56,6 +58,9 @@ export const customizerSlice = createSlice({
                 state.activeTheme = 'PURPLE_THEME';
                 state.activeMode = 'light';
             }
+        },
+        changeActiveSlider: (state: StateType, action: PayloadAction<'spotlight' | 'recentlySold'>) => {
+            state.activeSlider = action.payload;
         },
         setDarkMode: (state: StateType, action) => {
             state.activeMode = action.payload;
@@ -117,6 +122,7 @@ export const {
     setCardShadow,
     setHidden,
     reset,
+    changeActiveSlider,
 } = customizerSlice.actions;
 
 export const customizerActionsCreators = customizerSlice.actions;

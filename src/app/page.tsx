@@ -57,8 +57,9 @@ const Search = () => {
         dispatch(actions.initialParams(initialParams));
         dispatch(actionsAssets.initialSort({ order: sort_order || 'latest', sold: sort_sold || 'no' }));
 
-        if (groupByCreator === 'no') dispatch(actionsAssets.startNormal());
-        else dispatch(actionsAssets.startGrouped());
+        if (!groupByCreator || groupByCreator === 'no' || !['noSales', 'all'].includes(groupByCreator))
+            dispatch(actionsAssets.startNormal());
+        else dispatch(actionsAssets.startGrouped(groupByCreator));
     }, [searchParams]);
 
     const isInIframe = window.self !== window.top;
@@ -77,7 +78,7 @@ const Search = () => {
             <Box
                 display={isInIframe ? 'none' : 'inherit'}
                 position={'fixed'}
-                top={64}
+                top={15}
                 right={-32}
                 bgcolor={theme.palette.grey[100]}
                 width={100}

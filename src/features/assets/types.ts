@@ -9,6 +9,7 @@ export interface AssetsSliceState {
     error: string | null;
     data: AssetData;
     tags: Tags[];
+    spotlight: SpotlightAsset[];
     lastSold: LastSoldAsset[];
     creator: Creator;
     slideshow: string;
@@ -20,7 +21,7 @@ export interface AssetsSliceState {
         sold: string;
     };
     groupByCreator: {
-        active: boolean;
+        active: string;
         name: string;
     };
     paused: boolean;
@@ -116,6 +117,16 @@ export interface Tags {
     tag: string;
     count: number;
 }
+
+export interface SpotlightAsset {
+    _id: string;
+    title: string;
+    license: string;
+    preview: string;
+    author: string;
+}
+
+export type ResponseAssetsSpotlight = SpotlightAsset[];
 
 export interface LastSoldAsset {
     _id: string;

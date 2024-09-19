@@ -40,8 +40,10 @@ const AssetItem = ({
     const [isHovered, setIsHovered] = useState(false);
     const [showFanEffect, setShowFanEffect] = useState(false);
     const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const hasIncludesGroup = useSelector((state) => state.assets.groupByCreator.active);
+    const optionIncludeGroup = useSelector((state) => state.assets.groupByCreator.active);
     const isHiddenCardDetail = useSelector((state) => state.customizer.hidden?.cardDetail);
+
+    const hasIncludesGroup = optionIncludeGroup === 'all' || optionIncludeGroup === 'noSales';
 
     const hasCreator =
         asset?.assetMetadata?.creators?.formData instanceof Array &&

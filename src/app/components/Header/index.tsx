@@ -71,7 +71,14 @@ const Header = () => {
                     {paused && <Typography variant="h3">⚠️ Store currently undergoing maintenance</Typography>}
                 </Box>
 
-                <Stack spacing={1} direction="row" alignItems="center">
+                <Stack
+                    spacing={1}
+                    direction="row"
+                    alignItems="center"
+                    style={{
+                        marginRight: '59px',
+                    }}
+                >
                     <IconButton onClick={handleToggleTheme}>
                         {customizer.activeMode === 'dark' ? <IconSun /> : <IconMoon />}
                     </IconButton>

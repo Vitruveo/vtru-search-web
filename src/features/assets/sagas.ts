@@ -16,6 +16,7 @@ import type {
     ResponseAssetGroupByCreator,
     ResponseAssets,
     ResponseAssetsLastSold,
+    ResponseAssetsSpotlight,
     ResponseGrid,
     ResponseSlideshow,
     ResponseVideo,
@@ -26,6 +27,28 @@ import { APIResponse } from '../common/types';
 import { AppState } from '@/store';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
 import validateCryptoAddress from '@/utils/adressValidate';
+
+function* getAssetsSpotlight() {
+    try {
+        const nudity: string[] = yield select((state: AppState) => state.filters.taxonomy.nudity);
+
+        const URL_ASSETS_SPOTLIGHT = `${API_BASE_URL}/assets/public/spotlight`;
+
+        const response: AxiosResponse<APIResponse<ResponseAssetsSpotlight>> = yield call(
+            axios.get,
+            URL_ASSETS_SPOTLIGHT,
+            {
+                params: {
+                    nudity: nudity[0] || 'yes',
+                },
+            }
+        );
+
+        yield put(actions.setSpotlight(response.data.data));
+    } catch (error) {
+        // Handle error
+    }
+}
 
 function* getAssetsLastSold() {
     try {
@@ -44,8 +67,8 @@ function* getAssetsLastSold() {
 
 function* getAssetsGroupByCreator() {
     try {
-        const groupByCreator: boolean = yield select((state: AppState) => state.assets.groupByCreator.active);
-        if (!groupByCreator) return;
+        const groupByCreator: string = yield select((state: AppState) => state.assets.groupByCreator.active);
+        if (groupByCreator === 'no') return;
 
         yield put(actions.startLoading());
 
@@ -99,6 +122,8 @@ function* getAssetsGroupByCreator() {
             };
         }
 
+        buildQuery.grouped = groupByCreator;
+
         const response: AxiosResponse<APIResponse<ResponseAssetGroupByCreator>> = yield call(
             axios.get,
             `${API_BASE_URL}/assets/public/groupByCreator`,
@@ -139,8 +164,8 @@ function* getAssetsGroupByCreator() {
 
 function* getAssets(action: PayloadAction<GetAssetsParams>) {
     try {
-        const hasIncludesGroup: boolean = yield select((state: AppState) => state.assets.groupByCreator.active);
-        if (hasIncludesGroup) return;
+        const hasIncludesGroup: string = yield select((state: AppState) => state.assets.groupByCreator.active);
+        if (['noSales', 'all'].includes(hasIncludesGroup)) return;
 
         yield put(actions.startLoading());
 
@@ -487,6 +512,7 @@ export function* assetsSagas() {
 
         // Sold
         takeEvery(actions.loadAssetsLastSold.type, getAssetsLastSold),
+        takeEvery(actions.loadAssetsLastSold.type, getAssetsSpotlight),
 
         takeEvery(actions.loadCreator.type, getCreator),
         takeEvery(actions.makeVideo.type, makeVideo),

@@ -34,10 +34,26 @@ import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
 import './AssetScroll.css';
 import NumberOfFilters from '../components/numberOfFilters';
-import Slider from '../../../components/Slider';
 import { useTheme } from '@mui/material/styles';
 import generateQueryParam from '@/utils/generateQueryParam';
 import { STORE_BASE_URL } from '@/constants/api';
+import TabSliders from '../../Sliders/TabSliders';
+
+const optionsForSelectSort = [
+    { value: 'latest', label: 'Latest' },
+    { value: 'priceHighToLow', label: 'Price – High to Low' },
+    { value: 'priceLowToHigh', label: 'Price – Low to High' },
+    { value: 'creatorAZ', label: 'Creator – A-Z' },
+    { value: 'creatorZA', label: 'Creator – Z-A' },
+    { value: 'consignNewToOld', label: 'Consign Date – New to Old' },
+    { value: 'consignOldToNew', label: 'Consign Date – Old to New' },
+];
+
+const optionsForSelectGrouped = [
+    { value: 'no', label: 'Not grouped' },
+    { value: 'all', label: 'All' },
+    { value: 'noSales', label: 'No Sales' },
+];
 
 const AssetsList = () => {
     const dispatch = useDispatch();
@@ -57,8 +73,7 @@ const AssetsList = () => {
     const [selected, setSelected] = useState<Asset[]>([]);
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
     const [sortOrder, setSortOrder] = useState<string>('latest');
-    const [isIncludeSold, setIsIncludeSold] = useState<boolean>(false);
-    const [isIncludeGroupByCreator, setIsIncludeGroupByCreator] = useState<boolean>(true);
+    const [groupByCreator, setGroupByCreator] = useState<string>('no');
     const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
@@ -84,16 +99,6 @@ const AssetsList = () => {
         }
         return options;
     }, [totalPage]);
-
-    const optionsForSelectSort = [
-        { value: 'latest', label: 'Latest' },
-        { value: 'priceHighToLow', label: 'Price – High to Low' },
-        { value: 'priceLowToHigh', label: 'Price – Low to High' },
-        { value: 'creatorAZ', label: 'Creator – A-Z' },
-        { value: 'creatorZA', label: 'Creator – Z-A' },
-        { value: 'consignNewToOld', label: 'Consign Date – New to Old' },
-        { value: 'consignOldToNew', label: 'Consign Date – Old to New' },
-    ];
 
     const getTotalFiltersApplied = () => {
         const fields = {
@@ -128,7 +133,7 @@ const AssetsList = () => {
     }, []);
 
     useEffect(() => {
-        if (grid || video || slideshow) setIsIncludeGroupByCreator(false);
+        if (grid || video || slideshow) setGroupByCreator('no');
     }, []);
 
     useEffect(() => {
@@ -145,13 +150,12 @@ const AssetsList = () => {
         if (grid || video || slideshow) return;
 
         setSortOrder(sort.order);
-        setIsIncludeSold(sort.sold === 'yes' ? true : false);
     }, [sort]);
 
     useEffect(() => {
         if (grid || video || slideshow) return;
 
-        setIsIncludeGroupByCreator(hasIncludesGroup.active);
+        setGroupByCreator(hasIncludesGroup.active);
     }, [hasIncludesGroup.active]);
 
     const openAssetDrawer = (asset: Asset) => {
@@ -205,7 +209,7 @@ const AssetsList = () => {
         params.set('sort_sold', 'no');
         params.set('taxonomy_aiGeneration', 'partial,none');
         params.set('taxonomy_nudity', 'no');
-        params.set('groupByCreator', 'yes');
+        params.set('groupByCreator', 'no');
         params.delete('creatorId');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
@@ -222,19 +226,21 @@ const AssetsList = () => {
     ) => {
         setSortOrder(e?.value || '');
         generateQueryParam('sort_order', e?.value || '');
-        dispatch(actions.setSort({ order: e?.value || '', sold: isIncludeSold ? 'yes' : 'no' }));
-    };
-    const handleChangeIsIncludeSold = () => {
-        setIsIncludeSold(!isIncludeSold);
-        generateQueryParam('sort_sold', isIncludeSold ? 'no' : 'yes');
-        dispatch(actions.setSort({ order: sortOrder, sold: isIncludeSold ? 'no' : 'yes' }));
+        dispatch(actions.setSort({ order: e?.value || '', sold: sort.sold === 'yes' ? 'yes' : 'no' }));
     };
 
-    const handleChangeIsIncludeGroupByCreator = () => {
-        setIsIncludeGroupByCreator(!isIncludeGroupByCreator);
-        generateQueryParam('groupByCreator', isIncludeGroupByCreator ? 'no' : 'yes');
+    const handleChangeSelectGroupByCreator = (
+        e: SingleValue<{
+            value: string;
+            label: string;
+        }>
+    ) => {
+        const value = e?.value || '';
 
-        if (!isIncludeGroupByCreator) {
+        setGroupByCreator(value);
+        generateQueryParam('groupByCreator', value);
+
+        if (e?.value === 'no') {
             generateQueryParam('creatorId', '');
             generateQueryParam('grid', '');
             generateQueryParam('video', '');
@@ -250,12 +256,12 @@ const AssetsList = () => {
 
         dispatch(
             actions.setGroupByCreator({
-                active: !isIncludeGroupByCreator,
+                active: value,
                 name: '',
             })
         );
 
-        if (isIncludeGroupByCreator) dispatch(actions.loadAssets({ page: 1 }));
+        if (['no'].includes(value)) dispatch(actions.loadAssets({ page: 1 }));
     };
 
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
@@ -272,7 +278,7 @@ const AssetsList = () => {
     const hasActiveAssets = activeAssets.length > 0;
     const hasBlockedAssets = blockedAssets.length > 0;
     const isInIframe = window.self !== window.top;
-
+    const hasIncludesGroupActive = hasIncludesGroup.active === 'all' || hasIncludesGroup.active === 'noSales';
     return (
         <Box>
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
@@ -292,7 +298,11 @@ const AssetsList = () => {
                     justifyContent="space-between"
                     alignItems="center"
                     mt={1}
+                    mb={3}
                     p={3}
+                    style={{
+                        paddingTop: '7px',
+                    }}
                 >
                     <Grid
                         item
@@ -301,58 +311,93 @@ const AssetsList = () => {
                         display={'flex'}
                         gap={lgUp ? 4 : 0}
                         flexDirection={lgUp ? 'row' : 'column'}
+                        alignItems={'flex-end'}
                     >
-                        <Select
-                            placeholder="Sort"
-                            options={optionsForSelectSort}
-                            value={optionsForSelectSort.find((option) => option.value === sortOrder)}
-                            onChange={(e) => handleChangeSelectSortOrder(e)}
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    minWidth: lgUp ? '240px' : '100px',
-                                    maxWidth: lgUp ? '' : '150px',
-                                    borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
-                                    backgroundColor: theme.palette.background.paper,
-                                    boxShadow: '#00d6f4',
-                                    '&:hover': { borderColor: '#00d6f4' },
-                                }),
-                                menu: (base) => ({
-                                    ...base,
-                                    zIndex: 1000,
-                                    color: theme.palette.text.primary,
-                                    backgroundColor: theme.palette.background.paper,
-                                }),
-                                singleValue: (base) => ({
-                                    ...base,
-                                    color: theme.palette.text.primary,
-                                }),
-                                option: (base, state) => ({
-                                    ...base,
-                                    color: theme.palette.text.primary,
-                                    backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
-                                    '&:hover': { backgroundColor: theme.palette.action.hover },
-                                }),
-                                input: (base) => ({
-                                    ...base,
-                                    color: theme.palette.text.primary,
-                                }),
-                            }}
-                        />
-                        <FormControlLabel
-                            control={<Checkbox checked={isIncludeSold} onChange={handleChangeIsIncludeSold} />}
-                            label="Include Sold"
-                        />
+                        <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
+                            <Typography variant="h4">Sort:</Typography>
+                            <Select
+                                placeholder="Sort"
+                                options={optionsForSelectSort}
+                                value={optionsForSelectSort.find((option) => option.value === sortOrder)}
+                                onChange={(e) => handleChangeSelectSortOrder(e)}
+                                styles={{
+                                    control: (base, state) => ({
+                                        ...base,
+                                        minWidth: lgUp ? '240px' : '100px',
+                                        maxWidth: lgUp ? '' : '150px',
+                                        borderColor: state.isFocused
+                                            ? theme.palette.primary.main
+                                            : theme.palette.grey[200],
+                                        backgroundColor: theme.palette.background.paper,
+                                        boxShadow: '#00d6f4',
+                                        '&:hover': { borderColor: '#00d6f4' },
+                                    }),
+                                    menu: (base) => ({
+                                        ...base,
+                                        zIndex: 1000,
+                                        color: theme.palette.text.primary,
+                                        backgroundColor: theme.palette.background.paper,
+                                    }),
+                                    singleValue: (base) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                    }),
+                                    option: (base, state) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                        backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
+                                        '&:hover': { backgroundColor: theme.palette.action.hover },
+                                    }),
+                                    input: (base) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                    }),
+                                }}
+                            />
+                        </Box>
 
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={isIncludeGroupByCreator}
-                                    onChange={handleChangeIsIncludeGroupByCreator}
-                                />
-                            }
-                            label="Group by creator"
-                        />
+                        <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
+                            <Typography variant="h4">Creators:</Typography>
+                            <Select
+                                placeholder="Creators"
+                                options={optionsForSelectGrouped}
+                                value={optionsForSelectGrouped.find((option) => option.value === groupByCreator)}
+                                onChange={(e) => handleChangeSelectGroupByCreator(e)}
+                                styles={{
+                                    control: (base, state) => ({
+                                        ...base,
+                                        minWidth: lgUp ? '240px' : '100px',
+                                        maxWidth: lgUp ? '' : '150px',
+                                        borderColor: state.isFocused
+                                            ? theme.palette.primary.main
+                                            : theme.palette.grey[200],
+                                        backgroundColor: theme.palette.background.paper,
+                                        boxShadow: '#00d6f4',
+                                        '&:hover': { borderColor: '#00d6f4' },
+                                    }),
+                                    menu: (base) => ({
+                                        ...base,
+                                        zIndex: 1000,
+                                        color: theme.palette.text.primary,
+                                        backgroundColor: theme.palette.background.paper,
+                                    }),
+                                    singleValue: (base) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                    }),
+                                    option: (base, state) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                        backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
+                                        '&:hover': { backgroundColor: theme.palette.action.hover },
+                                    }),
+                                    input: (base) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                    }),
+                                }}
+                            />
+                        </Box>
                     </Grid>
                     <Box display={'flex'}>
                         {curateStack.isActive && (
@@ -365,11 +410,10 @@ const AssetsList = () => {
                             >
                                 {lgUp && (
                                     <Box display="flex" alignItems="center" gap={2}>
-                                        <Typography variant="h4">
+                                        <Button variant="contained" fullWidth>
                                             {selected.length}{' '}
                                             {language['search.assetList.curateStack.selected'] as string}
-                                        </Typography>
-                                        <IconCopy width={20} />
+                                        </Button>
                                     </Box>
                                 )}
 
@@ -424,7 +468,7 @@ const AssetsList = () => {
                         !slideshow &&
                         !creatorId &&
                         !portfolioWallets &&
-                        !isHidden?.recentlySold && <Slider />}
+                        !isHidden?.recentlySold && <TabSliders />}
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>
@@ -436,7 +480,7 @@ const AssetsList = () => {
                         justifyContent={'space-between'}
                         gap={1}
                     >
-                        {hasCurated || !hasIncludesGroup.active ? (
+                        {hasCurated || !hasIncludesGroupActive ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
                                 {hasCurated && (
                                     <Typography variant="h4">
@@ -548,12 +592,12 @@ const AssetsList = () => {
                                                 return;
                                             }
 
-                                            if (hasIncludesGroup.active) {
+                                            if (hasIncludesGroupActive) {
                                                 if (asset?.framework?.createdBy) {
                                                     dispatch(actions.setInitialPage());
                                                     dispatch(actionsFilters.changeCreatorId(asset.framework.createdBy));
                                                     generateQueryParam('creatorId', asset.framework.createdBy);
-                                                    dispatch(actions.setGroupByCreator({ active: false, name: '' }));
+                                                    dispatch(actions.setGroupByCreator({ active: 'no', name: '' }));
 
                                                     if (Array.isArray(asset.assetMetadata?.creators.formData)) {
                                                         dispatch(
@@ -608,7 +652,7 @@ const AssetsList = () => {
                                                     return;
                                                 }
 
-                                                if (hasIncludesGroup.active) {
+                                                if (hasIncludesGroupActive) {
                                                     if (asset?.framework?.createdBy) {
                                                         dispatch(
                                                             actionsFilters.changeCreatorId(asset.framework.createdBy)
