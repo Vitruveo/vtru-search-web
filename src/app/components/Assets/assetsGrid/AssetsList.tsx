@@ -300,6 +300,9 @@ const AssetsList = () => {
                     mt={1}
                     mb={3}
                     p={3}
+                    style={{
+                        paddingTop: '7px',
+                    }}
                 >
                     <Grid
                         item
@@ -310,8 +313,8 @@ const AssetsList = () => {
                         flexDirection={lgUp ? 'row' : 'column'}
                         alignItems={'flex-end'}
                     >
-                        <Box display="flex" flexDirection="column" gap={1}>
-                            <Typography variant="h4">Sort</Typography>
+                        <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
+                            <Typography variant="h4">Sort:</Typography>
                             <Select
                                 placeholder="Sort"
                                 options={optionsForSelectSort}
@@ -353,8 +356,8 @@ const AssetsList = () => {
                             />
                         </Box>
 
-                        <Box display="flex" flexDirection="column" gap={1}>
-                            <Typography variant="h4">Creators</Typography>
+                        <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
+                            <Typography variant="h4">Creators:</Typography>
                             <Select
                                 placeholder="Creators"
                                 options={optionsForSelectGrouped}

@@ -69,6 +69,9 @@ const Language = () => {
                 aria-expanded={open ? 'true' : undefined}
                 aria-haspopup="true"
                 onClick={handleClick}
+                style={{
+                    marginLeft: '-9px',
+                }}
             >
                 <Avatar src={currentLang.icon} alt={currentLang.value} sx={{ width: 35, height: 35 }} />
             </IconButton>
