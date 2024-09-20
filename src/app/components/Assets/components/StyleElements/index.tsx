@@ -107,7 +107,7 @@ export default function StyleElements() {
                         onChange={() => handleChange('recentlySold', TypeAction.SET_RECENTLYSOLD)}
                         checked={state.recentlySold}
                     />
-                    Hide Recently Sold
+                    Hide Carousels
                 </MenuItem>
                 <MenuItem>
                     <Switch
