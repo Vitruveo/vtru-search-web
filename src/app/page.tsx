@@ -1,8 +1,9 @@
 'use client';
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Box } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles';
 
 import { useDispatch } from '@/store/hooks';
 import AssetsSidebar from './components/Assets/assetsGrid/AssetsSidebar';
@@ -21,6 +22,8 @@ const initialParams: Record<string, string> = {};
 const Search = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
+    const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
+
     const searchParams = useSearchParams();
     const grid = searchParams.get('grid');
     const video = searchParams.get('video');
@@ -78,7 +81,7 @@ const Search = () => {
             <Box
                 display={isInIframe ? 'none' : 'inherit'}
                 position={'fixed'}
-                top={15}
+                top={lgUp ? 15 : 9}
                 right={-32}
                 bgcolor={theme.palette.grey[100]}
                 width={100}

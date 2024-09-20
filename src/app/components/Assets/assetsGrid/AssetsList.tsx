@@ -50,9 +50,9 @@ const optionsForSelectSort = [
 ];
 
 const optionsForSelectGrouped = [
-    { value: 'no', label: 'Not grouped' },
-    { value: 'all', label: 'All' },
-    { value: 'noSales', label: 'No Sales' },
+    { value: 'no', label: 'Ungrouped – All' },
+    { value: 'all', label: 'Grouped – All' },
+    { value: 'noSales', label: 'Grouped – No Sales' },
 ];
 
 const AssetsList = () => {
@@ -294,7 +294,7 @@ const AssetsList = () => {
                 <Stack
                     width="100%"
                     direction="row"
-                    display="flex"
+                    display={lgUp ? 'flex' : 'block'}
                     justifyContent="space-between"
                     alignItems="center"
                     mt={1}
@@ -309,9 +309,9 @@ const AssetsList = () => {
                         xs={12}
                         sm={'auto'}
                         display={'flex'}
-                        gap={lgUp ? 4 : 0}
+                        gap={lgUp ? 4 : 2}
                         flexDirection={lgUp ? 'row' : 'column'}
-                        alignItems={'flex-end'}
+                        alignItems="flex-end"
                     >
                         <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
                             <Typography variant="h4">Sort:</Typography>
@@ -323,7 +323,7 @@ const AssetsList = () => {
                                 styles={{
                                     control: (base, state) => ({
                                         ...base,
-                                        minWidth: lgUp ? '240px' : '100px',
+                                        minWidth: '240px',
                                         maxWidth: lgUp ? '' : '150px',
                                         borderColor: state.isFocused
                                             ? theme.palette.primary.main
@@ -366,7 +366,7 @@ const AssetsList = () => {
                                 styles={{
                                     control: (base, state) => ({
                                         ...base,
-                                        minWidth: lgUp ? '240px' : '100px',
+                                        minWidth: '240px',
                                         maxWidth: lgUp ? '' : '150px',
                                         borderColor: state.isFocused
                                             ? theme.palette.primary.main
@@ -399,7 +399,7 @@ const AssetsList = () => {
                             />
                         </Box>
                     </Grid>
-                    <Box display={'flex'}>
+                    <Box mt={lgUp ? 0 : 2} display={'flex'} justifyContent={lgUp ? 'unset' : 'flex-end'}>
                         {curateStack.isActive && (
                             <Box
                                 sx={{ cursor: 'pointer' }}
