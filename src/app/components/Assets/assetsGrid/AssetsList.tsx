@@ -311,7 +311,7 @@ const AssetsList = () => {
                         display={'flex'}
                         gap={lgUp ? 4 : 2}
                         flexDirection={lgUp ? 'row' : 'column'}
-                        alignItems={lgUp ? 'flex-end' : 'flex-start'}
+                        alignItems="flex-end"
                     >
                         <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
                             <Typography variant="h4">Sort:</Typography>
@@ -399,7 +399,7 @@ const AssetsList = () => {
                             />
                         </Box>
                     </Grid>
-                    <Box mt={lgUp ? 0 : 2} display={'flex'}>
+                    <Box mt={lgUp ? 0 : 2} display={'flex'} justifyContent={lgUp ? 'unset' : 'flex-end'}>
                         {curateStack.isActive && (
                             <Box
                                 sx={{ cursor: 'pointer' }}
