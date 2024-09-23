@@ -9,15 +9,17 @@ import type { ContextItem, Option } from '../types';
 import { convertHEXtoRGB } from '@/utils/colors';
 import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/filters/slice';
+import generateQueryParam from '@/utils/generateQueryParam';
 
 export function ContextItem({ title, values, hidden, type, options, onChange, onRemove }: ContextItem) {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const { language } = useI18n();
     const context = 'search.assetFilter.context';
 
     const afterColorPrecisionChange = (value: number) => {
+        generateQueryParam('precision', value.toString());
         dispatch(actions.changeColorPrecision(value));
-    }
+    };
 
     return (
         <Box mb={2}>
