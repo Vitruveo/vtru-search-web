@@ -87,15 +87,18 @@ export async function GET(req: Request) {
             total: assets.data.data.total,
             pages: assets.data.data.totalPage,
             data: assets.data.data.data.map((item: any) => ({
-                _id: item._id,
+                id: item._id,
                 title: item.assetMetadata.context.formData.title,
+                description: item.assetMetadata.context.formData.description,
                 preview: item.formats.preview.path,
+                thumbnail: item.formats.preview.path.replace(/\.(\w+)$/, '_thumb.jpg'),
                 price: item.licenses.nft.single.editionPrice,
                 username: item.username,
+                nudity: item.assetMetadata.taxonomy.formData.nudity,
             })),
         },
         config: {
-            aws: {
+            baseUrl: {
                 assets: AWS_BASE_URL_S3,
                 general: GENERAL_STORAGE_URL,
             },
