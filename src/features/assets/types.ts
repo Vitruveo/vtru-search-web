@@ -121,36 +121,19 @@ export interface Tags {
 export interface SpotlightAsset {
     _id: string;
     title: string;
-    license: string;
+    price: number;
     preview: string;
-    author: string;
+    username: string;
+    nudity: string;
 }
 
 export type ResponseAssetsSpotlight = SpotlightAsset[];
 
 export interface LastSoldAsset {
     _id: string;
-    assetMetadata: AssetsMetadata;
-    formats: Format;
-    licenses: {
-        version: string;
-        added: boolean;
-        license: string;
-        elastic: {
-            editionPrice: number;
-            numberOfEditions: number;
-            totalPrice: number;
-            editionDiscount: boolean;
-        };
-        single: {
-            editionPrice: number;
-        };
-        unlimited: {
-            editionPrice: number;
-        };
-        editionOption: 'elastic' | 'single' | 'unlimited';
-        availableLicenses: number;
-    };
+    title: string;
+    preview: string;
+    price: number;
     username: string;
 }
 

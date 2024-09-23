@@ -5,10 +5,10 @@ import { useTheme } from '@mui/material/styles';
 
 import { useSelector } from '@/store/hooks';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
-import { getAssetPrice } from '@/utils/assets';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import { LastSoldAsset } from '@/features/assets/types';
 import { STORE_BASE_URL } from '@/constants/api';
+import { formatPrice } from '@/utils/assets';
 
 function RecentlySoldSlider() {
     const assets = useSelector((state) => state.assets.lastSold);
@@ -22,16 +22,12 @@ function RecentlySoldSlider() {
         <Box minHeight={250}>
             <Marquee>
                 {assets.map((asset, index) => {
-                    const assetTitle = asset?.assetMetadata?.context?.formData?.title || 'No Title';
-
-                    const hasCreator =
-                        asset?.assetMetadata?.creators?.formData instanceof Array &&
-                        asset?.assetMetadata?.creators?.formData?.length > 0;
-                    const creatorName = hasCreator ? asset!.assetMetadata!.creators!.formData![0]!.name : 'No creator';
-
-                    const price = getAssetPrice(asset);
+                    const assetTitle = asset?.title || 'No Title';
+                    const creatorName = asset?.username || 'No creator';
+                    const price = formatPrice(asset.price);
 
                     const nextAssetExists = index + 1 < assets.length;
+
                     return (
                         <Box
                             display="flex"
@@ -51,10 +47,10 @@ function RecentlySoldSlider() {
                         >
                             <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
                                 <MediaRenderer
-                                    src={`${AWS_BASE_URL_S3}/${asset?.formats?.path}`}
+                                    src={`${AWS_BASE_URL_S3}/${asset.preview}`}
                                     fallbackSrc={'https://via.placeholder.com/250'}
                                     preSource={
-                                        nextAssetExists ? `${AWS_BASE_URL_S3}/${assets[index + 1]?.formats?.path}` : ''
+                                        nextAssetExists ? `${AWS_BASE_URL_S3}/${assets[index + 1]?.preview}` : ''
                                     }
                                 />
                             </Box>
