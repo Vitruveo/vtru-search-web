@@ -30,28 +30,25 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
 
     const queryParams = parseQueryParams(searchParams);
-    // console.log(queryParams);
+    console.log(queryParams);
 
-    // get assets
-    const { data: assets } = await axios.get(`${API_BASE_URL}/assets/public/search`, {
-        params: queryParams,
-    });
-
-    // get recently sold
-    const { data: recentlySold } = await axios.get(`${API_BASE_URL}/assets/public/lastSold`);
-
-    // get spotlight
-    const { data: spotlight } = await axios.get(`${API_BASE_URL}/assets/public/spotlight?nudity=no`);
+    const [assets, recentlySold, spotlight] = await Promise.all([
+        axios.get(`${API_BASE_URL}/assets/public/search`, {
+            params: queryParams,
+        }),
+        axios.get(`${API_BASE_URL}/assets/public/lastSold`),
+        axios.get(`${API_BASE_URL}/assets/public/spotlight?nudity=no`),
+    ]);
 
     const data = {
-        recentlySold: recentlySold.data,
-        spotlight: spotlight.data,
+        recentlySold: recentlySold.data.data,
+        spotlight: spotlight.data.data,
         assets: {
-            page: assets.data.page,
-            limit: assets.data.limit,
-            total: assets.data.total,
-            pages: assets.data.totalPage,
-            data: assets.data.data,
+            page: assets.data.data.page,
+            limit: assets.data.data.limit,
+            total: assets.data.data.total,
+            pages: assets.data.data.totalPage,
+            data: assets.data.data.data,
         },
     };
 
