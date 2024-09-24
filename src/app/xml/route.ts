@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
+import { XMLBuilder } from 'fast-xml-parser';
 
 import { API_BASE_URL, STORE_BASE_URL } from '@/constants/api';
 import { AWS_BASE_URL_S3, GENERAL_STORAGE_URL } from '@/constants/aws';
@@ -114,9 +115,13 @@ export async function GET(req: Request) {
         },
     };
 
-    return NextResponse.json(data, {
+    const jsonData = { body: data };
+    const xmlBuilder = new XMLBuilder({ ignoreAttributes: false, format: true });
+    const xmlData = xmlBuilder.build(jsonData);
+
+    return new NextResponse(xmlData, {
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/xml',
         },
     });
 }

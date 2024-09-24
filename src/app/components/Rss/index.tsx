@@ -31,6 +31,10 @@ export const Rss = () => {
             flagname: 'JSON',
             value: `json/${queryString}`,
         },
+        {
+            flagname: 'XML',
+            value: `xml/${queryString}`,
+        },
     ];
 
     return (
