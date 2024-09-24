@@ -3,6 +3,7 @@ import { Stack, Typography, Box, Button } from '@mui/material';
 import BlankCard from '../../Shared/BlankCard';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions as assetActions } from '@/features/assets';
+import generateQueryParam from '@/utils/generateQueryParam';
 
 export const AdditionalAssetsFilterCard = () => {
     const dispatch = useDispatch();
@@ -16,6 +17,7 @@ export const AdditionalAssetsFilterCard = () => {
         } else {
             dispatch(filterActions.changeShowAdditionalAssets(false));
         }
+        generateQueryParam('showAdditionalAssets', showAdditionalAssets ? 'no' : 'yes');
         dispatch(assetActions.loadAssets({ page: currentPage }));
     };
 
