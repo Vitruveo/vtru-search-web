@@ -102,13 +102,13 @@ export async function GET(req: Request) {
                 price: item.licenses.nft.single.editionPrice * 100,
                 username: item.username,
                 nudity: item.assetMetadata.taxonomy.formData.nudity,
-                storeUrl: `${STORE_BASE_URL}/${item.username}/${item._id}`,
             })),
         },
         config: {
             baseUrl: {
-                assets: AWS_BASE_URL_S3,
-                general: GENERAL_STORAGE_URL,
+                assets: `${AWS_BASE_URL_S3}/`,
+                general: `${GENERAL_STORAGE_URL}/`,
+                store: `${STORE_BASE_URL}/`,
             },
             currency: 'USD',
         },
