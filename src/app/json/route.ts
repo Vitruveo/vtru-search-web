@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import { API_BASE_URL } from '@/constants/api';
 import { AWS_BASE_URL_S3, GENERAL_STORAGE_URL } from '@/constants/aws';
+import { formatPrice } from '@/utils/assets';
 
 function parseQueryParams(searchParams: URLSearchParams) {
     const params: any = {};
@@ -92,7 +93,11 @@ export async function GET(req: Request) {
                 description: item.assetMetadata.context.formData.description,
                 preview: item.formats.preview.path,
                 thumbnail: item.formats.preview.path.replace(/\.(\w+)$/, '_thumb.jpg'),
-                price: item.licenses.nft.single.editionPrice,
+                price: {
+                    value: item.licenses.nft.single.editionPrice,
+                    valueCents: item.licenses.nft.single.editionPrice * 100,
+                    currency: formatPrice(item.licenses.nft.single.editionPrice as number),
+                },
                 username: item.username,
                 nudity: item.assetMetadata.taxonomy.formData.nudity,
             })),
