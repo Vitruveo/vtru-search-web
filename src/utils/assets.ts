@@ -20,8 +20,10 @@ export const getAssetPrice = (asset: Asset | LastSoldAsset | SpotlightAsset) => 
 };
 
 export const formatPrice = (price = 0) => {
-    const language = navigator.language || 'en-US';
-
+    let language = 'en-US';
+    if (typeof navigator !== 'undefined' && navigator.language) {
+        language = navigator.language;
+    }
     const formatedPrice = price.toLocaleString(language, {
         style: 'currency',
         currency: 'USD',
