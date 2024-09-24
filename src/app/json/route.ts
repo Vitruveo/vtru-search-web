@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 
-import { API_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, STORE_BASE_URL } from '@/constants/api';
 import { AWS_BASE_URL_S3, GENERAL_STORAGE_URL } from '@/constants/aws';
-import { formatPrice } from '@/utils/assets';
 
 function parseQueryParams(searchParams: URLSearchParams) {
     const params: any = {};
@@ -65,6 +64,13 @@ function buildQueryParams(params: any) {
     return modifiedParams;
 }
 
+function multiplyPriceBy100(data: any) {
+    if (data && data.price) {
+        data.price *= 100;
+    }
+    return data;
+}
+
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
 
@@ -80,8 +86,8 @@ export async function GET(req: Request) {
     ]);
 
     const data = {
-        recentlySold: recentlySold.data.data,
-        spotlight: spotlight.data.data,
+        recentlySold: recentlySold.data.data.map(multiplyPriceBy100),
+        spotlight: spotlight.data.data.map(multiplyPriceBy100),
         assets: {
             page: assets.data.data.page,
             limit: assets.data.data.limit,
@@ -93,13 +99,10 @@ export async function GET(req: Request) {
                 description: item.assetMetadata.context.formData.description,
                 preview: item.formats.preview.path,
                 thumbnail: item.formats.preview.path.replace(/\.(\w+)$/, '_thumb.jpg'),
-                price: {
-                    value: item.licenses.nft.single.editionPrice,
-                    valueCents: item.licenses.nft.single.editionPrice * 100,
-                    currency: formatPrice(item.licenses.nft.single.editionPrice as number),
-                },
+                price: item.licenses.nft.single.editionPrice * 100,
                 username: item.username,
                 nudity: item.assetMetadata.taxonomy.formData.nudity,
+                storeUrl: `${STORE_BASE_URL}/${item.username}/${item._id}`,
             })),
         },
         config: {
@@ -107,6 +110,7 @@ export async function GET(req: Request) {
                 assets: AWS_BASE_URL_S3,
                 general: GENERAL_STORAGE_URL,
             },
+            currency: 'USD',
         },
     };
 
