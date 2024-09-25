@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import { API_BASE_URL, STORE_BASE_URL } from '@/constants/api';
 import { AWS_BASE_URL_S3, GENERAL_STORAGE_URL } from '@/constants/aws';
+import { EXPLORER_BASE_URL } from '@/constants/web3';
 
 function parseQueryParams(searchParams: URLSearchParams) {
     const params: any = {};
@@ -89,10 +90,11 @@ export async function GET(req: Request) {
         recentlySold: recentlySold.data.data.map(multiplyPriceBy100),
         spotlight: spotlight.data.data.map(multiplyPriceBy100),
         config: {
-            baseUrl: {
+            baseUrls: {
                 assets: `${AWS_BASE_URL_S3}/`,
                 general: `${GENERAL_STORAGE_URL}/`,
                 store: `${STORE_BASE_URL}/`,
+                explorer: `${EXPLORER_BASE_URL}/tx/`,
             },
             currency: 'USD',
         },
@@ -110,6 +112,8 @@ export async function GET(req: Request) {
                 price: item.licenses.nft.single.editionPrice * 100,
                 username: item.username,
                 nudity: item.assetMetadata.taxonomy.formData.nudity,
+                soldTo: item?.mintExplorer?.address || null,
+                transactionHash: item?.mintExplorer?.transactionHash || null,
             })),
         },
     };
