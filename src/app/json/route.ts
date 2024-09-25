@@ -88,6 +88,14 @@ export async function GET(req: Request) {
     const data = {
         recentlySold: recentlySold.data.data.map(multiplyPriceBy100),
         spotlight: spotlight.data.data.map(multiplyPriceBy100),
+        config: {
+            baseUrl: {
+                assets: `${AWS_BASE_URL_S3}/`,
+                general: `${GENERAL_STORAGE_URL}/`,
+                store: `${STORE_BASE_URL}/`,
+            },
+            currency: 'USD',
+        },
         assets: {
             page: assets.data.data.page,
             limit: assets.data.data.limit,
@@ -103,14 +111,6 @@ export async function GET(req: Request) {
                 username: item.username,
                 nudity: item.assetMetadata.taxonomy.formData.nudity,
             })),
-        },
-        config: {
-            baseUrl: {
-                assets: `${AWS_BASE_URL_S3}/`,
-                general: `${GENERAL_STORAGE_URL}/`,
-                store: `${STORE_BASE_URL}/`,
-            },
-            currency: 'USD',
         },
     };
 
