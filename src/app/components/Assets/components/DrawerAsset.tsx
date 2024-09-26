@@ -1,5 +1,6 @@
 import { useI18n } from '@/app/hooks/useI18n';
 import { Box, Button, Typography, Drawer, useMediaQuery } from '@mui/material';
+import cookie from 'cookiejs';
 import { Theme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
 import { AWS_BASE_URL_S3, GENERAL_STORAGE_URL } from '@/constants/aws';
@@ -28,9 +29,19 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
         const grid = searchParams.get('grid');
         const video = searchParams.get('video');
 
-        window.open(
-            `${STORE_BASE_URL}/${creator.username}/${assetView?._id}${grid ? `?grid=${grid}` : video ? `?video=${video}` : ''}`
-        );
+        const domain = window.location.hostname.replace('search.', '');
+        cookie.set(`${grid ? 'grid' : video ? 'video' : ''}`, grid || video || '', { path: '/', domain });
+        if (!grid) {
+            // remove cookie grid
+            cookie.remove('grid');
+            document.cookie = 'grid=; path=/; domain=' + domain + '; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+        if (!video) {
+            // remove cookie video
+            cookie.remove('video');
+            document.cookie = 'video=; path=/; domain=' + domain + '; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+        window.open(`${STORE_BASE_URL}/${creator.username}/${assetView?._id}`);
     };
 
     const width = lgUp ? 400 : mdUp ? 300 : 200;

@@ -5,17 +5,17 @@ import { useTheme } from '@mui/material/styles';
 
 import { useSelector } from '@/store/hooks';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
-import { getAssetPrice } from '@/utils/assets';
-import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import { SpotlightAsset } from '@/features/assets/types';
 import { STORE_BASE_URL } from '@/constants/api';
+import { MediaRenderer } from '../Assets/components/MediaRenderer';
+import { formatPrice } from '@/utils/assets';
 
 function SpotlightSlider() {
     const assets = useSelector((state) => state.assets.spotlight);
     const theme = useTheme();
 
     const handleClickItem = (asset: SpotlightAsset) => {
-        window.open(`${STORE_BASE_URL}/${asset?.author || 'preview'}/${asset?._id}`);
+        window.open(`${STORE_BASE_URL}/${asset?.username || 'preview'}/${asset?._id}`);
     };
 
     return (
@@ -23,9 +23,9 @@ function SpotlightSlider() {
             <Marquee>
                 {assets.map((asset, index) => {
                     const assetTitle = asset?.title || 'No Title';
-                    const creatorName = asset?.author || 'No creator';
+                    const creatorName = asset?.username || 'No creator';
 
-                    const price = getAssetPrice(asset);
+                    const price = formatPrice(asset.price);
 
                     const nextAssetExists = index + 1 < assets.length;
                     return (
