@@ -34,10 +34,12 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
         if (!grid) {
             // remove cookie grid
             cookie.remove('grid');
+            document.cookie = 'grid=; path=/; domain=' + domain + '; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         }
         if (!video) {
             // remove cookie video
             cookie.remove('video');
+            document.cookie = 'video=; path=/; domain=' + domain + '; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         }
         window.open(`${STORE_BASE_URL}/${creator.username}/${assetView?._id}`);
     };
