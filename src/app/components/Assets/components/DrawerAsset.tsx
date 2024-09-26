@@ -31,6 +31,14 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
 
         const domain = window.location.hostname.replace('search.', '');
         cookie.set(`${grid ? 'grid' : video ? 'video' : ''}`, grid || video || '', { path: '/', domain });
+        if (!grid) {
+            // remove cookie grid
+            cookie.remove('grid');
+        }
+        if (!video) {
+            // remove cookie video
+            cookie.remove('video');
+        }
         window.open(`${STORE_BASE_URL}/${creator.username}/${assetView?._id}`);
     };
 
