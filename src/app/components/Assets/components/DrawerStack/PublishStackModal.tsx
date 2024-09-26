@@ -76,7 +76,7 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
                     <Typography width={{ xs: '100%', sm: 120 }} mb={{ xs: 1, sm: 0 }}>
                         Curator Fee
                     </Typography>
-                    <TextField rows={4} value={'10% (feature not yet supported)'} fullWidth disabled />
+                    <TextField rows={4} value={'10%'} fullWidth disabled />
                 </Box>
 
                 <TabContext value={tabValue}>
