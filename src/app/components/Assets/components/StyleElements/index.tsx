@@ -106,8 +106,17 @@ export default function StyleElements() {
                     <Switch
                         onChange={() => handleChange('recentlySold', TypeAction.SET_RECENTLYSOLD)}
                         checked={state.recentlySold}
+                        disabled={state.spotlight && state.assets}
                     />
-                    Hide Carousels
+                    Hide Recently Sold
+                </MenuItem>
+                <MenuItem>
+                    <Switch
+                        onChange={() => handleChange('spotlight', TypeAction.SET_SPOTLIGHT)}
+                        checked={state.spotlight}
+                        disabled={state.recentlySold && state.assets}
+                    />
+                    Hide Spotlight
                 </MenuItem>
                 <MenuItem>
                     <Switch
@@ -122,6 +131,14 @@ export default function StyleElements() {
                         checked={state.cardDetail}
                     />
                     Hide Card Detail
+                </MenuItem>
+                <MenuItem>
+                    <Switch
+                        onChange={() => handleChange('assets', TypeAction.SET_ASSETS)}
+                        checked={state.assets}
+                        disabled={state.recentlySold && state.spotlight}
+                    />
+                    Hide Digital Assets
                 </MenuItem>
                 <Divider />
                 <MenuItem>

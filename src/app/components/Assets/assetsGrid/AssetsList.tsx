@@ -462,13 +462,9 @@ const AssetsList = () => {
                         paddingTop: 0,
                     }}
                 >
-                    {currentPage === 1 &&
-                        !grid &&
-                        !video &&
-                        !slideshow &&
-                        !creatorId &&
-                        !portfolioWallets &&
-                        !isHidden?.recentlySold && <TabSliders />}
+                    {currentPage === 1 && !grid && !video && !slideshow && !creatorId && !portfolioWallets && (
+                        <TabSliders />
+                    )}
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>
@@ -565,78 +561,19 @@ const AssetsList = () => {
                     </Box>
                 </Grid>
 
-                <Grid container display={'flex'} ml={4} rowGap={3} overflow={'hidden'}>
-                    {isLoading ? (
-                        [...Array(4)].map((_, index) => (
-                            <AssetCardContainer key={index}>
-                                <Skeleton variant="rectangular" width={250} height={250} />
-                            </AssetCardContainer>
-                        ))
-                    ) : assets.length > 0 ? (
-                        <>
-                            {activeAssets.map((asset) => (
-                                <AssetCardContainer key={asset._id}>
-                                    <AssetItem
-                                        isAvailable={isAssetAvailable(asset)}
-                                        assetView={assetView}
-                                        asset={asset}
-                                        isCurated={curateStack.isActive}
-                                        checkedCurate={selected.some((item) => item._id === asset._id)}
-                                        handleChangeCurate={() => {
-                                            handleCheckCurate(asset);
-                                        }}
-                                        handleClickImage={() => {
-                                            if (isInIframe) {
-                                                window.open(`${STORE_BASE_URL}/${asset.username}/${asset._id}`);
-
-                                                return;
-                                            }
-
-                                            if (hasIncludesGroupActive) {
-                                                if (asset?.framework?.createdBy) {
-                                                    dispatch(actions.setInitialPage());
-                                                    dispatch(actionsFilters.changeCreatorId(asset.framework.createdBy));
-                                                    generateQueryParam('creatorId', asset.framework.createdBy);
-                                                    dispatch(actions.setGroupByCreator({ active: 'no', name: '' }));
-
-                                                    if (Array.isArray(asset.assetMetadata?.creators.formData)) {
-                                                        dispatch(
-                                                            actions.changeGroupByCreatorName(
-                                                                asset.assetMetadata?.creators.formData[0].name
-                                                            )
-                                                        );
-                                                    } else {
-                                                        dispatch(actions.changeGroupByCreatorName('Unknown'));
-                                                    }
-
-                                                    handleScrollToTop();
-                                                }
-
-                                                return;
-                                            }
-
-                                            handleAssetImageClick(asset);
-                                        }}
-                                        price={getAssetPrice(asset)}
-                                        countByCreator={asset.countByCreator}
-                                    />
+                {!isHidden?.assets && (
+                    <Grid container display={'flex'} ml={4} rowGap={3} overflow={'hidden'}>
+                        {isLoading ? (
+                            [...Array(4)].map((_, index) => (
+                                <AssetCardContainer key={index}>
+                                    <Skeleton variant="rectangular" width={250} height={250} />
                                 </AssetCardContainer>
-                            ))}
-
-                            {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) &&
-                                !isInIframe && (
-                                    <AssetCardContainer key={1}>
-                                        <Box width={'100%'} height={'100%'} mr={4}>
-                                            <AdditionalAssetsFilterCard />
-                                        </Box>
-                                    </AssetCardContainer>
-                                )}
-
-                            {showAdditionalAssets.value &&
-                                blockedAssets.map((asset) => (
+                            ))
+                        ) : assets.length > 0 ? (
+                            <>
+                                {activeAssets.map((asset) => (
                                     <AssetCardContainer key={asset._id}>
                                         <AssetItem
-                                            variant="blocked"
                                             isAvailable={isAssetAvailable(asset)}
                                             assetView={assetView}
                                             asset={asset}
@@ -654,11 +591,13 @@ const AssetsList = () => {
 
                                                 if (hasIncludesGroupActive) {
                                                     if (asset?.framework?.createdBy) {
+                                                        dispatch(actions.setInitialPage());
                                                         dispatch(
                                                             actionsFilters.changeCreatorId(asset.framework.createdBy)
                                                         );
                                                         generateQueryParam('creatorId', asset.framework.createdBy);
-                                                        dispatch(actions.resetGroupByCreator());
+                                                        dispatch(actions.setGroupByCreator({ active: 'no', name: '' }));
+
                                                         if (Array.isArray(asset.assetMetadata?.creators.formData)) {
                                                             dispatch(
                                                                 actions.changeGroupByCreatorName(
@@ -678,35 +617,98 @@ const AssetsList = () => {
                                                 handleAssetImageClick(asset);
                                             }}
                                             price={getAssetPrice(asset)}
+                                            countByCreator={asset.countByCreator}
                                         />
                                     </AssetCardContainer>
                                 ))}
-                        </>
-                    ) : (
-                        <Grid
-                            item
-                            xl={12}
-                            lg={12}
-                            md={12}
-                            sm={12}
-                            xs={12}
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                minWidth: 'calc(100vw - 320px)',
-                            }}
-                        >
-                            <Box textAlign="center" mt={6} width="100%">
-                                <Image src={emptyCart} alt="cart" width={200} />
-                                <Typography variant="h2">No Asset found</Typography>
-                                <Typography variant="h6" mb={3}>
-                                    The Asset you are searching for could not be found.
-                                </Typography>
-                            </Box>
-                        </Grid>
-                    )}
-                </Grid>
+
+                                {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) &&
+                                    !isInIframe && (
+                                        <AssetCardContainer key={1}>
+                                            <Box width={'100%'} height={'100%'} mr={4}>
+                                                <AdditionalAssetsFilterCard />
+                                            </Box>
+                                        </AssetCardContainer>
+                                    )}
+
+                                {showAdditionalAssets.value &&
+                                    blockedAssets.map((asset) => (
+                                        <AssetCardContainer key={asset._id}>
+                                            <AssetItem
+                                                variant="blocked"
+                                                isAvailable={isAssetAvailable(asset)}
+                                                assetView={assetView}
+                                                asset={asset}
+                                                isCurated={curateStack.isActive}
+                                                checkedCurate={selected.some((item) => item._id === asset._id)}
+                                                handleChangeCurate={() => {
+                                                    handleCheckCurate(asset);
+                                                }}
+                                                handleClickImage={() => {
+                                                    if (isInIframe) {
+                                                        window.open(`${STORE_BASE_URL}/${asset.username}/${asset._id}`);
+
+                                                        return;
+                                                    }
+
+                                                    if (hasIncludesGroupActive) {
+                                                        if (asset?.framework?.createdBy) {
+                                                            dispatch(
+                                                                actionsFilters.changeCreatorId(
+                                                                    asset.framework.createdBy
+                                                                )
+                                                            );
+                                                            generateQueryParam('creatorId', asset.framework.createdBy);
+                                                            dispatch(actions.resetGroupByCreator());
+                                                            if (Array.isArray(asset.assetMetadata?.creators.formData)) {
+                                                                dispatch(
+                                                                    actions.changeGroupByCreatorName(
+                                                                        asset.assetMetadata?.creators.formData[0].name
+                                                                    )
+                                                                );
+                                                            } else {
+                                                                dispatch(actions.changeGroupByCreatorName('Unknown'));
+                                                            }
+
+                                                            handleScrollToTop();
+                                                        }
+
+                                                        return;
+                                                    }
+
+                                                    handleAssetImageClick(asset);
+                                                }}
+                                                price={getAssetPrice(asset)}
+                                            />
+                                        </AssetCardContainer>
+                                    ))}
+                            </>
+                        ) : (
+                            <Grid
+                                item
+                                xl={12}
+                                lg={12}
+                                md={12}
+                                sm={12}
+                                xs={12}
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    minWidth: 'calc(100vw - 320px)',
+                                }}
+                            >
+                                <Box textAlign="center" mt={6} width="100%">
+                                    <Image src={emptyCart} alt="cart" width={200} />
+                                    <Typography variant="h2">No Asset found</Typography>
+                                    <Typography variant="h6" mb={3}>
+                                        The Asset you are searching for could not be found.
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                        )}
+                    </Grid>
+                )}
                 {!isHidden?.pageNavigation ? (
                     <>
                         <Box
