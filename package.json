@@ -1,6 +1,6 @@
 {
     "name": "search-web",
-    "version": "0.0.352",
+    "version": "0.0.353",
     "private": true,
     "scripts": {
         "dev": "next dev",
@@ -36,6 +36,7 @@
         "@types/html2canvas": "^1.0.0",
         "@types/react": "18.2.28",
         "@types/react-dom": "18.2.13",
+        "@wojtekmaj/react-daterange-picker": "^6.0.0",
         "apexcharts": "3.43.0",
         "axios": "^1.5.1",
         "cookiejs": "^2.1.3",
