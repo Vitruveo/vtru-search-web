@@ -1,6 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export type StateKeys = 'filter' | 'order' | 'header' | 'recentlySold' | 'pageNavigation' | 'cardDetail';
+export type StateKeys =
+    | 'filter'
+    | 'order'
+    | 'header'
+    | 'recentlySold'
+    | 'spotlight'
+    | 'pageNavigation'
+    | 'cardDetail'
+    | 'assets';
 interface StateType {
     activeDir?: string | any;
     activeMode?: string; // This can be light or dark
@@ -40,8 +48,10 @@ const initialState: StateType = {
         order: false,
         header: false,
         recentlySold: false,
+        spotlight: false,
         pageNavigation: false,
         cardDetail: false,
+        assets: false,
     },
     activeSlider: 'spotlight',
 };
@@ -101,8 +111,10 @@ export const customizerSlice = createSlice({
                 order: false,
                 header: false,
                 recentlySold: false,
+                spotlight: false,
                 pageNavigation: false,
                 cardDetail: false,
+                assets: false,
             };
         },
     },

@@ -10,14 +10,25 @@ export default function TabSliders() {
     const dispatch = useDispatch();
     const activeSlider = useSelector((state) => state.customizer.activeSlider);
     const isFilterHidden = useSelector((state) => state.customizer.hidden?.filter);
+    const hidden = useSelector((state) => state.customizer.hidden);
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
 
     const [tabValue, setTabValue] = useState(activeSlider === 'spotlight' ? '1' : '2');
 
     useEffect(() => {
+        if (hidden?.spotlight && hidden?.recentlySold) return;
+        if (hidden?.spotlight && activeSlider === 'spotlight') {
+            setTabValue('2');
+            dispatch(changeActiveSlider('recentlySold'));
+        }
+        if (hidden?.recentlySold && activeSlider === 'recentlySold') {
+            setTabValue('1');
+            dispatch(changeActiveSlider('spotlight'));
+        }
         setTabValue(activeSlider === 'spotlight' ? '1' : '2');
-    }, [activeSlider]);
+    }, [activeSlider, hidden?.recentlySold, hidden?.spotlight]);
 
+    if (hidden?.spotlight && hidden?.recentlySold) return null;
     return (
         <Box sx={{ width: lgUp && !isFilterHidden ? 'calc(100vw - 350px)' : 'calc(100vw - 65px)' }} minHeight={500}>
             <TabContext value={tabValue}>
@@ -30,16 +41,20 @@ export default function TabSliders() {
                         variant="scrollable"
                         scrollButtons="auto"
                     >
-                        <Tab label="Spotlight" value="1" />
-                        <Tab label="Recently Sold" value="2" />
+                        {!hidden?.spotlight && <Tab label="Spotlight" value="1" />}
+                        {!hidden?.recentlySold && <Tab label="Recently Sold" value="2" />}
                     </TabList>
                 </Box>
-                <TabPanel value="1">
-                    <SpotlightSlider />
-                </TabPanel>
-                <TabPanel value="2">
-                    <RecentlySoldSlider />
-                </TabPanel>
+                {!hidden?.spotlight && (
+                    <TabPanel value="1">
+                        <SpotlightSlider />
+                    </TabPanel>
+                )}
+                {!hidden?.recentlySold && (
+                    <TabPanel value="2">
+                        <RecentlySoldSlider />
+                    </TabPanel>
+                )}
             </TabContext>
         </Box>
     );
