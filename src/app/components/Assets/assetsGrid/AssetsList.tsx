@@ -81,7 +81,7 @@ const AssetsList = () => {
     const drawerStack = useToggle();
 
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
-    const { data: assets, totalPage, page: currentPage } = useSelector((state) => state.assets.data);
+    const { data: assets, totalPage, page: currentPage, limit } = useSelector((state) => state.assets.data);
     const { sort, maxPrice } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
     const hasIncludesGroup = useSelector((state) => state.assets.groupByCreator);
@@ -514,8 +514,54 @@ const AssetsList = () => {
                         ) : (
                             <Box />
                         )}
-                        <Box display={'flex'} gap={1}>
-                            {!isHidden?.pageNavigation && (
+                        {!isHidden?.pageNavigation && (
+                            <Box display={'flex'} gap={1}>
+                                <Select
+                                    placeholder="Page Items"
+                                    options={[
+                                        { value: 25, label: 25 },
+                                        { value: 50, label: 50 },
+                                        { value: 100, label: 100 },
+                                        { value: 150, label: 150 },
+                                        { value: 200, label: 200 },
+                                    ]}
+                                    value={{ value: limit, label: limit }}
+                                    onChange={(e) => dispatch(actions.setLimit(e?.value || 25))}
+                                    styles={{
+                                        control: (base, state) => ({
+                                            ...base,
+                                            minWidth: '250px',
+                                            borderColor: state.isFocused
+                                                ? theme.palette.primary.main
+                                                : theme.palette.grey[200],
+                                            backgroundColor: theme.palette.background.paper,
+                                            boxShadow: '#00d6f4',
+                                            '&:hover': { borderColor: '#00d6f4' },
+                                        }),
+                                        menu: (base) => ({
+                                            ...base,
+                                            zIndex: 1000,
+                                            color: theme.palette.text.primary,
+                                            backgroundColor: theme.palette.background.paper,
+                                        }),
+                                        singleValue: (base) => ({
+                                            ...base,
+                                            color: theme.palette.text.primary,
+                                        }),
+                                        option: (base, state) => ({
+                                            ...base,
+                                            color: theme.palette.text.primary,
+                                            backgroundColor: state.isFocused
+                                                ? theme.palette.action.hover
+                                                : 'transparent',
+                                            '&:hover': { backgroundColor: theme.palette.action.hover },
+                                        }),
+                                        input: (base) => ({
+                                            ...base,
+                                            color: theme.palette.text.primary,
+                                        }),
+                                    }}
+                                />
                                 <Select
                                     placeholder="Select Page"
                                     options={optionsForSelect}
@@ -556,8 +602,8 @@ const AssetsList = () => {
                                         }),
                                     }}
                                 />
-                            )}
-                        </Box>
+                            </Box>
+                        )}
                     </Box>
                 </Grid>
 

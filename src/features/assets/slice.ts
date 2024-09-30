@@ -104,6 +104,9 @@ export const assetsSlice = createSlice({
         setData: (state, action: PayloadAction<AssetsSliceState['data']>) => {
             state.data = action.payload;
         },
+        setLimit: (state, action: PayloadAction<number>) => {
+            state.data.limit = action.payload;
+        },
         setSort: (state, action: PayloadAction<AssetsSliceState['sort']>) => {
             state.sort = action.payload;
         },

@@ -74,6 +74,7 @@ function* getAssetsGroupByCreator() {
 
         const wallets: string[] = yield select((state: AppState) => state.filters.portfolio.wallets);
         const page: number = yield select((state: AppState) => state.assets.data.page);
+        const limit: number = yield select((state: AppState) => state.assets.data.limit);
         const order: string = yield select((state: AppState) => state.assets.sort.order);
         const sold: string = yield select((state: AppState) => state.assets.sort.sold);
         const name: string = yield select((state: AppState) => state.filters.name);
@@ -130,7 +131,7 @@ function* getAssetsGroupByCreator() {
             {
                 params: {
                     query: buildQuery,
-                    limit: 25,
+                    limit: limit || 25,
                     page: page || 1,
                     name: name.trim() || null,
                     sort: {
@@ -187,6 +188,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         const creatorId: string = yield select((state: AppState) => state.filters.creatorId);
         const name: string = yield select((state: AppState) => state.filters.name);
         const page: number = yield select((state: AppState) => state.assets.data.page);
+        const limit: number = yield select((state: AppState) => state.assets.data.limit);
         const order: string = yield select((state: AppState) => state.assets.sort.order);
         const sold: string = yield select((state: AppState) => state.assets.sort.sold);
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
@@ -252,7 +254,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
 
         const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.get, URL_ASSETS_SEARCH, {
             params: {
-                limit: 25,
+                limit: limit || 25,
                 page: page || 1,
                 query: buildQuery,
                 minPrice: price.min,
@@ -494,6 +496,7 @@ export function* assetsSagas() {
         takeEvery(actions.setSort.type, getAssets),
         takeEvery(actionsFilter.change.type, getAssets),
         debounce(500, actions.setCurrentPage.type, getAssets),
+        debounce(500, actions.setLimit.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),
         debounce(1000, actionsFilter.changeName.type, getAssets),
         takeEvery(actionsFilter.changeColorPrecision.type, getAssets),
@@ -506,6 +509,7 @@ export function* assetsSagas() {
         takeEvery(actions.setGroupByCreator.type, getAssetsGroupByCreator),
         takeEvery(actions.setSort.type, getAssetsGroupByCreator),
         debounce(500, actions.setCurrentPage.type, getAssetsGroupByCreator),
+        debounce(500, actions.setLimit.type, getAssetsGroupByCreator),
         takeEvery(actionsFilter.change.type, getAssetsGroupByCreator),
         debounce(1000, actionsFilter.changeName.type, getAssetsGroupByCreator),
         takeEvery(actionsFilter.changePortfolioWallets.type, getAssetsGroupByCreator),
