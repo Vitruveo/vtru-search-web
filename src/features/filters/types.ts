@@ -73,6 +73,7 @@ export interface FilterSliceState {
     };
     tabNavigation: {
         assets: string[];
+        title: string;
     };
     creatorId: string;
     portfolio: {

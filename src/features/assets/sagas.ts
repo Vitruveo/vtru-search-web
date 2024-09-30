@@ -482,7 +482,7 @@ function* getTabNavigation(action: PayloadAction<string>) {
         const option = action.payload.toLowerCase() === 'spotlight' ? 'spotlight' : 'lastSold';
         const ids: string[] = yield select((state: AppState) => state.assets[option].map((item) => item._id));
 
-        yield put(actionsFilter.changeTabNavigation({ assets: ids }));
+        yield put(actionsFilter.changeTabNavigation({ assets: ids, title: action.payload }));
 
         yield put(actionsFilter.resetCreatorId());
         yield put(actions.noGroupByCreator());

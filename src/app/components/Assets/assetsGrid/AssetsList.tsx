@@ -91,6 +91,7 @@ const AssetsList = () => {
     const gridTitle = useSelector((state) => state.filters.grid.title);
     const videoTitle = useSelector((state) => state.filters.video.title);
     const slideshowTitle = useSelector((state) => state.filters.slideshow.title);
+    const tabNavigation = useSelector((state) => state.filters.tabNavigation);
     const isHidden = useSelector((state) => state.customizer.hidden);
 
     const optionsForSelect = useMemo(() => {
@@ -215,6 +216,7 @@ const AssetsList = () => {
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
 
+        dispatch(actionsFilters.clearTabNavigation());
         dispatch(actions.resetGroupByCreator());
         dispatch(actionsFilters.reset({ maxPrice }));
     };
@@ -487,11 +489,15 @@ const AssetsList = () => {
                         justifyContent={'space-between'}
                         gap={1}
                     >
-                        {hasCurated || !hasIncludesGroupActive ? (
+                        {hasCurated || !hasIncludesGroupActive || tabNavigation.assets.length > 0 ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
-                                {hasCurated && (
+                                {(hasCurated || tabNavigation.assets.length > 0) && (
                                     <Typography variant="h4">
-                                        {gridTitle || videoTitle || slideshowTitle || 'Curated arts'}
+                                        {gridTitle ||
+                                            videoTitle ||
+                                            slideshowTitle ||
+                                            tabNavigation.title ||
+                                            'Curated arts'}
                                     </Typography>
                                 )}
                                 {hasIncludesGroup.name && (
@@ -499,7 +505,7 @@ const AssetsList = () => {
                                         {hasIncludesGroup.name}
                                     </Typography>
                                 )}
-                                {(hasCurated || hasIncludesGroup.name) && (
+                                {(hasCurated || hasIncludesGroup.name || tabNavigation.assets.length > 0) && (
                                     <button
                                         style={{
                                             border: 'none',
