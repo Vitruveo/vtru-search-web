@@ -71,6 +71,7 @@ const AssetsList = () => {
     const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
     const [selected, setSelected] = useState<Asset[]>([]);
+    const [selectAllMessage, setSelectAllMessage] = useState<string>('Select All');
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
     const [sortOrder, setSortOrder] = useState<string>('latest');
     const [groupByCreator, setGroupByCreator] = useState<string>('no');
@@ -262,6 +263,16 @@ const AssetsList = () => {
         );
 
         if (['no'].includes(value)) dispatch(actions.loadAssets({ page: 1 }));
+    };
+
+    const handleSelectAll = () => {
+        if (selected.length === assets.length) {
+            setSelected([]);
+            setSelectAllMessage('Select All');
+        } else {
+            setSelected(assets);
+            setSelectAllMessage('Deselect All');
+        }
     };
 
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
@@ -562,6 +573,11 @@ const AssetsList = () => {
                                         }),
                                     }}
                                 />
+                                {curateStack.isActive && (
+                                    <Button variant="contained" onClick={handleSelectAll}>
+                                        {selectAllMessage}
+                                    </Button>
+                                )}
                                 <Select
                                     placeholder="Select Page"
                                     options={optionsForSelect}
