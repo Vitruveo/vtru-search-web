@@ -130,7 +130,7 @@ function* getAssetsGroupByCreator() {
             {
                 params: {
                     query: buildQuery,
-                    limit: 24,
+                    limit: 25,
                     page: page || 1,
                     name: name.trim() || null,
                     sort: {
@@ -252,7 +252,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
 
         const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.get, URL_ASSETS_SEARCH, {
             params: {
-                limit: 24,
+                limit: 25,
                 page: page || 1,
                 query: buildQuery,
                 minPrice: price.min,
