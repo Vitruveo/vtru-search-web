@@ -98,6 +98,7 @@ export const assetsSlice = createSlice({
         },
         setVideoId: (state, action: PayloadAction<string>) => {},
         setSlideshowId: (state, action: PayloadAction<string>) => {},
+        setTabNavigation: (state, action: PayloadAction<string>) => {},
         setVideoUrl: (state, action: PayloadAction<string>) => {
             state.video = action.payload;
         },

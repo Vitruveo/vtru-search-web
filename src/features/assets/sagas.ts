@@ -175,6 +175,9 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         const video: FilterSliceState['video'] = yield select((state: AppState) => state.filters.video);
         const slideshow: FilterSliceState['slideshow'] = yield select((state: AppState) => state.filters.slideshow);
         const grid: FilterSliceState['grid'] = yield select((state: AppState) => state.filters.grid);
+        const tabNavigation: FilterSliceState['tabNavigation'] = yield select(
+            (state: AppState) => state.filters.tabNavigation
+        );
 
         if (video.assets.length > 0) {
             ids = video.assets;
@@ -182,6 +185,8 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             ids = slideshow.assets;
         } else if (grid.assets.length > 0) {
             ids = grid.assets;
+        } else if (tabNavigation.assets.length > 0) {
+            ids = tabNavigation.assets;
         }
 
         const wallets: string[] = yield select((state: AppState) => state.filters.portfolio.wallets);
@@ -252,20 +257,18 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
 
         const URL_ASSETS_SEARCH = `${API_BASE_URL}/assets/public/search`;
 
-        const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.get, URL_ASSETS_SEARCH, {
-            params: {
-                limit: limit || 25,
-                page: page || 1,
-                query: buildQuery,
-                minPrice: price.min,
-                maxPrice: price.max,
-                name: name.trim() ? name : null,
-                precision: colorPrecision.value,
-                showAdditionalAssets,
-                sort: {
-                    order,
-                    isIncludeSold: sold === 'yes' ? true : false,
-                },
+        const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.post, URL_ASSETS_SEARCH, {
+            limit: limit || 25,
+            page: page || 1,
+            query: buildQuery,
+            minPrice: price.min,
+            maxPrice: price.max,
+            name: name.trim() ? name : null,
+            precision: colorPrecision.value,
+            showAdditionalAssets,
+            sort: {
+                order,
+                isIncludeSold: sold === 'yes' ? true : false,
             },
         });
 
@@ -474,6 +477,22 @@ function* generateSlideshow(action: PayloadAction<GenerateSlideshowParams>) {
     }
 }
 
+function* getTabNavigation(action: PayloadAction<string>) {
+    try {
+        const option = action.payload.toLowerCase() === 'spotlight' ? 'spotlight' : 'lastSold';
+        const ids: string[] = yield select((state: AppState) => state.assets[option].map((item) => item._id));
+
+        yield put(actionsFilter.changeTabNavigation({ assets: ids }));
+
+        yield put(actionsFilter.resetCreatorId());
+        yield put(actions.noGroupByCreator());
+        yield put(actions.setInitialPage());
+        yield put(actions.loadAssets({ page: 1 }));
+    } catch (error) {
+        // handle error
+    }
+}
+
 function* setup() {
     try {
         const response: AxiosResponse<APIResponse<boolean>> = yield call(
@@ -523,6 +542,7 @@ export function* assetsSagas() {
         takeEvery(actions.setGridId.type, getGrid),
         takeEvery(actions.setVideoId.type, getVideo),
         takeEvery(actions.setSlideshowId.type, getSlideshow),
+        takeEvery(actions.setTabNavigation.type, getTabNavigation),
 
         takeEvery(actions.generateSlideshow.type, generateSlideshow),
 

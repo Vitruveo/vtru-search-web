@@ -814,7 +814,9 @@ const AssetsList = () => {
                             mr={4}
                             mb={lgUp ? 4 : 12}
                         >
-                            <Button onClick={handleScrollToTop}>Scroll to top</Button>
+                            <Button variant="contained" onClick={handleScrollToTop}>
+                                Scroll to top
+                            </Button>
                         </Box>
                     </>
                 ) : (

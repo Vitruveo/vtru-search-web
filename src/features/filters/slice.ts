@@ -79,6 +79,9 @@ export const initialState: FilterSliceState = {
         assets: [],
         title: '',
     },
+    tabNavigation: {
+        assets: [],
+    },
     creatorId: '',
     portfolio: {
         wallets: [],
@@ -223,6 +226,11 @@ export const filterSlice = createSlice({
                 title: '',
             };
         },
+        clearTabNavigation: (state) => {
+            state.tabNavigation = {
+                assets: [],
+            };
+        },
         resetCreatorId: (state) => {
             state.creatorId = '';
         },
@@ -324,6 +332,30 @@ export const filterSlice = createSlice({
         ) => {
             if (action.payload) {
                 state.video = action.payload;
+            }
+
+            // clear other filters
+            state.name = '';
+            state.context = initialState.context;
+            state.taxonomy = initialState.taxonomy;
+            state.creators = initialState.creators;
+            state.provenance = initialState.provenance;
+            state.price = initialState.price;
+            state.shortCuts = {
+                nudity: 'no',
+                aiGeneration: 'no',
+            };
+            state.reseted += 1;
+            clearAssetsFromURL();
+        },
+        changeTabNavigation: (
+            state,
+            action: PayloadAction<{
+                assets: string[];
+            }>
+        ) => {
+            if (action.payload) {
+                state.tabNavigation = action.payload;
             }
 
             // clear other filters
