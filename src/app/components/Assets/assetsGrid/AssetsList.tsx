@@ -415,27 +415,25 @@ const AssetsList = () => {
                     </Grid>
                     <Box mt={lgUp ? 0 : 2} display={'flex'} justifyContent={lgUp ? 'unset' : 'flex-end'}>
                         {curateStack.isActive && (
-                            <Box
-                                sx={{ cursor: 'pointer' }}
-                                display="flex"
-                                alignItems="center"
-                                gap={1}
-                                onClick={drawerStack.activate}
-                            >
-                                {lgUp && (
-                                    <Box display="flex" alignItems="center" gap={2}>
-                                        <Button variant="contained" fullWidth>
-                                            {selected.length}{' '}
-                                            {language['search.assetList.curateStack.selected'] as string}
-                                        </Button>
-                                    </Box>
-                                )}
-
-                                {!lgUp && (
-                                    <Badge badgeContent={selected.length} color="primary" style={{ marginLeft: 2 }}>
-                                        <IconCopy width={20} color={iconColor} />
-                                    </Badge>
-                                )}
+                            <Box display="flex" alignItems="center" gap={1}>
+                                <Button variant="contained" onClick={handleSelectAll}>
+                                    {selectAllMessage}
+                                </Button>
+                                <Box sx={{ cursor: 'pointer' }} onClick={drawerStack.activate}>
+                                    {lgUp && (
+                                        <Box display="flex" alignItems="center" gap={2}>
+                                            <Button variant="contained" fullWidth>
+                                                {selected.length}{' '}
+                                                {language['search.assetList.curateStack.selected'] as string}
+                                            </Button>
+                                        </Box>
+                                    )}
+                                    {!lgUp && (
+                                        <Badge badgeContent={selected.length} color="primary" style={{ marginLeft: 2 }}>
+                                            <IconCopy width={20} color={iconColor} />
+                                        </Badge>
+                                    )}
+                                </Box>
                             </Box>
                         )}
 
@@ -580,11 +578,6 @@ const AssetsList = () => {
                                         }),
                                     }}
                                 />
-                                {curateStack.isActive && (
-                                    <Button variant="contained" onClick={handleSelectAll}>
-                                        {selectAllMessage}
-                                    </Button>
-                                )}
                                 <Select
                                     placeholder="Select Page"
                                     options={optionsForSelect}
