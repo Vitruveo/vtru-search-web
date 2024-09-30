@@ -39,17 +39,13 @@ const Logo = () => {
 
     const returnToPageOne = () => {
         const params = new URLSearchParams(window.location.search);
-
+        const keysToDelete: string[] = [];
         params.forEach((_, key) => {
-            if (!key.includes('_hidden')) params.delete(key);
+            if (!key.includes('_hidden')) keysToDelete.push(key);
             else params.set(key, params.get(key) || '');
         });
+        keysToDelete.forEach((key) => params.delete(key));
 
-        params.set('sort_order', 'latest');
-        params.set('sort_sold', 'no');
-        params.set('taxonomy_aiGeneration', 'partial,none');
-        params.set('taxonomy_nudity', 'no');
-        params.set('groupByCreator', 'no');
         params.delete('creatorId');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
