@@ -24,7 +24,7 @@ const AssetsSidebar = () => {
         <Drawer
             open={isSidebarOpen}
             onClose={onSidebarClose}
-            variant={lgUp ? 'permanent' : 'temporary'}
+            variant={isSidebarOpen ? 'permanent' : 'temporary'}
             sx={{
                 width: drawerWidth,
                 flexShrink: 0,

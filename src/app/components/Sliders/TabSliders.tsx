@@ -1,5 +1,5 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Box, Button, Tab, Theme, Typography, useMediaQuery } from '@mui/material';
+import { Box, Tab, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import RecentlySoldSlider from './RecentlySold';
 import SpotlightSlider from './Spotlight';
@@ -12,6 +12,7 @@ export default function TabSliders() {
     const dispatch = useDispatch();
     const activeSlider = useSelector((state) => state.customizer.activeSlider);
     const isFilterHidden = useSelector((state) => state.customizer.hidden?.filter);
+    const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
     const hidden = useSelector((state) => state.customizer.hidden);
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
 
@@ -32,7 +33,10 @@ export default function TabSliders() {
 
     if (hidden?.spotlight && hidden?.recentlySold) return null;
     return (
-        <Box sx={{ width: lgUp && !isFilterHidden ? 'calc(100vw - 350px)' : 'calc(100vw - 65px)' }} minHeight={500}>
+        <Box
+            sx={{ width: lgUp && !isFilterHidden && isSidebarOpen ? 'calc(100vw - 350px)' : 'calc(100vw - 65px)' }}
+            minHeight={500}
+        >
             <TabContext value={tabValue}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList
@@ -73,22 +77,7 @@ function Label({ label }: LabelProps) {
     return (
         <Box display={'flex'} gap={1.5} alignItems={'center'}>
             <Typography variant="h6">{label}</Typography>
-            <Button
-                variant="contained"
-                sx={{
-                    width: 28,
-                    height: 25,
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: 0,
-                    minWidth: 0,
-                }}
-                onClick={handleView}
-            >
-                <IconEye size={20} />
-            </Button>
+            <IconEye size={20} onClick={handleView} />
         </Box>
     );
 }

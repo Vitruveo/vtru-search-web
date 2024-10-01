@@ -13,12 +13,11 @@ import {
     Switch,
     Badge,
     Button,
-    Checkbox,
-    FormControlLabel,
+    IconButton,
     Container,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
-import { IconCopy } from '@tabler/icons-react';
+import { IconArrowBarToLeft, IconCopy, IconArrowBarToRight } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/assets';
@@ -72,7 +71,6 @@ const AssetsList = () => {
     const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
     const [selected, setSelected] = useState<Asset[]>([]);
-    const [selectAllMessage, setSelectAllMessage] = useState<string>('Select All');
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
     const [sortOrder, setSortOrder] = useState<string>('latest');
     const [groupByCreator, setGroupByCreator] = useState<string>('no');
@@ -94,6 +92,7 @@ const AssetsList = () => {
     const slideshowTitle = useSelector((state) => state.filters.slideshow.title);
     const tabNavigation = useSelector((state) => state.filters.tabNavigation);
     const isHidden = useSelector((state) => state.customizer.hidden);
+    const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
 
     const optionsForSelect = useMemo(() => {
         const options: { value: number; label: number }[] = [];
@@ -269,15 +268,10 @@ const AssetsList = () => {
         if (['no'].includes(value)) dispatch(actions.loadAssets({ page: 1 }));
     };
 
-    const handleSelectAll = () => {
-        if (selectAllMessage === 'Deselect All') {
-            setSelected([]);
-            setSelectAllMessage('Select All');
-        } else {
-            setSelected(assets);
-            setSelectAllMessage('Deselect All');
-        }
-    };
+    const handleSelectAll = () => setSelected((prev) => [...prev, ...assets]);
+    const handleUnselectAll = () => setSelected([]);
+
+    const onMenuClick = () => dispatch(layoutActions.toggleSidebar());
 
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
 
@@ -315,6 +309,7 @@ const AssetsList = () => {
                     mt={1}
                     mb={3}
                     p={3}
+                    pl={2}
                     style={{
                         paddingTop: '7px',
                     }}
@@ -326,8 +321,13 @@ const AssetsList = () => {
                         display={'flex'}
                         gap={lgUp ? 4 : 2}
                         flexDirection={lgUp ? 'row' : 'column'}
-                        alignItems="flex-end"
+                        alignItems="flex-start"
                     >
+                        {lgUp && (
+                            <IconButton sx={{ color: theme.palette.grey[300] }} aria-label="menu" onClick={onMenuClick}>
+                                {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
+                            </IconButton>
+                        )}
                         <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
                             <Typography variant="h4">Sort:</Typography>
                             <Select
@@ -414,11 +414,14 @@ const AssetsList = () => {
                             />
                         </Box>
                     </Grid>
-                    <Box mt={lgUp ? 0 : 2} display={'flex'} justifyContent={lgUp ? 'unset' : 'flex-end'}>
+                    <Box mt={lgUp ? 0 : 2} display={'flex'} justifyContent={lgUp ? 'unset' : 'flex-start'}>
                         {curateStack.isActive && (
                             <Box display="flex" alignItems="center" gap={1}>
+                                <Button variant="contained" onClick={handleUnselectAll}>
+                                    Deselect All
+                                </Button>
                                 <Button variant="contained" onClick={handleSelectAll}>
-                                    {selectAllMessage}
+                                    Select All
                                 </Button>
                                 <Box sx={{ cursor: 'pointer' }} onClick={drawerStack.activate}>
                                     {lgUp && (
@@ -475,9 +478,13 @@ const AssetsList = () => {
                         paddingTop: 0,
                     }}
                 >
-                    {currentPage === 1 && !grid && !video && !slideshow && !creatorId && !portfolioWallets && (
-                        <TabSliders />
-                    )}
+                    {currentPage === 1 &&
+                        !grid &&
+                        !video &&
+                        !slideshow &&
+                        !creatorId &&
+                        !portfolioWallets &&
+                        tabNavigation.assets.length <= 0 && <TabSliders />}
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>
@@ -532,7 +539,7 @@ const AssetsList = () => {
                             <Box />
                         )}
                         {!isHidden?.pageNavigation && (
-                            <Box display={'flex'} gap={1}>
+                            <Box display={'flex'} gap={1} flexDirection={lgUp ? 'row' : 'column'}>
                                 <Select
                                     placeholder="Page Items"
                                     options={[
