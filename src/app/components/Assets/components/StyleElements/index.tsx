@@ -120,7 +120,9 @@ export default function StyleElements() {
                 </MenuItem>
                 <MenuItem>
                     <Switch
-                        onChange={() => handleChange('pageNavigation', TypeAction.SET_PAGENAVIGATION)}
+                        onChange={() => {
+                            if (!state.assets) handleChange('pageNavigation', TypeAction.SET_PAGENAVIGATION);
+                        }}
                         checked={state.pageNavigation}
                     />
                     Hide Page Navigation
@@ -134,7 +136,10 @@ export default function StyleElements() {
                 </MenuItem>
                 <MenuItem>
                     <Switch
-                        onChange={() => handleChange('assets', TypeAction.SET_ASSETS)}
+                        onChange={() => {
+                            handleChange('assets', TypeAction.SET_ASSETS);
+                            handleChange('pageNavigation', TypeAction.SET_PAGENAVIGATION);
+                        }}
                         checked={state.assets}
                         disabled={state.recentlySold && state.spotlight}
                     />

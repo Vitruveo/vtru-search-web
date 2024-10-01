@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Drawer from '@mui/material/Drawer';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -20,11 +20,15 @@ const AssetsSidebar = () => {
         dispatch(actions.closeSidebar());
     };
 
+    useEffect(() => {
+        if (!lgUp) onSidebarClose();
+    }, [lgUp]);
+
     return (
         <Drawer
             open={isSidebarOpen}
             onClose={onSidebarClose}
-            variant={lgUp ? 'permanent' : 'temporary'}
+            variant={isSidebarOpen ? 'permanent' : 'temporary'}
             sx={{
                 width: drawerWidth,
                 flexShrink: 0,
