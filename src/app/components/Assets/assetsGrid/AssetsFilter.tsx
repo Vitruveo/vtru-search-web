@@ -267,12 +267,20 @@ const Filters = () => {
                             />
                         }
                         label={'Photography'}
+                        sx={{
+                            width: '100%',
+                            wordBreak: 'break-word',
+                        }}
                     />
                     <FormControlLabel
                         control={
                             <Checkbox onChange={handleChangeAnimation} checked={selectedCategories.includes('video')} />
                         }
                         label={'Animation'}
+                        sx={{
+                            width: '100%',
+                            wordBreak: 'break-word',
+                        }}
                     />
                 </Box>
                 <Box display={'grid'} gridTemplateColumns="130px 130px">
