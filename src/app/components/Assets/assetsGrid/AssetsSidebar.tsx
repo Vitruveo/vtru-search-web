@@ -14,15 +14,16 @@ const AssetsSidebar = () => {
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
     const isHiddenFilter = useSelector((state) => state.customizer.hidden?.filter);
+
+ useEffect(() => {
+        if (!lgUp) onSidebarClose();
+    }, [lgUp]);
+
     if (isHiddenFilter) return null;
 
     const onSidebarClose = () => {
         dispatch(actions.closeSidebar());
-    };
-
-    useEffect(() => {
-        if (!lgUp) onSidebarClose();
-    }, [lgUp]);
+    };
 
     return (
         <Drawer
