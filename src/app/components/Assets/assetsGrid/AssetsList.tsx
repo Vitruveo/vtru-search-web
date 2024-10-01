@@ -241,6 +241,7 @@ const AssetsList = () => {
     ) => {
         const value = e?.value || '';
 
+        dispatch(actionsFilters.clearTabNavigation());
         setGroupByCreator(value);
         generateQueryParam('groupByCreator', value);
 
@@ -269,7 +270,7 @@ const AssetsList = () => {
     };
 
     const handleSelectAll = () => {
-        if (selected.length === assets.length) {
+        if (selectAllMessage === 'Deselect All') {
             setSelected([]);
             setSelectAllMessage('Select All');
         } else {
@@ -624,8 +625,15 @@ const AssetsList = () => {
                 </Grid>
 
                 {!isHidden?.assets && (
-                    <Container maxWidth={false} fixed>
-                        <Grid container display={'flex'} ml={4} rowGap={3} overflow={'hidden'}>
+                    <Container maxWidth="xl" sx={{ overflow: 'hidden' }}>
+                        <Grid
+                            container
+                            ml={4}
+                            rowGap={3}
+                            overflow={'hidden'}
+                            display={'flex'}
+                            justifyContent={'center'}
+                        >
                             {isLoading ? (
                                 [...Array(4)].map((_, index) => (
                                     <AssetCardContainer key={index}>
@@ -637,14 +645,11 @@ const AssetsList = () => {
                                     {activeAssets.map((asset) => (
                                         <Grid
                                             item
-                                            xs={12}
-                                            sm={6}
-                                            md={4}
-                                            lg={4}
                                             xl={2.4}
                                             key={asset._id}
                                             display={'flex'}
                                             justifyContent={'center'}
+                                            flexWrap={'wrap'}
                                         >
                                             <AssetCardContainer>
                                                 <AssetItem
