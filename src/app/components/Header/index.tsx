@@ -12,6 +12,7 @@ import Language from '../Language';
 import { AvatarProfile } from '../AvatarProfile';
 import Logo from '../Shared/Logo';
 import { Rss } from '../Rss';
+import AllProjectsMenu from '../AllProjectsMenu';
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -46,10 +47,6 @@ const Header = () => {
         dispatch(actions.toggleSidebar());
     };
 
-    const handleToggleTheme = () => {
-        dispatch(customizerActionsCreators.setTheme(customizer.activeMode === 'light'));
-    };
-
     return (
         <AppBarStyled position="sticky" color="default" elevation={8}>
             <ToolbarStyled
@@ -70,36 +67,16 @@ const Header = () => {
                 <Box flexGrow={1} display="flex" alignItems="center" justifyContent="center">
                     {paused && <Typography variant="h3">⚠️ Store currently undergoing maintenance</Typography>}
                 </Box>
-
+                <AllProjectsMenu />
                 <Stack
                     spacing={1}
                     direction="row"
                     alignItems="center"
                     style={{
-                        marginRight: '59px',
+                        marginRight: '70px',
+                        marginTop: lgDown ? '' : '10px',
                     }}
                 >
-                    <IconButton onClick={handleToggleTheme}>
-                        {customizer.activeMode === 'dark' ? <IconSun /> : <IconMoon />}
-                    </IconButton>
-                    <Tooltip
-                        title="Join Vitruveo"
-                        arrow
-                        componentsProps={{
-                            tooltip: {
-                                sx: { fontSize: '0.8rem' },
-                            },
-                        }}
-                    >
-                        <Button
-                            variant="contained"
-                            onClick={() => window.open(`${STUDIO_BASE_URL}/login`, '_blank')}
-                            sx={{ borderRadius: 0.5, display: 'flex', gap: 1.2, padding: '0.35rem 0.4rem' }}
-                        >
-                            <IconPlus size={16} />
-                            <Image src="/images/logos/VTRU_Studio.png" width={18} height={18} alt="studio logo" />
-                        </Button>
-                    </Tooltip>
                     <Rss />
                     <Language />
                     {isLogged && <AvatarProfile />}

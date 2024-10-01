@@ -31,6 +31,7 @@ export const AvatarProfile = () => {
     return (
         <>
             <IconButton
+                sx={{ padding: 0, marginLeft: 1 }}
                 aria-label="more"
                 id="long-button"
                 aria-controls={open ? 'long-menu' : undefined}
@@ -55,7 +56,7 @@ export const AvatarProfile = () => {
                     <Typography>{username || ''}</Typography>
                 </MenuItem>
                 <MenuItem sx={{ py: 2, px: 3 }} onClick={handleLogout}>
-                    <Typography color="#00d6f4">Logout</Typography>
+                    <Typography color="#FF0066">Logout</Typography>
                 </MenuItem>
             </Menu>
         </>

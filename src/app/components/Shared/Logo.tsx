@@ -2,33 +2,26 @@ import Image from 'next/image';
 import { Box } from '@mui/material';
 
 import { useSelector } from '@/store/hooks';
-import VtruTitle from '../VtruTitle';
 import { useDispatch } from 'react-redux';
 import { actions } from '@/features/assets';
 import { actions as actionsFilters } from '@/features/filters/slice';
 
 const LogoLtrDark = () => (
-    <Box display="flex" marginTop={2} alignItems="center">
+    <Box display="flex" marginTop={2}>
         <Image
-            style={{ marginRight: '5px' }}
-            src={'/images/logos/VTRU_Search.png'}
+            style={{ display: 'inline-block', alignSelf: 'baseline', marginRight: '5px' }}
+            src={'/images/logos/XIBIT-logo_dark.png'}
             alt="logo"
-            height={35}
-            width={35}
+            height={40}
+            width={200}
             priority
         />
-        <Box marginLeft={1}>
-            <VtruTitle vtruRem="1.2rem" studioRem="1.2rem" />
-        </Box>
     </Box>
 );
 
 const LogoLtrLight = () => (
     <Box display="flex" marginTop={2} alignItems="center">
-        <Image src={'/images/logos/VTRU_Search.png'} alt="logo" height={35} width={35} priority />
-        <Box marginLeft={1}>
-            <VtruTitle vtruRem="1.2rem" studioRem="1.2rem" />
-        </Box>
+        <Image src={'/images/logos/XIBIT-logo_light.png'} alt="logo" height={40} width={200} priority />
     </Box>
 );
 

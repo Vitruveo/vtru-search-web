@@ -538,7 +538,18 @@ const Filters = () => {
             </AssetFilterAccordion>
 
             <Box>
-                <Button variant="contained" onClick={handleResetFilters} fullWidth>
+                <Button
+                    sx={{
+                        background: 'linear-gradient(to right, #FF0066, #9966FF)',
+                        color: '#fff',
+                        '&:hover': {
+                            background: 'linear-gradient(to right, #cc0052, #7a52cc)', // Versão mais escura do gradiente
+                        },
+                    }}
+                    variant="contained"
+                    onClick={handleResetFilters}
+                    fullWidth
+                >
                     {language['search.assetFilter.resetFilters'] as string}
                 </Button>
             </Box>

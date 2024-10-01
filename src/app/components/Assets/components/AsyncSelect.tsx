@@ -84,8 +84,8 @@ export const AsyncSelect = ({ onChange, defaultValue, endpoint, showAdditionalAs
                     minWidth: '240px',
                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                     backgroundColor: theme.palette.background.paper,
-                    boxShadow: '#00d6f4',
-                    '&:hover': { borderColor: '#00d6f4' },
+                    boxShadow: '#FF0066',
+                    '&:hover': { borderColor: '#FF0066' },
                 }),
                 menu: (base) => ({
                     ...base,

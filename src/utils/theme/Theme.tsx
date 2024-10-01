@@ -34,6 +34,7 @@ export const BuildTheme = (config: any = {}) => {
             direction: config.direction,
         })
     );
+
     theme.components = components(theme);
 
     return theme;

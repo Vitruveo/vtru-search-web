@@ -1,4 +1,5 @@
-import { reset, setHidden, StateKeys } from '@/features/customizer/slice';
+import { customizerActionsCreators, reset, setHidden, StateKeys } from '@/features/customizer/slice';
+import { IconMoon, IconSun } from '@tabler/icons-react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import generateQueryParam from '@/utils/generateQueryParam';
 import { Box, Button, Divider, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material';
@@ -26,6 +27,7 @@ export default function StyleElements() {
         setCopyEmbed('Copy Embed');
     };
 
+    const customizer = useSelector((state) => state.customizer);
     const hiddenElement = useSelector((state) => state.customizer.hidden);
     const [state, dispatchAction] = useReducer(reducer, initialState);
     const [copyUrl, setCopyUrl] = useState('Copy URL');
@@ -49,6 +51,10 @@ export default function StyleElements() {
         Object.keys(paramsHidden).forEach((key) => generateQueryParam(key, ''));
     };
 
+    const handleToggleTheme = () => {
+        dispatch(customizerActionsCreators.setTheme(customizer.activeMode === 'light'));
+    };
+
     useEffect(() => {
         if (hiddenElement) {
             Object.entries(hiddenElement).forEach((item) => {
@@ -69,19 +75,24 @@ export default function StyleElements() {
 
     return (
         <Box>
-            <Tooltip
-                title="Settings"
-                arrow
-                componentsProps={{
-                    tooltip: {
-                        sx: { fontSize: '0.8rem' },
-                    },
-                }}
-            >
-                <IconButton onClick={handleClick}>
-                    <IconSettingsFilled />
+            <Box sx={{ padding: 1, display: 'flex' }}>
+                <Tooltip
+                    title="Settings"
+                    arrow
+                    componentsProps={{
+                        tooltip: {
+                            sx: { fontSize: '0.8rem' },
+                        },
+                    }}
+                >
+                    <IconButton sx={{ padding: 0 }} onClick={handleClick}>
+                        <IconSettingsFilled />
+                    </IconButton>
+                </Tooltip>
+                <IconButton sx={{ padding: 0, marginLeft: '5px' }} onClick={handleToggleTheme}>
+                    {customizer.activeMode === 'dark' ? <IconSun /> : <IconMoon />}
                 </IconButton>
-            </Tooltip>
+            </Box>
             <Menu
                 anchorEl={anchorEl}
                 open={open}

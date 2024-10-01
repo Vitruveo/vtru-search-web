@@ -20,18 +20,17 @@ export default function VtruTitle({
     copyRem?: string;
 }) {
     return (
-        <Stack display="inline">
-            <Typography style={{ fontSize: login ? '3em' : vtruRem }} fontWeight="bold" variant={vtru} display="inline">
-                VTRU
-            </Typography>
-            <Typography
-                style={{ fontSize: login ? '3em' : studioRem }}
-                fontWeight="normal"
-                display="inline"
-            >
-                {' '}
-                Search
-            </Typography>
-        </Stack>
+        <Typography
+            style={{
+                display: 'inline-block',
+                alignSelf: 'baseline',
+                fontSize: login ? '3em' : studioRem,
+                color: '#B9BEC4',
+                letterSpacing: '3px',
+            }}
+            fontWeight="normal"
+        >
+            SEARCH
+        </Typography>
     );
 }
