@@ -71,7 +71,7 @@ const language: Translation = {
     'search.assetFilter.portfolio.placeholder': 'Wallet address',
 
     /* Asset List */
-    'search.assetList.curateStack': 'Curate stack',
+    'search.assetList.curateStack': 'Curate Stack',
     'search.assetList.curateStack.selected': 'Selected',
 
     'search.assetList.visualization.description': 'Description',

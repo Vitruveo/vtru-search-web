@@ -1,10 +1,12 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Box, Tab, Theme, useMediaQuery } from '@mui/material';
+import { Box, Button, Tab, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import RecentlySoldSlider from './RecentlySold';
 import SpotlightSlider from './Spotlight';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { changeActiveSlider } from '@/features/customizer/slice';
+import { actions } from '@/features/assets/slice';
+import { IconEye } from '@tabler/icons-react';
 
 export default function TabSliders() {
     const dispatch = useDispatch();
@@ -41,8 +43,8 @@ export default function TabSliders() {
                         variant="scrollable"
                         scrollButtons="auto"
                     >
-                        {!hidden?.spotlight && <Tab label="Spotlight" value="1" />}
-                        {!hidden?.recentlySold && <Tab label="Recently Sold" value="2" />}
+                        {!hidden?.spotlight && <Tab label={<Label label={'Spotlight'} />} value="1" />}
+                        {!hidden?.recentlySold && <Tab label={<Label label={'Recently Sold'} />} value="2" />}
                     </TabList>
                 </Box>
                 {!hidden?.spotlight && (
@@ -56,6 +58,37 @@ export default function TabSliders() {
                     </TabPanel>
                 )}
             </TabContext>
+        </Box>
+    );
+}
+
+interface LabelProps {
+    label: string;
+}
+
+function Label({ label }: LabelProps) {
+    const dispatch = useDispatch();
+    const handleView = () => dispatch(actions.setTabNavigation(label));
+
+    return (
+        <Box display={'flex'} gap={1.5} alignItems={'center'}>
+            <Typography variant="h6">{label}</Typography>
+            <Button
+                variant="contained"
+                sx={{
+                    width: 28,
+                    height: 25,
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: 0,
+                    minWidth: 0,
+                }}
+                onClick={handleView}
+            >
+                <IconEye size={20} />
+            </Button>
         </Box>
     );
 }

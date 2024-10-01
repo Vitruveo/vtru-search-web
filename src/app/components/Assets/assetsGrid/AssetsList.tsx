@@ -15,6 +15,7 @@ import {
     Button,
     Checkbox,
     FormControlLabel,
+    Container,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { IconCopy } from '@tabler/icons-react';
@@ -71,6 +72,7 @@ const AssetsList = () => {
     const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
     const [selected, setSelected] = useState<Asset[]>([]);
+    const [selectAllMessage, setSelectAllMessage] = useState<string>('Select All');
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
     const [sortOrder, setSortOrder] = useState<string>('latest');
     const [groupByCreator, setGroupByCreator] = useState<string>('no');
@@ -81,7 +83,7 @@ const AssetsList = () => {
     const drawerStack = useToggle();
 
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
-    const { data: assets, totalPage, page: currentPage } = useSelector((state) => state.assets.data);
+    const { data: assets, totalPage, page: currentPage, limit } = useSelector((state) => state.assets.data);
     const { sort, maxPrice } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
     const hasIncludesGroup = useSelector((state) => state.assets.groupByCreator);
@@ -90,6 +92,7 @@ const AssetsList = () => {
     const gridTitle = useSelector((state) => state.filters.grid.title);
     const videoTitle = useSelector((state) => state.filters.video.title);
     const slideshowTitle = useSelector((state) => state.filters.slideshow.title);
+    const tabNavigation = useSelector((state) => state.filters.tabNavigation);
     const isHidden = useSelector((state) => state.customizer.hidden);
 
     const optionsForSelect = useMemo(() => {
@@ -214,6 +217,7 @@ const AssetsList = () => {
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
 
+        dispatch(actionsFilters.clearTabNavigation());
         dispatch(actions.resetGroupByCreator());
         dispatch(actionsFilters.reset({ maxPrice }));
     };
@@ -262,6 +266,16 @@ const AssetsList = () => {
         );
 
         if (['no'].includes(value)) dispatch(actions.loadAssets({ page: 1 }));
+    };
+
+    const handleSelectAll = () => {
+        if (selected.length === assets.length) {
+            setSelected([]);
+            setSelectAllMessage('Select All');
+        } else {
+            setSelected(assets);
+            setSelectAllMessage('Deselect All');
+        }
     };
 
     const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
@@ -401,27 +415,25 @@ const AssetsList = () => {
                     </Grid>
                     <Box mt={lgUp ? 0 : 2} display={'flex'} justifyContent={lgUp ? 'unset' : 'flex-end'}>
                         {curateStack.isActive && (
-                            <Box
-                                sx={{ cursor: 'pointer' }}
-                                display="flex"
-                                alignItems="center"
-                                gap={1}
-                                onClick={drawerStack.activate}
-                            >
-                                {lgUp && (
-                                    <Box display="flex" alignItems="center" gap={2}>
-                                        <Button variant="contained" fullWidth>
-                                            {selected.length}{' '}
-                                            {language['search.assetList.curateStack.selected'] as string}
-                                        </Button>
-                                    </Box>
-                                )}
-
-                                {!lgUp && (
-                                    <Badge badgeContent={selected.length} color="primary" style={{ marginLeft: 2 }}>
-                                        <IconCopy width={20} color={iconColor} />
-                                    </Badge>
-                                )}
+                            <Box display="flex" alignItems="center" gap={1}>
+                                <Button variant="contained" onClick={handleSelectAll}>
+                                    {selectAllMessage}
+                                </Button>
+                                <Box sx={{ cursor: 'pointer' }} onClick={drawerStack.activate}>
+                                    {lgUp && (
+                                        <Box display="flex" alignItems="center" gap={2}>
+                                            <Button variant="contained" fullWidth>
+                                                {selected.length}{' '}
+                                                {language['search.assetList.curateStack.selected'] as string}
+                                            </Button>
+                                        </Box>
+                                    )}
+                                    {!lgUp && (
+                                        <Badge badgeContent={selected.length} color="primary" style={{ marginLeft: 2 }}>
+                                            <IconCopy width={20} color={iconColor} />
+                                        </Badge>
+                                    )}
+                                </Box>
                             </Box>
                         )}
 
@@ -476,11 +488,15 @@ const AssetsList = () => {
                         justifyContent={'space-between'}
                         gap={1}
                     >
-                        {hasCurated || !hasIncludesGroupActive ? (
+                        {hasCurated || !hasIncludesGroupActive || tabNavigation.assets.length > 0 ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
-                                {hasCurated && (
+                                {(hasCurated || tabNavigation.assets.length > 0) && (
                                     <Typography variant="h4">
-                                        {gridTitle || videoTitle || slideshowTitle || 'Curated arts'}
+                                        {gridTitle ||
+                                            videoTitle ||
+                                            slideshowTitle ||
+                                            tabNavigation.title ||
+                                            'Curated arts'}
                                     </Typography>
                                 )}
                                 {hasIncludesGroup.name && (
@@ -488,7 +504,7 @@ const AssetsList = () => {
                                         {hasIncludesGroup.name}
                                     </Typography>
                                 )}
-                                {(hasCurated || hasIncludesGroup.name) && (
+                                {(hasCurated || hasIncludesGroup.name || tabNavigation.assets.length > 0) && (
                                     <button
                                         style={{
                                             border: 'none',
@@ -514,8 +530,54 @@ const AssetsList = () => {
                         ) : (
                             <Box />
                         )}
-                        <Box display={'flex'} gap={1}>
-                            {!isHidden?.pageNavigation && (
+                        {!isHidden?.pageNavigation && (
+                            <Box display={'flex'} gap={1}>
+                                <Select
+                                    placeholder="Page Items"
+                                    options={[
+                                        { value: 25, label: 25 },
+                                        { value: 50, label: 50 },
+                                        { value: 100, label: 100 },
+                                        { value: 150, label: 150 },
+                                        { value: 200, label: 200 },
+                                    ]}
+                                    value={{ value: limit, label: limit }}
+                                    onChange={(e) => dispatch(actions.setLimit(e?.value || 25))}
+                                    styles={{
+                                        control: (base, state) => ({
+                                            ...base,
+                                            minWidth: '250px',
+                                            borderColor: state.isFocused
+                                                ? theme.palette.primary.main
+                                                : theme.palette.grey[200],
+                                            backgroundColor: theme.palette.background.paper,
+                                            boxShadow: '#00d6f4',
+                                            '&:hover': { borderColor: '#00d6f4' },
+                                        }),
+                                        menu: (base) => ({
+                                            ...base,
+                                            zIndex: 1000,
+                                            color: theme.palette.text.primary,
+                                            backgroundColor: theme.palette.background.paper,
+                                        }),
+                                        singleValue: (base) => ({
+                                            ...base,
+                                            color: theme.palette.text.primary,
+                                        }),
+                                        option: (base, state) => ({
+                                            ...base,
+                                            color: theme.palette.text.primary,
+                                            backgroundColor: state.isFocused
+                                                ? theme.palette.action.hover
+                                                : 'transparent',
+                                            '&:hover': { backgroundColor: theme.palette.action.hover },
+                                        }),
+                                        input: (base) => ({
+                                            ...base,
+                                            color: theme.palette.text.primary,
+                                        }),
+                                    }}
+                                />
                                 <Select
                                     placeholder="Select Page"
                                     options={optionsForSelect}
@@ -556,158 +618,203 @@ const AssetsList = () => {
                                         }),
                                     }}
                                 />
-                            )}
-                        </Box>
+                            </Box>
+                        )}
                     </Box>
                 </Grid>
 
                 {!isHidden?.assets && (
-                    <Grid container display={'flex'} ml={4} rowGap={3} overflow={'hidden'}>
-                        {isLoading ? (
-                            [...Array(4)].map((_, index) => (
-                                <AssetCardContainer key={index}>
-                                    <Skeleton variant="rectangular" width={250} height={250} />
-                                </AssetCardContainer>
-                            ))
-                        ) : assets.length > 0 ? (
-                            <>
-                                {activeAssets.map((asset) => (
-                                    <AssetCardContainer key={asset._id}>
-                                        <AssetItem
-                                            isAvailable={isAssetAvailable(asset)}
-                                            assetView={assetView}
-                                            asset={asset}
-                                            isCurated={curateStack.isActive}
-                                            checkedCurate={selected.some((item) => item._id === asset._id)}
-                                            handleChangeCurate={() => {
-                                                handleCheckCurate(asset);
-                                            }}
-                                            handleClickImage={() => {
-                                                if (isInIframe) {
-                                                    window.open(`${STORE_BASE_URL}/${asset.username}/${asset._id}`);
-
-                                                    return;
-                                                }
-
-                                                if (hasIncludesGroupActive) {
-                                                    if (asset?.framework?.createdBy) {
-                                                        dispatch(actions.setInitialPage());
-                                                        dispatch(
-                                                            actionsFilters.changeCreatorId(asset.framework.createdBy)
-                                                        );
-                                                        generateQueryParam('creatorId', asset.framework.createdBy);
-                                                        dispatch(actions.setGroupByCreator({ active: 'no', name: '' }));
-
-                                                        if (Array.isArray(asset.assetMetadata?.creators.formData)) {
-                                                            dispatch(
-                                                                actions.changeGroupByCreatorName(
-                                                                    asset.assetMetadata?.creators.formData[0].name
-                                                                )
+                    <Container maxWidth={false} fixed>
+                        <Grid container display={'flex'} ml={4} rowGap={3} overflow={'hidden'}>
+                            {isLoading ? (
+                                [...Array(4)].map((_, index) => (
+                                    <AssetCardContainer key={index}>
+                                        <Skeleton variant="rectangular" width={250} height={250} />
+                                    </AssetCardContainer>
+                                ))
+                            ) : assets.length > 0 ? (
+                                <>
+                                    {activeAssets.map((asset) => (
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={6}
+                                            md={4}
+                                            lg={4}
+                                            xl={2.4}
+                                            key={asset._id}
+                                            display={'flex'}
+                                            justifyContent={'center'}
+                                        >
+                                            <AssetCardContainer>
+                                                <AssetItem
+                                                    isAvailable={isAssetAvailable(asset)}
+                                                    assetView={assetView}
+                                                    asset={asset}
+                                                    isCurated={curateStack.isActive}
+                                                    checkedCurate={selected.some((item) => item._id === asset._id)}
+                                                    handleChangeCurate={() => {
+                                                        handleCheckCurate(asset);
+                                                    }}
+                                                    handleClickImage={() => {
+                                                        if (isInIframe) {
+                                                            window.open(
+                                                                `${STORE_BASE_URL}/${asset.username}/${asset._id}`
                                                             );
-                                                        } else {
-                                                            dispatch(actions.changeGroupByCreatorName('Unknown'));
+
+                                                            return;
                                                         }
 
-                                                        handleScrollToTop();
-                                                    }
-
-                                                    return;
-                                                }
-
-                                                handleAssetImageClick(asset);
-                                            }}
-                                            price={getAssetPrice(asset)}
-                                            countByCreator={asset.countByCreator}
-                                        />
-                                    </AssetCardContainer>
-                                ))}
-
-                                {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) &&
-                                    !isInIframe && (
-                                        <AssetCardContainer key={1}>
-                                            <Box width={'100%'} height={'100%'} mr={4}>
-                                                <AdditionalAssetsFilterCard />
-                                            </Box>
-                                        </AssetCardContainer>
-                                    )}
-
-                                {showAdditionalAssets.value &&
-                                    blockedAssets.map((asset) => (
-                                        <AssetCardContainer key={asset._id}>
-                                            <AssetItem
-                                                variant="blocked"
-                                                isAvailable={isAssetAvailable(asset)}
-                                                assetView={assetView}
-                                                asset={asset}
-                                                isCurated={curateStack.isActive}
-                                                checkedCurate={selected.some((item) => item._id === asset._id)}
-                                                handleChangeCurate={() => {
-                                                    handleCheckCurate(asset);
-                                                }}
-                                                handleClickImage={() => {
-                                                    if (isInIframe) {
-                                                        window.open(`${STORE_BASE_URL}/${asset.username}/${asset._id}`);
-
-                                                        return;
-                                                    }
-
-                                                    if (hasIncludesGroupActive) {
-                                                        if (asset?.framework?.createdBy) {
-                                                            dispatch(
-                                                                actionsFilters.changeCreatorId(
-                                                                    asset.framework.createdBy
-                                                                )
-                                                            );
-                                                            generateQueryParam('creatorId', asset.framework.createdBy);
-                                                            dispatch(actions.resetGroupByCreator());
-                                                            if (Array.isArray(asset.assetMetadata?.creators.formData)) {
+                                                        if (hasIncludesGroupActive) {
+                                                            if (asset?.framework?.createdBy) {
+                                                                dispatch(actions.setInitialPage());
                                                                 dispatch(
-                                                                    actions.changeGroupByCreatorName(
-                                                                        asset.assetMetadata?.creators.formData[0].name
+                                                                    actionsFilters.changeCreatorId(
+                                                                        asset.framework.createdBy
                                                                     )
                                                                 );
-                                                            } else {
-                                                                dispatch(actions.changeGroupByCreatorName('Unknown'));
+                                                                generateQueryParam(
+                                                                    'creatorId',
+                                                                    asset.framework.createdBy
+                                                                );
+                                                                dispatch(
+                                                                    actions.setGroupByCreator({
+                                                                        active: 'no',
+                                                                        name: '',
+                                                                    })
+                                                                );
+
+                                                                if (
+                                                                    Array.isArray(
+                                                                        asset.assetMetadata?.creators.formData
+                                                                    )
+                                                                ) {
+                                                                    dispatch(
+                                                                        actions.changeGroupByCreatorName(
+                                                                            asset.assetMetadata?.creators.formData[0]
+                                                                                .name
+                                                                        )
+                                                                    );
+                                                                } else {
+                                                                    dispatch(
+                                                                        actions.changeGroupByCreatorName('Unknown')
+                                                                    );
+                                                                }
+
+                                                                handleScrollToTop();
                                                             }
 
-                                                            handleScrollToTop();
+                                                            return;
                                                         }
 
-                                                        return;
-                                                    }
-
-                                                    handleAssetImageClick(asset);
-                                                }}
-                                                price={getAssetPrice(asset)}
-                                            />
-                                        </AssetCardContainer>
+                                                        handleAssetImageClick(asset);
+                                                    }}
+                                                    price={getAssetPrice(asset)}
+                                                    countByCreator={asset.countByCreator}
+                                                />
+                                            </AssetCardContainer>
+                                        </Grid>
                                     ))}
-                            </>
-                        ) : (
-                            <Grid
-                                item
-                                xl={12}
-                                lg={12}
-                                md={12}
-                                sm={12}
-                                xs={12}
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    minWidth: 'calc(100vw - 320px)',
-                                }}
-                            >
-                                <Box textAlign="center" mt={6} width="100%">
-                                    <Image src={emptyCart} alt="cart" width={200} />
-                                    <Typography variant="h2">No Asset found</Typography>
-                                    <Typography variant="h6" mb={3}>
-                                        The Asset you are searching for could not be found.
-                                    </Typography>
-                                </Box>
-                            </Grid>
-                        )}
-                    </Grid>
+
+                                    {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) &&
+                                        !isInIframe && (
+                                            <AssetCardContainer key={1}>
+                                                <Box width={'100%'} height={'100%'} mr={14}>
+                                                    <AdditionalAssetsFilterCard />
+                                                </Box>
+                                            </AssetCardContainer>
+                                        )}
+
+                                    {showAdditionalAssets.value &&
+                                        blockedAssets.map((asset) => (
+                                            <AssetCardContainer key={asset._id}>
+                                                <AssetItem
+                                                    variant="blocked"
+                                                    isAvailable={isAssetAvailable(asset)}
+                                                    assetView={assetView}
+                                                    asset={asset}
+                                                    isCurated={curateStack.isActive}
+                                                    checkedCurate={selected.some((item) => item._id === asset._id)}
+                                                    handleChangeCurate={() => {
+                                                        handleCheckCurate(asset);
+                                                    }}
+                                                    handleClickImage={() => {
+                                                        if (isInIframe) {
+                                                            window.open(
+                                                                `${STORE_BASE_URL}/${asset.username}/${asset._id}`
+                                                            );
+
+                                                            return;
+                                                        }
+
+                                                        if (hasIncludesGroupActive) {
+                                                            if (asset?.framework?.createdBy) {
+                                                                dispatch(
+                                                                    actionsFilters.changeCreatorId(
+                                                                        asset.framework.createdBy
+                                                                    )
+                                                                );
+                                                                generateQueryParam(
+                                                                    'creatorId',
+                                                                    asset.framework.createdBy
+                                                                );
+                                                                dispatch(actions.resetGroupByCreator());
+                                                                if (
+                                                                    Array.isArray(
+                                                                        asset.assetMetadata?.creators.formData
+                                                                    )
+                                                                ) {
+                                                                    dispatch(
+                                                                        actions.changeGroupByCreatorName(
+                                                                            asset.assetMetadata?.creators.formData[0]
+                                                                                .name
+                                                                        )
+                                                                    );
+                                                                } else {
+                                                                    dispatch(
+                                                                        actions.changeGroupByCreatorName('Unknown')
+                                                                    );
+                                                                }
+
+                                                                handleScrollToTop();
+                                                            }
+
+                                                            return;
+                                                        }
+
+                                                        handleAssetImageClick(asset);
+                                                    }}
+                                                    price={getAssetPrice(asset)}
+                                                />
+                                            </AssetCardContainer>
+                                        ))}
+                                </>
+                            ) : (
+                                <Grid
+                                    item
+                                    xl={12}
+                                    lg={12}
+                                    md={12}
+                                    sm={12}
+                                    xs={12}
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        minWidth: 'calc(100vw - 320px)',
+                                    }}
+                                >
+                                    <Box textAlign="center" mt={6} width="100%">
+                                        <Image src={emptyCart} alt="cart" width={200} />
+                                        <Typography variant="h2">No Asset found</Typography>
+                                        <Typography variant="h6" mb={3}>
+                                            The Asset you are searching for could not be found.
+                                        </Typography>
+                                    </Box>
+                                </Grid>
+                            )}
+                        </Grid>
+                    </Container>
                 )}
                 {!isHidden?.pageNavigation ? (
                     <>
@@ -736,7 +843,9 @@ const AssetsList = () => {
                             mr={4}
                             mb={lgUp ? 4 : 12}
                         >
-                            <Button onClick={handleScrollToTop}>Scroll to top</Button>
+                            <Button variant="contained" onClick={handleScrollToTop}>
+                                Scroll to top
+                            </Button>
                         </Box>
                     </>
                 ) : (
