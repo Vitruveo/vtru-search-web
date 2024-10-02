@@ -500,6 +500,11 @@ function* getTabNavigation(action: PayloadAction<string>) {
 
         yield put(actionsFilter.changeTabNavigation({ assets: ids, title: action.payload }));
 
+        // clear others
+        yield put(actionsFilter.clearGrid());
+        yield put(actionsFilter.clearSlideshow());
+        yield put(actionsFilter.clearVideo());
+
         yield put(actionsFilter.resetCreatorId());
         yield put(actions.noGroupByCreator());
         yield put(actions.setInitialPage());
