@@ -46,6 +46,7 @@ const persistConfig = {
     key: PERSIST_KEY,
     version: PERSIST_VERSION,
     storage,
+    whitelist: ['creator', 'filters', 'assets'],
 };
 
 const rootReducer = combineReducers({

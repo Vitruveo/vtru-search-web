@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Drawer from '@mui/material/Drawer';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -14,17 +14,22 @@ const AssetsSidebar = () => {
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
     const isHiddenFilter = useSelector((state) => state.customizer.hidden?.filter);
+
+ useEffect(() => {
+        if (!lgUp) onSidebarClose();
+    }, [lgUp]);
+
     if (isHiddenFilter) return null;
 
     const onSidebarClose = () => {
         dispatch(actions.closeSidebar());
-    };
+    };
 
     return (
         <Drawer
             open={isSidebarOpen}
             onClose={onSidebarClose}
-            variant={lgUp ? 'permanent' : 'temporary'}
+            variant={isSidebarOpen ? 'permanent' : 'temporary'}
             sx={{
                 width: drawerWidth,
                 flexShrink: 0,

@@ -106,12 +106,23 @@ export default function StyleElements() {
                     <Switch
                         onChange={() => handleChange('recentlySold', TypeAction.SET_RECENTLYSOLD)}
                         checked={state.recentlySold}
+                        disabled={state.spotlight && state.assets}
                     />
-                    Hide Carousels
+                    Hide Recently Sold
                 </MenuItem>
                 <MenuItem>
                     <Switch
-                        onChange={() => handleChange('pageNavigation', TypeAction.SET_PAGENAVIGATION)}
+                        onChange={() => handleChange('spotlight', TypeAction.SET_SPOTLIGHT)}
+                        checked={state.spotlight}
+                        disabled={state.recentlySold && state.assets}
+                    />
+                    Hide Spotlight
+                </MenuItem>
+                <MenuItem>
+                    <Switch
+                        onChange={() => {
+                            if (!state.assets) handleChange('pageNavigation', TypeAction.SET_PAGENAVIGATION);
+                        }}
                         checked={state.pageNavigation}
                     />
                     Hide Page Navigation
@@ -122,6 +133,17 @@ export default function StyleElements() {
                         checked={state.cardDetail}
                     />
                     Hide Card Detail
+                </MenuItem>
+                <MenuItem>
+                    <Switch
+                        onChange={() => {
+                            handleChange('assets', TypeAction.SET_ASSETS);
+                            handleChange('pageNavigation', TypeAction.SET_PAGENAVIGATION);
+                        }}
+                        checked={state.assets}
+                        disabled={state.recentlySold && state.spotlight}
+                    />
+                    Hide Digital Assets
                 </MenuItem>
                 <Divider />
                 <MenuItem>

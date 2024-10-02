@@ -1,25 +1,42 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Box, Tab, Theme, useMediaQuery } from '@mui/material';
+import { Box, Tab, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import RecentlySoldSlider from './RecentlySold';
 import SpotlightSlider from './Spotlight';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { changeActiveSlider } from '@/features/customizer/slice';
+import { actions } from '@/features/assets/slice';
+import { IconEye } from '@tabler/icons-react';
 
 export default function TabSliders() {
     const dispatch = useDispatch();
     const activeSlider = useSelector((state) => state.customizer.activeSlider);
     const isFilterHidden = useSelector((state) => state.customizer.hidden?.filter);
+    const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
+    const hidden = useSelector((state) => state.customizer.hidden);
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
 
     const [tabValue, setTabValue] = useState(activeSlider === 'spotlight' ? '1' : '2');
 
     useEffect(() => {
+        if (hidden?.spotlight && hidden?.recentlySold) return;
+        if (hidden?.spotlight && activeSlider === 'spotlight') {
+            setTabValue('2');
+            dispatch(changeActiveSlider('recentlySold'));
+        }
+        if (hidden?.recentlySold && activeSlider === 'recentlySold') {
+            setTabValue('1');
+            dispatch(changeActiveSlider('spotlight'));
+        }
         setTabValue(activeSlider === 'spotlight' ? '1' : '2');
-    }, [activeSlider]);
+    }, [activeSlider, hidden?.recentlySold, hidden?.spotlight]);
 
+    if (hidden?.spotlight && hidden?.recentlySold) return null;
     return (
-        <Box sx={{ width: lgUp && !isFilterHidden ? 'calc(100vw - 350px)' : 'calc(100vw - 65px)' }} minHeight={500}>
+        <Box
+            sx={{ width: lgUp && !isFilterHidden && isSidebarOpen ? 'calc(100vw - 350px)' : 'calc(100vw - 65px)' }}
+            minHeight={500}
+        >
             <TabContext value={tabValue}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList
@@ -30,17 +47,37 @@ export default function TabSliders() {
                         variant="scrollable"
                         scrollButtons="auto"
                     >
-                        <Tab label="Spotlight" value="1" />
-                        <Tab label="Recently Sold" value="2" />
+                        {!hidden?.spotlight && <Tab label={<Label label={'Spotlight'} />} value="1" />}
+                        {!hidden?.recentlySold && <Tab label={<Label label={'Recently Sold'} />} value="2" />}
                     </TabList>
                 </Box>
-                <TabPanel value="1">
-                    <SpotlightSlider />
-                </TabPanel>
-                <TabPanel value="2">
-                    <RecentlySoldSlider />
-                </TabPanel>
+                {!hidden?.spotlight && (
+                    <TabPanel value="1">
+                        <SpotlightSlider />
+                    </TabPanel>
+                )}
+                {!hidden?.recentlySold && (
+                    <TabPanel value="2">
+                        <RecentlySoldSlider />
+                    </TabPanel>
+                )}
             </TabContext>
+        </Box>
+    );
+}
+
+interface LabelProps {
+    label: string;
+}
+
+function Label({ label }: LabelProps) {
+    const dispatch = useDispatch();
+    const handleView = () => dispatch(actions.setTabNavigation(label));
+
+    return (
+        <Box display={'flex'} gap={1.5} alignItems={'center'}>
+            <Typography variant="h6">{label}</Typography>
+            <IconEye size={20} onClick={handleView} />
         </Box>
     );
 }
