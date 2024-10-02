@@ -268,7 +268,18 @@ const AssetsList = () => {
         if (['no'].includes(value)) dispatch(actions.loadAssets({ page: 1 }));
     };
 
-    const handleSelectAll = () => setSelected((prev) => [...prev, ...assets]);
+    const handleSelectAll = () => {
+        setSelected((prev) => {
+            const selectedMap = [...prev, ...assets].reduce((acc, asset) => {
+                return {
+                    ...acc,
+                    [asset._id]: asset,
+                };
+            }, {});
+
+            return Object.values(selectedMap);
+        });
+    };
     const handleUnselectAll = () => setSelected([]);
 
     const onMenuClick = () => dispatch(layoutActions.toggleSidebar());
