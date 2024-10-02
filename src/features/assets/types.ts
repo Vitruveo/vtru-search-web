@@ -142,7 +142,7 @@ export type ResponseAssetsLastSold = LastSoldAsset[];
 
 export interface ArtistsSpotlight {
     _id: string;
-    username: string;
+    name: string[];
     avatar: string;
 }
 

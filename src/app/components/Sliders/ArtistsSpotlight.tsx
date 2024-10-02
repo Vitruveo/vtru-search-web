@@ -24,7 +24,7 @@ export default function ArtistsSpotlight() {
         <Box minHeight={250}>
             <Marquee>
                 {artists.map((artist, index) => {
-                    const creatorName = artist?.username || 'No creator';
+                    const creatorName = artist?.name[0] || 'No creator';
                     const nextAssetExists = index + 1 < artists.length;
 
                     return (
@@ -34,7 +34,7 @@ export default function ArtistsSpotlight() {
                             justifyContent="center"
                             alignItems="center"
                             m={2}
-                            onClick={() => handleClickItem(artist.username)}
+                            onClick={() => handleClickItem(artist.name[0])}
                             sx={{
                                 backgroundColor: theme.palette.grey[100],
                                 ':hover': {

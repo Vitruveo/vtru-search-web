@@ -478,7 +478,7 @@ const AssetsList = () => {
                         paddingTop: 0,
                     }}
                 >
-                    {currentPage === 1 &&
+                    {(currentPage === 1 || currentPage === 0) &&
                         !grid &&
                         !video &&
                         !slideshow &&
