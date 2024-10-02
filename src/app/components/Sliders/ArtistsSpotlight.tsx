@@ -8,7 +8,7 @@ import { actions } from '@/features/filters/slice';
 
 export default function ArtistsSpotlight() {
     const dispatch = useDispatch();
-    const artists = useSelector((state) => state.creator.spotlight);
+    const artists = useSelector((state) => state.assets.artistSpotlight);
     const theme = useTheme();
 
     const handleClickItem = (name: string) => {

@@ -10,7 +10,6 @@ const initialState: InitialState = {
     loading: false,
     id: '',
     avatar: '',
-    spotlight: [],
 };
 
 export const creatorSlice = createSlice({
@@ -20,7 +19,6 @@ export const creatorSlice = createSlice({
         sendCode: () => {},
         resendCode: () => {},
         verifyCode: () => {},
-        loadArtistsSpotlight: () => {},
         logout: (state) => {
             state.token = '';
             state.email = '';
@@ -56,9 +54,6 @@ export const creatorSlice = createSlice({
         },
         changeCode: (state, action: PayloadAction<string>) => {
             state.code = action.payload;
-        },
-        changeSpotlight: (state, action: PayloadAction<InitialState['spotlight']>) => {
-            state.spotlight = action.payload;
         },
     },
 });

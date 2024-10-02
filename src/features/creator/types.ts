@@ -7,7 +7,6 @@ export interface InitialState {
     loading: boolean;
     id: string;
     avatar: string | null;
-    spotlight: ArtistsSpotlight[];
 }
 
 export interface OptConfirmResponse {
@@ -20,11 +19,3 @@ export interface OptConfirmResponse {
         };
     };
 }
-
-export interface ArtistsSpotlight {
-    _id: string;
-    username: string;
-    avatar: string;
-}
-
-export type ResponseArtistsSpotlight = ArtistsSpotlight[];

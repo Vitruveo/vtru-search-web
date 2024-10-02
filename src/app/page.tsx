@@ -13,7 +13,6 @@ import AppCard from './components/Shared/AppCard';
 import Header from './components/Header';
 import { actions, initialState } from '@/features/filters/slice';
 import { actions as actionsAssets } from '@/features/assets/slice';
-import { actions as actionsCreator } from '@/features/creator/slice';
 import { extractObjects } from '@/utils/extractObjects';
 import StyleElements from './components/Assets/components/StyleElements';
 
@@ -60,7 +59,6 @@ const Search = () => {
 
         dispatch(actions.initialParams(initialParams));
         dispatch(actionsAssets.initialSort({ order: sort_order || 'latest', sold: sort_sold || 'no' }));
-        dispatch(actionsCreator.loadArtistsSpotlight());
 
         if (!groupByCreator || groupByCreator === 'no' || !['noSales', 'all'].includes(groupByCreator))
             dispatch(actionsAssets.startNormal());
