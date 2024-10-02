@@ -6,6 +6,7 @@ export type StateKeys =
     | 'header'
     | 'recentlySold'
     | 'spotlight'
+    | 'artistSpotlight'
     | 'pageNavigation'
     | 'cardDetail'
     | 'assets';
@@ -25,7 +26,7 @@ interface StateType {
     isCardShadow?: boolean;
     borderRadius?: number | any;
     hidden?: { [key in StateKeys]: boolean };
-    activeSlider: 'spotlight' | 'recentlySold';
+    activeSlider: string;
 }
 
 const initialState: StateType = {
@@ -52,6 +53,7 @@ const initialState: StateType = {
         pageNavigation: false,
         cardDetail: false,
         assets: false,
+        artistSpotlight: false,
     },
     activeSlider: 'spotlight',
 };
@@ -69,7 +71,7 @@ export const customizerSlice = createSlice({
                 state.activeMode = 'light';
             }
         },
-        changeActiveSlider: (state: StateType, action: PayloadAction<'spotlight' | 'recentlySold'>) => {
+        changeActiveSlider: (state: StateType, action: PayloadAction<string>) => {
             state.activeSlider = action.payload;
         },
         setDarkMode: (state: StateType, action) => {
@@ -115,6 +117,7 @@ export const customizerSlice = createSlice({
                 pageNavigation: false,
                 cardDetail: false,
                 assets: false,
+                artistSpotlight: false,
             };
         },
     },

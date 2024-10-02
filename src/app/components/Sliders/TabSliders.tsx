@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { changeActiveSlider } from '@/features/customizer/slice';
 import { actions } from '@/features/assets/slice';
 import { IconEye } from '@tabler/icons-react';
+import ArtistsSpotlight from './ArtistsSpotlight';
 
 export default function TabSliders() {
     const dispatch = useDispatch();
@@ -19,19 +20,26 @@ export default function TabSliders() {
     const [tabValue, setTabValue] = useState(activeSlider === 'spotlight' ? '1' : '2');
 
     useEffect(() => {
-        if (hidden?.spotlight && hidden?.recentlySold) return;
-        if (hidden?.spotlight && activeSlider === 'spotlight') {
-            setTabValue('2');
-            dispatch(changeActiveSlider('recentlySold'));
+        if (hidden?.spotlight && hidden?.recentlySold && hidden?.artistSpotlight) return;
+        if (
+            (hidden?.spotlight && activeSlider === '1') ||
+            (hidden?.artistSpotlight && activeSlider === '2') ||
+            (hidden?.recentlySold && activeSlider === '3')
+        ) {
+            if (!hidden?.spotlight) {
+                setTabValue('1');
+                dispatch(changeActiveSlider('1'));
+            } else if (!hidden?.artistSpotlight) {
+                setTabValue('2');
+                dispatch(changeActiveSlider('2'));
+            } else if (!hidden?.recentlySold) {
+                setTabValue('3');
+                dispatch(changeActiveSlider('3'));
+            }
         }
-        if (hidden?.recentlySold && activeSlider === 'recentlySold') {
-            setTabValue('1');
-            dispatch(changeActiveSlider('spotlight'));
-        }
-        setTabValue(activeSlider === 'spotlight' ? '1' : '2');
-    }, [activeSlider, hidden?.recentlySold, hidden?.spotlight]);
+    }, [activeSlider, hidden?.recentlySold, hidden?.spotlight, hidden?.artistSpotlight]);
 
-    if (hidden?.spotlight && hidden?.recentlySold) return null;
+    if (hidden?.spotlight && hidden?.recentlySold && hidden?.artistSpotlight) return null;
     return (
         <Box
             sx={{ width: lgUp && !isFilterHidden && isSidebarOpen ? 'calc(100vw - 350px)' : 'calc(100vw - 65px)' }}
@@ -42,13 +50,16 @@ export default function TabSliders() {
                     <TabList
                         onChange={(_e, value) => {
                             setTabValue(value);
-                            dispatch(changeActiveSlider(value === '1' ? 'spotlight' : 'recentlySold'));
+                            dispatch(changeActiveSlider(value));
                         }}
                         variant="scrollable"
                         scrollButtons="auto"
                     >
-                        {!hidden?.spotlight && <Tab label={<Label label={'Spotlight'} />} value="1" />}
-                        {!hidden?.recentlySold && <Tab label={<Label label={'Recently Sold'} />} value="2" />}
+                        {!hidden?.spotlight && <Tab label={<Label label={'Artwork Spotlight'} />} value="1" />}
+                        {!hidden?.artistSpotlight && (
+                            <Tab label={<Typography variant="h6">Artist Spotlight</Typography>} value="2" />
+                        )}
+                        {!hidden?.recentlySold && <Tab label={<Label label={'Recently Sold'} />} value="3" />}
                     </TabList>
                 </Box>
                 {!hidden?.spotlight && (
@@ -56,8 +67,13 @@ export default function TabSliders() {
                         <SpotlightSlider />
                     </TabPanel>
                 )}
-                {!hidden?.recentlySold && (
+                {!hidden?.artistSpotlight && (
                     <TabPanel value="2">
+                        <ArtistsSpotlight />
+                    </TabPanel>
+                )}
+                {!hidden?.recentlySold && (
+                    <TabPanel value="3">
                         <RecentlySoldSlider />
                     </TabPanel>
                 )}
