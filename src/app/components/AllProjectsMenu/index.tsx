@@ -10,12 +10,13 @@ const projects = [
 
 const AllProjectsMenu = () => {
     return (
-        <Box marginTop={2.1} marginRight={2} display="flex" alignItems="baseline">
+        <Box marginRight={2} display="flex" alignItems="baseline">
             {projects.map((v, index) => (
                 <Box key={v.title} display="flex" alignItems="center">
                     <Typography
+                        onClick={() => v.url && window.open(v.url, '_blank')}
                         sx={{
-                            cursor: 'pointer',
+                            cursor: v.url ? 'pointer' : 'default',
                             letterSpacing: '3px',
                             color: v.title === 'SEARCH' ? '#D7DF23' : '#5A5A5A',
                         }}
