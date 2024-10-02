@@ -12,7 +12,12 @@ export default function ArtistsSpotlight() {
     const theme = useTheme();
 
     const handleClickItem = (name: string) => {
-        dispatch(actions.changeName({ name }));
+        dispatch(
+            actions.change({
+                key: 'creators',
+                value: { name: [name] },
+            })
+        );
     };
 
     return (
