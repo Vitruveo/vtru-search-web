@@ -244,7 +244,7 @@ const AssetsList = () => {
         setGroupByCreator(value);
         generateQueryParam('groupByCreator', value);
 
-        if (e?.value === 'no') {
+        if (e?.value !== 'no') {
             generateQueryParam('creatorId', '');
             generateQueryParam('grid', '');
             generateQueryParam('video', '');
