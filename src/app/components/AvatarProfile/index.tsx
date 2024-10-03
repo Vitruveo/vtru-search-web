@@ -27,7 +27,8 @@ export const AvatarProfile = () => {
         disconnectWebSocket();
     };
 
-    const src = avatar != null && avatar !== '' ? avatar : '/images/profile/default.png';
+    const checkAvatar = avatar != null && avatar !== '';
+    const src = checkAvatar ? avatar : '/images/profile/default.png';
 
     return (
         <>
@@ -40,7 +41,11 @@ export const AvatarProfile = () => {
                 aria-haspopup="true"
                 onClick={handleClick}
             >
-                <Image alt="" src={src} width={25} height={29} />
+                {checkAvatar ? (
+                    <Avatar src={src} sx={{ width: 29, height: 29 }} />
+                ) : (
+                    <Image alt="" src={src} width={25} height={29} />
+                )}
             </IconButton>
             <Menu
                 id="long-menu"
