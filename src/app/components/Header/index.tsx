@@ -74,7 +74,7 @@ const Header = () => {
                         marginTop: lgDown ? '' : '24px',
                     }}
                 >
-                    <AllProjectsMenu />
+                    {!lgDown && <AllProjectsMenu />}
                     <Rss />
                     <Language />
                     {isLogged && <AvatarProfile />}
