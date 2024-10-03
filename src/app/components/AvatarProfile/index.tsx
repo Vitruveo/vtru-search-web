@@ -3,6 +3,7 @@ import { Avatar, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions as actionsCreator } from '@/features/creator';
 import { disconnectWebSocket } from '@/services/socket';
+import Image from 'next/image';
 
 export const AvatarProfile = () => {
     const dispatch = useDispatch();
@@ -31,7 +32,7 @@ export const AvatarProfile = () => {
     return (
         <>
             <IconButton
-                sx={{ padding: 0, marginLeft: 1 }}
+                sx={{ padding: 0 }}
                 aria-label="more"
                 id="long-button"
                 aria-controls={open ? 'long-menu' : undefined}
@@ -39,7 +40,7 @@ export const AvatarProfile = () => {
                 aria-haspopup="true"
                 onClick={handleClick}
             >
-                <Avatar src={src} sx={{ width: 35, height: 35 }} />
+                <Image alt="" src={src} width={25} height={29} />
             </IconButton>
             <Menu
                 id="long-menu"

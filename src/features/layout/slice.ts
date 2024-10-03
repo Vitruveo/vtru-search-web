@@ -6,7 +6,7 @@ interface LayoutState {
 }
 
 const initialState: LayoutState = {
-    isSidebarOpen: false,
+    isSidebarOpen: true,
 };
 
 export const layoutSlice = createSlice({
@@ -18,7 +18,7 @@ export const layoutSlice = createSlice({
         },
         closeSidebar: (state) => {
             state.isSidebarOpen = false;
-        }
+        },
     },
 });
 

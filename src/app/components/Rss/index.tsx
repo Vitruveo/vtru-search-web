@@ -51,8 +51,9 @@ export const Rss = () => {
                         width: 29,
                         height: 29,
                         borderRadius: '0px',
-                        marginRight: '5px',
-                        marginTop: '4px',
+                        margin: 0,
+                        padding: 0,
+                        lineHeight: '1',
                     }}
                 />
             </IconButton>

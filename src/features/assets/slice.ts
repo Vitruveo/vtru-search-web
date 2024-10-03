@@ -23,6 +23,7 @@ export const initialState: AssetsSliceState = {
     },
     spotlight: [],
     lastSold: [],
+    artistSpotlight: [],
     tags: [],
     creator: {
         username: '',
@@ -135,6 +136,9 @@ export const assetsSlice = createSlice({
         },
         setLastSold: (state, action: PayloadAction<LastSoldAsset[]>) => {
             state.lastSold = action.payload;
+        },
+        setArtistSpotlight: (state, action: PayloadAction<AssetsSliceState['artistSpotlight']>) => {
+            state.artistSpotlight = action.payload;
         },
         startNormal: (state) => {
             state.groupByCreator.active = 'no';

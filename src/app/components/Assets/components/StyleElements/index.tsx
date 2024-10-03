@@ -117,7 +117,7 @@ export default function StyleElements() {
                     <Switch
                         onChange={() => handleChange('recentlySold', TypeAction.SET_RECENTLYSOLD)}
                         checked={state.recentlySold}
-                        disabled={state.spotlight && state.assets}
+                        disabled={state.spotlight && state.assets && state.artistSpotlight}
                     />
                     Hide Recently Sold
                 </MenuItem>
@@ -125,13 +125,23 @@ export default function StyleElements() {
                     <Switch
                         onChange={() => handleChange('spotlight', TypeAction.SET_SPOTLIGHT)}
                         checked={state.spotlight}
-                        disabled={state.recentlySold && state.assets}
+                        disabled={state.recentlySold && state.assets && state.artistSpotlight}
                     />
                     Hide Spotlight
                 </MenuItem>
                 <MenuItem>
                     <Switch
-                        onChange={() => handleChange('pageNavigation', TypeAction.SET_PAGENAVIGATION)}
+                        onChange={() => handleChange('artistSpotlight', TypeAction.SET_ARTISTSPOTLIGHT)}
+                        checked={state.artistSpotlight}
+                        disabled={state.recentlySold && state.assets && state.spotlight}
+                    />
+                    Hide Artist Spotlight
+                </MenuItem>
+                <MenuItem>
+                    <Switch
+                        onChange={() => {
+                            if (!state.assets) handleChange('pageNavigation', TypeAction.SET_PAGENAVIGATION);
+                        }}
                         checked={state.pageNavigation}
                     />
                     Hide Page Navigation
@@ -145,7 +155,10 @@ export default function StyleElements() {
                 </MenuItem>
                 <MenuItem>
                     <Switch
-                        onChange={() => handleChange('assets', TypeAction.SET_ASSETS)}
+                        onChange={() => {
+                            handleChange('assets', TypeAction.SET_ASSETS);
+                            handleChange('pageNavigation', TypeAction.SET_PAGENAVIGATION);
+                        }}
                         checked={state.assets}
                         disabled={state.recentlySold && state.spotlight}
                     />

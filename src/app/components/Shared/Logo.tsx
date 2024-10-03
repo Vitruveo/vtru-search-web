@@ -43,6 +43,7 @@ const Logo = () => {
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
 
+        dispatch(actionsFilters.clearTabNavigation());
         dispatch(actions.resetGroupByCreator());
         dispatch(actionsFilters.reset({ maxPrice }));
     };

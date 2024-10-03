@@ -12,6 +12,7 @@ import type {
     GetCreatorParams,
     MakeVideoParams,
     MakeVideoResponse,
+    ResponseArtistsSpotlight,
     ResponseAsserCreator,
     ResponseAssetGroupByCreator,
     ResponseAssets,
@@ -62,6 +63,21 @@ function* getAssetsLastSold() {
         yield put(actions.setLastSold(response.data.data));
     } catch (error) {
         // Handle error
+    }
+}
+
+function* getArtistsSpotlight() {
+    try {
+        const URL_ARTISTS_SPOTLIGHT = `${API_BASE_URL}/assets/public/artistSpotlight`;
+
+        const response: AxiosResponse<APIResponse<ResponseArtistsSpotlight>> = yield call(
+            axios.get,
+            URL_ARTISTS_SPOTLIGHT
+        );
+
+        yield put(actions.setArtistSpotlight(response.data.data));
+    } catch (error) {
+        // handle error
     }
 }
 
@@ -484,6 +500,11 @@ function* getTabNavigation(action: PayloadAction<string>) {
 
         yield put(actionsFilter.changeTabNavigation({ assets: ids, title: action.payload }));
 
+        // clear others
+        yield put(actionsFilter.clearGrid());
+        yield put(actionsFilter.clearSlideshow());
+        yield put(actionsFilter.clearVideo());
+
         yield put(actionsFilter.resetCreatorId());
         yield put(actions.noGroupByCreator());
         yield put(actions.setInitialPage());
@@ -536,6 +557,7 @@ export function* assetsSagas() {
         // Sold
         takeEvery(actions.loadAssetsLastSold.type, getAssetsLastSold),
         takeEvery(actions.loadAssetsLastSold.type, getAssetsSpotlight),
+        takeEvery(actions.loadAssetsLastSold.type, getArtistsSpotlight),
 
         takeEvery(actions.loadCreator.type, getCreator),
         takeEvery(actions.makeVideo.type, makeVideo),

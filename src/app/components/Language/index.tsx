@@ -64,18 +64,19 @@ const Language = () => {
     return (
         <>
             <IconButton
+                size="small"
                 aria-label="more"
                 id="long-button"
                 aria-controls={open ? 'long-menu' : undefined}
                 aria-expanded={open ? 'true' : undefined}
                 aria-haspopup="true"
                 onClick={handleClick}
-                sx={{ padding: 0, marginLeft: 5 }}
+                sx={{ padding: 0, margin: 0, lineHeight: '1' }}
             >
                 <Avatar
                     src={currentLang.icon}
                     alt={currentLang.value}
-                    sx={{ marginTop: '5px', width: 36, height: 36 }}
+                    sx={{ width: 29, height: 29, borderRadius: '0px', margin: 0, padding: 0, lineHeight: '1' }}
                 />
             </IconButton>
             <Menu

@@ -1,13 +1,10 @@
-import Image from 'next/image';
 import { useDispatch } from 'react-redux';
-import { AppBar, Box, Button, IconButton, Stack, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Box, IconButton, Stack, Toolbar, Tooltip, Typography } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { IconMenu2, IconMoon, IconPlus, IconSun } from '@tabler/icons-react';
+import { IconMenu2 } from '@tabler/icons-react';
 import { useSelector } from '@/store/hooks';
 import { actions } from '@/features/layout';
-import { customizerActionsCreators } from '@/features/customizer';
-import { STUDIO_BASE_URL } from '@/constants/api';
 import Language from '../Language';
 import { AvatarProfile } from '../AvatarProfile';
 import Logo from '../Shared/Logo';
@@ -67,16 +64,17 @@ const Header = () => {
                 <Box flexGrow={1} display="flex" alignItems="center" justifyContent="center">
                     {paused && <Typography variant="h3">⚠️ Store currently undergoing maintenance</Typography>}
                 </Box>
-                <AllProjectsMenu />
+
                 <Stack
-                    spacing={1}
+                    spacing={2}
                     direction="row"
-                    alignItems="center"
+                    alignItems="end"
                     style={{
                         marginRight: '70px',
-                        marginTop: lgDown ? '' : '10px',
+                        marginTop: lgDown ? '' : '24px',
                     }}
                 >
+                    <AllProjectsMenu />
                     <Rss />
                     <Language />
                     {isLogged && <AvatarProfile />}
