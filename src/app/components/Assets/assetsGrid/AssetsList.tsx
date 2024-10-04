@@ -645,7 +645,7 @@ const AssetsList = () => {
                 {!isHidden?.assets && (
                     <Grid
                         container
-                        rowGap={3}
+                        rowGap={2.85}
                         columnGap={3}
                         overflow={'hidden'}
                         display={'flex'}
