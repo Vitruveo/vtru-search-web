@@ -7,21 +7,21 @@ import { actions } from '@/features/assets';
 import { actions as actionsFilters } from '@/features/filters/slice';
 
 const LogoLtrDark = () => (
-    <Box display="flex" marginTop={2}>
+    <Box display="flex">
         <Image
             style={{ display: 'inline-block', alignSelf: 'baseline', marginRight: '5px' }}
             src={'/images/logos/XIBIT-logo_dark.png'}
             alt="logo"
             height={40}
-            width={200}
+            width={120}
             priority
         />
     </Box>
 );
 
 const LogoLtrLight = () => (
-    <Box display="flex" marginTop={2} alignItems="center">
-        <Image src={'/images/logos/XIBIT-logo_light.png'} alt="logo" height={40} width={200} priority />
+    <Box display="flex" alignItems="center">
+        <Image src={'/images/logos/XIBIT-logo_light.png'} alt="logo" height={40} width={120} priority />
     </Box>
 );
 

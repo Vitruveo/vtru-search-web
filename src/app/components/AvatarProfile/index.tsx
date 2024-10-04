@@ -33,6 +33,7 @@ export const AvatarProfile = () => {
     return (
         <>
             <IconButton
+                size="small"
                 sx={{ padding: 0 }}
                 aria-label="more"
                 id="long-button"
@@ -44,7 +45,7 @@ export const AvatarProfile = () => {
                 {checkAvatar ? (
                     <Avatar src={src} sx={{ width: 29, height: 29 }} />
                 ) : (
-                    <Image alt="" src={src} width={25} height={29} />
+                    <Image alt="" style={{ marginLeft: '5px' }} src={src} width={25} height={29} />
                 )}
             </IconButton>
             <Menu
