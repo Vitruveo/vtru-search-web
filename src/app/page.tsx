@@ -81,7 +81,7 @@ const Search = () => {
             <Box
                 display={isInIframe ? 'none' : 'inherit'}
                 position={'fixed'}
-                top={lgUp ? 22 : 9}
+                top={lgUp ? 21 : 9}
                 right={-5}
                 bgcolor={theme.palette.grey[100]}
                 width={85}

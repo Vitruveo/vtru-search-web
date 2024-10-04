@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 import { AppBar, Box, IconButton, Stack, Toolbar, Tooltip, Typography } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { IconMenu2 } from '@tabler/icons-react';
+import { IconMenu2, IconMoon, IconSun } from '@tabler/icons-react';
 import { useSelector } from '@/store/hooks';
 import { actions } from '@/features/layout';
 import Language from '../Language';
@@ -10,6 +10,7 @@ import { AvatarProfile } from '../AvatarProfile';
 import Logo from '../Shared/Logo';
 import { Rss } from '../Rss';
 import AllProjectsMenu from '../AllProjectsMenu';
+import { customizerActionsCreators } from '@/features/customizer';
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -44,8 +45,12 @@ const Header = () => {
         dispatch(actions.toggleSidebar());
     };
 
+    const handleToggleTheme = () => {
+        dispatch(customizerActionsCreators.setTheme(customizer.activeMode === 'light'));
+    };
+
     return (
-        <AppBarStyled position="sticky" color="default" elevation={8}>
+        <AppBarStyled position="sticky" color="default" elevation={0}>
             <ToolbarStyled
                 sx={{
                     maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
@@ -67,17 +72,25 @@ const Header = () => {
 
                 <Stack
                     spacing={2}
+                    height={40}
                     direction="row"
-                    alignItems="end"
+                    justifyContent="center"
+                    alignItems="center"
                     style={{
                         marginRight: '70px',
-                        marginTop: lgDown ? '' : '24px',
                     }}
                 >
                     {!lgDown && <AllProjectsMenu />}
                     <Rss />
                     <Language />
                     {isLogged && <AvatarProfile />}
+                    <IconButton size="small" sx={{ padding: 0 }} onClick={handleToggleTheme}>
+                        {customizer.activeMode === 'dark' ? (
+                            <IconSun width={29} height={29} />
+                        ) : (
+                            <IconMoon width={29} height={29} />
+                        )}
+                    </IconButton>
                 </Stack>
             </ToolbarStyled>
         </AppBarStyled>

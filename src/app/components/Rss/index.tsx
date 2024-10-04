@@ -50,7 +50,6 @@ export const Rss = () => {
                     sx={{
                         width: 29,
                         height: 29,
-                        borderRadius: '0px',
                         margin: 0,
                         padding: 0,
                         lineHeight: '1',

@@ -1,5 +1,4 @@
-import { customizerActionsCreators, reset, setHidden, StateKeys } from '@/features/customizer/slice';
-import { IconMoon, IconSun } from '@tabler/icons-react';
+import { reset, setHidden, StateKeys } from '@/features/customizer/slice';
 import { useDispatch, useSelector } from '@/store/hooks';
 import generateQueryParam from '@/utils/generateQueryParam';
 import { Box, Button, Divider, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material';
@@ -51,10 +50,6 @@ export default function StyleElements() {
         Object.keys(paramsHidden).forEach((key) => generateQueryParam(key, ''));
     };
 
-    const handleToggleTheme = () => {
-        dispatch(customizerActionsCreators.setTheme(customizer.activeMode === 'light'));
-    };
-
     useEffect(() => {
         if (hiddenElement) {
             Object.entries(hiddenElement).forEach((item) => {
@@ -75,7 +70,7 @@ export default function StyleElements() {
 
     return (
         <Box>
-            <Box sx={{ padding: 1, display: 'flex' }}>
+            <Box sx={{ height: 29, paddingLeft: 0.5, display: 'flex' }}>
                 <Tooltip
                     title="Settings"
                     arrow
@@ -85,13 +80,10 @@ export default function StyleElements() {
                         },
                     }}
                 >
-                    <IconButton sx={{ padding: 0 }} onClick={handleClick}>
-                        <IconSettingsFilled />
+                    <IconButton size="small" sx={{ padding: 0 }} onClick={handleClick}>
+                        <IconSettingsFilled height={29} />
                     </IconButton>
                 </Tooltip>
-                <IconButton sx={{ padding: 0, marginLeft: '5px' }} onClick={handleToggleTheme}>
-                    {customizer.activeMode === 'dark' ? <IconSun /> : <IconMoon />}
-                </IconButton>
             </Box>
             <Menu
                 anchorEl={anchorEl}
