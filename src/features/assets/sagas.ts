@@ -94,6 +94,7 @@ function* getAssetsGroupByCreator() {
         const order: string = yield select((state: AppState) => state.assets.sort.order);
         const sold: string = yield select((state: AppState) => state.assets.sort.sold);
         const name: string = yield select((state: AppState) => state.filters.name);
+        const hasBts: string = yield select((state: AppState) => state.filters.hasBts);
 
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
@@ -154,6 +155,7 @@ function* getAssetsGroupByCreator() {
                         order,
                         isIncludeSold: sold === 'yes' ? true : false,
                     },
+                    hasBts,
                 },
             }
         );
@@ -215,6 +217,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
         const filtersCreators: FilterSliceState['creators'] = yield select((state: AppState) => state.filters.creators);
+        const hasBts: FilterSliceState['hasBts'] = yield select((state: AppState) => state.filters.hasBts);
         const price: FilterSliceState['price'] = yield select((state: AppState) => state.filters.price);
         const colorPrecision: FilterSliceState['colorPrecision'] = yield select(
             (state: AppState) => state.filters.colorPrecision
@@ -286,6 +289,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 order,
                 isIncludeSold: sold === 'yes' ? true : false,
             },
+            hasBts,
         });
 
         if (page === 1 || page === 0) {
@@ -542,6 +546,7 @@ export function* assetsSagas() {
         takeEvery(actionsFilter.changeColorPrecision.type, getAssets),
         takeEvery(actionsFilter.changeCreatorId.type, getAssets),
         takeEvery(actionsFilter.changePortfolioWallets.type, getAssets),
+        takeEvery(actionsFilter.changeHasBts.type, getAssets),
 
         // Group by creator
         takeEvery(actions.startGrouped.type, getAssetsGroupByCreator),
@@ -553,6 +558,7 @@ export function* assetsSagas() {
         takeEvery(actionsFilter.change.type, getAssetsGroupByCreator),
         debounce(1000, actionsFilter.changeName.type, getAssetsGroupByCreator),
         takeEvery(actionsFilter.changePortfolioWallets.type, getAssetsGroupByCreator),
+        takeEvery(actionsFilter.changeHasBts.type, getAssetsGroupByCreator),
 
         // Sold
         takeEvery(actions.loadAssetsLastSold.type, getAssetsLastSold),
