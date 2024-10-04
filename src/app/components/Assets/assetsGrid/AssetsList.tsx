@@ -244,7 +244,7 @@ const AssetsList = () => {
         setGroupByCreator(value);
         generateQueryParam('groupByCreator', value);
 
-        if (e?.value === 'no') {
+        if (e?.value !== 'no') {
             generateQueryParam('creatorId', '');
             generateQueryParam('grid', '');
             generateQueryParam('video', '');
@@ -643,7 +643,16 @@ const AssetsList = () => {
                 </Grid>
 
                 {!isHidden?.assets && (
-                    <Grid container rowGap={3} overflow={'hidden'} display={'flex'} justifyContent={'center'} ml={4}>
+                    <Grid
+                        container
+                        rowGap={3}
+                        columnGap={3}
+                        overflow={'hidden'}
+                        display={'flex'}
+                        justifyContent={'center'}
+                        ml={4}
+                        mr={4}
+                    >
                         {isLoading ? (
                             [...Array(4)].map((_, index) => (
                                 <AssetCardContainer key={index}>
