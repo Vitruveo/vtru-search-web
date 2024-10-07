@@ -95,6 +95,7 @@ function* getAssetsGroupByCreator() {
         const sold: string = yield select((state: AppState) => state.assets.sort.sold);
         const name: string = yield select((state: AppState) => state.filters.name);
         const hasBts: string = yield select((state: AppState) => state.filters.hasBts);
+        const artists: string[] = yield select((state: AppState) => state.filters.tabNavigation.artists);
 
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
@@ -142,21 +143,25 @@ function* getAssetsGroupByCreator() {
 
         buildQuery.grouped = groupByCreator;
 
+        if (artists.length) {
+            buildQuery['framework.createdBy'] = {
+                $in: artists,
+            };
+        }
+
         const response: AxiosResponse<APIResponse<ResponseAssetGroupByCreator>> = yield call(
-            axios.get,
+            axios.post,
             `${API_BASE_URL}/assets/public/groupByCreator`,
             {
-                params: {
-                    query: buildQuery,
-                    limit: limit || 25,
-                    page: page || 1,
-                    name: name.trim() || null,
-                    sort: {
-                        order,
-                        isIncludeSold: sold === 'yes' ? true : false,
-                    },
-                    hasBts,
+                query: buildQuery,
+                limit: limit || 25,
+                page: page || 1,
+                name: name.trim() || null,
+                sort: {
+                    order,
+                    isIncludeSold: sold === 'yes' ? true : false,
                 },
+                hasBts,
             }
         );
 
@@ -499,10 +504,32 @@ function* generateSlideshow(action: PayloadAction<GenerateSlideshowParams>) {
 
 function* getTabNavigation(action: PayloadAction<string>) {
     try {
-        const option = action.payload.toLowerCase() === 'spotlight' ? 'spotlight' : 'lastSold';
-        const ids: string[] = yield select((state: AppState) => state.assets[option].map((item) => item._id));
+        if (action.payload.toLowerCase().includes('artist')) {
+            const ids: string[] = yield select((state: AppState) =>
+                state.assets.artistSpotlight.map((item) => item._id)
+            );
+            yield put(actionsFilter.changeTabNavigation({ assets: [], title: action.payload, artists: ids }));
 
-        yield put(actionsFilter.changeTabNavigation({ assets: ids, title: action.payload }));
+            // clear others
+            yield put(actionsFilter.clearGrid());
+            yield put(actionsFilter.clearSlideshow());
+            yield put(actionsFilter.clearVideo());
+
+            yield put(actions.setInitialPage());
+
+            yield put(
+                actions.setGroupByCreator({
+                    active: 'all',
+                    name: '',
+                })
+            );
+
+            return;
+        }
+
+        const option = action.payload.toLowerCase().includes('spotlight') ? 'spotlight' : 'lastSold';
+        const ids: string[] = yield select((state: AppState) => state.assets[option].map((item) => item._id));
+        yield put(actionsFilter.changeTabNavigation({ assets: ids, title: action.payload, artists: [] }));
 
         // clear others
         yield put(actionsFilter.clearGrid());

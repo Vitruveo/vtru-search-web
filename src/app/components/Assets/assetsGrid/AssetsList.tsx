@@ -495,7 +495,8 @@ const AssetsList = () => {
                         !slideshow &&
                         !creatorId &&
                         !portfolioWallets &&
-                        tabNavigation.assets.length <= 0 && <TabSliders />}
+                        tabNavigation.assets.length <= 0 &&
+                        tabNavigation.artists.length <= 0 && <TabSliders />}
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>
@@ -507,9 +508,14 @@ const AssetsList = () => {
                         justifyContent={'space-between'}
                         gap={1}
                     >
-                        {hasCurated || !hasIncludesGroupActive || tabNavigation.assets.length > 0 ? (
+                        {hasCurated ||
+                        !hasIncludesGroupActive ||
+                        tabNavigation.assets.length > 0 ||
+                        tabNavigation.artists.length > 0 ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
-                                {(hasCurated || tabNavigation.assets.length > 0) && (
+                                {(hasCurated ||
+                                    tabNavigation.assets.length > 0 ||
+                                    tabNavigation.artists.length > 0) && (
                                     <Typography variant="h4">
                                         {gridTitle ||
                                             videoTitle ||
@@ -523,7 +529,10 @@ const AssetsList = () => {
                                         {hasIncludesGroup.name}
                                     </Typography>
                                 )}
-                                {(hasCurated || hasIncludesGroup.name || tabNavigation.assets.length > 0) && (
+                                {(hasCurated ||
+                                    hasIncludesGroup.name ||
+                                    tabNavigation.assets.length > 0 ||
+                                    tabNavigation.artists.length > 0) && (
                                     <button
                                         style={{
                                             border: 'none',
@@ -728,7 +737,8 @@ const AssetsList = () => {
                                     !slideshow &&
                                     !creatorId &&
                                     !portfolioWallets &&
-                                    tabNavigation.assets.length <= 0 && (
+                                    tabNavigation.assets.length <= 0 &&
+                                    tabNavigation.artists.length <= 0 && (
                                         <Grid item display={'flex'} justifyContent={'center'}>
                                             <AssetCardContainer key={1}>
                                                 <Box width={'100%'} height={'100%'}>

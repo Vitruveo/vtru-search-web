@@ -56,9 +56,7 @@ export default function TabSliders() {
                         scrollButtons="auto"
                     >
                         {!hidden?.spotlight && <Tab label={<Label label={'Artwork Spotlight'} />} value="1" />}
-                        {!hidden?.artistSpotlight && (
-                            <Tab label={<Typography variant="h6">Artist Spotlight</Typography>} value="2" />
-                        )}
+                        {!hidden?.artistSpotlight && <Tab label={<Label label={'Artist Spotlight'} />} value="2" />}
                         {!hidden?.recentlySold && <Tab label={<Label label={'Recently Sold'} />} value="3" />}
                     </TabList>
                 </Box>

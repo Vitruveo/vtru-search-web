@@ -82,6 +82,7 @@ export const initialState: FilterSliceState = {
     },
     tabNavigation: {
         assets: [],
+        artists: [],
         title: '',
     },
     creatorId: '',
@@ -231,6 +232,7 @@ export const filterSlice = createSlice({
         clearTabNavigation: (state) => {
             state.tabNavigation = {
                 assets: [],
+                artists: [],
                 title: '',
             };
         },
@@ -358,6 +360,7 @@ export const filterSlice = createSlice({
             state,
             action: PayloadAction<{
                 assets: string[];
+                artists: string[];
                 title: string;
             }>
         ) => {
