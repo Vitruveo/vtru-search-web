@@ -53,6 +53,7 @@ export const initialState: FilterSliceState = {
             awardUrl: '',
         },
     },
+    hasBts: '',
     price: {
         min: 0,
         max: 0,
@@ -81,6 +82,7 @@ export const initialState: FilterSliceState = {
     },
     tabNavigation: {
         assets: [],
+        artists: [],
         title: '',
     },
     creatorId: '',
@@ -230,6 +232,7 @@ export const filterSlice = createSlice({
         clearTabNavigation: (state) => {
             state.tabNavigation = {
                 assets: [],
+                artists: [],
                 title: '',
             };
         },
@@ -268,6 +271,9 @@ export const filterSlice = createSlice({
             state.colorPrecision = {
                 value: action.payload,
             };
+        },
+        changeHasBts: (state, action: PayloadAction<string>) => {
+            state.hasBts = action.payload;
         },
         changeShowAdditionalAssets: (state, action: PayloadAction<boolean>) => {
             state.showAdditionalAssets.value = action.payload;
@@ -354,6 +360,7 @@ export const filterSlice = createSlice({
             state,
             action: PayloadAction<{
                 assets: string[];
+                artists: string[];
                 title: string;
             }>
         ) => {

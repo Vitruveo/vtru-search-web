@@ -11,14 +11,7 @@ export default function ArtistsSpotlight() {
     const artists = useSelector((state) => state.assets.artistSpotlight);
     const theme = useTheme();
 
-    const handleClickItem = (name: string) => {
-        dispatch(
-            actions.change({
-                key: 'creators',
-                value: { name: [name] },
-            })
-        );
-    };
+    const handleClickItem = (id: string) => dispatch(actions.changeCreatorId(id));
 
     return (
         <Box minHeight={250}>
@@ -34,7 +27,7 @@ export default function ArtistsSpotlight() {
                             justifyContent="center"
                             alignItems="center"
                             m={2}
-                            onClick={() => handleClickItem(artist.name[0])}
+                            onClick={() => handleClickItem(artist._id)}
                             sx={{
                                 backgroundColor: theme.palette.grey[100],
                                 ':hover': {

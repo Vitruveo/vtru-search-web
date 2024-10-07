@@ -94,6 +94,8 @@ function* getAssetsGroupByCreator() {
         const order: string = yield select((state: AppState) => state.assets.sort.order);
         const sold: string = yield select((state: AppState) => state.assets.sort.sold);
         const name: string = yield select((state: AppState) => state.filters.name);
+        const hasBts: string = yield select((state: AppState) => state.filters.hasBts);
+        const artists: string[] = yield select((state: AppState) => state.filters.tabNavigation.artists);
 
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
@@ -141,20 +143,25 @@ function* getAssetsGroupByCreator() {
 
         buildQuery.grouped = groupByCreator;
 
+        if (artists.length) {
+            buildQuery['framework.createdBy'] = {
+                $in: artists,
+            };
+        }
+
         const response: AxiosResponse<APIResponse<ResponseAssetGroupByCreator>> = yield call(
-            axios.get,
+            axios.post,
             `${API_BASE_URL}/assets/public/groupByCreator`,
             {
-                params: {
-                    query: buildQuery,
-                    limit: limit || 25,
-                    page: page || 1,
-                    name: name.trim() || null,
-                    sort: {
-                        order,
-                        isIncludeSold: sold === 'yes' ? true : false,
-                    },
+                query: buildQuery,
+                limit: limit || 25,
+                page: page || 1,
+                name: name.trim() || null,
+                sort: {
+                    order,
+                    isIncludeSold: sold === 'yes' ? true : false,
                 },
+                hasBts,
             }
         );
 
@@ -215,6 +222,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
         const filtersCreators: FilterSliceState['creators'] = yield select((state: AppState) => state.filters.creators);
+        const hasBts: FilterSliceState['hasBts'] = yield select((state: AppState) => state.filters.hasBts);
         const price: FilterSliceState['price'] = yield select((state: AppState) => state.filters.price);
         const colorPrecision: FilterSliceState['colorPrecision'] = yield select(
             (state: AppState) => state.filters.colorPrecision
@@ -286,6 +294,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 order,
                 isIncludeSold: sold === 'yes' ? true : false,
             },
+            hasBts,
         });
 
         if (page === 1 || page === 0) {
@@ -495,10 +504,32 @@ function* generateSlideshow(action: PayloadAction<GenerateSlideshowParams>) {
 
 function* getTabNavigation(action: PayloadAction<string>) {
     try {
-        const option = action.payload.toLowerCase() === 'spotlight' ? 'spotlight' : 'lastSold';
-        const ids: string[] = yield select((state: AppState) => state.assets[option].map((item) => item._id));
+        if (action.payload.toLowerCase().includes('artist')) {
+            const ids: string[] = yield select((state: AppState) =>
+                state.assets.artistSpotlight.map((item) => item._id)
+            );
+            yield put(actionsFilter.changeTabNavigation({ assets: [], title: action.payload, artists: ids }));
 
-        yield put(actionsFilter.changeTabNavigation({ assets: ids, title: action.payload }));
+            // clear others
+            yield put(actionsFilter.clearGrid());
+            yield put(actionsFilter.clearSlideshow());
+            yield put(actionsFilter.clearVideo());
+
+            yield put(actions.setInitialPage());
+
+            yield put(
+                actions.setGroupByCreator({
+                    active: 'all',
+                    name: '',
+                })
+            );
+
+            return;
+        }
+
+        const option = action.payload.toLowerCase().includes('spotlight') ? 'spotlight' : 'lastSold';
+        const ids: string[] = yield select((state: AppState) => state.assets[option].map((item) => item._id));
+        yield put(actionsFilter.changeTabNavigation({ assets: ids, title: action.payload, artists: [] }));
 
         // clear others
         yield put(actionsFilter.clearGrid());
@@ -542,6 +573,7 @@ export function* assetsSagas() {
         takeEvery(actionsFilter.changeColorPrecision.type, getAssets),
         takeEvery(actionsFilter.changeCreatorId.type, getAssets),
         takeEvery(actionsFilter.changePortfolioWallets.type, getAssets),
+        takeEvery(actionsFilter.changeHasBts.type, getAssets),
 
         // Group by creator
         takeEvery(actions.startGrouped.type, getAssetsGroupByCreator),
@@ -553,6 +585,7 @@ export function* assetsSagas() {
         takeEvery(actionsFilter.change.type, getAssetsGroupByCreator),
         debounce(1000, actionsFilter.changeName.type, getAssetsGroupByCreator),
         takeEvery(actionsFilter.changePortfolioWallets.type, getAssetsGroupByCreator),
+        takeEvery(actionsFilter.changeHasBts.type, getAssetsGroupByCreator),
 
         // Sold
         takeEvery(actions.loadAssetsLastSold.type, getAssetsLastSold),

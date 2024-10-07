@@ -58,7 +58,7 @@ const language: Translation = {
     'search.assetFilter.taxonomy.title.style': 'سبک',
     'search.assetFilter.taxonomy.title.subject': 'موضوع',
 
-    'search.assetFilter.creators': 'خالقان',
+    'search.assetFilter.creators': 'هنرمندان',
     'search.assetFilter.creators.title': 'عنوان',
     'search.assetFilter.creators.title.name': 'نام',
     'search.assetFilter.creators.title.profileUrl': 'آدرس اینترنتی پروفایل',
