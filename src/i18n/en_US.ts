@@ -58,7 +58,7 @@ const language: Translation = {
     'search.assetFilter.taxonomy.title.style': 'Style',
     'search.assetFilter.taxonomy.title.subject': 'Subject',
 
-    'search.assetFilter.creators': 'Creators',
+    'search.assetFilter.creators': 'Artists',
     'search.assetFilter.creators.title': 'Title',
     'search.assetFilter.creators.title.name': 'Name',
     'search.assetFilter.creators.title.profileUrl': 'Profile URL',

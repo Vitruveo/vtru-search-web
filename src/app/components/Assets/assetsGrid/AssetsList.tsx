@@ -383,9 +383,9 @@ const AssetsList = () => {
                         </Box>
 
                         <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
-                            <Typography variant="h4">Creators:</Typography>
+                            <Typography variant="h4">Artists:</Typography>
                             <Select
-                                placeholder="Creators"
+                                placeholder="Artists"
                                 options={optionsForSelectGrouped}
                                 value={optionsForSelectGrouped.find((option) => option.value === groupByCreator)}
                                 onChange={(e) => handleChangeSelectGroupByCreator(e)}
