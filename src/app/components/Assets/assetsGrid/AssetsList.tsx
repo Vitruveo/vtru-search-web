@@ -211,7 +211,7 @@ const AssetsList = () => {
         params.set('sort_sold', 'no');
         params.set('taxonomy_aiGeneration', 'partial,none');
         params.set('taxonomy_nudity', 'no');
-        params.set('groupByCreator', 'no');
+        params.set('groupByCreator', 'all');
         params.delete('creatorId');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
@@ -265,7 +265,17 @@ const AssetsList = () => {
             })
         );
 
-        if (['no'].includes(value)) dispatch(actions.loadAssets({ page: 1 }));
+        if (['no'].includes(value)) {
+            dispatch(actionsFilters.resetCreatorId());
+            params.delete('creatorId');
+            window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+            dispatch(actions.loadAssets({ page: 1 }));
+        }
+    };
+
+    const handleChangeCurateStack = () => {
+        curateStack.toggle();
+        if (!curateStack.isActive) handleChangeSelectGroupByCreator({ value: 'no', label: 'Ungrouped – All' });
     };
 
     const handleSelectAll = () => {
@@ -453,7 +463,7 @@ const AssetsList = () => {
                         )}
 
                         <Box display="flex" alignItems="center">
-                            <Switch onChange={curateStack.toggle} checked={curateStack.isActive} />
+                            <Switch onChange={handleChangeCurateStack} checked={curateStack.isActive} />
                             <Box display={'flex'} gap={1}>
                                 <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
                                     {language['search.assetList.curateStack'] as string}
@@ -495,8 +505,8 @@ const AssetsList = () => {
                         !slideshow &&
                         !creatorId &&
                         !portfolioWallets &&
-                        tabNavigation.assets.length <= 0 &&
-                        tabNavigation.artists.length <= 0 && <TabSliders />}
+                        tabNavigation.assets?.length <= 0 &&
+                        tabNavigation.artists?.length <= 0 && <TabSliders />}
                 </Grid>
 
                 <Grid item xs={12} mr={4} mb={4}>
@@ -510,12 +520,12 @@ const AssetsList = () => {
                     >
                         {hasCurated ||
                         !hasIncludesGroupActive ||
-                        tabNavigation.assets.length > 0 ||
-                        tabNavigation.artists.length > 0 ? (
+                        tabNavigation.assets?.length > 0 ||
+                        tabNavigation.artists?.length > 0 ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
                                 {(hasCurated ||
-                                    tabNavigation.assets.length > 0 ||
-                                    tabNavigation.artists.length > 0) && (
+                                    tabNavigation.assets?.length > 0 ||
+                                    tabNavigation.artists?.length > 0) && (
                                     <Typography variant="h4">
                                         {gridTitle ||
                                             videoTitle ||
@@ -531,8 +541,8 @@ const AssetsList = () => {
                                 )}
                                 {(hasCurated ||
                                     hasIncludesGroup.name ||
-                                    tabNavigation.assets.length > 0 ||
-                                    tabNavigation.artists.length > 0) && (
+                                    tabNavigation.assets?.length > 0 ||
+                                    tabNavigation.artists?.length > 0) && (
                                     <button
                                         style={{
                                             border: 'none',
@@ -737,8 +747,8 @@ const AssetsList = () => {
                                     !slideshow &&
                                     !creatorId &&
                                     !portfolioWallets &&
-                                    tabNavigation.assets.length <= 0 &&
-                                    tabNavigation.artists.length <= 0 && (
+                                    tabNavigation.assets?.length <= 0 &&
+                                    tabNavigation.artists?.length <= 0 && (
                                         <Grid item display={'flex'} justifyContent={'center'}>
                                             <AssetCardContainer key={1}>
                                                 <Box width={'100%'} height={'100%'}>

@@ -5,13 +5,17 @@ import { useTheme } from '@mui/material/styles';
 import Marquee from 'react-fast-marquee';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import { actions } from '@/features/filters/slice';
+import { actions as actionsAssets } from '@/features/assets/slice';
 
 export default function ArtistsSpotlight() {
     const dispatch = useDispatch();
     const artists = useSelector((state) => state.assets.artistSpotlight);
     const theme = useTheme();
 
-    const handleClickItem = (id: string) => dispatch(actions.changeCreatorId(id));
+    const handleClickItem = (id: string) => {
+        dispatch(actionsAssets.setGroupByCreator({ active: 'no', name: '' }));
+        dispatch(actions.changeCreatorId(id));
+    };
 
     return (
         <Box minHeight={250}>

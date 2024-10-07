@@ -24,6 +24,7 @@ export const AvatarProfile = () => {
 
     const handleLogout = () => {
         dispatch(actionsCreator.logout());
+        localStorage.removeItem('auth');
         disconnectWebSocket();
     };
 
