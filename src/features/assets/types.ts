@@ -11,6 +11,7 @@ export interface AssetsSliceState {
     tags: Tags[];
     spotlight: SpotlightAsset[];
     lastSold: LastSoldAsset[];
+    artistSpotlight: ArtistsSpotlight[];
     creator: Creator;
     slideshow: string;
     video: string;
@@ -138,6 +139,14 @@ export interface LastSoldAsset {
 }
 
 export type ResponseAssetsLastSold = LastSoldAsset[];
+
+export interface ArtistsSpotlight {
+    _id: string;
+    name: string[];
+    avatar: string;
+}
+
+export type ResponseArtistsSpotlight = ArtistsSpotlight[];
 
 export interface ResponseAssets {
     data: Asset[];

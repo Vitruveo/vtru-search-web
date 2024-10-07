@@ -10,6 +10,7 @@ const Language = () => {
     const open = Boolean(anchorEl);
 
     const customizer = useSelector((state) => state.customizer);
+
     const { language } = useI18n();
 
     const texts = {
@@ -63,17 +64,20 @@ const Language = () => {
     return (
         <>
             <IconButton
+                size="small"
                 aria-label="more"
                 id="long-button"
                 aria-controls={open ? 'long-menu' : undefined}
                 aria-expanded={open ? 'true' : undefined}
                 aria-haspopup="true"
                 onClick={handleClick}
-                style={{
-                    marginLeft: '-9px',
-                }}
+                sx={{ padding: 0, margin: 0, lineHeight: '1' }}
             >
-                <Avatar src={currentLang.icon} alt={currentLang.value} sx={{ width: 35, height: 35 }} />
+                <Avatar
+                    src={currentLang.icon}
+                    alt={currentLang.value}
+                    sx={{ width: 29, height: 29, borderRadius: '0px', margin: 0, padding: 0, lineHeight: '1' }}
+                />
             </IconButton>
             <Menu
                 id="long-menu"

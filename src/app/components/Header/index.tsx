@@ -1,17 +1,16 @@
-import Image from 'next/image';
 import { useDispatch } from 'react-redux';
-import { AppBar, Box, Button, IconButton, Stack, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Box, IconButton, Stack, Toolbar, Tooltip, Typography } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { IconMenu2, IconMoon, IconPlus, IconSun } from '@tabler/icons-react';
+import { IconMenu2, IconMoon, IconSun } from '@tabler/icons-react';
 import { useSelector } from '@/store/hooks';
 import { actions } from '@/features/layout';
-import { customizerActionsCreators } from '@/features/customizer';
-import { STUDIO_BASE_URL } from '@/constants/api';
 import Language from '../Language';
 import { AvatarProfile } from '../AvatarProfile';
 import Logo from '../Shared/Logo';
 import { Rss } from '../Rss';
+import AllProjectsMenu from '../AllProjectsMenu';
+import { customizerActionsCreators } from '@/features/customizer';
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -51,7 +50,7 @@ const Header = () => {
     };
 
     return (
-        <AppBarStyled position="sticky" color="default" elevation={8}>
+        <AppBarStyled position="sticky" color="default" elevation={0}>
             <ToolbarStyled
                 sx={{
                     maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
@@ -70,39 +69,27 @@ const Header = () => {
                 <Box flexGrow={1} display="flex" alignItems="center" justifyContent="center">
                     {paused && <Typography variant="h3">⚠️ Store currently undergoing maintenance</Typography>}
                 </Box>
-
+                {!lgDown && <AllProjectsMenu />}
                 <Stack
-                    spacing={1}
+                    spacing={2}
+                    height={40}
                     direction="row"
+                    justifyContent="center"
                     alignItems="center"
                     style={{
-                        marginRight: '59px',
+                        marginRight: '70px',
                     }}
                 >
-                    <IconButton onClick={handleToggleTheme}>
-                        {customizer.activeMode === 'dark' ? <IconSun /> : <IconMoon />}
-                    </IconButton>
-                    <Tooltip
-                        title="Join Vitruveo"
-                        arrow
-                        componentsProps={{
-                            tooltip: {
-                                sx: { fontSize: '0.8rem' },
-                            },
-                        }}
-                    >
-                        <Button
-                            variant="contained"
-                            onClick={() => window.open(`${STUDIO_BASE_URL}/login`, '_blank')}
-                            sx={{ borderRadius: 0.5, display: 'flex', gap: 1.2, padding: '0.35rem 0.4rem' }}
-                        >
-                            <IconPlus size={16} />
-                            <Image src="/images/logos/VTRU_Studio.png" width={18} height={18} alt="studio logo" />
-                        </Button>
-                    </Tooltip>
                     <Rss />
                     <Language />
                     {isLogged && <AvatarProfile />}
+                    <IconButton size="small" sx={{ padding: 0 }} onClick={handleToggleTheme}>
+                        {customizer.activeMode === 'dark' ? (
+                            <IconSun width={29} height={29} />
+                        ) : (
+                            <IconMoon width={29} height={29} />
+                        )}
+                    </IconButton>
                 </Stack>
             </ToolbarStyled>
         </AppBarStyled>

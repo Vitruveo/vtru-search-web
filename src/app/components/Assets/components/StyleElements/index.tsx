@@ -26,6 +26,7 @@ export default function StyleElements() {
         setCopyEmbed('Copy Embed');
     };
 
+    const customizer = useSelector((state) => state.customizer);
     const hiddenElement = useSelector((state) => state.customizer.hidden);
     const [state, dispatchAction] = useReducer(reducer, initialState);
     const [copyUrl, setCopyUrl] = useState('Copy URL');
@@ -69,19 +70,21 @@ export default function StyleElements() {
 
     return (
         <Box>
-            <Tooltip
-                title="Settings"
-                arrow
-                componentsProps={{
-                    tooltip: {
-                        sx: { fontSize: '0.8rem' },
-                    },
-                }}
-            >
-                <IconButton onClick={handleClick}>
-                    <IconSettingsFilled />
-                </IconButton>
-            </Tooltip>
+            <Box sx={{ height: 29, paddingLeft: 0.5, display: 'flex' }}>
+                <Tooltip
+                    title="Settings"
+                    arrow
+                    componentsProps={{
+                        tooltip: {
+                            sx: { fontSize: '0.8rem' },
+                        },
+                    }}
+                >
+                    <IconButton size="small" sx={{ padding: 0 }} onClick={handleClick}>
+                        <IconSettingsFilled height={29} />
+                    </IconButton>
+                </Tooltip>
+            </Box>
             <Menu
                 anchorEl={anchorEl}
                 open={open}
@@ -106,7 +109,7 @@ export default function StyleElements() {
                     <Switch
                         onChange={() => handleChange('recentlySold', TypeAction.SET_RECENTLYSOLD)}
                         checked={state.recentlySold}
-                        disabled={state.spotlight && state.assets}
+                        disabled={state.spotlight && state.assets && state.artistSpotlight}
                     />
                     Hide Recently Sold
                 </MenuItem>
@@ -114,9 +117,17 @@ export default function StyleElements() {
                     <Switch
                         onChange={() => handleChange('spotlight', TypeAction.SET_SPOTLIGHT)}
                         checked={state.spotlight}
-                        disabled={state.recentlySold && state.assets}
+                        disabled={state.recentlySold && state.assets && state.artistSpotlight}
                     />
                     Hide Spotlight
+                </MenuItem>
+                <MenuItem>
+                    <Switch
+                        onChange={() => handleChange('artistSpotlight', TypeAction.SET_ARTISTSPOTLIGHT)}
+                        checked={state.artistSpotlight}
+                        disabled={state.recentlySold && state.assets && state.spotlight}
+                    />
+                    Hide Artist Spotlight
                 </MenuItem>
                 <MenuItem>
                     <Switch

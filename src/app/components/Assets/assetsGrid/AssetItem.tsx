@@ -67,11 +67,10 @@ const AssetItem = ({
     return (
         <div
             style={{
-                border: assetView === asset ? '1px solid #00d6f4' : '',
+                border: assetView === asset ? '1px solid #FF0066' : '',
                 width: 250,
                 cursor: 'pointer',
                 height: isHiddenCardDetail ? 250 : 380,
-                marginRight: '32px',
                 position: 'relative',
                 borderRadius: '15px',
             }}

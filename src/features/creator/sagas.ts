@@ -37,6 +37,18 @@ function* verifyCode() {
                 code,
             }
         );
+
+        localStorage.setItem(
+            'auth',
+            JSON.stringify({
+                id: response.data.data.creator._id,
+                token: response.data.data.token,
+                username: response.data.data.creator.username,
+                avatar: response.data.data.creator.profile.avatar,
+                email,
+            })
+        );
+
         yield put(
             actionsCreator.setLogged({
                 username: response.data.data.creator.username,

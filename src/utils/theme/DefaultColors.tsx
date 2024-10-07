@@ -65,9 +65,9 @@ const baseDarkTheme = {
     direction: 'ltr',
     palette: {
         primary: {
-            main: '#00d6f4',
+            main: '#FF0066',
             light: '#ECF2FF',
-            dark: '#149cb0',
+            dark: '#CC0052',
         },
         secondary: {
             main: '#777e89',

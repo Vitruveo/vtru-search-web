@@ -55,7 +55,7 @@ export default function Slideshow({ selectedAssets, title }: VideoStackProps) {
             <>
                 <Box mt={2}>
                     <a
-                        style={{ color: '#00d6f4', textDecoration: 'underline' }}
+                        style={{ color: '#FF0066', textDecoration: 'underline' }}
                         href={url}
                         target="_blank"
                         rel="noreferrer"

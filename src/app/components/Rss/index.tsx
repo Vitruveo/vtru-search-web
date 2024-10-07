@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import { Avatar, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import Image from 'next/image';
 import Link from 'next/link';
 
 export const Rss = () => {
@@ -39,13 +38,22 @@ export const Rss = () => {
 
     return (
         <>
-            <IconButton aria-label="more" id="long-button" aria-haspopup="true" onClick={handleClick}>
-                <Image
+            <IconButton
+                sx={{ padding: 0 }}
+                aria-label="more"
+                id="long-button"
+                aria-haspopup="true"
+                onClick={handleClick}
+            >
+                <Avatar
                     src="/images/icons/rss.png"
-                    width={39}
-                    height={39}
-                    alt=""
-                    style={{ borderRadius: '50%', cursor: 'pointer' }}
+                    sx={{
+                        width: 29,
+                        height: 29,
+                        margin: 0,
+                        padding: 0,
+                        lineHeight: '1',
+                    }}
                 />
             </IconButton>
             <Menu
