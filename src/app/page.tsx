@@ -60,9 +60,9 @@ const Search = () => {
         dispatch(actions.initialParams(initialParams));
         dispatch(actionsAssets.initialSort({ order: sort_order || 'latest', sold: sort_sold || 'no' }));
 
-        if (!groupByCreator || groupByCreator === 'no' || !['noSales', 'all'].includes(groupByCreator))
+        if (groupByCreator && (groupByCreator === 'no' || !['noSales', 'all'].includes(groupByCreator)))
             dispatch(actionsAssets.startNormal());
-        else dispatch(actionsAssets.startGrouped(groupByCreator));
+        else dispatch(actionsAssets.startGrouped('all'));
     }, [searchParams]);
 
     const isInIframe = window.self !== window.top;
