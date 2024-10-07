@@ -69,7 +69,7 @@ const Header = () => {
                 <Box flexGrow={1} display="flex" alignItems="center" justifyContent="center">
                     {paused && <Typography variant="h3">⚠️ Store currently undergoing maintenance</Typography>}
                 </Box>
-
+                {!lgDown && <AllProjectsMenu />}
                 <Stack
                     spacing={2}
                     height={40}
@@ -80,7 +80,6 @@ const Header = () => {
                         marginRight: '70px',
                     }}
                 >
-                    {!lgDown && <AllProjectsMenu />}
                     <Rss />
                     <Language />
                     {isLogged && <AvatarProfile />}

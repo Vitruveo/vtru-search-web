@@ -19,9 +19,9 @@ const AllProjectsMenu = () => {
     const isDark = customizer.activeMode === 'dark';
 
     return (
-        <Box marginRight={5} display="flex" alignItems="baseline">
+        <Box marginRight={7} display="flex">
             {projects.map((v, index) => (
-                <Box key={v.title} display="flex" alignItems="baseline">
+                <Box key={v.title} display="flex">
                     <Typography
                         onClick={() => v.url && window.open(v.url, '_blank')}
                         sx={{
