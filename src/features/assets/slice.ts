@@ -38,7 +38,7 @@ export const initialState: AssetsSliceState = {
         sold: '',
     },
     groupByCreator: {
-        active: 'no',
+        active: 'all',
         name: '',
     },
     paused: false,
@@ -77,7 +77,7 @@ export const assetsSlice = createSlice({
         },
         resetGroupByCreator: (state) => {
             state.groupByCreator = {
-                active: 'no',
+                active: 'all',
                 name: '',
             };
             state.data.page = 1;

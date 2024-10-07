@@ -6,6 +6,7 @@ import { FinishedGridPayload, GridUploadParams } from './types';
 import { connectWebSocket, disconnectWebSocket, socket, socketEmit } from '@/services/socket';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { actions } from './slice';
+import { actions as actionsCreator } from '../creator/slice';
 import { TOKEN_CREATORS } from '@/constants/ws';
 import store from '@/store';
 
@@ -38,17 +39,31 @@ function* watchEvents() {
 }
 
 function* reconnect() {
-    yield call(disconnectWebSocket);
+    try {
+        yield call(disconnectWebSocket);
 
-    const { token: isLogged, id, email } = yield select((state) => state.creator);
+        const authRaw = localStorage.getItem('auth');
+        const auth = authRaw ? JSON.parse(authRaw) : null;
 
-    if (isLogged) {
-        yield call(connectWebSocket);
-        yield call(socketEmit, 'login', {
-            id,
-            email,
-            token: TOKEN_CREATORS,
-        });
+        if (auth && auth.token) {
+            yield put(
+                actionsCreator.setLogged({
+                    token: auth.token,
+                    username: auth.username,
+                    id: auth.id,
+                    avatar: auth.avatar,
+                })
+            );
+
+            yield call(connectWebSocket);
+            yield call(socketEmit, 'login', {
+                id: auth.id,
+                email: auth.email,
+                token: TOKEN_CREATORS,
+            });
+        }
+    } catch (error) {
+        // do nothing
     }
 }
 
