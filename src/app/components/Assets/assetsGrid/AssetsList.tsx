@@ -645,7 +645,7 @@ const AssetsList = () => {
                 {!isHidden?.assets && (
                     <Grid
                         container
-                        rowGap={3}
+                        rowGap={2.85}
                         columnGap={3}
                         overflow={'hidden'}
                         display={'flex'}
@@ -722,7 +722,13 @@ const AssetsList = () => {
                                 ))}
 
                                 {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) &&
-                                    !isInIframe && (
+                                    !isInIframe &&
+                                    !grid &&
+                                    !video &&
+                                    !slideshow &&
+                                    !creatorId &&
+                                    !portfolioWallets &&
+                                    tabNavigation.assets.length <= 0 && (
                                         <Grid item display={'flex'} justifyContent={'center'}>
                                             <AssetCardContainer key={1}>
                                                 <Box width={'100%'} height={'100%'}>

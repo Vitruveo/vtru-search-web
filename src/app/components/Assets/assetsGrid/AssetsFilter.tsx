@@ -58,6 +58,7 @@ const Filters = () => {
     const [taxonomyFilters, setTaxonomyFilters] = useState<number>();
     const [creatorsFilters, setCreatorsFilters] = useState<number>();
     const [isIncludeSold, setIsIncludeSold] = useState<boolean>(false);
+    const [hasBts, setHasBts] = useState<boolean>(false);
 
     const dispatch = useDispatch();
     const { language } = useI18n();
@@ -206,17 +207,21 @@ const Filters = () => {
         syncFiltersWithUrl(updatedObjectTypes, 'taxonomy_objectType');
         dispatch(actions.change({ key: 'taxonomy', value: { objectType: updatedObjectTypes } }));
     };
+    const handleChangeIsIncludeSold = () => {
+        setIsIncludeSold(!isIncludeSold);
+        generateQueryParam('sort_sold', isIncludeSold ? 'no' : 'yes');
+        dispatch(actionsAssets.setSort({ order: sort.order, sold: isIncludeSold ? 'no' : 'yes' }));
+    };
+    const handleChangeHasBTS = () => {
+        setHasBts(!hasBts);
+        generateQueryParam('hasBts', hasBts ? '' : 'yes');
+        dispatch(actions.changeHasBts(hasBts ? '' : 'yes'));
+    };
 
     const handleAddWallet = (value?: string) => {
         if (value) {
             dispatch(actions.changePortfolioWallets({ wallets: [...wallets, value] }));
         }
-    };
-
-    const handleChangeIsIncludeSold = () => {
-        setIsIncludeSold(!isIncludeSold);
-        generateQueryParam('sort_sold', isIncludeSold ? 'no' : 'yes');
-        dispatch(actionsAssets.setSort({ order: sort.order, sold: isIncludeSold ? 'no' : 'yes' }));
     };
 
     return (
@@ -243,10 +248,6 @@ const Filters = () => {
 
             <FormGroup sx={{ display: 'flex', flexDirection: 'column', marginLeft: '8%' }}>
                 <Typography variant="h4">Filters</Typography>
-                <FormControlLabel
-                    control={<Checkbox onChange={handleChangeIsIncludeSold} checked={isIncludeSold} />}
-                    label={'Include Sold'}
-                />
                 <Box display={'grid'} gridTemplateColumns="130px 130px">
                     <FormControlLabel
                         control={<Checkbox onChange={handleChangeNudity} checked={isHideNuditychecked} />}
@@ -301,6 +302,16 @@ const Filters = () => {
                             />
                         }
                         label={'Digital Art'}
+                    />
+                </Box>
+                <Box display={'grid'} gridTemplateColumns="130px 130px">
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangeIsIncludeSold} checked={isIncludeSold} />}
+                        label={'Include Sold'}
+                    />
+                    <FormControlLabel
+                        control={<Checkbox onChange={handleChangeHasBTS} checked={hasBts} />}
+                        label={'Has BTS'}
                     />
                 </Box>
             </FormGroup>
