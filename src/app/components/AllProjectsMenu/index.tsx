@@ -1,13 +1,16 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { useSelector } from '@/store/hooks';
+import { API_BASE_URL } from '@/constants/api';
+
+const isDev = API_BASE_URL.includes('dev');
 
 const projects = [
     { title: 'STACKS', url: '' },
     { title: 'SEARCH', url: '' },
     { title: 'STORES', url: '' },
     { title: 'STREAMS', url: '' },
-    { title: 'STUDIO', url: 'https://studio.vitruveo.xyz/login' },
+    { title: 'STUDIO', url: isDev ? 'https://studio.vtru.dev/login' : 'https://studio.vitruveo.xyz/login' },
     { title: 'ABOUT', url: '' },
 ];
 
@@ -25,9 +28,16 @@ const AllProjectsMenu = () => {
                             lineHeight: '1.2',
                             cursor: v.url ? 'pointer' : 'default',
                             letterSpacing: '3px',
-                            color: v.title === 'SEARCH' ? '#D7DF23' : '#5A5A5A',
+                            color:
+                                v.title === 'SEARCH'
+                                    ? '#D7DF23'
+                                    : v.url && isDark
+                                      ? 'white'
+                                      : v.url
+                                        ? 'dark'
+                                        : '#5A5A5A',
                             '&:hover': {
-                                color: v.url && isDark ? 'white' : v.url && 'black',
+                                color: v.url && isDark ? '#e0e0e0' : v.url && '#333',
                             },
                         }}
                     >
