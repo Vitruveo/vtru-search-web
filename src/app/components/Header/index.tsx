@@ -15,6 +15,7 @@ import { customizerActionsCreators } from '@/features/customizer';
 const Header = () => {
     const dispatch = useDispatch();
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
 
     const customizer = useSelector((state) => state.customizer);
     const paused = useSelector((state) => state.assets.paused);
@@ -57,11 +58,18 @@ const Header = () => {
                 }}
             >
                 {lgDown ? (
-                    <IconButton color="inherit" aria-label="menu" onClick={onMenuClick}>
-                        <IconMenu2 />
-                    </IconButton>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Box
+                            sx={{ display: 'flex', width: smUp ? 'auto' : '40px', overflow: 'hidden', marginRight: 2 }}
+                        >
+                            <Logo />
+                        </Box>
+                        <IconButton size="small" color="inherit" aria-label="menu" onClick={onMenuClick}>
+                            <IconMenu2 />
+                        </IconButton>
+                    </Box>
                 ) : (
-                    <Box sx={{ width: lgDown ? '45px' : 'auto', overflow: 'hidden' }}>
+                    <Box sx={{ width: 'auto', overflow: 'hidden' }}>
                         <Logo />
                     </Box>
                 )}

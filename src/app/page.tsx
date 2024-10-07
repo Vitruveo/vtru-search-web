@@ -23,6 +23,7 @@ const Search = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
 
     const searchParams = useSearchParams();
     const grid = searchParams.get('grid');
@@ -81,10 +82,10 @@ const Search = () => {
             <Box
                 display={isInIframe ? 'none' : 'inherit'}
                 position={'fixed'}
-                top={lgUp ? 21 : 9}
+                top={lgUp ? 21 : smUp ? 17 : 13}
                 right={-5}
                 bgcolor={theme.palette.grey[100]}
-                width={85}
+                width={lgUp || smUp ? 85 : 77}
                 zIndex={9999}
             >
                 <StyleElements />
