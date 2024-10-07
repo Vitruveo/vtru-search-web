@@ -265,7 +265,12 @@ const AssetsList = () => {
             })
         );
 
-        if (['no'].includes(value)) dispatch(actions.loadAssets({ page: 1 }));
+        if (['no'].includes(value)) {
+            dispatch(actionsFilters.resetCreatorId());
+            params.delete('creatorId');
+            window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+            dispatch(actions.loadAssets({ page: 1 }));
+        }
     };
 
     const handleChangeCurateStack = () => {
