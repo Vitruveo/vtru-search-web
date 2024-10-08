@@ -14,6 +14,8 @@ import audios from '../../../../../../public/data/sounds.json';
 interface VideoStackProps {
     selectedAssets: Asset[];
     title: string;
+    description: string;
+    fees: number;
     selectedAudio: string;
     audio: HTMLAudioElement;
     setSelectedAudio: Dispatch<SetStateAction<string>>;
@@ -27,10 +29,11 @@ export default function VideoStack({
     audio,
     setSelectedAudio,
     setGenerating,
+    description,
+    fees,
 }: VideoStackProps) {
     const { language } = useI18n();
     const dispatch = useDispatch();
-    const creatorId = useSelector((state) => state.creator.id);
     const [isPlaying, setIsPlaying] = useState(false);
     const [published, setPublished] = useState(false);
     const [timestamp, setTimestamp] = useState('');
@@ -63,9 +66,10 @@ export default function VideoStack({
         dispatch(
             actions.makeVideo({
                 artworks: data,
-                title: title,
+                title,
+                description,
                 sound: audios.find((item) => item.value === selectedAudio)!.value,
-                fees: 10, // TODO: get fees from the user
+                fees,
                 timestamp: id,
             })
         );

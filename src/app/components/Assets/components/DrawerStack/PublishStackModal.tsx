@@ -1,6 +1,6 @@
 import { useI18n } from '@/app/hooks/useI18n';
 import { useDispatch } from '@/store/hooks';
-import { Modal, Box, Typography, TextField, Tab } from '@mui/material';
+import { Modal, Box, Typography, TextField, Tab, Slider } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { useState, useEffect, useMemo } from 'react';
@@ -17,19 +17,36 @@ interface PublishStackModalProps {
     onClose: () => void;
 }
 
+const curatorFeeProps = {
+    min: 0,
+    max: 25,
+    value: 10,
+};
+
 export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishStackModalProps) => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const { language } = useI18n();
     const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
     const [tabValue, setTabValue] = useState('1');
     const [selectedAudio, setSelectedAudio] = useState(audios[0].value);
     const [generating, setGenerating] = useState(false);
+    const [curatorFeeValue, setCuratorFeeValue] = useState(curatorFeeProps.value);
 
     const audio = useMemo(() => new Audio(`/audios/${selectedAudio}`), [selectedAudio]);
 
     const onTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(event.target.value);
+    };
+    const onDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setDescription(event.target.value);
+    };
+
+    const handleChangeCuratorFee = (_event: Event, newValue: number | number[]) => {
+        if (Array.isArray(newValue)) return;
+
+        setCuratorFeeValue(newValue);
     };
 
     useEffect(() => {
@@ -76,7 +93,31 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
                     <Typography width={{ xs: '100%', sm: 120 }} mb={{ xs: 1, sm: 0 }}>
                         Curator Fee
                     </Typography>
-                    <TextField rows={4} value={'10%'} fullWidth disabled />
+                    <Box width={'100%'} display={'flex'} gap={2} alignItems={'center'}>
+                        <Typography>{curatorFeeValue}%</Typography>
+                        <Typography>0</Typography>
+                        <Slider
+                            defaultValue={[curatorFeeProps.min, curatorFeeProps.max]}
+                            value={curatorFeeValue}
+                            min={curatorFeeProps.min}
+                            max={curatorFeeProps.max}
+                            onChange={handleChangeCuratorFee}
+                            disabled
+                        />
+                        <Typography>25</Typography>
+                    </Box>
+                </Box>
+
+                <Box display="flex" alignItems="center" mb={3} flexDirection={{ xs: 'column', sm: 'row' }}>
+                    <Box>
+                        <Typography width={{ xs: '100%', sm: 120 }} mb={{ xs: 1, sm: 0 }}>
+                            Description
+                        </Typography>
+                        <Typography variant="caption" width={{ xs: '100%', sm: 120 }} mb={{ xs: 1, sm: 0 }}>
+                            (Limit 200 characters)
+                        </Typography>
+                    </Box>
+                    <TextField multiline value={description} fullWidth onChange={onDescriptionChange} />
                 </Box>
 
                 <TabContext value={tabValue}>
@@ -98,14 +139,26 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
                             selectedAudio={selectedAudio}
                             setSelectedAudio={setSelectedAudio}
                             title={title.trim()}
+                            description={description.trim()}
+                            fees={curatorFeeValue}
                             setGenerating={setGenerating}
                         />
                     </TabPanel>
                     <TabPanel value="2">
-                        <GridStack selectedAssets={selectedAssets} title={title.trim()} />
+                        <GridStack
+                            selectedAssets={selectedAssets}
+                            title={title.trim()}
+                            description={description.trim()}
+                            fees={curatorFeeValue}
+                        />
                     </TabPanel>
                     <TabPanel value="3">
-                        <Slideshow selectedAssets={selectedAssets} title={title.trim()} />
+                        <Slideshow
+                            selectedAssets={selectedAssets}
+                            title={title.trim()}
+                            description={description.trim()}
+                            fees={curatorFeeValue}
+                        />
                     </TabPanel>
                 </TabContext>
             </Box>

@@ -264,6 +264,7 @@ export interface MakeVideoResponse {
 export interface MakeVideoParams {
     artworks: string[];
     title: string;
+    description: string;
     sound: string;
     fees: number;
     timestamp: string;
@@ -272,6 +273,7 @@ export interface MakeVideoParams {
 export interface GenerateSlideshowParams {
     assets: string[];
     title: string;
+    description: string;
     fees: number;
     display: string;
     interval: number;

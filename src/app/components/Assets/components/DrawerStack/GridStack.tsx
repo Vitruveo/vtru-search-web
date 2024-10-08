@@ -15,6 +15,8 @@ import { ShareButton } from './ShareButton';
 interface GridStackProps {
     selectedAssets: Asset[];
     title: string;
+    description: string;
+    fees: number;
 }
 
 const sizes = {
@@ -23,7 +25,7 @@ const sizes = {
     '4x4': 19,
 } as { [key: string]: number };
 
-export default function GridStack({ selectedAssets, title }: GridStackProps) {
+export default function GridStack({ selectedAssets, title, description, fees }: GridStackProps) {
     const captureRef = useRef<HTMLDivElement | null>(null);
     const dispatch = useDispatch();
     const { language } = useI18n();
@@ -61,9 +63,10 @@ export default function GridStack({ selectedAssets, title }: GridStackProps) {
             actions.gridUpload({
                 assetsId: selectedAssets.map((item) => item._id.toLowerCase()).slice(0, size ** 2),
                 assets: selectedAssets.map((item) => item.formats.preview.path).slice(0, size ** 2),
-                fees: 10,
+                fees,
                 size,
                 title,
+                description,
             })
         );
     };
