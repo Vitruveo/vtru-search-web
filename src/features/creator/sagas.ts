@@ -41,7 +41,7 @@ function* verifyCode() {
 
         // save cookie
         const host = window.location.hostname;
-        const domain = host.replace('studio.', '');
+        const domain = host.replace('search.', '');
 
         cookie.set('auth', response.data.data.token, { path: '/', domain });
 
