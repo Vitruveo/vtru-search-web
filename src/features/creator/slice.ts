@@ -25,6 +25,8 @@ export const creatorSlice = createSlice({
             state.code = '';
             state.wasSended = false;
             state.avatar = '';
+            state.username = '';
+            state.id = '';
         },
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload;

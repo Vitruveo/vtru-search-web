@@ -32,6 +32,7 @@ const Search = () => {
     const groupByCreator = searchParams.get('groupByCreator');
     const sort_sold = searchParams.get('sort_sold');
     const sort_order = searchParams.get('sort_order');
+    const creatorId = searchParams.get('creatorId');
 
     useEffect(() => {
         params.forEach((param) => {
@@ -61,7 +62,9 @@ const Search = () => {
         dispatch(actions.initialParams(initialParams));
         dispatch(actionsAssets.initialSort({ order: sort_order || 'latest', sold: sort_sold || 'no' }));
 
-        if (groupByCreator && (groupByCreator === 'no' || !['noSales', 'all'].includes(groupByCreator)))
+        if (creatorId) {
+            dispatch(actionsAssets.startNormal());
+        } else if (groupByCreator && (groupByCreator === 'no' || !['noSales', 'all'].includes(groupByCreator)))
             dispatch(actionsAssets.startNormal());
         else dispatch(actionsAssets.startGrouped('all'));
     }, [searchParams]);

@@ -85,6 +85,10 @@ const Filters = () => {
     }, [sort]);
 
     useEffect(() => {
+        setHasBts(values.hasBts === 'yes' ? true : false);
+    }, [values.hasBts]);
+
+    useEffect(() => {
         const updateFilters = (
             fieldName: keyof FilterSliceState,
             setFilters: React.Dispatch<React.SetStateAction<number | undefined>>

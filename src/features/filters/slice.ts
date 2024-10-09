@@ -259,6 +259,7 @@ export const filterSlice = createSlice({
             state.reseted += 1;
             state.creatorId = '';
             state.portfolio = initialState.portfolio;
+            state.hasBts = '';
             clearAssetsFromURL();
         },
         changePrice: (state, action: PayloadAction<{ min: number; max: number }>) => {
