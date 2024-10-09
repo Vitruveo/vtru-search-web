@@ -41,6 +41,7 @@ export const creatorSlice = createSlice({
             state.token = action.payload.token;
             state.username = action.payload.username;
             state.id = action.payload.id;
+            state.avatar = action.payload.avatar;
         },
         wasSended: (state) => {
             state.wasSended = true;

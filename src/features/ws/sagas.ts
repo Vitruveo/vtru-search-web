@@ -1,5 +1,6 @@
 import { API_BASE_URL } from '@/constants/api';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import cookie from 'cookiejs';
 import { all, call, put, select, takeLatest } from 'redux-saga/effects';
 import { toastrActionsCreators } from '../toastr/slice';
 import { FinishedGridPayload, GridUploadParams } from './types';
@@ -9,6 +10,7 @@ import { actions } from './slice';
 import { actions as actionsCreator } from '../creator/slice';
 import { TOKEN_CREATORS } from '@/constants/ws';
 import store from '@/store';
+import { APIResponse } from '../common/types';
 
 function* gridUpload(action: PayloadAction<GridUploadParams>) {
     try {
@@ -42,23 +44,37 @@ function* reconnect() {
     try {
         yield call(disconnectWebSocket);
 
-        const authRaw = localStorage.getItem('auth');
-        const auth = authRaw ? JSON.parse(authRaw) : null;
+        const auth = cookie.get('auth');
 
-        if (auth && auth.token) {
+        if (!auth || typeof auth !== 'string') return;
+
+        const me: AxiosResponse<
+            APIResponse<{
+                _id: string;
+                username: string;
+                emails: { email: string }[];
+                profile: { avatar: string };
+            }>
+        > = yield call(axios.get, `${API_BASE_URL}/creators/me`, {
+            headers: {
+                Authorization: `Bearer ${auth}`,
+            },
+        });
+
+        if (me.data) {
             yield put(
                 actionsCreator.setLogged({
-                    token: auth.token,
-                    username: auth.username,
-                    id: auth.id,
-                    avatar: auth.avatar,
+                    username: me.data.data.username,
+                    token: auth,
+                    id: me.data.data._id,
+                    avatar: me.data.data.profile.avatar,
                 })
             );
 
             yield call(connectWebSocket);
             yield call(socketEmit, 'login', {
-                id: auth.id,
-                email: auth.email,
+                id: me.data.data._id,
+                email: me.data.data.emails[0].email,
                 token: TOKEN_CREATORS,
             });
         }
