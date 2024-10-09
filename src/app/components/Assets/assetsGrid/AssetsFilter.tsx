@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { IconSearch } from '@tabler/icons-react';
+import { IconSearch, IconX } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
 import {
     InputAdornment,
@@ -15,6 +15,8 @@ import {
     Checkbox,
     FormGroup,
     FormControlLabel,
+    IconButton,
+    useTheme,
 } from '@mui/material';
 
 import chunkArray from '@/utils/chunkArray';
@@ -23,6 +25,7 @@ import generateQueryParam from '@/utils/generateQueryParam';
 import assetsMetadata from '@/mock/assetsMetadata.json';
 import { useSelector } from '@/store/hooks';
 import { actions } from '@/features/filters/slice';
+import { actions as actionsLayout } from '@/features/layout';
 import { actions as actionsAssets } from '@/features/assets/slice';
 import { FilterSliceState } from '@/features/filters/types';
 
@@ -60,9 +63,10 @@ const Filters = () => {
     const [isIncludeSold, setIsIncludeSold] = useState<boolean>(false);
     const [hasBts, setHasBts] = useState<boolean>(false);
 
+    const theme = useTheme();
     const dispatch = useDispatch();
     const { language } = useI18n();
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
+    const isSmallScreen = useMediaQuery((them: Theme) => them.breakpoints.down('lg'));
 
     const values = useSelector((state) => state.filters);
     const { tags, maxPrice, sort } = useSelector((state) => state.assets);
@@ -224,358 +228,384 @@ const Filters = () => {
         }
     };
 
+    const onCloseClick = () => {
+        dispatch(actionsLayout.toggleSidebar());
+    };
+
     return (
-        <Stack gap={2} p={1} pb={2} mt={1} pt={isSmallScreen ? 8 : 1} height="92vh" overflow="auto">
-            <OutlinedInput
-                id="outlined-search"
-                placeholder={language['search.assetFilter.search.placeholder'] as string}
-                size="small"
-                type="search"
-                color="primary"
-                notched
-                startAdornment={
-                    <InputAdornment position="start">
-                        <IconSearch size="14" />
-                    </InputAdornment>
-                }
-                fullWidth
-                value={values.name}
-                onChange={(e) => {
-                    generateQueryParam('name', e.target.value);
-                    dispatch(actions.changeName({ name: e.target.value }));
-                }}
-            />
+        <Box pt={isSmallScreen ? 2.2 : 0}>
+            {isSmallScreen && (
+                <Box sx={{ width: '100%', textAlign: 'right', paddingInline: 1 }}>
+                    <IconButton
+                        size="small"
+                        sx={{ color: theme.palette.grey[300] }}
+                        aria-label="close"
+                        onClick={onCloseClick}
+                    >
+                        <IconX />
+                    </IconButton>
+                </Box>
+            )}
 
-            <FormGroup sx={{ display: 'flex', flexDirection: 'column', marginLeft: '8%' }}>
-                <Typography variant="h4">Filters</Typography>
-                <Box display={'grid'} gridTemplateColumns="130px 130px">
-                    <FormControlLabel
-                        control={<Checkbox onChange={handleChangeNudity} checked={isHideNuditychecked} />}
-                        label={'Hide Nudity'}
-                    />
-                    <FormControlLabel
-                        control={<Checkbox onChange={handleChangeAI} checked={isHideAIchecked} />}
-                        label={'Hide AI'}
-                    />
-                </Box>
+            <Stack gap={2} p={1} pb={2} mt={1} height="81vh" overflow="auto">
+                <OutlinedInput
+                    id="outlined-search"
+                    placeholder={language['search.assetFilter.search.placeholder'] as string}
+                    size="small"
+                    type="search"
+                    color="primary"
+                    notched
+                    startAdornment={
+                        <InputAdornment position="start">
+                            <IconSearch size="14" />
+                        </InputAdornment>
+                    }
+                    fullWidth
+                    value={values.name}
+                    onChange={(e) => {
+                        generateQueryParam('name', e.target.value);
+                        dispatch(actions.changeName({ name: e.target.value }));
+                    }}
+                />
 
-                <Box display={'grid'} gridTemplateColumns="130px 130px">
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                onChange={handleChangePhotography}
-                                checked={selectedCategories.includes('photography')}
-                            />
-                        }
-                        label={'Photography'}
-                        sx={{
-                            width: '100%',
-                            wordBreak: 'break-word',
-                        }}
-                    />
-                    <FormControlLabel
-                        control={
-                            <Checkbox onChange={handleChangeAnimation} checked={selectedCategories.includes('video')} />
-                        }
-                        label={'Animation'}
-                        sx={{
-                            width: '100%',
-                            wordBreak: 'break-word',
-                        }}
-                    />
-                </Box>
-                <Box display={'grid'} gridTemplateColumns="130px 130px">
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                onChange={handleChangePhysicalArt}
-                                checked={selectedObjectTypes.includes('physicalart')}
-                            />
-                        }
-                        label={'Physical Art'}
-                    />
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                onChange={handleChangeDigitalArt}
-                                checked={selectedObjectTypes.includes('digitalart')}
-                            />
-                        }
-                        label={'Digital Art'}
-                    />
-                </Box>
-                <Box display={'grid'} gridTemplateColumns="130px 130px">
-                    <FormControlLabel
-                        control={<Checkbox onChange={handleChangeIsIncludeSold} checked={isIncludeSold} />}
-                        label={'Include Sold'}
-                    />
-                    <FormControlLabel
-                        control={<Checkbox onChange={handleChangeHasBTS} checked={hasBts} />}
-                        label={'Has BTS'}
-                    />
-                </Box>
-            </FormGroup>
-
-            <AssetFilterAccordion title="Licenses">
-                <Box>
-                    <Typography fontSize="0.85rem" fontWeight="700" mb={1}>
-                        Price
-                    </Typography>
-                    <Box mx={1}>
-                        <Range afterChange={afterPriceChange} />
+                <FormGroup sx={{ display: 'flex', flexDirection: 'column', marginLeft: '8%' }}>
+                    <Typography variant="h4">Filters</Typography>
+                    <Box display={'grid'} gridTemplateColumns="130px 130px">
+                        <FormControlLabel
+                            control={<Checkbox onChange={handleChangeNudity} checked={isHideNuditychecked} />}
+                            label={'Hide Nudity'}
+                        />
+                        <FormControlLabel
+                            control={<Checkbox onChange={handleChangeAI} checked={isHideAIchecked} />}
+                            label={'Hide AI'}
+                        />
                     </Box>
-                </Box>
-            </AssetFilterAccordion>
 
-            <Divider />
-
-            <AssetFilterAccordion
-                title={language['search.assetFilter.context'] as string}
-                numberOfFilters={contextFilters}
-            >
-                {Object.entries(assetsMetadata.context.schema.properties).map((item) => {
-                    const [key, value] = item;
-                    return (
-                        <ContextItem
-                            key={key}
-                            title={key as keyof Context}
-                            values={values}
-                            hidden={
-                                assetsMetadata.context.uiSchema[
-                                    key as keyof AssetsMetadata['context']['schema']['properties']
-                                ]['ui:widget'] === 'hidden'
+                    <Box display={'grid'} gridTemplateColumns="130px 130px">
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    onChange={handleChangePhotography}
+                                    checked={selectedCategories.includes('photography')}
+                                />
                             }
-                            type={
-                                assetsMetadata.context.uiSchema[
-                                    key as keyof AssetsMetadata['context']['schema']['properties']
-                                ]['ui:widget']
-                            }
-                            options={
-                                (
-                                    value as ItemsOrCultureOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrEthnicityOrGenderOrBlockchain
-                                ).enum ||
-                                (value as MoodOrMediumOrStyle)?.items?.enum ||
-                                []
-                            }
-                            onChange={(changeValue) => {
-                                syncFiltersWithUrl(changeValue, `context_${key}`);
-                                dispatch(
-                                    actions.change({
-                                        key: 'context',
-                                        value: {
-                                            [key]: changeValue,
-                                        },
-                                    })
-                                );
-                            }}
-                            onRemove={(color) => {
-                                const chunckedValues = chunkArray(params.getAll(`context${key}`), 3);
-                                const filtered = chunckedValues.filter(
-                                    (chunk) => !chunk.every((v, i) => parseInt(v) === parseInt(color[i]))
-                                );
-                                params.delete(`context${key}`);
-                                filtered.forEach((chunk) => {
-                                    params.append(`context${key}`, chunk.join(','));
-                                });
-                                window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
-                                dispatch(
-                                    actions.change({
-                                        key: 'context',
-                                        value: {
-                                            [key]: (
-                                                values.context[
-                                                    key as keyof AssetsMetadata['context']['schema']['properties']
-                                                ] as string[]
-                                            ).filter((itemColor) => itemColor !== color),
-                                        },
-                                    })
-                                );
+                            label={'Photography'}
+                            sx={{
+                                width: '100%',
+                                wordBreak: 'break-word',
                             }}
                         />
-                    );
-                })}
-            </AssetFilterAccordion>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    onChange={handleChangeAnimation}
+                                    checked={selectedCategories.includes('video')}
+                                />
+                            }
+                            label={'Animation'}
+                            sx={{
+                                width: '100%',
+                                wordBreak: 'break-word',
+                            }}
+                        />
+                    </Box>
+                    <Box display={'grid'} gridTemplateColumns="130px 130px">
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    onChange={handleChangePhysicalArt}
+                                    checked={selectedObjectTypes.includes('physicalart')}
+                                />
+                            }
+                            label={'Physical Art'}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    onChange={handleChangeDigitalArt}
+                                    checked={selectedObjectTypes.includes('digitalart')}
+                                />
+                            }
+                            label={'Digital Art'}
+                        />
+                    </Box>
+                    <Box display={'grid'} gridTemplateColumns="130px 130px">
+                        <FormControlLabel
+                            control={<Checkbox onChange={handleChangeIsIncludeSold} checked={isIncludeSold} />}
+                            label={'Include Sold'}
+                        />
+                        <FormControlLabel
+                            control={<Checkbox onChange={handleChangeHasBTS} checked={hasBts} />}
+                            label={'Has BTS'}
+                        />
+                    </Box>
+                </FormGroup>
 
-            <Divider />
+                <AssetFilterAccordion title="Licenses">
+                    <Box>
+                        <Typography fontSize="0.85rem" fontWeight="700" mb={1}>
+                            Price
+                        </Typography>
+                        <Box mx={1}>
+                            <Range afterChange={afterPriceChange} />
+                        </Box>
+                    </Box>
+                </AssetFilterAccordion>
 
-            <AssetFilterAccordion
-                title={language['search.assetFilter.taxonomy'] as string}
-                numberOfFilters={taxonomyFilters}
-            >
-                {Object.entries(assetsMetadata.taxonomy.schema.properties).map((item) => {
-                    const [key, value] = item;
+                <Divider />
 
-                    // TODO: CORRIGIR TIPAGEM
-                    return (
-                        <TaxonomyItem
-                            loadOptionsEndpoint={
-                                (
+                <AssetFilterAccordion
+                    title={language['search.assetFilter.context'] as string}
+                    numberOfFilters={contextFilters}
+                >
+                    {Object.entries(assetsMetadata.context.schema.properties).map((item) => {
+                        const [key, value] = item;
+                        return (
+                            <ContextItem
+                                key={key}
+                                title={key as keyof Context}
+                                values={values}
+                                hidden={
+                                    assetsMetadata.context.uiSchema[
+                                        key as keyof AssetsMetadata['context']['schema']['properties']
+                                    ]['ui:widget'] === 'hidden'
+                                }
+                                type={
+                                    assetsMetadata.context.uiSchema[
+                                        key as keyof AssetsMetadata['context']['schema']['properties']
+                                    ]['ui:widget']
+                                }
+                                options={
+                                    (
+                                        value as ItemsOrCultureOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrEthnicityOrGenderOrBlockchain
+                                    ).enum ||
+                                    (value as MoodOrMediumOrStyle)?.items?.enum ||
+                                    []
+                                }
+                                onChange={(changeValue) => {
+                                    syncFiltersWithUrl(changeValue, `context_${key}`);
+                                    dispatch(
+                                        actions.change({
+                                            key: 'context',
+                                            value: {
+                                                [key]: changeValue,
+                                            },
+                                        })
+                                    );
+                                }}
+                                onRemove={(color) => {
+                                    const chunckedValues = chunkArray(params.getAll(`context${key}`), 3);
+                                    const filtered = chunckedValues.filter(
+                                        (chunk) => !chunk.every((v, i) => parseInt(v) === parseInt(color[i]))
+                                    );
+                                    params.delete(`context${key}`);
+                                    filtered.forEach((chunk) => {
+                                        params.append(`context${key}`, chunk.join(','));
+                                    });
+                                    window.history.pushState(
+                                        {},
+                                        '',
+                                        `${window.location.pathname}?${params.toString()}`
+                                    );
+                                    dispatch(
+                                        actions.change({
+                                            key: 'context',
+                                            value: {
+                                                [key]: (
+                                                    values.context[
+                                                        key as keyof AssetsMetadata['context']['schema']['properties']
+                                                    ] as string[]
+                                                ).filter((itemColor) => itemColor !== color),
+                                            },
+                                        })
+                                    );
+                                }}
+                            />
+                        );
+                    })}
+                </AssetFilterAccordion>
+
+                <Divider />
+
+                <AssetFilterAccordion
+                    title={language['search.assetFilter.taxonomy'] as string}
+                    numberOfFilters={taxonomyFilters}
+                >
+                    {Object.entries(assetsMetadata.taxonomy.schema.properties).map((item) => {
+                        const [key, value] = item;
+
+                        // TODO: CORRIGIR TIPAGEM
+                        return (
+                            <TaxonomyItem
+                                loadOptionsEndpoint={
+                                    (
+                                        assetsMetadata.taxonomy.uiSchema[
+                                            key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                        ] as any
+                                    )['ui:options']?.loadOptionsEndpoint
+                                }
+                                key={key}
+                                title={key as keyof Taxonomy}
+                                values={values}
+                                tags={tags || []}
+                                hidden={
                                     assetsMetadata.taxonomy.uiSchema[
                                         key as keyof AssetsMetadata['taxonomy']['schema']['properties']
-                                    ] as any
-                                )['ui:options']?.loadOptionsEndpoint
-                            }
-                            key={key}
-                            title={key as keyof Taxonomy}
-                            values={values}
-                            tags={tags || []}
-                            hidden={
-                                assetsMetadata.taxonomy.uiSchema[
-                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
-                                ]['ui:widget'] === 'hidden'
-                            }
-                            type={
-                                assetsMetadata.taxonomy.uiSchema[
-                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
-                                ]['ui:widget']
-                            }
-                            options={
-                                (
-                                    value as ItemsOrCultureOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrEthnicityOrGenderOrBlockchain
-                                )?.enum ||
-                                (value as MoodOrMediumOrStyle)?.items?.enum ||
-                                []
-                            }
-                            onChange={(changeValue) => {
-                                syncFiltersWithUrl(changeValue, `taxonomy_${key}`);
-                                dispatch(
-                                    actions.change({
-                                        key: 'taxonomy',
-                                        value: {
-                                            [key]: changeValue,
-                                        },
-                                    })
-                                );
-                            }}
-                            onRemove={(color) =>
-                                dispatch(
-                                    actions.change({
-                                        key: 'taxonomy',
-                                        value: {
-                                            [key]: (
-                                                values.taxonomy[
-                                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
-                                                ] as string[]
-                                            ).filter((itemColor) => itemColor !== color),
-                                        },
-                                    })
-                                )
-                            }
-                        />
-                    );
-                })}
-            </AssetFilterAccordion>
+                                    ]['ui:widget'] === 'hidden'
+                                }
+                                type={
+                                    assetsMetadata.taxonomy.uiSchema[
+                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                    ]['ui:widget']
+                                }
+                                options={
+                                    (
+                                        value as ItemsOrCultureOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrEthnicityOrGenderOrBlockchain
+                                    )?.enum ||
+                                    (value as MoodOrMediumOrStyle)?.items?.enum ||
+                                    []
+                                }
+                                onChange={(changeValue) => {
+                                    syncFiltersWithUrl(changeValue, `taxonomy_${key}`);
+                                    dispatch(
+                                        actions.change({
+                                            key: 'taxonomy',
+                                            value: {
+                                                [key]: changeValue,
+                                            },
+                                        })
+                                    );
+                                }}
+                                onRemove={(color) =>
+                                    dispatch(
+                                        actions.change({
+                                            key: 'taxonomy',
+                                            value: {
+                                                [key]: (
+                                                    values.taxonomy[
+                                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                                    ] as string[]
+                                                ).filter((itemColor) => itemColor !== color),
+                                            },
+                                        })
+                                    )
+                                }
+                            />
+                        );
+                    })}
+                </AssetFilterAccordion>
 
-            <Divider />
+                <Divider />
 
-            <AssetFilterAccordion
-                title={language['search.assetFilter.creators'] as string}
-                numberOfFilters={creatorsFilters}
-            >
-                {Object.entries(assetsMetadata.creators.schema.items.properties).map((item) => {
-                    const [key, value] = item;
-                    return (
-                        <CreatorsItem
-                            loadOptionsEndpoint={
-                                (
+                <AssetFilterAccordion
+                    title={language['search.assetFilter.creators'] as string}
+                    numberOfFilters={creatorsFilters}
+                >
+                    {Object.entries(assetsMetadata.creators.schema.items.properties).map((item) => {
+                        const [key, value] = item;
+                        return (
+                            <CreatorsItem
+                                loadOptionsEndpoint={
+                                    (
+                                        assetsMetadata.creators.uiSchema.items[
+                                            key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                        ] as any
+                                    )['ui:options']?.loadOptionsEndpoint
+                                }
+                                key={key}
+                                title={key as keyof Creators}
+                                values={values}
+                                hidden={
                                     assetsMetadata.creators.uiSchema.items[
                                         key as keyof AssetsMetadata['creators']['schema']['items']['properties']
-                                    ] as any
-                                )['ui:options']?.loadOptionsEndpoint
-                            }
-                            key={key}
-                            title={key as keyof Creators}
-                            values={values}
-                            hidden={
-                                assetsMetadata.creators.uiSchema.items[
-                                    key as keyof AssetsMetadata['creators']['schema']['items']['properties']
-                                ]['ui:widget'] === 'hidden'
-                            }
-                            type={
-                                assetsMetadata.creators.uiSchema.items[
-                                    key as keyof AssetsMetadata['creators']['schema']['items']['properties']
-                                ]['ui:widget']
-                            }
-                            options={(value as NationalityOrResidenceOrCountry)?.enum || []}
-                            onChange={(changeValue) => {
-                                syncFiltersWithUrl(changeValue, `creators_${key}`);
-                                dispatch(
-                                    actions.change({
-                                        key: 'creators',
-                                        value: {
-                                            [key]: changeValue,
-                                        },
-                                    })
-                                );
-                            }}
-                            onRemove={(color) =>
-                                dispatch(
-                                    actions.change({
-                                        key: 'creators',
-                                        value: {
-                                            [key]: (
-                                                values.creators[
-                                                    key as keyof AssetsMetadata['creators']['schema']['items']['properties']
-                                                ] as string[]
-                                            ).filter((itemColor) => itemColor !== color),
-                                        },
-                                    })
-                                )
-                            }
-                        />
-                    );
-                })}
-            </AssetFilterAccordion>
-
-            <Divider />
-
-            <AssetFilterAccordion
-                title={language['search.assetFilter.portfolio'] as string}
-                numberOfFilters={wallets.length}
-            >
-                <PortfolioItem
-                    handleAddWallet={(value?: string) => {
-                        handleAddWallet(value);
-                        syncFiltersWithUrl(
-                            [...wallets, value!].filter((item) => validateCryptoAddress(item)),
-                            'portfolio_wallets'
+                                    ]['ui:widget'] === 'hidden'
+                                }
+                                type={
+                                    assetsMetadata.creators.uiSchema.items[
+                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                    ]['ui:widget']
+                                }
+                                options={(value as NationalityOrResidenceOrCountry)?.enum || []}
+                                onChange={(changeValue) => {
+                                    syncFiltersWithUrl(changeValue, `creators_${key}`);
+                                    dispatch(
+                                        actions.change({
+                                            key: 'creators',
+                                            value: {
+                                                [key]: changeValue,
+                                            },
+                                        })
+                                    );
+                                }}
+                                onRemove={(color) =>
+                                    dispatch(
+                                        actions.change({
+                                            key: 'creators',
+                                            value: {
+                                                [key]: (
+                                                    values.creators[
+                                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                                    ] as string[]
+                                                ).filter((itemColor) => itemColor !== color),
+                                            },
+                                        })
+                                    )
+                                }
+                            />
                         );
-                    }}
-                />
-                <Wallets
-                    wallets={wallets}
-                    onRemove={(wallet: string) => {
-                        dispatch(
-                            actions.changePortfolioWallets({ wallets: wallets.filter((item) => item !== wallet) })
-                        );
-                        syncFiltersWithUrl(
-                            wallets.filter((item) => item !== wallet && validateCryptoAddress(item)),
-                            'portfolio_wallets'
-                        );
-                    }}
-                />
-            </AssetFilterAccordion>
+                    })}
+                </AssetFilterAccordion>
 
-            <Box>
-                <Button
-                    sx={{
-                        background: 'linear-gradient(to right, #FF0066, #9966FF)',
-                        color: '#fff',
-                        '&:hover': {
-                            background: 'linear-gradient(to right, #cc0052, #7a52cc)',
-                        },
-                    }}
-                    variant="contained"
-                    onClick={handleResetFilters}
-                    fullWidth
+                <Divider />
+
+                <AssetFilterAccordion
+                    title={language['search.assetFilter.portfolio'] as string}
+                    numberOfFilters={wallets.length}
                 >
-                    {language['search.assetFilter.resetFilters'] as string}
-                </Button>
-            </Box>
-            <Box display="flex" justifyContent="center">
-                <Version />
-            </Box>
-        </Stack>
+                    <PortfolioItem
+                        handleAddWallet={(value?: string) => {
+                            handleAddWallet(value);
+                            syncFiltersWithUrl(
+                                [...wallets, value!].filter((item) => validateCryptoAddress(item)),
+                                'portfolio_wallets'
+                            );
+                        }}
+                    />
+                    <Wallets
+                        wallets={wallets}
+                        onRemove={(wallet: string) => {
+                            dispatch(
+                                actions.changePortfolioWallets({ wallets: wallets.filter((item) => item !== wallet) })
+                            );
+                            syncFiltersWithUrl(
+                                wallets.filter((item) => item !== wallet && validateCryptoAddress(item)),
+                                'portfolio_wallets'
+                            );
+                        }}
+                    />
+                </AssetFilterAccordion>
+
+                <Box>
+                    <Button
+                        sx={{
+                            background: 'linear-gradient(to right, #FF0066, #9966FF)',
+                            color: '#fff',
+                            '&:hover': {
+                                background: 'linear-gradient(to right, #cc0052, #7a52cc)',
+                            },
+                        }}
+                        variant="contained"
+                        onClick={handleResetFilters}
+                        fullWidth
+                    >
+                        {language['search.assetFilter.resetFilters'] as string}
+                    </Button>
+                </Box>
+                <Box display="flex" justifyContent="center">
+                    <Version />
+                </Box>
+            </Stack>
+        </Box>
     );
 };
 
