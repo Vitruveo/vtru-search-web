@@ -17,7 +17,7 @@ import {
     Container,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
-import { IconArrowBarToLeft, IconCopy, IconArrowBarToRight } from '@tabler/icons-react';
+import { IconArrowBarToLeft, IconCopy, IconArrowBarToRight, IconFilter } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/assets';
@@ -332,6 +332,7 @@ const AssetsList = () => {
                     p={3}
                     pl={2}
                     style={{
+                        marginBottom: lgUp || curateStack.isActive ? '20px' : 0,
                         paddingTop: '7px',
                     }}
                 >
@@ -349,7 +350,15 @@ const AssetsList = () => {
                                 {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
                             </IconButton>
                         )}
-                        <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
+                        <Box
+                            width="100%"
+                            maxWidth={350}
+                            justifyContent="space-between"
+                            display="flex"
+                            flexDirection="row"
+                            alignItems="center"
+                            gap={1}
+                        >
                             <Typography variant="h4">Sort:</Typography>
                             <Select
                                 placeholder="Sort"
@@ -392,7 +401,15 @@ const AssetsList = () => {
                             />
                         </Box>
 
-                        <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
+                        <Box
+                            width="100%"
+                            justifyContent="space-between"
+                            display="flex"
+                            flexDirection="row"
+                            maxWidth={350}
+                            alignItems="center"
+                            gap={1}
+                        >
                             <Typography variant="h4">Artists:</Typography>
                             <Select
                                 placeholder="Artists"
@@ -435,7 +452,13 @@ const AssetsList = () => {
                             />
                         </Box>
                     </Grid>
-                    <Box mt={lgUp ? 0 : 2} display={'flex'} justifyContent={lgUp ? 'unset' : 'flex-start'}>
+                    <Box
+                        mt={lgUp ? 0 : 2}
+                        display={'flex'}
+                        flexDirection={!lgUp ? 'column-reverse' : 'row'}
+                        flexWrap="wrap"
+                        justifyContent={lgUp ? 'unset' : 'flex-start'}
+                    >
                         {curateStack.isActive && (
                             <Box display="flex" alignItems="center" gap={1}>
                                 <Button variant="contained" onClick={handleUnselectAll}>
@@ -462,12 +485,23 @@ const AssetsList = () => {
                             </Box>
                         )}
 
-                        <Box display="flex" alignItems="center">
+                        <Box sx={!lgUp ? { marginBottom: 2 } : {}} display="flex" alignItems="center">
+                            {!lgUp && (
+                                <IconButton
+                                    sx={{ marginLeft: 0, paddingLeft: 0 }}
+                                    size="small"
+                                    aria-label="menu"
+                                    onClick={onMenuClick}
+                                >
+                                    <IconFilter />
+                                </IconButton>
+                            )}
                             <Switch onChange={handleChangeCurateStack} checked={curateStack.isActive} />
                             <Box display={'flex'} gap={1}>
                                 <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
                                     {language['search.assetList.curateStack'] as string}
                                 </Typography>
+
                                 {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
                             </Box>
                         </Box>

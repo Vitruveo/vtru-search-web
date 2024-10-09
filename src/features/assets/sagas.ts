@@ -452,6 +452,7 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
             {
                 artworks: action.payload.artworks,
                 title: action.payload.title,
+                description: action.payload.description,
                 sound: action.payload.sound,
                 fees: action.payload.fees,
                 timestamp: action.payload.timestamp,
@@ -485,6 +486,7 @@ function* generateSlideshow(action: PayloadAction<GenerateSlideshowParams>) {
             {
                 assets: action.payload.assets,
                 title: action.payload.title,
+                description: action.payload.description,
                 fees: action.payload.fees,
                 display: action.payload.display,
                 interval: action.payload.interval,

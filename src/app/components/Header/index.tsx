@@ -64,9 +64,11 @@ const Header = () => {
                         >
                             <Logo />
                         </Box>
-                        <IconButton size="small" color="inherit" aria-label="menu" onClick={onMenuClick}>
+                        {lgDown && <AllProjectsMenu />}
+
+                        {/* <IconButton size="small" color="inherit" aria-label="menu" onClick={onMenuClick}>
                             <IconMenu2 />
-                        </IconButton>
+                        </IconButton> */}
                     </Box>
                 ) : (
                     <Box sx={{ width: 'auto', overflow: 'hidden' }}>
