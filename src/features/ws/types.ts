@@ -24,4 +24,5 @@ export interface GridUploadParams {
     fees: number;
     size: number;
     title: string;
+    description: string;
 }
