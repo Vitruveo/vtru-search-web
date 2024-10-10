@@ -66,6 +66,7 @@ const Search = () => {
             dispatch(actionsAssets.startNormal());
         } else if (groupByCreator && (groupByCreator === 'no' || !['noSales', 'all'].includes(groupByCreator)))
             dispatch(actionsAssets.startNormal());
+        else if (groupByCreator && groupByCreator === 'noSales') dispatch(actionsAssets.startGrouped('noSales'));
         else dispatch(actionsAssets.startGrouped('all'));
     }, [searchParams]);
 

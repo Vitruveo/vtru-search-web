@@ -267,8 +267,9 @@ const AssetsList = () => {
 
         if (['no'].includes(value)) {
             dispatch(actionsFilters.resetCreatorId());
-            params.delete('creatorId');
-            window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+            generateQueryParam('creatorId', '');
+            generateQueryParam('groupByCreator', value);
+
             dispatch(actions.loadAssets({ page: 1 }));
         }
     };
@@ -699,8 +700,8 @@ const AssetsList = () => {
                 {!isHidden?.assets && (
                     <Grid
                         container
-                        rowGap={2.85}
-                        columnGap={3}
+                        rowGap={hasIncludesGroupActive ? 2 : 2.85}
+                        columnGap={hasIncludesGroupActive ? 6 : 3}
                         overflow={'hidden'}
                         display={'flex'}
                         justifyContent={'center'}
