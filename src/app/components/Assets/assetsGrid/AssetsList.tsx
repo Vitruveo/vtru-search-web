@@ -575,6 +575,7 @@ const AssetsList = () => {
                                 )}
                                 {(hasCurated ||
                                     hasIncludesGroup.name ||
+                                    creatorId ||
                                     tabNavigation.assets?.length > 0 ||
                                     tabNavigation.artists?.length > 0) && (
                                     <button
@@ -707,10 +708,12 @@ const AssetsList = () => {
                         mr={4}
                     >
                         {isLoading ? (
-                            [...Array(4)].map((_, index) => (
-                                <AssetCardContainer key={index}>
-                                    <Skeleton variant="rectangular" width={250} height={250} />
-                                </AssetCardContainer>
+                            [...Array(15)].map((_, index) => (
+                                <Grid item key={index} display={'flex'} justifyContent={'center'}>
+                                    <AssetCardContainer>
+                                        <Skeleton variant="rectangular" width={250} height={250} />
+                                    </AssetCardContainer>
+                                </Grid>
                             ))
                         ) : assets.length > 0 ? (
                             <>

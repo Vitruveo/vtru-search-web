@@ -79,7 +79,11 @@ function* reconnect() {
             });
         }
     } catch (error) {
-        // do nothing
+        yield put(actionsCreator.logout());
+        yield call(disconnectWebSocket);
+
+        // remove cookie
+        cookie.remove('auth');
     }
 }
 
