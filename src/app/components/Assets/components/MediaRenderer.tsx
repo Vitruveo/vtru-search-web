@@ -1,6 +1,5 @@
-import Image from 'next/image';
 import { Stack, Typography, useMediaQuery } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IconPlayerPlayFilled } from '@tabler/icons-react';
 
 interface MediaRendererProps {
@@ -10,18 +9,69 @@ interface MediaRendererProps {
     preSource?: string;
 }
 
-export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false, preSource }: MediaRendererProps) => {
-    const [src, setSrc] = useState(source);
+const defaultFallbackSrc = 'https://via.placeholder.com/200';
+
+export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false }: MediaRendererProps) => {
     const isMobile = useMediaQuery('(max-width: 900px)');
+    const [src, setSrc] = useState<string | null>(null);
 
-    const onError = () => {
-        setSrc(fallbackSrc ?? 'fallback');
-    };
+    const isVideo = source.match(/\.(mp4|webm|ogg)$/) != null;
+    const isImage = source.match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
 
-    const isImage = src.match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
-    const isVideo = src.match(/\.(mp4|webm|ogg)$/) != null;
-    const preIsImage = preSource?.match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
-    const preIsVideo = preSource?.match(/\.(mp4|webm|ogg)$/) != null;
+    useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        const loadMedia = () => {
+            if (isVideo) {
+                const video = document.createElement('video');
+                video.src = source;
+                video.load();
+
+                video.onloadeddata = () => {
+                    if (!signal.aborted) {
+                        setSrc(source);
+                    }
+                };
+                video.onerror = () => {
+                    if (!signal.aborted) {
+                        setSrc(fallbackSrc || defaultFallbackSrc);
+                    }
+                };
+            }
+
+            if (isImage) {
+                const img = new Image();
+                img.src = source;
+
+                img.onload = () => {
+                    if (!signal.aborted) {
+                        setSrc(img.src);
+                    }
+                };
+
+                img.onerror = () => {
+                    if (!signal.aborted) {
+                        setSrc(fallbackSrc || defaultFallbackSrc);
+                    }
+                };
+            }
+        };
+
+        loadMedia();
+
+        return () => {
+            controller.abort();
+        };
+    }, []);
+
+    if (!src) {
+        return (
+            <Stack justifyContent="center" alignItems="center" width="100%" height="100%">
+                <Typography variant="h6">Loading</Typography>
+            </Stack>
+        );
+    }
 
     if (isVideo) {
         return (
@@ -34,11 +84,6 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false, preS
                     borderTopLeftRadius: 10,
                 }}
             >
-                {preIsVideo && (
-                    <video muted style={{ display: 'none' }}>
-                        <source src={src} type="video/mp4" />
-                    </video>
-                )}
                 <video
                     autoPlay={!isMobile || autoPlay}
                     muted
@@ -54,7 +99,6 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false, preS
                         borderTopRightRadius: 10,
                         borderTopLeftRadius: 10,
                     }}
-                    onError={onError}
                 >
                     <source src={src} type="video/mp4" />
                 </video>
@@ -67,19 +111,15 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false, preS
         );
     }
 
-    if (isImage || src === fallbackSrc) {
+    if (isImage) {
         return (
-            <>
-                {preIsImage && <Image src={src} alt="asset" width={160} height={160} style={{ display: 'none' }} />}
-                <Image
-                    src={src}
-                    alt="asset"
-                    width={160}
-                    height={160}
-                    onError={onError}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }}
-                />
-            </>
+            <img
+                src={src}
+                alt="asset"
+                width={160}
+                height={160}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }}
+            />
         );
     }
 

@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/filters/slice';
 import { ShowAnimation } from '@/animations';
 import DeckEffect from '../components/DeckEffect';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 interface Props {
     assetView: Asset;
@@ -63,6 +63,10 @@ const AssetItem = ({
             );
         }
     };
+
+    const media = useMemo(() => {
+        return `${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`;
+    }, [asset?.formats?.preview?.path]);
 
     return (
         <div
@@ -122,10 +126,7 @@ const AssetItem = ({
                 {!isHiddenCardDetail ? (
                     <>
                         <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
-                            <MediaRenderer
-                                src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
-                                fallbackSrc={'https://via.placeholder.com/250'}
-                            />
+                            <MediaRenderer src={media} fallbackSrc={'https://via.placeholder.com/250'} />
                         </Box>
 
                         <CardContent sx={{ p: 3, pt: 2 }} style={{ backgroundColor: theme.palette.grey[100] }}>
@@ -205,10 +206,7 @@ const AssetItem = ({
                         </CardContent>
                     </>
                 ) : (
-                    <MediaRenderer
-                        src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
-                        fallbackSrc={'https://via.placeholder.com/250'}
-                    />
+                    <MediaRenderer src={media} fallbackSrc={'https://via.placeholder.com/250'} />
                 )}
             </BlankCard>
         </div>
