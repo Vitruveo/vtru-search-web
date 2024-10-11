@@ -17,6 +17,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
     const isHiddenCardDetail = useSelector((state) => state.customizer.hidden?.cardDetail);
 
     const commonStyles = {
+        display: showFanEffect ? 'block' : 'none',
         width: showFanEffect ? 200 : 1,
         height: showFanEffect ? 200 : 1,
         borderRadius: '15px',
@@ -28,10 +29,10 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
     };
 
     let cards = [
-        {
-            id: 1,
-            transform: showFanEffect ? 'rotate(-30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
-        },
+        // {
+        //     id: 1,
+        //     transform: showFanEffect ? 'rotate(-30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
+        // },
         {
             id: 2,
             transform: showFanEffect ? 'rotate(-15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
@@ -44,10 +45,10 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
             id: 4,
             transform: showFanEffect ? 'rotate(15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
         },
-        {
-            id: 5,
-            transform: showFanEffect ? 'rotate(30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
-        },
+        // {
+        //     id: 5,
+        //     transform: showFanEffect ? 'rotate(30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
+        // },
     ];
 
     const effectiveCount: number = count || 0;
@@ -90,11 +91,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                 {cards.length > 1 && (
                     <>
                         {cards.map(({ transform }, index) => {
-                            const isVideo = paths[index]?.match(/\.(mp4|webm|ogg)$/) != null;
-                            let media = paths[index];
-                            if (isVideo) {
-                                media = media.replace(/\.(\w+)$/, '_thumb.jpg');
-                            }
+                            const media = paths[index]?.replace(/\.(\w+)$/, '_thumb.jpg');
 
                             return (
                                 <div
@@ -119,7 +116,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                                         alt="image"
                                         style={commonStyles}
                                         onError={(e) => {
-                                            e.currentTarget.src = 'https://via.placeholder.com/200x200';
+                                            e.currentTarget.src = 'https://via.placeholder.com/200';
                                         }}
                                     />
                                     {effectiveCount > 5 && index === cards.length - 1 && (
