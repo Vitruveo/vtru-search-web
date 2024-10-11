@@ -13,8 +13,8 @@ const projects = [
     { title: 'STREAMS', url: '' },
     { title: 'STUDIO', url: isDev ? 'https://studio.vtru.dev/login' : 'https://studio.vitruveo.xyz/login' },
     { title: 'BUY VUSD', url: '' },
-    { title: 'ABOUT XIBIT', url: 'https://about.xibit.app' },
-    { title: 'ABOUT VITRUVEO', url: 'https://vitruveo.xyz' },
+    { title: 'ABOUT XIBIT', url: 'https://about.xibit.app', onlyMobile: true },
+    { title: 'ABOUT VITRUVEO', url: 'https://vitruveo.xyz', onlyMobile: true },
 ];
 
 const AllProjectsMenu = () => {
@@ -61,14 +61,16 @@ const AllProjectsMenu = () => {
         );
     }
 
+    const deskMenus = projects.filter((v) => !v.onlyMobile);
+
     return (
         <Box marginRight={7} display="flex">
-            {projects.map((v, index) => (
+            {deskMenus.map((v, index) => (
                 <Box key={v.title} display="flex">
                     <Typography onClick={() => v.url && window.open(v.url, '_blank')} sx={getStyle(v)}>
                         {v.title}
                     </Typography>
-                    {index !== projects.length - 1 && (
+                    {index !== deskMenus.length - 1 && (
                         <Typography color={isDark ? 'white' : 'black'} sx={{ margin: '0 8px', lineHeight: '1.2' }}>
                             |
                         </Typography>

@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { AppBar, Box, IconButton, Stack, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Avatar, Box, IconButton, Stack, Toolbar, Tooltip, Typography } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { IconMenu2, IconMoon, IconSun } from '@tabler/icons-react';
@@ -50,6 +50,10 @@ const Header = () => {
         dispatch(customizerActionsCreators.setTheme(customizer.activeMode === 'light'));
     };
 
+    const handleClick = () => {
+        window.open('https://about.xibit.app', '_blank');
+    };
+
     return (
         <AppBarStyled position="sticky" color="default" elevation={0}>
             <ToolbarStyled
@@ -90,6 +94,26 @@ const Header = () => {
                         marginRight: '70px',
                     }}
                 >
+                    {!lgDown && (
+                        <IconButton
+                            sx={{ padding: 0 }}
+                            aria-label="more"
+                            id="long-button"
+                            aria-haspopup="true"
+                            onClick={handleClick}
+                        >
+                            <Avatar
+                                src={`/images/icons/xibit-icon-redondo-${customizer.activeMode !== 'dark' ? 'darkmode' : 'litemode'}.png`}
+                                sx={{
+                                    width: 29,
+                                    height: 29,
+                                    margin: 0,
+                                    padding: 0,
+                                    lineHeight: '1',
+                                }}
+                            />
+                        </IconButton>
+                    )}
                     <Rss />
                     <Language />
                     {isLogged && <AvatarProfile />}
