@@ -267,8 +267,9 @@ const AssetsList = () => {
 
         if (['no'].includes(value)) {
             dispatch(actionsFilters.resetCreatorId());
-            params.delete('creatorId');
-            window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+            generateQueryParam('creatorId', '');
+            generateQueryParam('groupByCreator', value);
+
             dispatch(actions.loadAssets({ page: 1 }));
         }
     };
@@ -575,6 +576,7 @@ const AssetsList = () => {
                                 )}
                                 {(hasCurated ||
                                     hasIncludesGroup.name ||
+                                    creatorId ||
                                     tabNavigation.assets?.length > 0 ||
                                     tabNavigation.artists?.length > 0) && (
                                     <button
@@ -698,8 +700,8 @@ const AssetsList = () => {
                 {!isHidden?.assets && (
                     <Grid
                         container
-                        rowGap={2.85}
-                        columnGap={3}
+                        rowGap={hasIncludesGroupActive ? 2 : 2.85}
+                        columnGap={hasIncludesGroupActive ? 6 : 3}
                         overflow={'hidden'}
                         display={'flex'}
                         justifyContent={'center'}
@@ -707,10 +709,12 @@ const AssetsList = () => {
                         mr={4}
                     >
                         {isLoading ? (
-                            [...Array(4)].map((_, index) => (
-                                <AssetCardContainer key={index}>
-                                    <Skeleton variant="rectangular" width={250} height={250} />
-                                </AssetCardContainer>
+                            [...Array(15)].map((_, index) => (
+                                <Grid item key={index} display={'flex'} justifyContent={'center'}>
+                                    <AssetCardContainer>
+                                        <Skeleton variant="rectangular" width={250} height={250} />
+                                    </AssetCardContainer>
+                                </Grid>
                             ))
                         ) : assets.length > 0 ? (
                             <>

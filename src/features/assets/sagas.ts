@@ -224,6 +224,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         const filtersCreators: FilterSliceState['creators'] = yield select((state: AppState) => state.filters.creators);
         const hasBts: FilterSliceState['hasBts'] = yield select((state: AppState) => state.filters.hasBts);
         const price: FilterSliceState['price'] = yield select((state: AppState) => state.filters.price);
+        const creatorName: string = yield select((state: AppState) => state.assets.groupByCreator.name);
         const colorPrecision: FilterSliceState['colorPrecision'] = yield select(
             (state: AppState) => state.filters.colorPrecision
         );
@@ -313,6 +314,11 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             })
         );
         yield put(actions.setTags(response.data.data.tags.sort((a, b) => (a.count > b.count ? -1 : 1))));
+
+        if (creatorId && !creatorName && response.data.data.data.length > 0) {
+            const artistName = response.data.data.data[0]?.assetMetadata?.creators?.formData?.[0]?.name || 'Unknown';
+            yield put(actions.changeGroupByCreatorName(artistName));
+        }
     } catch (error) {
         // Handle error
     }
