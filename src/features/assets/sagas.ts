@@ -165,7 +165,10 @@ function* getAssetsGroupByCreator() {
             }
         );
 
-        yield put(actions.loadAssetsLastSold());
+        if (page === 1 || page === 0) {
+            yield put(actions.loadAssetsLastSold());
+        }
+
         yield put(
             actions.setData({
                 data: response.data.data.data.map((item) => ({
