@@ -29,42 +29,25 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
     };
 
     let cards = [
-        // {
-        //     id: 1,
-        //     transform: showFanEffect ? 'rotate(-30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
-        // },
         {
-            id: 2,
+            id: 1,
             transform: showFanEffect ? 'rotate(-15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
         },
         {
-            id: 3,
+            id: 2,
             transform: 'rotate(0deg) translateY(0px)',
         },
         {
-            id: 4,
+            id: 3,
             transform: showFanEffect ? 'rotate(15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
         },
-        // {
-        //     id: 5,
-        //     transform: showFanEffect ? 'rotate(30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
-        // },
     ];
 
     const effectiveCount: number = count || 0;
+
     switch (effectiveCount) {
-        case 0:
-        case 1:
-            cards = cards.slice(0, 1);
-            break;
         case 2:
-            cards = cards.filter((card) => card.id !== 1 && card.id !== 3 && card.id !== 5);
-            break;
-        case 3:
-            cards = cards.filter((card) => card.id !== 1 && card.id !== 5);
-            break;
-        case 4:
-            cards = cards.filter((card) => card.id !== 3);
+            cards = cards.filter((card) => card.id === 1 || card.id === 3);
             break;
     }
 
@@ -119,7 +102,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                                             e.currentTarget.src = 'https://via.placeholder.com/200';
                                         }}
                                     />
-                                    {effectiveCount > 5 && index === cards.length - 1 && (
+                                    {effectiveCount > 3 && index === cards.length - 1 && (
                                         <p
                                             style={{
                                                 position: 'absolute',
@@ -132,7 +115,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                                                 backgroundColor: 'rgba(0, 0, 0, 0.5)',
                                             }}
                                         >
-                                            +{effectiveCount - 5} Digital Assets
+                                            +{effectiveCount - 3} Digital Assets
                                         </p>
                                     )}
                                 </div>

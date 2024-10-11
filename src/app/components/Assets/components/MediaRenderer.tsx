@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Stack, Typography, useMediaQuery } from '@mui/material';
 import { IconPlayerPlayFilled } from '@tabler/icons-react';
 
@@ -12,7 +12,7 @@ interface MediaRendererProps {
 
 const defaultFallbackSrc = 'https://via.placeholder.com/200';
 
-export const MediaRenderer = ({ src, fallbackSrc, autoPlay = false }: MediaRendererProps) => {
+const MediaRendererMain = ({ src, fallbackSrc, autoPlay = false }: MediaRendererProps) => {
     const isMobile = useMediaQuery('(max-width: 900px)');
     const [loading, setLoading] = useState(true);
 
@@ -101,3 +101,5 @@ export const MediaRenderer = ({ src, fallbackSrc, autoPlay = false }: MediaRende
         </>
     );
 };
+
+export const MediaRenderer = React.memo(MediaRendererMain); 
