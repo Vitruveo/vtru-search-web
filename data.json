@@ -1,0 +1,1026 @@
+{
+    "code": "vitruveo.studio.api.creators.stack.success",
+    "message": "Reader stack success",
+    "transaction": "lX3MsinBkgL0ydZb07MLr",
+    "data": {
+        "data": [
+            {
+                "_id": "662351370903ef02962fa960",
+                "username": "matheuspaice",
+                "stacks": {},
+                "assetDetails": [
+                    {
+                        "preview": "65fe8e5b59e94e78747e1f81/1711181835403.jpeg"
+                    },
+                    {
+                        "preview": "664360c64ec5211f0bca3e1b/1715691966239.jpeg"
+                    },
+                    {
+                        "preview": "6643a3724ec5211f0bca3e46/1715709073772.jpeg"
+                    },
+                    {
+                        "preview": "6643aa5f4ec5211f0bca3e51/1715716969636.jpeg"
+                    },
+                    {
+                        "preview": "6643aac64ec5211f0bca3e52/1715775868826.jpeg"
+                    },
+                    {
+                        "preview": "6643ab704ec5211f0bca3e54/1715712196059.jpeg"
+                    },
+                    {
+                        "preview": "6643afc34ec5211f0bca3e5b/1715712472651.jpeg"
+                    },
+                    {
+                        "preview": "6643c49c4ec5211f0bca3e69/1715798327791.jpeg"
+                    },
+                    {
+                        "preview": "6643ac0e4ec5211f0bca3e55/1715727625552.jpeg"
+                    },
+                    {
+                        "preview": "6643d9d94ec5211f0bca3e75/1715723340786.jpeg"
+                    },
+                    {
+                        "preview": "6643ed334ec5211f0bca3e85/1715777491724.jpeg"
+                    },
+                    {
+                        "preview": "6643fc9d4ec5211f0bca3e8b/1715732201598.jpeg"
+                    },
+                    {
+                        "preview": "6644024e4ec5211f0bca3e8f/1715733973640.jpeg"
+                    },
+                    {
+                        "preview": "66442a014ec5211f0bca3e97/1715756587857.jpeg"
+                    },
+                    {
+                        "preview": "6644327c4ec5211f0bca3e9b/1715782081118.jpeg"
+                    },
+                    {
+                        "preview": "664453ce4ec5211f0bca3ea8/1715877165122.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "662351370903ef02962fa960",
+                "username": "matheuspaice",
+                "stacks": {
+                    "id": "1728569886929",
+                    "fees": 10,
+                    "assets": [
+                        "664468b74ec5211f0bca3ebc",
+                        "664491854ec5211f0bca3ef3",
+                        "66446cd74ec5211f0bca3ec2",
+                        "6644968c4ec5211f0bca3f03",
+                        "66445a884ec5211f0bca3eab",
+                        "6644870d4ec5211f0bca3edd"
+                    ],
+                    "url": "https://vitruveo-studio-qa-general.s3.amazonaws.com/662351370903ef02962fa960/video/1728569886929.mp4",
+                    "sound": "ambisax.mp3",
+                    "thumbnail": "https://vitruveo-studio-qa-assets.s3.amazonaws.com/664464064ec5211f0bca3eb7/1715761696707.jpeg",
+                    "title": "video",
+                    "createdAt": "2024-10-10T14:18:36.485Z",
+                    "type": "video",
+                    "quantity": 248
+                },
+                "assetDetails": [
+                    {
+                        "preview": "66444f9a4ec5211f0bca3ea5/1715756334272.jpeg"
+                    },
+                    {
+                        "preview": "664464064ec5211f0bca3eb7/1715761696707.jpeg"
+                    },
+                    {
+                        "preview": "6643c2514ec5211f0bca3e67/1715763204216.jpeg"
+                    },
+                    {
+                        "preview": "664481344ec5211f0bca3ed7/1715767231909.jpeg"
+                    },
+                    {
+                        "preview": "664491244ec5211f0bca3ef1/1715769797158.jpeg"
+                    },
+                    {
+                        "preview": "6644950c4ec5211f0bca3efd/1715772425766.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "662351370903ef02962fa960",
+                "username": "matheuspaice",
+                "stacks": {
+                    "id": "1728569848171",
+                    "assets": [
+                        "66454a8a332b466610ac9461",
+                        "66455cc2332b466610ac9464",
+                        "664560e3332b466610ac9467",
+                        "664520df332b466610ac944d",
+                        "6644ad824ec5211f0bca3f36",
+                        "664501d0332b466610ac9419",
+                        "66450bd4332b466610ac942a",
+                        "6644f376332b466610ac9401",
+                        "6644d92c4ec5211f0bca3f6d",
+                        "6644aeb84ec5211f0bca3f39",
+                        "6644acf44ec5211f0bca3f35",
+                        "6644c04a4ec5211f0bca3f56",
+                        "6644c0eb4ec5211f0bca3f58",
+                        "6644c03f4ec5211f0bca3f55",
+                        "6644c9d74ec5211f0bca3f5d",
+                        "6645156a332b466610ac943e",
+                        "6644d83e4ec5211f0bca3f6b",
+                        "6644be944ec5211f0bca3f4e",
+                        "6644b3394ec5211f0bca3f3d",
+                        "6644a8ca4ec5211f0bca3f2e",
+                        "6644a17f4ec5211f0bca3f20",
+                        "664497e54ec5211f0bca3f09",
+                        "6644968c4ec5211f0bca3f03",
+                        "664491854ec5211f0bca3ef3",
+                        "6644870d4ec5211f0bca3edd",
+                        "664478274ec5211f0bca3ed2",
+                        "664471be4ec5211f0bca3ecb",
+                        "66446cd74ec5211f0bca3ec2",
+                        "664468b74ec5211f0bca3ebc",
+                        "66445a884ec5211f0bca3eab"
+                    ],
+                    "display": "Alternate",
+                    "fees": 10,
+                    "interval": 5,
+                    "title": "slides",
+                    "createdAt": "2024-10-10T14:17:28.171Z",
+                    "type": "slideshow",
+                    "quantity": 248
+                },
+                "assetDetails": [
+                    {
+                        "preview": "66444f9a4ec5211f0bca3ea5/1715756334272.jpeg"
+                    },
+                    {
+                        "preview": "664464064ec5211f0bca3eb7/1715761696707.jpeg"
+                    },
+                    {
+                        "preview": "6643c2514ec5211f0bca3e67/1715763204216.jpeg"
+                    },
+                    {
+                        "preview": "664470524ec5211f0bca3ec6/1715768663987.jpeg"
+                    },
+                    {
+                        "preview": "6644687b4ec5211f0bca3ebb/1715763794696.jpeg"
+                    },
+                    {
+                        "preview": "664481344ec5211f0bca3ed7/1715767231909.jpeg"
+                    },
+                    {
+                        "preview": "664491244ec5211f0bca3ef1/1715769797158.jpeg"
+                    },
+                    {
+                        "preview": "6644950c4ec5211f0bca3efd/1715772425766.jpeg"
+                    },
+                    {
+                        "preview": "6644975b4ec5211f0bca3f06/1715771409919.jpeg"
+                    },
+                    {
+                        "preview": "6644a0a04ec5211f0bca3f1e/1715773940012.jpeg"
+                    },
+                    {
+                        "preview": "6644a8964ec5211f0bca3f2d/1715775754048.jpeg"
+                    },
+                    {
+                        "preview": "6644aca34ec5211f0bca3f33/1715776791180.jpeg"
+                    },
+                    {
+                        "preview": "6644aa9d4ec5211f0bca3f32/1717536022310.jpeg"
+                    },
+                    {
+                        "preview": "664495334ec5211f0bca3f00/1715779703839.jpeg"
+                    },
+                    {
+                        "preview": "6644b0b24ec5211f0bca3f3b/1715783228471.jpeg"
+                    },
+                    {
+                        "preview": "6644bdf94ec5211f0bca3f4c/1715781385876.jpeg"
+                    },
+                    {
+                        "preview": "6644bf064ec5211f0bca3f51/1715781814011.jpeg"
+                    },
+                    {
+                        "preview": "6644bee14ec5211f0bca3f50/1715792575605.jpeg"
+                    },
+                    {
+                        "preview": "6644c0a74ec5211f0bca3f57/1715781988823.jpeg"
+                    },
+                    {
+                        "preview": "664397624ec5211f0bca3e2e/1715797424490.jpeg"
+                    },
+                    {
+                        "preview": "6644d6374ec5211f0bca3f6a/1715795773249.jpeg"
+                    },
+                    {
+                        "preview": "6644d8684ec5211f0bca3f6c/1715788278044.jpeg"
+                    },
+                    {
+                        "preview": "6644f2ce332b466610ac93ff/1715808406334.jpeg"
+                    },
+                    {
+                        "preview": "664500a4332b466610ac9415/1715829004045.jpeg"
+                    },
+                    {
+                        "preview": "66450aaf332b466610ac9428/1715809558633.jpeg"
+                    },
+                    {
+                        "preview": "66451525332b466610ac943c/1715803542526.jpeg"
+                    },
+                    {
+                        "preview": "664406b44ec5211f0bca3e91/1715806894132.jpeg"
+                    },
+                    {
+                        "preview": "66454928332b466610ac9460/1715820012513.jpeg"
+                    },
+                    {
+                        "preview": "6645590a332b466610ac9462/1715896919780.jpeg"
+                    },
+                    {
+                        "preview": "66455b99332b466610ac9463/1715823235780.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "662351370903ef02962fa960",
+                "username": "matheuspaice",
+                "stacks": {
+                    "id": "1728569814273",
+                    "path": "662351370903ef02962fa960/creators/1728569814273",
+                    "assets": [
+                        "66454a8a332b466610ac9461",
+                        "66455cc2332b466610ac9464",
+                        "664560e3332b466610ac9467",
+                        "664520df332b466610ac944d",
+                        "6644ad824ec5211f0bca3f36",
+                        "664501d0332b466610ac9419",
+                        "66450bd4332b466610ac942a",
+                        "6644f376332b466610ac9401",
+                        "6644d92c4ec5211f0bca3f6d"
+                    ],
+                    "fees": 10,
+                    "title": "grid",
+                    "createdAt": "2024-10-10T14:16:54.273Z",
+                    "type": "grid",
+                    "quantity": 248
+                },
+                "assetDetails": [
+                    {
+                        "preview": "6644aa9d4ec5211f0bca3f32/1717536022310.jpeg"
+                    },
+                    {
+                        "preview": "6644d8684ec5211f0bca3f6c/1715788278044.jpeg"
+                    },
+                    {
+                        "preview": "6644f2ce332b466610ac93ff/1715808406334.jpeg"
+                    },
+                    {
+                        "preview": "664500a4332b466610ac9415/1715829004045.jpeg"
+                    },
+                    {
+                        "preview": "66450aaf332b466610ac9428/1715809558633.jpeg"
+                    },
+                    {
+                        "preview": "664406b44ec5211f0bca3e91/1715806894132.jpeg"
+                    },
+                    {
+                        "preview": "66454928332b466610ac9460/1715820012513.jpeg"
+                    },
+                    {
+                        "preview": "6645590a332b466610ac9462/1715896919780.jpeg"
+                    },
+                    {
+                        "preview": "66455b99332b466610ac9463/1715823235780.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "662351370903ef02962fa960",
+                "username": "matheuspaice",
+                "stacks": {
+                    "id": "1728569773319",
+                    "path": "662351370903ef02962fa960/creators/1728569773319",
+                    "assets": [
+                        "66465e00332b466610ac94b4",
+                        "66463828332b466610ac94ad",
+                        "66456d73332b466610ac9469",
+                        "66454a8a332b466610ac9461"
+                    ],
+                    "fees": 10,
+                    "title": "grid",
+                    "createdAt": "2024-10-10T14:16:13.326Z",
+                    "type": "grid",
+                    "quantity": 248
+                },
+                "assetDetails": [
+                    {
+                        "preview": "66454928332b466610ac9460/1715820012513.jpeg"
+                    },
+                    {
+                        "preview": "66456b47332b466610ac9468/1715826393069.jpeg"
+                    },
+                    {
+                        "preview": "66452ea3332b466610ac945a/1715878277701.jpeg"
+                    },
+                    {
+                        "preview": "66465a9e332b466610ac94b2/1716029269701.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "667b45ceeced9f8bf85e73ec",
+                "username": "luanjb",
+                "stacks": {
+                    "id": "1728514310856",
+                    "assets": [
+                        "66feada358b29d4a126727fd",
+                        "66fae075a7969fe3c11d18a2",
+                        "66b274c90e696efb07bcbe51",
+                        "66b2c7c293f6d44046b7ee5e"
+                    ],
+                    "display": "Alternate",
+                    "fees": 10,
+                    "interval": 5,
+                    "title": "BBBB_slideshow_luan_test",
+                    "createdAt": "2024-10-09T22:51:50.857Z",
+                    "type": "slideshow",
+                    "quantity": 58
+                },
+                "assetDetails": [
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1722971711602.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1722992740892.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1727717848973.jpeg"
+                    },
+                    {
+                        "preview": "66fead7f58b29d4a126727fc/1727966650830.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "667b45ceeced9f8bf85e73ec",
+                "username": "luanjb",
+                "stacks": {
+                    "id": "1728514154228",
+                    "fees": 10,
+                    "assets": [
+                        "66f3027e365be4fff5aedf45",
+                        "66f3052d365be4fff5aedf47",
+                        "66fae075a7969fe3c11d18a2",
+                        "66feada358b29d4a126727fd"
+                    ],
+                    "url": "https://vitruveo-studio-qa-general.s3.amazonaws.com/667b45ceeced9f8bf85e73ec/video/1728514154228.mp4",
+                    "sound": "ambisax.mp3",
+                    "thumbnail": "https://vitruveo-studio-qa-assets.s3.amazonaws.com/66f2a4de365be4fff5aedf38/1727201986670_thumb.jpg",
+                    "title": "AAA_video_test_luan",
+                    "createdAt": "2024-10-09T22:49:57.015Z",
+                    "type": "video",
+                    "quantity": 58
+                },
+                "assetDetails": [
+                    {
+                        "preview": "66f2a4de365be4fff5aedf38/1727201986670.mp4"
+                    },
+                    {
+                        "preview": "66f2a4de365be4fff5aedf38/1727202647479.mp4"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1727717848973.jpeg"
+                    },
+                    {
+                        "preview": "66fead7f58b29d4a126727fc/1727966650830.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "662351370903ef02962fa960",
+                "username": "matheuspaice",
+                "stacks": {
+                    "id": "1728495980517",
+                    "path": "662351370903ef02962fa960/creators/1728495980517",
+                    "assets": [
+                        "66f3027e365be4fff5aedf45",
+                        "66fae075a7969fe3c11d18a2",
+                        "66f3052d365be4fff5aedf47",
+                        "66e85ecbf03f98e8a0256c46",
+                        "66feada358b29d4a126727fd",
+                        "66e43793f03f98e8a0256c39",
+                        "669591e2bedb6da930c9753d",
+                        "66b274c90e696efb07bcbe51",
+                        "662c1f303e3abae4cedb7435"
+                    ],
+                    "fees": 10,
+                    "title": "grid",
+                    "createdAt": "2024-10-09T17:46:20.518Z",
+                    "type": "grid",
+                    "quantity": 248
+                },
+                "assetDetails": [
+                    {
+                        "preview": "662c1dfe3e3abae4cedb7434/1714478983717.mp4"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1721078275324.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1722971711602.jpeg"
+                    },
+                    {
+                        "preview": "66e348cdf03f98e8a0256c35/1726232497109.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1726504694111.jpeg"
+                    },
+                    {
+                        "preview": "66f2a4de365be4fff5aedf38/1727201986670.mp4"
+                    },
+                    {
+                        "preview": "66f2a4de365be4fff5aedf38/1727202647479.mp4"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1727717848973.jpeg"
+                    },
+                    {
+                        "preview": "66fead7f58b29d4a126727fc/1727966650830.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "662351370903ef02962fa960",
+                "username": "matheuspaice",
+                "stacks": {
+                    "id": "1728495931314",
+                    "path": "662351370903ef02962fa960/creators/1728495931314",
+                    "assets": [
+                        "66feada358b29d4a126727fd",
+                        "66fae075a7969fe3c11d18a2",
+                        "669591e2bedb6da930c9753d",
+                        "65ff161b59e94e78747e1f8c"
+                    ],
+                    "fees": 10,
+                    "title": "dfd",
+                    "createdAt": "2024-10-09T17:45:31.322Z",
+                    "type": "grid",
+                    "quantity": 248
+                },
+                "assetDetails": [
+                    {
+                        "preview": "65ff12d859e94e78747e1f8b/1711235143521.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1721078275324.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1727717848973.jpeg"
+                    },
+                    {
+                        "preview": "66fead7f58b29d4a126727fc/1727966650830.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "662351370903ef02962fa960",
+                "username": "matheuspaice",
+                "stacks": {
+                    "id": "1728423994340",
+                    "path": "662351370903ef02962fa960/creators/1728423994340",
+                    "assets": [
+                        "66feada358b29d4a126727fd",
+                        "66fae075a7969fe3c11d18a2",
+                        "66e85ecbf03f98e8a0256c46",
+                        "66e43793f03f98e8a0256c39"
+                    ],
+                    "fees": 10,
+                    "title": "grid",
+                    "createdAt": "2024-10-08T21:46:34.342Z",
+                    "type": "grid",
+                    "quantity": 248
+                },
+                "assetDetails": [
+                    {
+                        "preview": "66e348cdf03f98e8a0256c35/1726232497109.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1726504694111.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1727717848973.jpeg"
+                    },
+                    {
+                        "preview": "66fead7f58b29d4a126727fc/1727966650830.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "667b45ceeced9f8bf85e73ec",
+                "username": "luanjb",
+                "stacks": {
+                    "id": "1728417662486",
+                    "fees": 10,
+                    "assets": [
+                        "662c1f303e3abae4cedb7435",
+                        "664527a9332b466610ac9452",
+                        "6643ea3b4ec5211f0bca3e84",
+                        "667c55f7b02aa8cbbc0d688a",
+                        "669591e2bedb6da930c9753d",
+                        "66b274c90e696efb07bcbe51",
+                        "66b2c7c293f6d44046b7ee5e",
+                        "66fae075a7969fe3c11d18a2",
+                        "66feada358b29d4a126727fd"
+                    ],
+                    "url": "https://vitruveo-studio-qa-general.s3.amazonaws.com/667b45ceeced9f8bf85e73ec/video/1728417662486.mp4",
+                    "sound": "ambisax.mp3",
+                    "thumbnail": "https://vitruveo-studio-qa-assets.s3.amazonaws.com/662c1dfe3e3abae4cedb7434/1714478983717_thumb.jpg",
+                    "title": "luan_test",
+                    "createdAt": "2024-10-08T20:01:40.325Z",
+                    "type": "video",
+                    "quantity": 58
+                },
+                "assetDetails": [
+                    {
+                        "preview": "662c1dfe3e3abae4cedb7434/1714478983717.mp4"
+                    },
+                    {
+                        "preview": "6643e5f14ec5211f0bca3e7f/1718028898743.jpeg"
+                    },
+                    {
+                        "preview": "6644e8c92a3979a3efcf8236/1715809737879.jpeg"
+                    },
+                    {
+                        "preview": "667c5431b02aa8cbbc0d6889/1719424564912.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1721078275324.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1722971711602.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1722992740892.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1727717848973.jpeg"
+                    },
+                    {
+                        "preview": "66fead7f58b29d4a126727fc/1727966650830.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "667b45ceeced9f8bf85e73ec",
+                "username": "luanjb",
+                "stacks": {
+                    "id": "1728417638854",
+                    "path": "667b45ceeced9f8bf85e73ec/creators/1728417638854",
+                    "assets": [
+                        "66feada358b29d4a126727fd",
+                        "66fae075a7969fe3c11d18a2",
+                        "669591e2bedb6da930c9753d",
+                        "66b274c90e696efb07bcbe51",
+                        "66b2c7c293f6d44046b7ee5e",
+                        "667c55f7b02aa8cbbc0d688a",
+                        "6643ea3b4ec5211f0bca3e84",
+                        "662c1f303e3abae4cedb7435",
+                        "664527a9332b466610ac9452"
+                    ],
+                    "fees": 10,
+                    "title": "luan_test",
+                    "createdAt": "2024-10-08T20:00:38.871Z",
+                    "type": "grid",
+                    "quantity": 58
+                },
+                "assetDetails": [
+                    {
+                        "preview": "662c1dfe3e3abae4cedb7434/1714478983717.mp4"
+                    },
+                    {
+                        "preview": "6643e5f14ec5211f0bca3e7f/1718028898743.jpeg"
+                    },
+                    {
+                        "preview": "6644e8c92a3979a3efcf8236/1715809737879.jpeg"
+                    },
+                    {
+                        "preview": "667c5431b02aa8cbbc0d6889/1719424564912.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1721078275324.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1722971711602.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1722992740892.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1727717848973.jpeg"
+                    },
+                    {
+                        "preview": "66fead7f58b29d4a126727fc/1727966650830.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "6660f1425a6df2113d340d1e",
+                "username": "mpaice",
+                "stacks": {
+                    "id": "1728327274286",
+                    "path": "6660f1425a6df2113d340d1e/creators/1728327274286",
+                    "assets": ["67042861d8b5df3326e29a70", "66feada358b29d4a126727fd"],
+                    "fees": 10,
+                    "title": "grid",
+                    "createdAt": "2024-10-07T18:54:34.290Z",
+                    "type": "grid",
+                    "quantity": 1
+                },
+                "assetDetails": [
+                    {
+                        "preview": "66fead7f58b29d4a126727fc/1727966650830.jpeg"
+                    },
+                    {
+                        "preview": "67042704d8b5df3326e29a6d/1728325758140.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "667c5431b02aa8cbbc0d6889",
+                "username": "AfterMigration",
+                "stacks": {
+                    "id": "1728320188802",
+                    "path": "667c5431b02aa8cbbc0d6889/creators/1728320188802",
+                    "assets": [
+                        "66f3052d365be4fff5aedf47",
+                        "66fae075a7969fe3c11d18a2",
+                        "66feada358b29d4a126727fd",
+                        "66e85ecbf03f98e8a0256c46",
+                        "66b274c90e696efb07bcbe51",
+                        "669591e2bedb6da930c9753d",
+                        "65ff161b59e94e78747e1f8c"
+                    ],
+                    "fees": 10,
+                    "title": "654654sdf",
+                    "createdAt": "2024-10-07T16:56:28.809Z",
+                    "type": "grid",
+                    "quantity": 1
+                },
+                "assetDetails": [
+                    {
+                        "preview": "65ff12d859e94e78747e1f8b/1711235143521.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1721078275324.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1722971711602.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1726504694111.jpeg"
+                    },
+                    {
+                        "preview": "66f2a4de365be4fff5aedf38/1727202647479.mp4"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1727717848973.jpeg"
+                    },
+                    {
+                        "preview": "66fead7f58b29d4a126727fc/1727966650830.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "662351370903ef02962fa960",
+                "username": "matheuspaice",
+                "stacks": {
+                    "id": "1727785673345",
+                    "path": "662351370903ef02962fa960/creators/1727785673345",
+                    "assets": [
+                        "6643ea3b4ec5211f0bca3e84",
+                        "66455cc2332b466610ac9464",
+                        "66454a8a332b466610ac9461",
+                        "6644f376332b466610ac9401",
+                        "6644c0eb4ec5211f0bca3f58"
+                    ],
+                    "fees": 10,
+                    "title": "grid",
+                    "createdAt": "2024-10-01T12:27:53.354Z",
+                    "type": "grid",
+                    "quantity": 248
+                },
+                "assetDetails": [
+                    {
+                        "preview": "6643e5f14ec5211f0bca3e7f/1718028898743.jpeg"
+                    },
+                    {
+                        "preview": "6644c0a74ec5211f0bca3f57/1715781988823.jpeg"
+                    },
+                    {
+                        "preview": "6644f2ce332b466610ac93ff/1715808406334.jpeg"
+                    },
+                    {
+                        "preview": "66454928332b466610ac9460/1715820012513.jpeg"
+                    },
+                    {
+                        "preview": "6645590a332b466610ac9462/1715896919780.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "66f577a5b57237ec71b2d0a0",
+                "stacks": {
+                    "id": "1727363019197",
+                    "path": "66f577a5b57237ec71b2d0a0/creators/1727363019197",
+                    "assets": [
+                        "66f55af9b57237ec71b2d097",
+                        "66f55ab4b57237ec71b2d095",
+                        "66f55798b57237ec71b2d093",
+                        "66f55747b57237ec71b2d091"
+                    ],
+                    "fees": 10,
+                    "title": "grid",
+                    "createdAt": "2024-09-26T15:03:39.199Z",
+                    "type": "grid",
+                    "quantity": 1
+                },
+                "assetDetails": [
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1727354718362.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1727355528932.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1727355597798.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1727355674455.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "66f56f78b57237ec71b2d09e",
+                "stacks": {
+                    "id": "1727360937492",
+                    "path": "66f56f78b57237ec71b2d09e/creators/1727360937492",
+                    "assets": [
+                        "66f55b46b57237ec71b2d099",
+                        "66f55af9b57237ec71b2d097",
+                        "66f55ab4b57237ec71b2d095",
+                        "66f55798b57237ec71b2d093"
+                    ],
+                    "fees": 10,
+                    "title": "grid",
+                    "createdAt": "2024-09-26T14:28:57.503Z",
+                    "type": "grid",
+                    "quantity": 1
+                },
+                "assetDetails": [
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1727355528932.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1727355597798.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1727355674455.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1727355751442.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "662351370903ef02962fa960",
+                "username": "matheuspaice",
+                "stacks": {
+                    "id": "1727357879474",
+                    "path": "662351370903ef02962fa960/creators/1727357879474",
+                    "assets": [
+                        "66f55b46b57237ec71b2d099",
+                        "66f55ab4b57237ec71b2d095",
+                        "66f55af9b57237ec71b2d097",
+                        "66f55798b57237ec71b2d093"
+                    ],
+                    "fees": 10,
+                    "title": "grid",
+                    "createdAt": "2024-09-26T13:37:59.503Z",
+                    "type": "grid",
+                    "quantity": 248
+                },
+                "assetDetails": [
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1727355528932.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1727355597798.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1727355674455.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1727355751442.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "66f550d1d3b6ca84dd988477",
+                "stacks": {
+                    "id": "1727353111561",
+                    "path": "66f550d1d3b6ca84dd988477/creators/1727353111561",
+                    "assets": ["66f54c7bd3b6ca84dd988470"],
+                    "fees": 10,
+                    "title": "luan test 2",
+                    "createdAt": "2024-09-26T12:18:31.566Z",
+                    "type": "grid",
+                    "quantity": 1
+                },
+                "assetDetails": [
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1727351973060.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "667ec6b705b0951dca42bc84",
+                "username": "luanbian",
+                "stacks": {
+                    "id": "1727352371957",
+                    "path": "667ec6b705b0951dca42bc84/creators/1727352371957",
+                    "assets": ["66f54d34d3b6ca84dd988472", "66f54c7bd3b6ca84dd988470"],
+                    "fees": 10,
+                    "title": "luan test 1",
+                    "createdAt": "2024-09-26T12:06:11.966Z",
+                    "type": "grid",
+                    "quantity": 1
+                },
+                "assetDetails": [
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1727351973060.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1727352186113.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "6633e6263e3abae4cedb7869",
+                "username": "paicezinner",
+                "stacks": {
+                    "id": "1727349381057",
+                    "path": "6633e6263e3abae4cedb7869/creators/1727349381057",
+                    "assets": [
+                        "66e88b4af03f98e8a0256c4b",
+                        "66e888bcf03f98e8a0256c49",
+                        "66e85ecbf03f98e8a0256c46",
+                        "66e43793f03f98e8a0256c39"
+                    ],
+                    "fees": 10,
+                    "title": "grid",
+                    "createdAt": "2024-09-26T11:16:21.058Z",
+                    "type": "grid",
+                    "quantity": 3
+                },
+                "assetDetails": [
+                    {
+                        "preview": "66e348cdf03f98e8a0256c35/1726232497109.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1726504694111.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1726515418432.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1726516072028.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "6633e6263e3abae4cedb7869",
+                "username": "paicezinner",
+                "stacks": {
+                    "id": "1727349313650",
+                    "path": "6633e6263e3abae4cedb7869/creators/1727349313650",
+                    "assets": [
+                        "66e88b4af03f98e8a0256c4b",
+                        "66e888bcf03f98e8a0256c49",
+                        "66e85ecbf03f98e8a0256c46",
+                        "66e43793f03f98e8a0256c39"
+                    ],
+                    "fees": 10,
+                    "title": "grid",
+                    "createdAt": "2024-09-26T11:15:13.651Z",
+                    "type": "grid",
+                    "quantity": 3
+                },
+                "assetDetails": [
+                    {
+                        "preview": "66e348cdf03f98e8a0256c35/1726232497109.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1726504694111.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1726515418432.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1726516072028.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "6633e6263e3abae4cedb7869",
+                "username": "paicezinner",
+                "stacks": {
+                    "id": "1727349294753",
+                    "path": "6633e6263e3abae4cedb7869/creators/1727349294753",
+                    "assets": [
+                        "66f3052d365be4fff5aedf47",
+                        "66f3027e365be4fff5aedf45",
+                        "66e88b4af03f98e8a0256c4b",
+                        "66e888bcf03f98e8a0256c49"
+                    ],
+                    "fees": 10,
+                    "title": "grid",
+                    "createdAt": "2024-09-26T11:14:54.760Z",
+                    "type": "grid",
+                    "quantity": 3
+                },
+                "assetDetails": [
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1726515418432.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1726516072028.jpeg"
+                    },
+                    {
+                        "preview": "66f2a4de365be4fff5aedf38/1727201986670.mp4"
+                    },
+                    {
+                        "preview": "66f2a4de365be4fff5aedf38/1727202647479.mp4"
+                    }
+                ]
+            },
+            {
+                "_id": "65eb16df3fb79934ec457e1c",
+                "username": "nik",
+                "stacks": {
+                    "id": "1727312153548",
+                    "path": "65eb16df3fb79934ec457e1c/creators/1727312153548",
+                    "assets": [
+                        "66e43793f03f98e8a0256c39",
+                        "66b2c7c293f6d44046b7ee5e",
+                        "66b274c90e696efb07bcbe51",
+                        "66e888bcf03f98e8a0256c49"
+                    ],
+                    "fees": 10,
+                    "title": "Hello",
+                    "createdAt": "2024-09-26T00:55:53.557Z",
+                    "type": "grid",
+                    "quantity": 2
+                },
+                "assetDetails": [
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1722971711602.jpeg"
+                    },
+                    {
+                        "preview": "65eb19a53fb79934ec457e1e/1722992740892.jpeg"
+                    },
+                    {
+                        "preview": "66e348cdf03f98e8a0256c35/1726232497109.jpeg"
+                    },
+                    {
+                        "preview": "66e84482f03f98e8a0256c3b/1726515418432.jpeg"
+                    }
+                ]
+            },
+            {
+                "_id": "66f4a079c0f62e5dac11f70d",
+                "username": "vault001",
+                "stacks": {
+                    "id": "1727307996369",
+                    "path": "66f4a079c0f62e5dac11f70d/creators/1727307996369",
+                    "assets": ["66f3ff8dc0f62e5dac11f704", "66f2a505365be4fff5aedf39"],
+                    "fees": 10,
+                    "title": "grid",
+                    "createdAt": "2024-09-25T23:46:36.370Z",
+                    "type": "grid",
+                    "quantity": 2
+                },
+                "assetDetails": [
+                    {
+                        "preview": "66f2a4de365be4fff5aedf38/1727178015051.jpeg"
+                    },
+                    {
+                        "preview": "66f2a4de365be4fff5aedf38/1727266747395.mp4"
+                    }
+                ]
+            }
+        ],
+        "page": 1,
+        "totalPage": 14,
+        "total": 336,
+        "limit": 25
+    }
+}

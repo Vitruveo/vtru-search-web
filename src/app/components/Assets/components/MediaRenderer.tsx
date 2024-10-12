@@ -8,9 +8,10 @@ interface MediaRendererProps {
     fallbackSrc?: string;
     autoPlay?: boolean;
     preSource?: string;
+    type?: string;
 }
 
-export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false, preSource }: MediaRendererProps) => {
+export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false, preSource, type }: MediaRendererProps) => {
     const [src, setSrc] = useState(source);
     const isMobile = useMediaQuery('(max-width: 900px)');
 
@@ -23,7 +24,7 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false, preS
     const preIsImage = preSource?.match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
     const preIsVideo = preSource?.match(/\.(mp4|webm|ogg)$/) != null;
 
-    if (isVideo) {
+    if (isVideo || type === 'video') {
         return (
             <div
                 style={{
@@ -67,7 +68,7 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false, preS
         );
     }
 
-    if (isImage || src === fallbackSrc) {
+    if (isImage || src === fallbackSrc || type === 'grid') {
         return (
             <>
                 {preIsImage && <Image src={src} alt="asset" width={160} height={160} style={{ display: 'none' }} />}
@@ -81,6 +82,10 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false, preS
                 />
             </>
         );
+    }
+
+    if (type === 'slideshow') {
+        return <iframe src={src} title="stack" />;
     }
 
     return (
