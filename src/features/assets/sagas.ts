@@ -165,7 +165,10 @@ function* getAssetsGroupByCreator() {
             }
         );
 
-        yield put(actions.loadAssetsLastSold());
+        if (page === 1 || page === 0) {
+            yield put(actions.loadAssetsLastSold());
+        }
+
         yield put(
             actions.setData({
                 data: response.data.data.data.map((item) => ({
@@ -298,7 +301,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             hasBts,
         });
 
-        if (page === 1 || page === 0) {
+        if (!creatorId && (page === 1 || page === 0)) {
             yield put(actions.loadAssetsLastSold());
         }
 

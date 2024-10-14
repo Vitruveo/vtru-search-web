@@ -1,6 +1,6 @@
-import Image from 'next/image';
+/* eslint-disable @next/next/no-img-element */
+import React, { useState } from 'react';
 import { Stack, Typography, useMediaQuery } from '@mui/material';
-import { useState } from 'react';
 import { IconPlayerPlayFilled } from '@tabler/icons-react';
 
 interface MediaRendererProps {
@@ -8,105 +8,98 @@ interface MediaRendererProps {
     fallbackSrc?: string;
     autoPlay?: boolean;
     preSource?: string;
-    type?: string;
 }
 
-export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false, preSource, type }: MediaRendererProps) => {
-    const [src, setSrc] = useState(source);
+const defaultFallbackSrc = 'https://via.placeholder.com/200';
+
+const MediaRendererMain = ({ src, fallbackSrc, autoPlay = false }: MediaRendererProps) => {
     const isMobile = useMediaQuery('(max-width: 900px)');
+    const [loading, setLoading] = useState(true);
 
-    const onError = () => {
-        setSrc(fallbackSrc ?? 'fallback');
-    };
-
-    const isImage = src.match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
     const isVideo = src.match(/\.(mp4|webm|ogg)$/) != null;
-    const preIsImage = preSource?.match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
-    const preIsVideo = preSource?.match(/\.(mp4|webm|ogg)$/) != null;
+    const isImage = src.match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
 
-    if (isVideo || type === 'video') {
-        return (
-            <div
-                style={{
-                    position: 'relative',
-                    width: '100%',
-                    height: '100%',
-                    borderTopRightRadius: 10,
-                    borderTopLeftRadius: 10,
-                }}
-            >
-                {preIsVideo && (
-                    <video muted style={{ display: 'none' }}>
-                        <source src={src} type="video/mp4" />
-                    </video>
-                )}
-                <video
-                    autoPlay={!isMobile || autoPlay}
-                    muted
-                    loop
+    return (
+        <>
+            {loading && (
+                <Stack justifyContent="center" alignItems="center" width="100%" height="100%">
+                    <Typography variant="h6">Loading</Typography>
+                </Stack>
+            )}
+
+            {isVideo && (
+                <div
                     style={{
+                        position: 'relative',
                         width: '100%',
                         height: '100%',
-                        objectFit: type ? 'contain' : 'cover',
-                        borderRadius: 'inherit',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
                         borderTopRightRadius: 10,
                         borderTopLeftRadius: 10,
+                        display: loading ? 'none' : 'block',
                     }}
-                    onError={onError}
                 >
-                    <source src={src} type="video/mp4" />
-                </video>
-                <IconPlayerPlayFilled
-                    style={
-                        isMobile && !autoPlay ? { position: 'absolute', bottom: 10, right: 10 } : { display: 'none' }
-                    }
-                />
-            </div>
-        );
-    }
+                    <video
+                        autoPlay={!isMobile || autoPlay}
+                        muted
+                        loop
+                        preload="auto"
+                        onLoadedData={() => setLoading(false)}
+                        onError={(event) => {
+                            event.currentTarget.src = fallbackSrc || defaultFallbackSrc;
+                            setLoading(false);
+                        }}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            borderRadius: 'inherit',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            borderTopRightRadius: 10,
+                            borderTopLeftRadius: 10,
+                        }}
+                    >
+                        <source src={src} type="video/mp4" />
+                    </video>
+                    <IconPlayerPlayFilled
+                        style={
+                            isMobile && !autoPlay
+                                ? { position: 'absolute', bottom: 10, right: 10 }
+                                : { display: 'none' }
+                        }
+                    />
+                </div>
+            )}
 
-    if (isImage || src === fallbackSrc || type === 'grid') {
-        return (
-            <>
-                {preIsImage && <Image src={src} alt="asset" width={160} height={160} style={{ display: 'none' }} />}
-                <Image
+            {isImage && (
+                <img
                     src={src}
                     alt="asset"
                     width={160}
                     height={160}
-                    onError={onError}
                     style={{
+                        display: loading ? 'none' : 'block',
                         width: '100%',
                         height: '100%',
-                        objectFit: type ? 'contain' : 'cover',
+                        objectFit: 'cover',
                         borderRadius: 'inherit',
                     }}
+                    onLoad={() => setLoading(false)}
+                    onError={(event) => {
+                        event.currentTarget.src = fallbackSrc || defaultFallbackSrc;
+                        setLoading(false);
+                    }}
                 />
-            </>
-        );
-    }
+            )}
 
-    if (type === 'slideshow') {
-        return (
-            <iframe
-                src={src}
-                title="stack"
-                style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: type ? 'contain' : 'cover',
-                    borderRadius: 'inherit',
-                }}
-            />
-        );
-    }
-
-    return (
-        <Stack justifyContent="center" alignItems="center" width="100%" height="100%">
-            <Typography variant="h6">Unsupported media type</Typography>
-        </Stack>
+            {!isVideo && !isImage && (
+                <Stack justifyContent="center" alignItems="center" width="100%" height="100%">
+                    <Typography variant="h6">Unsupported media type</Typography>
+                </Stack>
+            )}
+        </>
     );
 };
+
+export const MediaRenderer = React.memo(MediaRendererMain);
