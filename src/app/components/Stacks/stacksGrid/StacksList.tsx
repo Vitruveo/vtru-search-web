@@ -1,17 +1,17 @@
+import { optionsForSelectSort } from '@/app/stacks/page';
 import { Stack, StackData } from '@/features/stacks/types';
 import { Box, Pagination, Typography } from '@mui/material';
-import StackItem, { StackCardContainer } from './StackItem';
 import { useTheme } from '@mui/material/styles';
 import Select, { SingleValue } from 'react-select';
-import { optionsForSelectSort } from '@/app/stacks/page';
 import AllProjectsMenu from '../../AllProjectsMenu';
-import Logo from '../../Shared/Logo';
-import { Rss } from '../../Rss';
 import '../../Assets/assetsGrid/AssetScroll.css';
+import { Rss } from '../../Rss';
+import Logo from '../../Shared/Logo';
+import StackItem, { StackCardContainer } from './StackItem';
 
 interface StacksProps {
     data: {
-        stacks: any;
+        stacks: StackData;
         selectValues: {
             limit: { value: string; label: string };
             page: { value: string; label: string };
@@ -48,7 +48,6 @@ const Stacks = ({ data, actions }: StacksProps) => {
     const { onChangePage, onChangeSort, onChangeLimit } = actions;
     const { stacks, selectValues, optionsForSelectPage } = data;
 
-    const tempData = stacks as unknown as StackData;
     return (
         <Box>
             <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} p={2}>
@@ -193,7 +192,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 p={2}
                 maxHeight={'80vh'}
             >
-                {tempData.data.map((stack: Stack, index) => {
+                {stacks.data.map((stack: Stack, index: number) => {
                     return (
                         <StackCardContainer key={index}>
                             <StackItem stack={stack} />
@@ -202,8 +201,8 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 })}
                 <Box mt={4} mb={2} display={'flex'} justifyContent="center" width="100%" alignItems="center">
                     <Pagination
-                        count={tempData.totalPage}
-                        page={tempData.page}
+                        count={stacks.totalPage}
+                        page={stacks.page}
                         onChange={(_e, value) => onChangePage({ value: value.toString(), label: value.toString() })}
                         color="primary"
                         size={lgUp ? 'large' : 'medium'}

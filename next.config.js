@@ -9,6 +9,7 @@ const nextConfig = {
             'vitruveo-studio-production-assets.s3.amazonaws.com',
             'vitruveo-studio-production-general.s3.amazonaws.com',
             'via.placeholder.com',
+            'slideshow.vtru.dev',
         ],
     },
     reactStrictMode: false,

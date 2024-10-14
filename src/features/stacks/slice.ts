@@ -7,8 +7,8 @@ export const initialState: StackSliceState = {
     error: null,
     data: {
         data: [],
-        limit: 0,
-        page: 0,
+        limit: 25,
+        page: 1,
         total: 0,
         totalPage: 0,
     },
@@ -28,6 +28,15 @@ export const stacksSlice = createSlice({
         },
         setData: (state, action: PayloadAction<StackSliceState['data']>) => {
             state.data = action.payload;
+        },
+        setPage: (state, action: PayloadAction<number>) => {
+            state.data.page = action.payload;
+        },
+        setLimit: (state, action: PayloadAction<number>) => {
+            state.data.limit = action.payload;
+        },
+        setSort: (state, action: PayloadAction<string>) => {
+            state.sort = action.payload;
         },
     },
 });

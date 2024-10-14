@@ -1,8 +1,9 @@
 'use client';
 import { SingleValue } from 'react-select';
-import dataJson from '../../../data.json';
 import StackList from '../components/Stacks/stacksGrid/StacksList';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { actions } from '@/features/stacks';
 
 export const optionsForSelectSort = [
     { value: 'latest', label: 'Latest' },
@@ -13,13 +14,17 @@ export const optionsForSelectSort = [
 ];
 
 const Stacks = () => {
+    const dispatch = useDispatch();
+    const stacks = useSelector((state) => state.stacks.data);
     const [selectValues, setSelectValues] = useState({
         limit: { value: '25', label: '25' },
         page: { value: '1', label: '1' },
         sort: { value: 'latest', label: 'Latest' },
     });
 
-    const stacks = dataJson.data;
+    useEffect(() => {
+        dispatch(actions.loadStacks());
+    }, []);
 
     const optionsForSelectPage = useMemo(() => {
         const options: { value: string; label: string }[] = [];
@@ -30,21 +35,24 @@ const Stacks = () => {
     }, [stacks.totalPage]);
 
     const onChangeLimit = useCallback((e: SingleValue<{ value: string; label: string }>) => {
+        dispatch(actions.setLimit(Number(e!.value)));
         setSelectValues((prev) => ({ ...prev, limit: { value: e!.value, label: e!.label } }));
     }, []);
 
     const onChangePage = useCallback((e: SingleValue<{ value: string; label: string }>) => {
+        dispatch(actions.setPage(Number(e!.value)));
         setSelectValues((prev) => ({ ...prev, page: { value: e!.value, label: e!.label } }));
     }, []);
 
     const onChangeSort = useCallback((e: SingleValue<{ value: string; label: string }>) => {
+        dispatch(actions.setSort(e!.value));
         setSelectValues((prev) => ({ ...prev, sort: { value: e!.value, label: e!.label } }));
     }, []);
 
     return (
         <>
             <StackList
-                data={{ stacks: stacks, selectValues, optionsForSelectPage }}
+                data={{ stacks, selectValues, optionsForSelectPage }}
                 actions={{ onChangeSort, onChangePage, onChangeLimit }}
             />
         </>

@@ -1,6 +1,6 @@
 import { API_BASE_URL } from '@/constants/api';
-import axios, { all, AxiosResponse } from 'axios';
-import { call, put, select, takeEvery } from 'redux-saga/effects';
+import axios, { AxiosResponse } from 'axios';
+import { call, put, select, takeEvery, all } from 'redux-saga/effects';
 import { APIResponse } from '../common/types';
 import { StackData } from './types';
 import { actions } from './slice';
@@ -9,7 +9,6 @@ import { AppState } from '@/store';
 function* getStacks() {
     yield put(actions.startLoading());
     try {
-        console.log('Here');
         const page: number = yield select((state: AppState) => state.stacks.data.page);
         const limit: number = yield select((state: AppState) => state.stacks.data.limit);
         const sort: string = yield select((state: AppState) => state.stacks.sort);
@@ -38,5 +37,10 @@ function* getStacks() {
 }
 
 export default function* stacksSaga() {
-    yield all([takeEvery(actions.loadStacks.type, getStacks)]);
+    yield all([
+        takeEvery(actions.loadStacks.type, getStacks),
+        takeEvery(actions.setPage.type, getStacks),
+        takeEvery(actions.setLimit.type, getStacks),
+        takeEvery(actions.setSort.type, getStacks),
+    ]);
 }
