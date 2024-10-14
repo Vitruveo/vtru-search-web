@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { useSelector } from '@/store/hooks';
 import { Box } from '@mui/material';
@@ -16,6 +17,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
     const isHiddenCardDetail = useSelector((state) => state.customizer.hidden?.cardDetail);
 
     const commonStyles = {
+        display: showFanEffect ? 'block' : 'none',
         width: showFanEffect ? 200 : 1,
         height: showFanEffect ? 200 : 1,
         borderRadius: '15px',
@@ -29,45 +31,28 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
     let cards = [
         {
             id: 1,
-            transform: showFanEffect ? 'rotate(-30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
-        },
-        {
-            id: 2,
             transform: showFanEffect ? 'rotate(-15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
         },
         {
-            id: 3,
+            id: 2,
             transform: 'rotate(0deg) translateY(0px)',
         },
         {
-            id: 4,
+            id: 3,
             transform: showFanEffect ? 'rotate(15deg) translateY(50px)' : 'rotate(0deg) translateY(0px)',
-        },
-        {
-            id: 5,
-            transform: showFanEffect ? 'rotate(30deg) translateY(150px)' : 'rotate(0deg) translateY(0px)',
         },
     ];
 
     const effectiveCount: number = count || 0;
+
     switch (effectiveCount) {
-        case 0:
-        case 1:
-            cards = cards.slice(0, 1);
-            break;
         case 2:
-            cards = cards.filter((card) => card.id !== 1 && card.id !== 3 && card.id !== 5);
-            break;
-        case 3:
-            cards = cards.filter((card) => card.id !== 1 && card.id !== 5);
-            break;
-        case 4:
-            cards = cards.filter((card) => card.id !== 3);
+            cards = cards.filter((card) => card.id === 1 || card.id === 3);
             break;
     }
 
     return (
-        <Box mt={4}>
+        <Box mt={4} onClick={handleClickImage}>
             <Box
                 display={'flex'}
                 flexDirection={'row'}
@@ -88,40 +73,14 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
             >
                 {cards.length > 1 && (
                     <>
-                        {cards.map(({ transform }, index) =>
-                            paths[index]?.match(/\.(mp4|webm|ogg)$/) != null ? (
-                                <div
-                                    key={index}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.zIndex = '1000';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.zIndex = 'auto';
-                                    }}
-                                    onClick={handleClickImage}
-                                >
-                                    <video
-                                        autoPlay
-                                        muted
-                                        loop
-                                        style={{
-                                            ...commonStyles,
-                                            transform,
-                                            position: 'relative',
-                                            minWidth: '200px',
-                                            backgroundColor: 'black',
-                                        }}
-                                        width={'100%'}
-                                    >
-                                        <source src={`${AWS_BASE_URL_S3}/${paths[index]}`} type="video/mp4" />
-                                    </video>
-                                </div>
-                            ) : (
+                        {cards.map(({ transform }, index) => {
+                            const media = paths[index]?.replace(/\.(\w+)$/, '_thumb.jpg');
+
+                            return (
                                 <div
                                     key={index}
                                     style={{
                                         ...commonStyles,
-                                        backgroundImage: `url(${AWS_BASE_URL_S3}/${paths[index]})`,
                                         transform,
                                         position: 'relative',
                                     }}
@@ -133,7 +92,17 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                                     }}
                                     onClick={handleClickImage}
                                 >
-                                    {effectiveCount > 5 && index === cards.length - 1 && (
+                                    <img
+                                        width={200}
+                                        height={200}
+                                        src={`${AWS_BASE_URL_S3}/${media}`}
+                                        alt="image"
+                                        style={commonStyles}
+                                        onError={(e) => {
+                                            e.currentTarget.src = 'https://via.placeholder.com/200';
+                                        }}
+                                    />
+                                    {effectiveCount > 3 && index === cards.length - 1 && (
                                         <p
                                             style={{
                                                 position: 'absolute',
@@ -146,12 +115,12 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                                                 backgroundColor: 'rgba(0, 0, 0, 0.5)',
                                             }}
                                         >
-                                            +{effectiveCount - 5} Digital Assets
+                                            +{effectiveCount - 3} Digital Assets
                                         </p>
                                     )}
                                 </div>
-                            )
-                        )}
+                            );
+                        })}
                     </>
                 )}
             </Box>
