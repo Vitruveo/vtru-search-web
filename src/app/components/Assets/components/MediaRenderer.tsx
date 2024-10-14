@@ -47,7 +47,7 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false, preS
                     style={{
                         width: '100%',
                         height: '100%',
-                        objectFit: 'cover',
+                        objectFit: type ? 'contain' : 'cover',
                         borderRadius: 'inherit',
                         position: 'absolute',
                         top: 0,
@@ -78,7 +78,12 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false, preS
                     width={160}
                     height={160}
                     onError={onError}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }}
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: type ? 'contain' : 'cover',
+                        borderRadius: 'inherit',
+                    }}
                 />
             </>
         );
@@ -89,7 +94,12 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false, preS
             <iframe
                 src={src}
                 title="stack"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }}
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: type ? 'contain' : 'cover',
+                    borderRadius: 'inherit',
+                }}
             />
         );
     }

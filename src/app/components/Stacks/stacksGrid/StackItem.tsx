@@ -2,11 +2,12 @@ import { ShowAnimation } from '@/animations';
 import { SEARCH_BASE_URL, SLIDESHOW_BASE_URL } from '@/constants/api';
 import { GENERAL_STORAGE_URL } from '@/constants/aws';
 import { Stack } from '@/features/stacks/types';
-import { Box, CardContent, Grid, IconButton, Stack as MuiStack, Tooltip, Typography } from '@mui/material';
+import { Box, CardContent, Grid, IconButton, Modal, Stack as MuiStack, Tooltip, Typography } from '@mui/material';
 import { MediaRenderer } from '../../Assets/components/MediaRenderer';
 import BlankCard from '../../Shared/BlankCard';
 import { useTheme } from '@mui/material/styles';
-import { IconInfoCircle, IconEye, IconPlayerPlayFilled } from '@tabler/icons-react';
+import { IconInfoCircle, IconEye, IconPlayerPlayFilled, IconX } from '@tabler/icons-react';
+import { useState } from 'react';
 
 interface Props {
     stack: Stack;
@@ -14,6 +15,9 @@ interface Props {
 
 const StackItem = ({ stack }: Props) => {
     const theme = useTheme();
+    const [isOpenModal, setIsOpenModal] = useState(false);
+
+    const onCloseModal = () => setIsOpenModal(false);
 
     const handleImage = () => {
         if (stack.stacks.type === 'grid') return `${GENERAL_STORAGE_URL}/${stack.stacks.path}`;
@@ -77,11 +81,50 @@ const StackItem = ({ stack }: Props) => {
                     >
                         <IconEye color={theme.palette.primary.main} size={32} />
                     </IconButton>
-                    <IconButton>
+                    <IconButton onClick={() => setIsOpenModal(true)}>
                         <IconPlayerPlayFilled style={{ color: theme.palette.primary.main }} size={32} />
                     </IconButton>
                 </MuiStack>
             </CardContent>
+
+            <Modal open={isOpenModal} onClose={onCloseModal}>
+                <Box
+                    sx={{
+                        position: 'relative',
+                        bgcolor: theme.palette.background.default,
+                        p: 4,
+                        width: '100vw',
+                        height: '100vh',
+                    }}
+                >
+                    <IconButton
+                        aria-label="close"
+                        onClick={onCloseModal}
+                        sx={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
+                            color: theme.palette.primary.main,
+                        }}
+                    >
+                        <IconX />
+                    </IconButton>
+                    <Box display={'flex'} gap={1}>
+                        <Typography variant="h5">{stack.stacks.title}</Typography>
+                        <Typography variant="h5">by</Typography>
+                        <Typography variant="h5" fontStyle={'italic'} color={theme.palette.primary.main}>
+                            {stack.username}
+                        </Typography>
+                    </Box>
+                    <Box style={{ height: 'calc(100vh - 80px)' }}>
+                        <MediaRenderer
+                            src={handleImage()}
+                            fallbackSrc={'https://via.placeholder.com/250'}
+                            type={stack.stacks.type}
+                        />
+                    </Box>
+                </Box>
+            </Modal>
         </BlankCard>
     );
 };
