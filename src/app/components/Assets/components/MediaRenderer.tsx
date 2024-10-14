@@ -85,7 +85,13 @@ export const MediaRenderer = ({ src: source, fallbackSrc, autoPlay = false, preS
     }
 
     if (type === 'slideshow') {
-        return <iframe src={src} title="stack" />;
+        return (
+            <iframe
+                src={src}
+                title="stack"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }}
+            />
+        );
     }
 
     return (

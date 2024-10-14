@@ -2,7 +2,7 @@ import { ShowAnimation } from '@/animations';
 import { SLIDESHOW_BASE_URL } from '@/constants/api';
 import { GENERAL_STORAGE_URL } from '@/constants/aws';
 import { Stack } from '@/features/stacks/types';
-import { Box, CardContent, Grid, IconButton, Stack as MuiStack, Typography } from '@mui/material';
+import { Box, CardContent, Grid, IconButton, Stack as MuiStack, Tooltip, Typography } from '@mui/material';
 import { MediaRenderer } from '../../Assets/components/MediaRenderer';
 import BlankCard from '../../Shared/BlankCard';
 import { useTheme } from '@mui/material/styles';
@@ -30,9 +30,9 @@ const StackItem = ({ stack }: Props) => {
     };
 
     return (
-        <div>
+        <div style={{ height: '425px' }}>
             <BlankCard className="hoverCard">
-                <Box width={250} height={250} borderRadius={'8px'} position={'relative'}>
+                <Box width={250} height={250} borderRadius={'8px'} position={'relative'} p={2}>
                     <MediaRenderer
                         src={handleImage()}
                         fallbackSrc={'https://via.placeholder.com/250'}
@@ -40,24 +40,36 @@ const StackItem = ({ stack }: Props) => {
                     />
                 </Box>
                 <CardContent sx={{ p: 3, pt: 2 }} style={{ backgroundColor: theme.palette.grey[100] }}>
-                    <Typography title={stack.stacks.title} variant="h6" sx={{ cursor: 'pointer' }} width="100%">
-                        {stack.stacks.title}
-                    </Typography>
-                    <MuiStack direction="column" mb={2}>
-                        <Typography variant="h6" color={theme.palette.primary.main}>
+                    <MuiStack direction="column" mb={4} gap={1}>
+                        <Typography title={stack.stacks.title} variant="h6" sx={{ cursor: 'pointer' }} width="100%">
+                            {stack.stacks.title}
+                        </Typography>
+                        <Typography variant="inherit" color={theme.palette.primary.main}>
                             Curator
                         </Typography>
-                        <Typography variant="h6">{stack.username}</Typography>
+                        <Typography variant="body1">
+                            {stack.username} (+{stack.stacks.quantity} stacks)
+                        </Typography>
                     </MuiStack>
                     <MuiStack flexDirection="row" justifyContent="flex-end" alignItems="end">
+                        <Tooltip
+                            title={stack.stacks.description}
+                            arrow
+                            componentsProps={{
+                                tooltip: {
+                                    sx: { fontSize: '0.8rem' },
+                                },
+                            }}
+                        >
+                            <IconButton>
+                                <IconInfoCircle color={theme.palette.primary.main} size={32} />
+                            </IconButton>
+                        </Tooltip>
                         <IconButton>
-                            <IconInfoCircle color={theme.palette.primary.main} />
+                            <IconEye color={theme.palette.primary.main} size={32} />
                         </IconButton>
                         <IconButton>
-                            <IconEye color={theme.palette.primary.main} />
-                        </IconButton>
-                        <IconButton>
-                            <IconPlayerPlay color={theme.palette.primary.main} />
+                            <IconPlayerPlay color={theme.palette.primary.main} size={32} />
                         </IconButton>
                     </MuiStack>
                 </CardContent>
