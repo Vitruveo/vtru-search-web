@@ -74,7 +74,12 @@ const Search = () => {
 
     return (
         <div>
-            <Header />
+            <Header
+                rssOptions={[
+                    { flagname: 'JSON', value: 'json' },
+                    { flagname: 'XML', value: 'xml' },
+                ]}
+            />
             <PageContainer title="Search" description="this is Search">
                 <AppCard>
                     <AssetsSidebar />

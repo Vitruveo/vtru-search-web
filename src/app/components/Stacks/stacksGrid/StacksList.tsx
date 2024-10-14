@@ -1,5 +1,5 @@
 import { Stack, StackData } from '@/features/stacks/types';
-import { Box, Pagination, Typography } from '@mui/material';
+import { Box, Button, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Select, { SingleValue } from 'react-select';
 import AllProjectsMenu from '../../AllProjectsMenu';
@@ -7,6 +7,8 @@ import '../../Assets/assetsGrid/AssetScroll.css';
 import { Rss } from '../../Rss';
 import Logo from '../../Shared/Logo';
 import StackItem, { StackCardContainer } from './StackItem';
+import { useEffect, useRef } from 'react';
+import Header from '../../Header';
 
 interface StacksProps {
     data: {
@@ -42,21 +44,35 @@ interface StacksProps {
 
 const Stacks = ({ data, actions }: StacksProps) => {
     const theme = useTheme();
-    const lgUp = theme.breakpoints.up('lg');
+    const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
+    const topRef = useRef<HTMLDivElement>(null);
 
     const { onChangePage, onChangeSort, onChangeLimit } = actions;
     const { stacks, selectValues, optionsForSelectPage } = data;
 
+    const handleScrollToTop = () => {
+        if (topRef.current) {
+            topRef.current.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            });
+        }
+    };
+
+    useEffect(() => {
+        handleScrollToTop();
+    }, [stacks.page]);
+
     return (
         <Box>
-            <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} p={2}>
-                <Logo />
-                <Box display={'flex'}>
-                    <AllProjectsMenu />
-                    <Rss />
-                </Box>
-            </Box>
-            <Box display={'flex'} justifyContent={'space-between'} p={2}>
+            <Header
+                rssOptions={[
+                    { flagname: 'JSON', value: 'stacks/json' },
+                    { flagname: 'XML', value: 'stacks/xml' },
+                ]}
+            />
+            <Box display={'flex'} flexDirection={smUp ? 'row' : 'column'} justifyContent={'space-between'} p={2}>
                 <Box display={'flex'} alignItems={'center'} gap={2}>
                     <Typography variant="h4">Sort:</Typography>
                     <Select
@@ -107,7 +123,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     Curate Stack
                 </Typography>
             </Box>
-            <Box display={'flex'} gap={1} flexDirection={lgUp ? 'row' : 'column'} justifyContent={'end'} p={2}>
+            <Box display={'flex'} gap={1} flexDirection={smUp ? 'row' : 'column'} justifyContent={'end'} p={2}>
                 <Select
                     placeholder="Page Items"
                     options={[
@@ -196,6 +212,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 gap={4}
                 p={2}
                 maxHeight={'80vh'}
+                ref={topRef}
             >
                 {stacks.data.map((stack: Stack, index: number) => {
                     return (
@@ -212,6 +229,11 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         color="primary"
                         size={lgUp ? 'large' : 'medium'}
                     />
+                </Box>
+                <Box display={'flex'} justifyContent="flex-end" width="100%" mr={4} mb={lgUp ? 4 : 12}>
+                    <Button variant="contained" onClick={handleScrollToTop}>
+                        Scroll to top
+                    </Button>
                 </Box>
             </Box>
         </Box>
