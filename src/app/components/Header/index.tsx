@@ -12,7 +12,14 @@ import { Rss } from '../Rss';
 import AllProjectsMenu from '../AllProjectsMenu';
 import { customizerActionsCreators } from '@/features/customizer';
 
-const Header = () => {
+interface Props {
+    rssOptions: {
+        flagname: string;
+        value: string;
+    }[];
+}
+
+const Header = ({ rssOptions }: Props) => {
     const dispatch = useDispatch();
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
@@ -114,7 +121,7 @@ const Header = () => {
                             />
                         </IconButton>
                     )}
-                    <Rss />
+                    <Rss options={rssOptions} />
                     <Language />
                     {isLogged && <AvatarProfile />}
                     <IconButton size="small" sx={{ padding: 0 }} onClick={handleToggleTheme}>

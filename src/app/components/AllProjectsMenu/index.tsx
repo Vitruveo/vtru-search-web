@@ -2,16 +2,14 @@ import React, { useState } from 'react';
 import { Box, Drawer, IconButton, List, ListItem, ListItemText, Theme, Typography, useMediaQuery } from '@mui/material';
 import { IconMenu2 } from '@tabler/icons-react';
 import { useSelector } from '@/store/hooks';
-import { API_BASE_URL } from '@/constants/api';
-
-const isDev = API_BASE_URL.includes('dev');
+import { SEARCH_BASE_URL, STUDIO_BASE_URL } from '@/constants/api';
 
 const projects = [
-    { title: 'STACKS', url: '' },
-    { title: 'SEARCH', url: '' },
+    { title: 'STACKS', url: `${SEARCH_BASE_URL}/stacks` },
+    { title: 'SEARCH', url: `${SEARCH_BASE_URL}` },
     { title: 'STORES', url: '' },
     { title: 'STREAMS', url: '' },
-    { title: 'STUDIO', url: isDev ? 'https://studio.vtru.dev/login' : 'https://studio.vitruveo.xyz/login' },
+    { title: 'STUDIO', url: `${STUDIO_BASE_URL}/login` },
     { title: 'BUY VUSD', url: '' },
     { title: 'ABOUT XIBIT', url: 'https://about.xibit.app', onlyMobile: true },
     { title: 'ABOUT VITRUVEO', url: 'https://vitruveo.xyz', onlyMobile: true },
@@ -24,6 +22,14 @@ const AllProjectsMenu = () => {
     const customizer = useSelector((state) => state.customizer);
     const isDark = customizer.activeMode === 'dark';
 
+    const getActualProject = () => {
+        const actualUrl = window.location.href;
+        if (actualUrl.includes('stacks')) return projects[0];
+        if (actualUrl.includes('search')) return projects[1];
+        if (actualUrl.includes('studio')) return projects[4];
+        return projects[1];
+    };
+
     const toggleDrawer = (open: boolean) => () => {
         setDrawerOpen(open);
     };
@@ -32,7 +38,8 @@ const AllProjectsMenu = () => {
         lineHeight: '1.2',
         cursor: v.url ? 'pointer' : 'default',
         letterSpacing: '3px',
-        color: v.title === 'SEARCH' ? '#D7DF23' : v.url && isDark ? 'white' : v.url ? 'dark' : '#5A5A5A',
+        color:
+            v.title === getActualProject().title ? '#D7DF23' : v.url && isDark ? 'white' : v.url ? 'dark' : '#5A5A5A',
         '&:hover': {
             color: v.url && isDark ? '#e0e0e0' : v.url && '#333',
         },

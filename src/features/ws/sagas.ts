@@ -43,6 +43,7 @@ function* watchEvents() {
 function* reconnect() {
     try {
         yield call(disconnectWebSocket);
+        if (typeof document === 'undefined') return;
 
         const auth = cookie.get('auth');
 

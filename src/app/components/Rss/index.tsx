@@ -3,7 +3,14 @@ import { Avatar, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Link from 'next/link';
 
-export const Rss = () => {
+interface Props {
+    options: {
+        flagname: string;
+        value: string;
+    }[];
+}
+
+export const Rss = ({ options }: Props) => {
     const theme = useTheme();
 
     const [queryString, setQueryString] = useState('');
@@ -24,17 +31,6 @@ export const Rss = () => {
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget);
     };
-
-    const options = [
-        {
-            flagname: 'JSON',
-            value: `json/${queryString}`,
-        },
-        {
-            flagname: 'XML',
-            value: `xml/${queryString}`,
-        },
-    ];
 
     return (
         <>
@@ -73,7 +69,7 @@ export const Rss = () => {
                         sx={{ py: 2, px: 3 }}
                         onClick={() => {
                             if (option.value) {
-                                window.open(option.value, '_blank');
+                                window.open(`${option.value}/${queryString}`, '_blank');
                             }
                         }}
                     >
@@ -84,7 +80,7 @@ export const Rss = () => {
                                 color: theme.palette.text.primary,
                             }}
                         >
-                            <Typography> {option.flagname}</Typography>
+                            <Typography>{option.flagname}</Typography>
                         </Link>
                     </MenuItem>
                 ))}
