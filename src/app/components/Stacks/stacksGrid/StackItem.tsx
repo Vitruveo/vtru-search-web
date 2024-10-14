@@ -121,6 +121,8 @@ const StackItem = ({ stack }: Props) => {
                             src={handleImage()}
                             fallbackSrc={'https://via.placeholder.com/250'}
                             type={stack.stacks.type}
+                            controls
+                            muted={false}
                         />
                     </Box>
                 </Box>

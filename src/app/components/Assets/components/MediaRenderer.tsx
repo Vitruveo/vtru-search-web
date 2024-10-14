@@ -9,11 +9,20 @@ interface MediaRendererProps {
     autoPlay?: boolean;
     preSource?: string;
     type?: string;
+    muted?: boolean;
+    controls?: boolean;
 }
 
 const defaultFallbackSrc = 'https://via.placeholder.com/200';
 
-const MediaRendererMain = ({ src, fallbackSrc, autoPlay = false, type }: MediaRendererProps) => {
+const MediaRendererMain = ({
+    src,
+    fallbackSrc,
+    autoPlay = false,
+    type,
+    muted = true,
+    controls = false,
+}: MediaRendererProps) => {
     const isMobile = useMediaQuery('(max-width: 900px)');
     const [loading, setLoading] = useState(true);
 
@@ -42,7 +51,8 @@ const MediaRendererMain = ({ src, fallbackSrc, autoPlay = false, type }: MediaRe
                 >
                     <video
                         autoPlay={!isMobile || autoPlay}
-                        muted
+                        muted={muted}
+                        controls={controls}
                         loop
                         preload="auto"
                         onLoadedData={() => setLoading(false)}
@@ -103,7 +113,7 @@ const MediaRendererMain = ({ src, fallbackSrc, autoPlay = false, type }: MediaRe
                         width: '100%',
                         height: '100%',
                         objectFit: type ? 'contain' : 'cover',
-                        borderRadius: 'inherit',
+                        border: 'none',
                     }}
                     onLoad={() => setLoading(false)}
                     onError={(event) => {
