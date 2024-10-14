@@ -80,15 +80,15 @@ const AssetItem = ({
             }}
             onMouseEnter={() => {
                 setIsHovered(true);
-                if (asset?.countByCreator && asset?.countByCreator > 1)
-                    hoverTimeoutRef.current = setTimeout(() => setShowFanEffect(true), 500);
+                // if (asset?.countByCreator && asset?.countByCreator > 1)
+                //     hoverTimeoutRef.current = setTimeout(() => setShowFanEffect(true), 500);
             }}
             onMouseLeave={() => {
                 setIsHovered(false);
-                if (hoverTimeoutRef.current) {
-                    clearTimeout(hoverTimeoutRef.current);
-                    hoverTimeoutRef.current = null;
-                }
+                // if (hoverTimeoutRef.current) {
+                //     clearTimeout(hoverTimeoutRef.current);
+                //     hoverTimeoutRef.current = null;
+                // }
                 setShowFanEffect(false);
             }}
             onClick={() => {

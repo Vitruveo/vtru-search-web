@@ -16,17 +16,17 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
     const theme = useTheme();
     const isHiddenCardDetail = useSelector((state) => state.customizer.hidden?.cardDetail);
 
-    const commonStyles = {
-        display: showFanEffect ? 'block' : 'none',
-        width: showFanEffect ? 200 : 1,
-        height: showFanEffect ? 200 : 1,
-        borderRadius: '15px',
-        marginRight: showFanEffect ? -50 : -200,
-        transition: 'margin-right 0.5s ease, transform 0.5s ease',
-        transitionDelay: '0.5s, 0.5s',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-    };
+    // const commonStyles = {
+    //     display: showFanEffect ? 'block' : 'none',
+    //     width: showFanEffect ? 200 : 1,
+    //     height: showFanEffect ? 200 : 1,
+    //     borderRadius: '15px',
+    //     marginRight: showFanEffect ? -50 : -200,
+    //     transition: 'margin-right 0.5s ease, transform 0.5s ease',
+    //     transitionDelay: '0.5s, 0.5s',
+    //     backgroundSize: 'cover',
+    //     backgroundPosition: 'center',
+    // };
 
     let cards = [
         {
@@ -46,6 +46,9 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
     const effectiveCount: number = count || 0;
 
     switch (effectiveCount) {
+        case 1:
+            cards = [];
+            break;
         case 2:
             cards = cards.filter((card) => card.id === 1 || card.id === 3);
             break;
@@ -71,7 +74,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                     opacity: showFanEffect ? 1 : 0,
                 }}
             >
-                {cards.length > 1 && (
+                {/* {cards.length > 1 && (
                     <>
                         {cards.map(({ transform }, index) => {
                             const media = paths[index]?.replace(/\.(\w+)$/, '_thumb.jpg');
@@ -122,7 +125,7 @@ export default function DeckEffect({ isHovered, showFanEffect, count, paths = []
                             );
                         })}
                     </>
-                )}
+                )} */}
             </Box>
             {cards.length > 1 && (
                 <Box onClick={handleClickImage}>
