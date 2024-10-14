@@ -5,14 +5,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/stacks';
 
-export const optionsForSelectSort = [
-    { value: 'latest', label: 'Latest' },
-    { value: 'titleAZ', label: 'Title a-z' },
-    { value: 'titleZA', label: 'Title z-a' },
-    { value: 'CuratorAZ', label: 'Curator a-z' },
-    { value: 'CuratorZA', label: 'Curator z-a' },
-];
-
 const Stacks = () => {
     const dispatch = useDispatch();
     const stacks = useSelector((state) => state.stacks.data);

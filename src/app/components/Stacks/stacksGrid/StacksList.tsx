@@ -1,4 +1,3 @@
-import { optionsForSelectSort } from '@/app/stacks/page';
 import { Stack, StackData } from '@/features/stacks/types';
 import { Box, Pagination, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -62,7 +61,13 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     <Typography variant="h4">Sort:</Typography>
                     <Select
                         placeholder="Sort"
-                        options={optionsForSelectSort}
+                        options={[
+                            { value: 'latest', label: 'Latest' },
+                            { value: 'titleAZ', label: 'Title a-z' },
+                            { value: 'titleZA', label: 'Title z-a' },
+                            { value: 'CuratorAZ', label: 'Curator a-z' },
+                            { value: 'CuratorZA', label: 'Curator z-a' },
+                        ]}
                         value={selectValues.sort}
                         onChange={onChangeSort}
                         styles={{
