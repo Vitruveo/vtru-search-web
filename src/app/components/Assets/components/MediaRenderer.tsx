@@ -11,6 +11,7 @@ interface MediaRendererProps {
     type?: string;
     muted?: boolean;
     controls?: boolean;
+    onClick?: () => void;
 }
 
 const defaultFallbackSrc = 'https://via.placeholder.com/200';
@@ -22,6 +23,7 @@ const MediaRendererMain = ({
     type,
     muted = true,
     controls = false,
+    onClick,
 }: MediaRendererProps) => {
     const isMobile = useMediaQuery('(max-width: 900px)');
     const [loading, setLoading] = useState(true);
@@ -106,21 +108,34 @@ const MediaRendererMain = ({
             )}
 
             {isSlideshow && (
-                <iframe
-                    src={src}
-                    title="stack"
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: type ? 'contain' : 'cover',
-                        border: 'none',
-                    }}
-                    onLoad={() => setLoading(false)}
-                    onError={(event) => {
-                        event.currentTarget.src = fallbackSrc || defaultFallbackSrc;
-                        setLoading(false);
-                    }}
-                />
+                <>
+                    <iframe
+                        src={src}
+                        title="stack"
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: type ? 'contain' : 'cover',
+                            border: 'none',
+                        }}
+                        onLoad={() => setLoading(false)}
+                        onError={(event) => {
+                            event.currentTarget.src = fallbackSrc || defaultFallbackSrc;
+                            setLoading(false);
+                        }}
+                    />
+                    <div
+                        onClick={onClick}
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            cursor: 'pointer',
+                        }}
+                    />
+                </>
             )}
 
             {!isVideo && !isImage && !isSlideshow && (
