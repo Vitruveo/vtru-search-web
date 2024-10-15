@@ -112,6 +112,18 @@ const AssetsList = () => {
         }, 0);
     };
 
+    const getTabTitle = () => {
+        if (!hasCurated) return 'Search';
+        const type = grid ? 'Grid' : video ? 'Video' : 'Slideshow';
+        const title = gridTitle || videoTitle || slideshowTitle;
+        return `Search - ${type}: ${title}`;
+    };
+
+    useEffect(() => {
+        const title = getTabTitle();
+        document.title = title;
+    }, [hasCurated, gridTitle, videoTitle, slideshowTitle]);
+
     useEffect(() => {
         const updateTotalFiltersApplied = () => {
             const total = getTotalFiltersApplied();
