@@ -52,18 +52,18 @@ const StackItem = ({ stack }: Props) => {
                     <MuiStack direction="column" mb={4} gap={1}>
                         <Typography
                             title={stack.stacks.title}
-                            variant="h6"
+                            variant="h5"
                             sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
                             width="100%"
                         >
                             {stack.stacks.title}
                         </Typography>
-                        <Typography variant="inherit" color={theme.palette.primary.main}>
+                        <Typography variant="h6" color={theme.palette.primary.main}>
                             Curator
                         </Typography>
                         <Box display="flex" gap={1} alignItems="center">
                             <Typography
-                                variant="body1"
+                                variant="h6"
                                 sx={{
                                     whiteSpace: 'nowrap',
                                     overflow: 'hidden',
@@ -73,7 +73,7 @@ const StackItem = ({ stack }: Props) => {
                             >
                                 {stack.username}
                             </Typography>
-                            <Typography variant="body1" sx={{ whiteSpace: 'nowrap' }}>
+                            <Typography variant="h6" sx={{ whiteSpace: 'nowrap' }}>
                                 (+{stack.stacks.quantity} stacks)
                             </Typography>
                         </Box>
