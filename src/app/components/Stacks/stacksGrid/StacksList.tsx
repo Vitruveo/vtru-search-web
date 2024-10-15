@@ -120,14 +120,16 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 <Button
                     variant="outlined"
                     sx={{
+                        fontSize: '1.2rem',
                         color: theme.palette.text.primary,
-                        fontWeight: 900,
                         cursor: 'pointer',
                         border: 'none',
+                        textDecoration: 'underline',
                         '&:hover': {
                             color: theme.palette.text.primary,
                             border: 'none',
                             backgroundColor: 'transparent',
+                            textDecoration: 'underline',
                         },
                     }}
                     onClick={handleCurateStack}

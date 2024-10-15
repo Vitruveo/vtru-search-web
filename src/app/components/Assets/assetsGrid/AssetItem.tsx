@@ -155,6 +155,7 @@ const AssetItem = ({
                                     whiteSpace="nowrap"
                                     textOverflow="ellipsis"
                                     href="#"
+                                    underline="none"
                                     onClick={onCreatorNameClick}
                                 >
                                     {creatorName}
