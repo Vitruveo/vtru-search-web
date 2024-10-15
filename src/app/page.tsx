@@ -5,7 +5,7 @@ import { Box, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Theme } from '@mui/material/styles';
 
-import { useDispatch } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import AssetsSidebar from './components/Assets/assetsGrid/AssetsSidebar';
 import AssetsList from './components/Assets/assetsGrid/AssetsList';
 import PageContainer from './components/Container/PageContainer';
@@ -22,6 +22,7 @@ const initialParams: Record<string, string> = {};
 const Search = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
+    const maxPrice = useSelector((state) => state.assets.maxPrice);
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
 
@@ -40,16 +41,19 @@ const Search = () => {
         });
 
         if (grid) {
+            dispatch(actions.reset({ maxPrice }));
             dispatch(actionsAssets.setGridId(grid));
             return;
         }
 
         if (video) {
+            dispatch(actions.reset({ maxPrice }));
             dispatch(actionsAssets.setVideoId(video));
             return;
         }
 
         if (slideshow) {
+            dispatch(actions.reset({ maxPrice }));
             dispatch(actionsAssets.setSlideshowId(slideshow));
             return;
         }
