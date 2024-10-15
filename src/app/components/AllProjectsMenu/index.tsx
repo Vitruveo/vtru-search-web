@@ -5,14 +5,14 @@ import { useSelector } from '@/store/hooks';
 import { SEARCH_BASE_URL, STUDIO_BASE_URL } from '@/constants/api';
 
 const projects = [
-    { title: 'STACKS', url: `${SEARCH_BASE_URL}/stacks` },
     { title: 'SEARCH', url: `${SEARCH_BASE_URL}` },
+    { title: 'STACKS', url: `${SEARCH_BASE_URL}/stacks` },
     { title: 'STORES', url: '' },
     { title: 'STREAMS', url: '' },
     { title: 'STUDIO', url: `${STUDIO_BASE_URL}/login` },
-    { title: 'BUY VUSD', url: '' },
     { title: 'ABOUT XIBIT', url: 'https://about.xibit.app', onlyMobile: true },
     { title: 'ABOUT VITRUVEO', url: 'https://vitruveo.xyz', onlyMobile: true },
+    { title: 'BUY VUSD', url: '' },
 ];
 
 const AllProjectsMenu = () => {
@@ -24,10 +24,10 @@ const AllProjectsMenu = () => {
 
     const getActualProject = () => {
         const actualUrl = window.location.href;
-        if (actualUrl.includes('stacks')) return projects[0];
-        if (actualUrl.includes('search')) return projects[1];
+        if (actualUrl.includes('stacks')) return projects[1];
+        if (actualUrl.includes('search')) return projects[0];
         if (actualUrl.includes('studio')) return projects[4];
-        return projects[1];
+        return projects[0];
     };
 
     const toggleDrawer = (open: boolean) => () => {
