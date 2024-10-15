@@ -114,9 +114,8 @@ const AssetsList = () => {
 
     const getTabTitle = () => {
         if (!hasCurated) return 'Search';
-        const type = grid ? 'Grid' : video ? 'Video' : 'Slideshow';
         const title = gridTitle || videoTitle || slideshowTitle;
-        return `Search - ${type}: ${title}`;
+        return `Stacks - ${title}`;
     };
 
     useEffect(() => {
