@@ -4,6 +4,7 @@ import StackList from '../components/Stacks/stacksGrid/StacksList';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/stacks';
+import { SEARCH_BASE_URL } from '@/constants/api';
 
 const Stacks = () => {
     const dispatch = useDispatch();
@@ -41,11 +42,13 @@ const Stacks = () => {
         setSelectValues((prev) => ({ ...prev, sort: { value: e!.value, label: e!.label } }));
     }, []);
 
+    const handleCurateStack = () => window.open(`${SEARCH_BASE_URL}?groupByCreator=no&assets=''`, '_blank');
+
     return (
         <>
             <StackList
                 data={{ stacks, selectValues, optionsForSelectPage }}
-                actions={{ onChangeSort, onChangePage, onChangeLimit }}
+                actions={{ onChangeSort, onChangePage, onChangeLimit, handleCurateStack }}
             />
         </>
     );
