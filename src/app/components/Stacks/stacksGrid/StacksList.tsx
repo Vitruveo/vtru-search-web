@@ -120,14 +120,16 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 <Button
                     variant="outlined"
                     sx={{
+                        fontSize: '1.2rem',
                         color: theme.palette.text.primary,
-                        fontWeight: 900,
                         cursor: 'pointer',
                         border: 'none',
+                        textDecoration: 'underline',
                         '&:hover': {
                             color: theme.palette.text.primary,
                             border: 'none',
                             backgroundColor: 'transparent',
+                            textDecoration: 'underline',
                         },
                     }}
                     onClick={handleCurateStack}
@@ -135,7 +137,15 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     Curate Stack
                 </Button>
             </Box>
-            <Box display={'flex'} gap={1} flexDirection={smUp ? 'row' : 'column'} justifyContent={'end'} p={2}>
+            <Box
+                display={'flex'}
+                gap={1}
+                flexDirection={smUp ? 'row' : 'column'}
+                justifyContent={'end'}
+                p={2}
+                alignItems={'center'}
+            >
+                <Typography variant="h4">Pagination:</Typography>
                 <Select
                     placeholder="Page Items"
                     options={[

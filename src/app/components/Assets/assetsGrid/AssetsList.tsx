@@ -14,7 +14,6 @@ import {
     Badge,
     Button,
     IconButton,
-    Container,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { IconArrowBarToLeft, IconCopy, IconArrowBarToRight, IconFilter } from '@tabler/icons-react';
@@ -112,6 +111,17 @@ const AssetsList = () => {
             return Array.isArray(arrayfield) ? acc + arrayfield.length : acc;
         }, 0);
     };
+
+    const getTabTitle = () => {
+        if (!hasCurated) return 'Search';
+        const title = gridTitle || videoTitle || slideshowTitle;
+        return `Stacks - ${title}`;
+    };
+
+    useEffect(() => {
+        const title = getTabTitle();
+        document.title = title;
+    }, [hasCurated, gridTitle, videoTitle, slideshowTitle]);
 
     useEffect(() => {
         const updateTotalFiltersApplied = () => {
@@ -605,7 +615,8 @@ const AssetsList = () => {
                             <Box />
                         )}
                         {!isHidden?.pageNavigation && (
-                            <Box display={'flex'} gap={1} flexDirection={lgUp ? 'row' : 'column'}>
+                            <Box display={'flex'} gap={1} flexDirection={lgUp ? 'row' : 'column'} alignItems={'center'}>
+                                <Typography variant="h4">Pagination:</Typography>
                                 <Select
                                     placeholder="Page Items"
                                     options={[
