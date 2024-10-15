@@ -14,7 +14,6 @@ import {
     Badge,
     Button,
     IconButton,
-    Container,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { IconArrowBarToLeft, IconCopy, IconArrowBarToRight, IconFilter } from '@tabler/icons-react';
@@ -605,7 +604,8 @@ const AssetsList = () => {
                             <Box />
                         )}
                         {!isHidden?.pageNavigation && (
-                            <Box display={'flex'} gap={1} flexDirection={lgUp ? 'row' : 'column'}>
+                            <Box display={'flex'} gap={1} flexDirection={lgUp ? 'row' : 'column'} alignItems={'center'}>
+                                <Typography variant="h4">Pagination:</Typography>
                                 <Select
                                     placeholder="Page Items"
                                     options={[

@@ -135,7 +135,15 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     Curate Stack
                 </Button>
             </Box>
-            <Box display={'flex'} gap={1} flexDirection={smUp ? 'row' : 'column'} justifyContent={'end'} p={2}>
+            <Box
+                display={'flex'}
+                gap={1}
+                flexDirection={smUp ? 'row' : 'column'}
+                justifyContent={'end'}
+                p={2}
+                alignItems={'center'}
+            >
+                <Typography variant="h4">Pagination:</Typography>
                 <Select
                     placeholder="Page Items"
                     options={[
