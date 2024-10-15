@@ -1,14 +1,11 @@
 import { Stack, StackData } from '@/features/stacks/types';
 import { Box, Button, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import Select, { SingleValue } from 'react-select';
-import AllProjectsMenu from '../../AllProjectsMenu';
-import '../../Assets/assetsGrid/AssetScroll.css';
-import { Rss } from '../../Rss';
-import Logo from '../../Shared/Logo';
-import StackItem, { StackCardContainer } from './StackItem';
 import { useEffect, useRef } from 'react';
+import Select, { SingleValue } from 'react-select';
+import '../../Assets/assetsGrid/AssetScroll.css';
 import Header from '../../Header';
+import StackItem, { StackCardContainer } from './StackItem';
 
 interface StacksProps {
     data: {
@@ -39,6 +36,7 @@ interface StacksProps {
                 label: string;
             }>
         ) => void;
+        handleCurateStack: () => void;
     };
 }
 
@@ -48,7 +46,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
     const topRef = useRef<HTMLDivElement>(null);
 
-    const { onChangePage, onChangeSort, onChangeLimit } = actions;
+    const { onChangePage, onChangeSort, onChangeLimit, handleCurateStack } = actions;
     const { stacks, selectValues, optionsForSelectPage } = data;
 
     const handleScrollToTop = () => {
@@ -119,9 +117,23 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         }}
                     />
                 </Box>
-                <Typography variant="h5" sx={{ color: theme.palette.text.primary, fontWeight: 700 }}>
+                <Button
+                    variant="outlined"
+                    sx={{
+                        color: theme.palette.text.primary,
+                        fontWeight: 900,
+                        cursor: 'pointer',
+                        border: 'none',
+                        '&:hover': {
+                            color: theme.palette.text.primary,
+                            border: 'none',
+                            backgroundColor: 'transparent',
+                        },
+                    }}
+                    onClick={handleCurateStack}
+                >
                     Curate Stack
-                </Typography>
+                </Button>
             </Box>
             <Box display={'flex'} gap={1} flexDirection={smUp ? 'row' : 'column'} justifyContent={'end'} p={2}>
                 <Select
