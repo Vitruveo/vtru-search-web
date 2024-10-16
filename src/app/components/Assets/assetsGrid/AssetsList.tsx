@@ -546,15 +546,7 @@ const AssetsList = () => {
                                             }}
                                         />
                                     </Box>
-
-                                    <Box
-                                        // justifyContent="space-between"
-                                        display="flex"
-                                        flexDirection="row"
-                                        maxWidth={350}
-                                        alignItems="center"
-                                        gap={1}
-                                    >
+                                    <Box display="flex" flexDirection="row" maxWidth={350} alignItems="center" gap={1}>
                                         <Typography variant="h4">Artists:</Typography>
                                         <Select
                                             placeholder="Artists"
@@ -725,7 +717,15 @@ const AssetsList = () => {
                                 </Grid>
                             ))
                         ) : assets.length > 0 ? (
-                            <>
+                            <Box
+                                display="grid"
+                                gridTemplateColumns="repeat(auto-fill, minmax(250px, 1fr))"
+                                justifyContent="center"
+                                rowGap={2}
+                                columnGap={1.5}
+                                width="100%"
+                                alignItems="center"
+                            >
                                 {activeAssets.map((asset) => (
                                     <Grid item key={asset._id} display={'flex'} justifyContent={'center'}>
                                         <AssetCardContainer>
@@ -855,7 +855,7 @@ const AssetsList = () => {
                                             />
                                         </AssetCardContainer>
                                     ))}
-                            </>
+                            </Box>
                         ) : (
                             <Grid
                                 item
