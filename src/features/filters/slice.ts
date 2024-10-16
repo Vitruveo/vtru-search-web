@@ -5,6 +5,7 @@ import { FilterSliceState } from './types';
 import { DeepPartial } from '../common/types';
 import { clearAssetsFromURL } from '@/utils/url-assets';
 import { extractObjects } from '@/utils/extractObjects';
+import { init } from 'next/dist/compiled/webpack/webpack';
 
 export const initialState: FilterSliceState = {
     name: '',
@@ -168,6 +169,7 @@ export const filterSlice = createSlice({
                 wallets: [],
             };
             state.reseted += 1;
+            state.hasBts = '';
 
             const payload = extractObjects(initialState);
 
@@ -259,7 +261,7 @@ export const filterSlice = createSlice({
             state.reseted += 1;
             state.creatorId = '';
             state.portfolio = initialState.portfolio;
-            state.hasBts = '';
+            state.hasBts = initialState.hasBts;
             clearAssetsFromURL();
         },
         changePrice: (state, action: PayloadAction<{ min: number; max: number }>) => {
@@ -302,6 +304,7 @@ export const filterSlice = createSlice({
                 aiGeneration: 'no',
             };
             state.reseted += 1;
+            state.hasBts = initialState.hasBts;
             clearAssetsFromURL();
         },
         changeSlideshow: (
@@ -330,6 +333,7 @@ export const filterSlice = createSlice({
                 aiGeneration: 'no',
             };
             state.reseted += 1;
+            state.hasBts = initialState.hasBts;
             clearAssetsFromURL();
         },
         changeVideo: (
@@ -355,6 +359,7 @@ export const filterSlice = createSlice({
                 aiGeneration: 'no',
             };
             state.reseted += 1;
+            state.hasBts = initialState.hasBts;
             clearAssetsFromURL();
         },
         changeTabNavigation: (
@@ -381,6 +386,7 @@ export const filterSlice = createSlice({
                 aiGeneration: 'no',
             };
             state.reseted += 1;
+            state.hasBts = initialState.hasBts;
             clearAssetsFromURL();
         },
         changePortfolioWallets: (state, action: PayloadAction<{ wallets: string[] }>) => {
