@@ -546,15 +546,7 @@ const AssetsList = () => {
                                             }}
                                         />
                                     </Box>
-
-                                    <Box
-                                        // justifyContent="space-between"
-                                        display="flex"
-                                        flexDirection="row"
-                                        maxWidth={350}
-                                        alignItems="center"
-                                        gap={1}
-                                    >
+                                    <Box display="flex" flexDirection="row" maxWidth={350} alignItems="center" gap={1}>
                                         <Typography variant="h4">Artists:</Typography>
                                         <Select
                                             placeholder="Artists"

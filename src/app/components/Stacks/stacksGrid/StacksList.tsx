@@ -70,53 +70,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     { flagname: 'XML', value: 'stacks/xml' },
                 ]}
             />
-            <Box display={'flex'} flexDirection={smUp ? 'row' : 'column'} justifyContent={'space-between'} p={2}>
-                <Box display={'flex'} alignItems={'center'} gap={2}>
-                    <Typography variant="h4">Sort:</Typography>
-                    <Select
-                        placeholder="Sort"
-                        options={[
-                            { value: 'latest', label: 'Latest' },
-                            { value: 'titleAZ', label: 'Title a-z' },
-                            { value: 'titleZA', label: 'Title z-a' },
-                            { value: 'CuratorAZ', label: 'Curator a-z' },
-                            { value: 'CuratorZA', label: 'Curator z-a' },
-                        ]}
-                        value={selectValues.sort}
-                        onChange={onChangeSort}
-                        styles={{
-                            control: (base, state) => ({
-                                ...base,
-                                minWidth: '240px',
-                                maxWidth: lgUp ? '' : '150px',
-                                borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
-                                backgroundColor: theme.palette.background.paper,
-                                boxShadow: '#FF0066',
-                                '&:hover': { borderColor: '#FF0066' },
-                            }),
-                            menu: (base) => ({
-                                ...base,
-                                zIndex: 1000,
-                                color: theme.palette.text.primary,
-                                backgroundColor: theme.palette.background.paper,
-                            }),
-                            singleValue: (base) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                            }),
-                            option: (base, state) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                                backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
-                                '&:hover': { backgroundColor: theme.palette.action.hover },
-                            }),
-                            input: (base) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                            }),
-                        }}
-                    />
-                </Box>
+            <Box display={'flex'} justifyContent={'flex-end'} width={'100%'}>
                 <Button
                     variant="outlined"
                     sx={{
@@ -148,91 +102,137 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 <Box
                     m={2}
                     display={'flex'}
-                    justifyContent="end"
+                    justifyContent="space-between"
                     width="100%"
-                    gap={1}
                     flexDirection={smUp ? 'row' : 'column'}
-                    alignItems={'center'}
                 >
-                    <Typography variant="h4">Pagination:</Typography>
-                    <Select
-                        placeholder="Page Items"
-                        options={[
-                            { value: '25', label: '25' },
-                            { value: '50', label: '50' },
-                            { value: '100', label: '100' },
-                            { value: '150', label: '150' },
-                            { value: '200', label: '200' },
-                        ]}
-                        value={selectValues.limit}
-                        onChange={onChangeLimit}
-                        styles={{
-                            control: (base, state) => ({
-                                ...base,
-                                minWidth: '250px',
-                                borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
-                                backgroundColor: theme.palette.background.paper,
-                                boxShadow: '#FF0066',
-                                '&:hover': { borderColor: '#FF0066' },
-                            }),
-                            menu: (base) => ({
-                                ...base,
-                                zIndex: 1000,
-                                color: theme.palette.text.primary,
-                                backgroundColor: theme.palette.background.paper,
-                            }),
-                            singleValue: (base) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                            }),
-                            option: (base, state) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                                backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
-                                '&:hover': { backgroundColor: theme.palette.action.hover },
-                            }),
-                            input: (base) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                            }),
-                        }}
-                    />
-                    <Select
-                        placeholder="Select Page"
-                        options={optionsForSelectPage}
-                        value={selectValues.page}
-                        onChange={onChangePage}
-                        styles={{
-                            control: (base, state) => ({
-                                ...base,
-                                minWidth: '250px',
-                                borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
-                                backgroundColor: theme.palette.background.paper,
-                                boxShadow: '#FF0066',
-                                '&:hover': { borderColor: '#FF0066' },
-                            }),
-                            menu: (base) => ({
-                                ...base,
-                                zIndex: 1000,
-                                color: theme.palette.text.primary,
-                                backgroundColor: theme.palette.background.paper,
-                            }),
-                            singleValue: (base) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                            }),
-                            option: (base, state) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                                backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
-                                '&:hover': { backgroundColor: theme.palette.action.hover },
-                            }),
-                            input: (base) => ({
-                                ...base,
-                                color: theme.palette.text.primary,
-                            }),
-                        }}
-                    />
+                    <Box display={'flex'} gap={1} alignItems={'center'}>
+                        <Typography variant="h4">Sort:</Typography>
+                        <Select
+                            placeholder="Sort"
+                            options={[
+                                { value: 'latest', label: 'Latest' },
+                                { value: 'titleAZ', label: 'Title a-z' },
+                                { value: 'titleZA', label: 'Title z-a' },
+                                { value: 'CuratorAZ', label: 'Curator a-z' },
+                                { value: 'CuratorZA', label: 'Curator z-a' },
+                            ]}
+                            value={selectValues.sort}
+                            onChange={onChangeSort}
+                            styles={{
+                                control: (base, state) => ({
+                                    ...base,
+                                    minWidth: '240px',
+                                    maxWidth: lgUp ? '' : '150px',
+                                    borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
+                                    backgroundColor: theme.palette.background.paper,
+                                    boxShadow: '#FF0066',
+                                    '&:hover': { borderColor: '#FF0066' },
+                                }),
+                                menu: (base) => ({
+                                    ...base,
+                                    zIndex: 1000,
+                                    color: theme.palette.text.primary,
+                                    backgroundColor: theme.palette.background.paper,
+                                }),
+                                singleValue: (base) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                }),
+                                option: (base, state) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                    backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
+                                    '&:hover': { backgroundColor: theme.palette.action.hover },
+                                }),
+                                input: (base) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                }),
+                            }}
+                        />
+                    </Box>
+                    <Box display={'flex'} gap={1} alignItems={'center'}>
+                        <Typography variant="h4">Pagination:</Typography>
+                        <Select
+                            placeholder="Page Items"
+                            options={[
+                                { value: '25', label: '25' },
+                                { value: '50', label: '50' },
+                                { value: '100', label: '100' },
+                                { value: '150', label: '150' },
+                                { value: '200', label: '200' },
+                            ]}
+                            value={selectValues.limit}
+                            onChange={onChangeLimit}
+                            styles={{
+                                control: (base, state) => ({
+                                    ...base,
+                                    minWidth: '150px',
+                                    borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
+                                    backgroundColor: theme.palette.background.paper,
+                                    boxShadow: '#FF0066',
+                                    '&:hover': { borderColor: '#FF0066' },
+                                }),
+                                menu: (base) => ({
+                                    ...base,
+                                    zIndex: 1000,
+                                    color: theme.palette.text.primary,
+                                    backgroundColor: theme.palette.background.paper,
+                                }),
+                                singleValue: (base) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                }),
+                                option: (base, state) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                    backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
+                                    '&:hover': { backgroundColor: theme.palette.action.hover },
+                                }),
+                                input: (base) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                }),
+                            }}
+                        />
+                        <Select
+                            placeholder="Select Page"
+                            options={optionsForSelectPage}
+                            value={selectValues.page}
+                            onChange={onChangePage}
+                            styles={{
+                                control: (base, state) => ({
+                                    ...base,
+                                    minWidth: '150px',
+                                    borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
+                                    backgroundColor: theme.palette.background.paper,
+                                    boxShadow: '#FF0066',
+                                    '&:hover': { borderColor: '#FF0066' },
+                                }),
+                                menu: (base) => ({
+                                    ...base,
+                                    zIndex: 1000,
+                                    color: theme.palette.text.primary,
+                                    backgroundColor: theme.palette.background.paper,
+                                }),
+                                singleValue: (base) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                }),
+                                option: (base, state) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                    backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
+                                    '&:hover': { backgroundColor: theme.palette.action.hover },
+                                }),
+                                input: (base) => ({
+                                    ...base,
+                                    color: theme.palette.text.primary,
+                                }),
+                            }}
+                        />
+                    </Box>
                 </Box>
                 <Box
                     display="grid"
