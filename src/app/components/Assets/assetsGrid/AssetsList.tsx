@@ -717,7 +717,15 @@ const AssetsList = () => {
                                 </Grid>
                             ))
                         ) : assets.length > 0 ? (
-                            <>
+                            <Box
+                                display="grid"
+                                gridTemplateColumns="repeat(auto-fill, minmax(250px, 1fr))"
+                                justifyContent="center"
+                                rowGap={2}
+                                columnGap={1.5}
+                                width="100%"
+                                alignItems="center"
+                            >
                                 {activeAssets.map((asset) => (
                                     <Grid item key={asset._id} display={'flex'} justifyContent={'center'}>
                                         <AssetCardContainer>
@@ -847,7 +855,7 @@ const AssetsList = () => {
                                             />
                                         </AssetCardContainer>
                                     ))}
-                            </>
+                            </Box>
                         ) : (
                             <Grid
                                 item
