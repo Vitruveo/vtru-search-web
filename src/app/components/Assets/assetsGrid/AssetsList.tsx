@@ -80,8 +80,9 @@ const AssetsList = () => {
     const drawerStack = useToggle();
 
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
-
+    const mdUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('md'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
+
     const { data: assets, totalPage, page: currentPage, limit } = useSelector((state) => state.assets.data);
     const { sort, maxPrice } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
@@ -498,7 +499,7 @@ const AssetsList = () => {
                                     gap={lgUp ? 4 : 2}
                                 >
                                     <Box maxWidth={350} display="flex" flexDirection="row" alignItems="center" gap={1}>
-                                        <Typography variant="h4">Sort:</Typography>
+                                        <Typography variant="h5">Sort:</Typography>
                                         <Select
                                             placeholder="Sort"
                                             options={optionsForSelectSort}
@@ -507,8 +508,7 @@ const AssetsList = () => {
                                             styles={{
                                                 control: (base, state) => ({
                                                     ...base,
-                                                    minWidth: '240px',
-                                                    maxWidth: lgUp ? '' : '150px',
+                                                    width: '150px',
                                                     borderColor: state.isFocused
                                                         ? theme.palette.primary.main
                                                         : theme.palette.grey[200],
@@ -542,7 +542,7 @@ const AssetsList = () => {
                                         />
                                     </Box>
                                     <Box display="flex" flexDirection="row" maxWidth={350} alignItems="center" gap={1}>
-                                        <Typography variant="h4">Artists:</Typography>
+                                        <Typography variant="h5">Artists:</Typography>
                                         <Select
                                             placeholder="Artists"
                                             options={optionsForSelectGrouped}
@@ -553,8 +553,7 @@ const AssetsList = () => {
                                             styles={{
                                                 control: (base, state) => ({
                                                     ...base,
-                                                    minWidth: '240px',
-                                                    maxWidth: lgUp ? '' : '150px',
+                                                    width: '150px',
                                                     borderColor: state.isFocused
                                                         ? theme.palette.primary.main
                                                         : theme.palette.grey[200],
@@ -598,7 +597,7 @@ const AssetsList = () => {
                                 flexWrap={'wrap'}
                                 gap={1}
                             >
-                                <Typography variant="h4">Pagination:</Typography>
+                                <Typography variant="h5">Pagination:</Typography>
                                 <Select
                                     placeholder="Page Items"
                                     options={[
@@ -700,7 +699,7 @@ const AssetsList = () => {
                         overflow={'hidden'}
                         display={'flex'}
                         justifyContent={'center'}
-                        ml={4}
+                        ml={8}
                         mr={4}
                     >
                         {isLoading ? (
@@ -712,15 +711,7 @@ const AssetsList = () => {
                                 </Grid>
                             ))
                         ) : assets.length > 0 ? (
-                            <Box
-                                display="grid"
-                                gridTemplateColumns="repeat(auto-fill, minmax(250px, 1fr))"
-                                justifyContent="center"
-                                rowGap={2}
-                                columnGap={1.5}
-                                width="100%"
-                                alignItems="center"
-                            >
+                            <Box display="flex" flexWrap="wrap" justifyContent={'start'} gap={4}>
                                 {activeAssets.map((asset) => (
                                     <Grid item key={asset._id} display={'flex'} justifyContent={'center'}>
                                         <AssetCardContainer>

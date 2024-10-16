@@ -26,7 +26,6 @@ export default function StyleElements() {
         setCopyEmbed('Copy Embed');
     };
 
-    const customizer = useSelector((state) => state.customizer);
     const hiddenElement = useSelector((state) => state.customizer.hidden);
     const [state, dispatchAction] = useReducer(reducer, initialState);
     const [copyUrl, setCopyUrl] = useState('Copy URL');
@@ -119,7 +118,7 @@ export default function StyleElements() {
                         checked={state.spotlight}
                         disabled={state.recentlySold && state.assets && state.artistSpotlight}
                     />
-                    Hide Spotlight
+                    Hide Artwork Spotlight
                 </MenuItem>
                 <MenuItem>
                     <Switch
