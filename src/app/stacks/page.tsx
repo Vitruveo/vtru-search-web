@@ -42,7 +42,7 @@ const Stacks = () => {
         setSelectValues((prev) => ({ ...prev, sort: { value: e!.value, label: e!.label } }));
     }, []);
 
-    const handleCurateStack = () => window.open(`${SEARCH_BASE_URL}?groupByCreator=no&assets=''`, '_blank');
+    const handleCurateStack = () => window.open(`${SEARCH_BASE_URL}?groupByCreator=no&assets`, '_blank');
 
     return (
         <>

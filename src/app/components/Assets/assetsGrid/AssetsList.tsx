@@ -27,7 +27,7 @@ import { DrawerAsset } from '../components/DrawerAsset';
 import DrawerStack from '../components/DrawerStack/DrawerStack';
 import AssetItem, { AssetCardContainer } from './AssetItem';
 import { useToggle } from '@/app/hooks/useToggle';
-import { getAssetsIdsFromURL } from '@/utils/url-assets';
+import { hasAssetsInURL } from '@/utils/url-assets';
 import { getAssetPrice, isAssetAvailable } from '@/utils/assets';
 import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
@@ -134,15 +134,10 @@ const AssetsList = () => {
     }, [values]);
 
     useEffect(() => {
-        const idsFromURL = getAssetsIdsFromURL();
+        const hasAsset = hasAssetsInURL();
 
-        if (idsFromURL?.length && idsFromURL[0] == '') {
-            return;
-        }
-
-        if (idsFromURL) {
+        if (hasAsset) {
             curateStack.activate();
-            setSelected(assets.filter((asset) => idsFromURL.includes(asset._id)));
         }
     }, []);
 
