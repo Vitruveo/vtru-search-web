@@ -88,14 +88,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     Curate Stack
                 </Button>
             </Box>
-            <Box
-                display="flex"
-                flexWrap={'wrap'}
-                justifyContent={'center'}
-                overflow={'auto'}
-                maxHeight={'80vh'}
-                ref={topRef}
-            >
+            <Box display="flex" flexWrap="wrap" justifyContent="center" overflow="auto" maxHeight="80vh" ref={topRef}>
                 <Box m={2} display={mdUp ? 'flex' : 'none'} justifyContent="space-between" width="100%">
                     <Box display={'flex'} gap={1} alignItems={'center'}>
                         <Typography variant="h4">Sort:</Typography>
@@ -225,21 +218,20 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     </Box>
                 </Box>
                 <Box
-                    display="grid"
-                    gridTemplateColumns="repeat(auto-fill, minmax(250px, 1fr))"
-                    justifyContent="center"
-                    rowGap={2}
-                    columnGap={1.5}
-                    width="100%"
-                    alignItems="center"
+                    width={'100%'}
+                    display={'flex'}
+                    justifyContent={'center'}
+                    maxWidth={lgUp ? '78%' : mdUp ? '90%' : '70%'}
                 >
-                    {stacks.data.map((stack: Stack, index: number) => {
-                        return (
-                            <StackCardContainer key={index}>
-                                <StackItem stack={stack} />
-                            </StackCardContainer>
-                        );
-                    })}
+                    <Box display="flex" flexWrap="wrap" justifyContent={'start'} gap={4}>
+                        {stacks.data.map((stack: Stack, index: number) => {
+                            return (
+                                <StackCardContainer key={index}>
+                                    <StackItem stack={stack} />
+                                </StackCardContainer>
+                            );
+                        })}
+                    </Box>
                 </Box>
                 <Box mt={4} mb={2} display={'flex'} justifyContent="center" width="100%" alignItems="center">
                     <Pagination
