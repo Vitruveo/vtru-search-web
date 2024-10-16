@@ -503,7 +503,7 @@ const AssetsList = () => {
                                     gap={lgUp ? 4 : 2}
                                 >
                                     <Box maxWidth={350} display="flex" flexDirection="row" alignItems="center" gap={1}>
-                                        <Typography variant="h4">Sort:</Typography>
+                                        <Typography variant="h5">Sort:</Typography>
                                         <Select
                                             placeholder="Sort"
                                             options={optionsForSelectSort}
@@ -512,8 +512,7 @@ const AssetsList = () => {
                                             styles={{
                                                 control: (base, state) => ({
                                                     ...base,
-                                                    minWidth: '240px',
-                                                    maxWidth: lgUp ? '' : '150px',
+                                                    width: '150px',
                                                     borderColor: state.isFocused
                                                         ? theme.palette.primary.main
                                                         : theme.palette.grey[200],
@@ -547,7 +546,7 @@ const AssetsList = () => {
                                         />
                                     </Box>
                                     <Box display="flex" flexDirection="row" maxWidth={350} alignItems="center" gap={1}>
-                                        <Typography variant="h4">Artists:</Typography>
+                                        <Typography variant="h5">Artists:</Typography>
                                         <Select
                                             placeholder="Artists"
                                             options={optionsForSelectGrouped}
@@ -558,8 +557,7 @@ const AssetsList = () => {
                                             styles={{
                                                 control: (base, state) => ({
                                                     ...base,
-                                                    minWidth: '240px',
-                                                    maxWidth: lgUp ? '' : '150px',
+                                                    width: '150px',
                                                     borderColor: state.isFocused
                                                         ? theme.palette.primary.main
                                                         : theme.palette.grey[200],
@@ -603,7 +601,7 @@ const AssetsList = () => {
                                 flexWrap={'wrap'}
                                 gap={1}
                             >
-                                <Typography variant="h4">Pagination:</Typography>
+                                <Typography variant="h5">Pagination:</Typography>
                                 <Select
                                     placeholder="Page Items"
                                     options={[

@@ -81,7 +81,6 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     sx={{
                         fontSize: '1.6rem',
                         fontWeight: 'bold',
-                        borderRadius: '0',
                         width: '250px',
                     }}
                     onClick={handleCurateStack}
@@ -114,8 +113,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                             styles={{
                                 control: (base, state) => ({
                                     ...base,
-                                    minWidth: '240px',
-                                    maxWidth: lgUp ? '' : '150px',
+                                    width: '150px',
                                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                                     backgroundColor: theme.palette.background.paper,
                                     boxShadow: '#FF0066',
@@ -145,7 +143,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         />
                     </Box>
                     <Box display={'flex'} gap={1} alignItems={'center'}>
-                        <Typography variant="h4">Pagination:</Typography>
+                        <Typography variant="h5">Pagination:</Typography>
                         <Select
                             placeholder="Page Items"
                             options={[
