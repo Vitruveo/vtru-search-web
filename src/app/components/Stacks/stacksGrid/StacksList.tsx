@@ -43,7 +43,7 @@ interface StacksProps {
 const Stacks = ({ data, actions }: StacksProps) => {
     const theme = useTheme();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
-    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
+    const mdUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('md'));
     const topRef = useRef<HTMLDivElement>(null);
 
     const { onChangePage, onChangeSort, onChangeLimit, handleCurateStack } = actions;
@@ -70,21 +70,19 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     { flagname: 'XML', value: 'stacks/xml' },
                 ]}
             />
-            <Box display={'flex'} justifyContent={'flex-end'} width={'100%'}>
+            <Box display={'flex'} justifyContent={'flex-end'} width={'96%'} m={2}>
+                <Box display={'flex'} justifyContent={'center'} alignItems={'center'} mr={2}>
+                    <Typography variant="h4" color={theme.palette.primary.main}>
+                        Curation is fun and easy. Try it now!
+                    </Typography>
+                </Box>
                 <Button
-                    variant="outlined"
+                    variant="contained"
                     sx={{
-                        fontSize: '1.2rem',
-                        color: theme.palette.text.primary,
-                        cursor: 'pointer',
-                        border: 'none',
-                        textDecoration: 'underline',
-                        '&:hover': {
-                            color: theme.palette.text.primary,
-                            border: 'none',
-                            backgroundColor: 'transparent',
-                            textDecoration: 'underline',
-                        },
+                        fontSize: '1.6rem',
+                        fontWeight: 'bold',
+                        borderRadius: '0',
+                        width: '250px',
                     }}
                     onClick={handleCurateStack}
                 >
@@ -99,13 +97,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 maxHeight={'80vh'}
                 ref={topRef}
             >
-                <Box
-                    m={2}
-                    display={'flex'}
-                    justifyContent="space-between"
-                    width="100%"
-                    flexDirection={smUp ? 'row' : 'column'}
-                >
+                <Box m={2} display={mdUp ? 'flex' : 'none'} justifyContent="space-between" width="100%">
                     <Box display={'flex'} gap={1} alignItems={'center'}>
                         <Typography variant="h4">Sort:</Typography>
                         <Select
