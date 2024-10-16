@@ -301,7 +301,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             hasBts,
         });
 
-        if (!creatorId && (page === 1 || page === 0)) {
+        if (!creatorId && ids.length === 0 && (page === 1 || page === 0)) {
             yield put(actions.loadAssetsLastSold());
         }
 
