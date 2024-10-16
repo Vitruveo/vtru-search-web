@@ -70,7 +70,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     { flagname: 'XML', value: 'stacks/xml' },
                 ]}
             />
-            <Box display={'flex'} justifyContent={'flex-end'} width={'96%'} m={2}>
+            <Box display={'flex'} justifyContent={'flex-end'} width={'96%'} m={2} mb={6}>
                 <Box display={'flex'} justifyContent={'center'} alignItems={'center'} mr={2}>
                     <Typography variant="h4" color={theme.palette.primary.main}>
                         Curation is fun and easy. Try it now!
@@ -89,7 +89,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 </Button>
             </Box>
             <Box display="flex" flexWrap="wrap" justifyContent="center" overflow="auto" maxHeight="80vh" ref={topRef}>
-                <Box m={2} display={mdUp ? 'flex' : 'none'} justifyContent="space-between" width="100%">
+                <Box m={2} display={mdUp ? 'flex' : 'none'} justifyContent="space-between" width="100%" mb={8}>
                     <Box display={'flex'} gap={1} alignItems={'center'}>
                         <Typography variant="h4">Sort:</Typography>
                         <Select
