@@ -1,8 +1,8 @@
-import { Box, CardContent, Link, Stack as StackMui, Typography } from '@mui/material';
+import { Box, CardContent, Stack as StackMui, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Marquee from 'react-fast-marquee';
 
-import { SLIDESHOW_BASE_URL, STORE_BASE_URL } from '@/constants/api';
+import { SEARCH_BASE_URL, SLIDESHOW_BASE_URL } from '@/constants/api';
 import { GENERAL_STORAGE_URL } from '@/constants/aws';
 import { Stack } from '@/features/stacks/types';
 import { useSelector } from '@/store/hooks';
@@ -13,7 +13,7 @@ function StackSpotlightSlider() {
     const theme = useTheme();
 
     const handleClickItem = (stack: Stack) => {
-        window.open(`${STORE_BASE_URL}/${stack?.username || 'preview'}/${stack?._id}`);
+        window.open(`${SEARCH_BASE_URL}?${stack.stacks.type}=${stack.stacks.id}`, '_blank');
     };
 
     const handleImage = (stack: Stack) => {
