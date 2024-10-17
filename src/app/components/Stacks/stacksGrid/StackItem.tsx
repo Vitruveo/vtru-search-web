@@ -39,7 +39,14 @@ const StackItem = ({ stack }: Props) => {
     return (
         <>
             <BlankCard className="hoverCard" onClick={handleCardClick}>
-                <Box width={250} height={250} borderRadius={'8px'} position={'relative'} p={2}>
+                <Box
+                    width={250}
+                    height={250}
+                    borderRadius={'8px'}
+                    position={'relative'}
+                    p={2}
+                    sx={{ '&:hover': { cursor: 'pointer' } }}
+                >
                     <MediaRenderer
                         key={stack.stacks.id}
                         src={handleImage()}
@@ -48,7 +55,15 @@ const StackItem = ({ stack }: Props) => {
                         onClick={handleCardClick}
                     />
                 </Box>
-                <CardContent sx={{ p: 3, pt: 2, width: '250px', backgroundColor: theme.palette.grey[100] }}>
+                <CardContent
+                    sx={{
+                        p: 3,
+                        pt: 2,
+                        width: '250px',
+                        backgroundColor: theme.palette.grey[100],
+                        '&:hover': { cursor: 'pointer' },
+                    }}
+                >
                     <MuiStack direction="column" mb={4} gap={1}>
                         <Typography
                             title={stack.stacks.title}

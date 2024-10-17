@@ -318,6 +318,7 @@ const AssetsList = () => {
     const hasBlockedAssets = blockedAssets.length > 0;
     const isInIframe = window.self !== window.top;
     const hasIncludesGroupActive = hasIncludesGroup.active === 'all' || hasIncludesGroup.active === 'noSales';
+
     return (
         <Box>
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
@@ -340,9 +341,15 @@ const AssetsList = () => {
                 >
                     <Box display="flex" alignItems={'center'} gap={1}>
                         {lgUp && (
-                            <IconButton sx={{ color: theme.palette.grey[300] }} aria-label="menu" onClick={onMenuClick}>
-                                {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
-                            </IconButton>
+                            <Box ml={1.5}>
+                                <IconButton
+                                    sx={{ color: theme.palette.grey[300] }}
+                                    aria-label="menu"
+                                    onClick={onMenuClick}
+                                >
+                                    {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
+                                </IconButton>
+                            </Box>
                         )}
                         {hasCurated ||
                         !hasIncludesGroupActive ||
@@ -423,7 +430,7 @@ const AssetsList = () => {
                             </Box>
                         )}
 
-                        <Box display="flex" alignItems="center">
+                        <Box display="flex" alignItems="center" mr={2}>
                             {!lgUp && (
                                 <IconButton
                                     sx={{ marginLeft: 0, paddingLeft: 0 }}
@@ -596,6 +603,7 @@ const AssetsList = () => {
                                 justifyContent={'flex-end'}
                                 flexWrap={'wrap'}
                                 gap={1}
+                                mr={1.5}
                             >
                                 <Typography variant="h5">Pagination:</Typography>
                                 <Select
@@ -699,8 +707,7 @@ const AssetsList = () => {
                         overflow={'hidden'}
                         display={'flex'}
                         justifyContent={'center'}
-                        ml={8}
-                        mr={4}
+                        margin={'0 5%'}
                     >
                         {isLoading ? (
                             [...Array(15)].map((_, index) => (
@@ -711,7 +718,14 @@ const AssetsList = () => {
                                 </Grid>
                             ))
                         ) : assets.length > 0 ? (
-                            <Box display="flex" flexWrap="wrap" justifyContent={'start'} gap={4}>
+                            <Box
+                                display="flex"
+                                flexWrap="wrap"
+                                justifyContent={'flex-start'}
+                                width={'100%'}
+                                height={'100%'}
+                                gap={4}
+                            >
                                 {activeAssets.map((asset) => (
                                     <Grid item key={asset._id} display={'flex'} justifyContent={'center'}>
                                         <AssetCardContainer>
