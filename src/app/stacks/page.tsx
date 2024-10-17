@@ -17,6 +17,7 @@ const Stacks = () => {
 
     useEffect(() => {
         dispatch(actions.loadStacks());
+        dispatch(actions.loadStacksSpotlight());
     }, []);
 
     const optionsForSelectPage = useMemo(() => {

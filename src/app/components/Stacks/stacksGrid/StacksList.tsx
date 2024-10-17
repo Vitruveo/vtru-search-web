@@ -6,6 +6,7 @@ import Select, { SingleValue } from 'react-select';
 import '../../Assets/assetsGrid/AssetScroll.css';
 import Header from '../../Header';
 import StackItem, { StackCardContainer } from './StackItem';
+import StackSpotlightSlider from '../../Sliders/StackSpotlight';
 
 interface StacksProps {
     data: {
@@ -87,6 +88,9 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 >
                     Curate Stack
                 </Button>
+            </Box>
+            <Box>
+                <StackSpotlightSlider />
             </Box>
             <Box display="flex" flexWrap="wrap" justifyContent="center" overflow="auto" maxHeight="80vh" ref={topRef}>
                 <Box m={2} display={mdUp ? 'flex' : 'none'} justifyContent="space-between" width="100%" mb={8}>

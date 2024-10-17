@@ -8,6 +8,7 @@ export interface StackSliceState {
     loading: boolean;
     error: string | null;
     data: StackData;
+    spotlight: Stack[];
     sort: string;
 }
 

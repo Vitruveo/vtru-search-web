@@ -12,6 +12,7 @@ export const initialState: StackSliceState = {
         total: 0,
         totalPage: 0,
     },
+    spotlight: [],
     sort: 'latest',
 };
 
@@ -20,6 +21,7 @@ export const stacksSlice = createSlice({
     initialState,
     reducers: {
         loadStacks: () => {},
+        loadStacksSpotlight: () => {},
         startLoading: (state) => {
             state.loading = true;
         },
@@ -37,6 +39,9 @@ export const stacksSlice = createSlice({
         },
         setSort: (state, action: PayloadAction<string>) => {
             state.sort = action.payload;
+        },
+        setSpotlight: (state, action: PayloadAction<StackSliceState['spotlight']>) => {
+            state.spotlight = action.payload;
         },
     },
 });

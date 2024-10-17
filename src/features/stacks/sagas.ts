@@ -2,7 +2,7 @@ import { API_BASE_URL } from '@/constants/api';
 import axios, { AxiosResponse } from 'axios';
 import { call, put, select, takeEvery, all } from 'redux-saga/effects';
 import { APIResponse } from '../common/types';
-import { StackData } from './types';
+import { Stack, StackData } from './types';
 import { actions } from './slice';
 import { AppState } from '@/store';
 
@@ -36,11 +36,22 @@ function* getStacks() {
     yield put(actions.finishLoading());
 }
 
+function* getStacksSpotlight() {
+    try {
+        const URL_SPOTLIGHT = `${API_BASE_URL}/creators/public/stackSpotlight`;
+        const response: AxiosResponse<APIResponse<Stack[]>> = yield call(axios.get, URL_SPOTLIGHT);
+        yield put(actions.setSpotlight(response.data.data));
+    } catch (error) {
+        // Handle error
+    }
+}
+
 export default function* stacksSaga() {
     yield all([
         takeEvery(actions.loadStacks.type, getStacks),
         takeEvery(actions.setPage.type, getStacks),
         takeEvery(actions.setLimit.type, getStacks),
         takeEvery(actions.setSort.type, getStacks),
+        takeEvery(actions.loadStacksSpotlight.type, getStacksSpotlight),
     ]);
 }
