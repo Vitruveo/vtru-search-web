@@ -29,9 +29,6 @@ export interface Stack {
         type: string;
         quantity: number;
     };
-    assetDetails: {
-        preview: string;
-    }[];
 }
 
 export interface StackData {

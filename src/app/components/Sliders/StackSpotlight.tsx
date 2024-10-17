@@ -23,7 +23,7 @@ function StackSpotlightSlider() {
     };
 
     return (
-        <Box>
+        <Box minHeight={250}>
             <Marquee>
                 {stacks.map((stack, index) => {
                     const stackTitle = stack?.stacks.title || 'No Title';

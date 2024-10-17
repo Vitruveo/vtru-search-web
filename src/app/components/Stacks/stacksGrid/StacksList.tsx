@@ -71,7 +71,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     { flagname: 'XML', value: 'stacks/xml' },
                 ]}
             />
-            <Grid container justifyContent="end" alignItems="center" spacing={12} width="100%">
+            <Grid container justifyContent="end" alignItems="center" spacing={6.4} width="100%">
                 <Grid item display={'flex'} alignItems={'center'} gap={2} mb={6} mt={2}>
                     <Typography variant="h5" color={theme.palette.primary.main}>
                         Curation is fun and easy. Try it now!
@@ -90,6 +90,9 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 </Grid>
             </Grid>
             <Box display="flex" flexWrap="wrap" justifyContent="center" overflow="auto" maxHeight="80vh" ref={topRef}>
+                <Box width={'95%'}>
+                    <StackSpotlightSlider />
+                </Box>
                 <Box m={2} display={mdUp ? 'flex' : 'none'} justifyContent="space-between" width="100%" mb={8}>
                     <Box display={'flex'} gap={1} alignItems={'center'} ml={1}>
                         <Typography variant="h4">Sort:</Typography>
@@ -136,7 +139,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                             }}
                         />
                     </Box>
-                    <Box display={'flex'} gap={1} alignItems={'center'} mr={9.5}>
+                    <Box display={'flex'} gap={1} alignItems={'center'} mr={3.8}>
                         <Typography variant="h5">Pagination:</Typography>
                         <Select
                             placeholder="Page Items"
