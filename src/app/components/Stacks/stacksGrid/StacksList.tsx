@@ -217,13 +217,15 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         />
                     </Box>
                 </Box>
-                <Box
-                    width={'100%'}
-                    display={'flex'}
-                    justifyContent={'center'}
-                    maxWidth={lgUp ? '78%' : mdUp ? '90%' : '70%'}
-                >
-                    <Box display="flex" flexWrap="wrap" justifyContent={'start'} gap={4}>
+                <Box display={'flex'} flexWrap={'wrap'} justifyContent={'center'} margin={'0 5%'}>
+                    <Box
+                        display="flex"
+                        flexWrap="wrap"
+                        justifyContent={'flex-start'}
+                        width={'100%'}
+                        height={'100%'}
+                        gap={4}
+                    >
                         {stacks.data.map((stack: Stack, index: number) => {
                             return (
                                 <StackCardContainer key={index}>

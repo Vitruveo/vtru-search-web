@@ -699,8 +699,7 @@ const AssetsList = () => {
                         overflow={'hidden'}
                         display={'flex'}
                         justifyContent={'center'}
-                        ml={8}
-                        mr={4}
+                        margin={'0 5%'}
                     >
                         {isLoading ? (
                             [...Array(15)].map((_, index) => (
@@ -711,7 +710,14 @@ const AssetsList = () => {
                                 </Grid>
                             ))
                         ) : assets.length > 0 ? (
-                            <Box display="flex" flexWrap="wrap" justifyContent={'start'} gap={4}>
+                            <Box
+                                display="flex"
+                                flexWrap="wrap"
+                                justifyContent={'flex-start'}
+                                width={'100%'}
+                                height={'100%'}
+                                gap={4}
+                            >
                                 {activeAssets.map((asset) => (
                                     <Grid item key={asset._id} display={'flex'} justifyContent={'center'}>
                                         <AssetCardContainer>
