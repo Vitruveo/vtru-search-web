@@ -1,5 +1,5 @@
 import { Stack, StackData } from '@/features/stacks/types';
-import { Box, Button, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, Grid, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useRef } from 'react';
 import Select, { SingleValue } from 'react-select';
@@ -70,27 +70,27 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     { flagname: 'XML', value: 'stacks/xml' },
                 ]}
             />
-            <Box display={'flex'} justifyContent={'flex-end'} width={'96%'} m={2} mb={6}>
-                <Box display={'flex'} justifyContent={'center'} alignItems={'center'} mr={2}>
-                    <Typography variant="h4" color={theme.palette.primary.main}>
+            <Grid container justifyContent="end" alignItems="center" spacing={12} width="100%">
+                <Grid item display={'flex'} alignItems={'center'} gap={2} mb={6} mt={2}>
+                    <Typography variant="h5" color={theme.palette.primary.main}>
                         Curation is fun and easy. Try it now!
                     </Typography>
-                </Box>
-                <Button
-                    variant="contained"
-                    sx={{
-                        fontSize: '1.6rem',
-                        fontWeight: 'bold',
-                        width: '250px',
-                    }}
-                    onClick={handleCurateStack}
-                >
-                    Curate Stack
-                </Button>
-            </Box>
+                    <Button
+                        variant="contained"
+                        sx={{
+                            fontSize: '1rem',
+                            fontWeight: 'bold',
+                            width: '150px',
+                        }}
+                        onClick={handleCurateStack}
+                    >
+                        Curate Stack
+                    </Button>
+                </Grid>
+            </Grid>
             <Box display="flex" flexWrap="wrap" justifyContent="center" overflow="auto" maxHeight="80vh" ref={topRef}>
                 <Box m={2} display={mdUp ? 'flex' : 'none'} justifyContent="space-between" width="100%" mb={8}>
-                    <Box display={'flex'} gap={1} alignItems={'center'}>
+                    <Box display={'flex'} gap={1} alignItems={'center'} ml={1}>
                         <Typography variant="h4">Sort:</Typography>
                         <Select
                             placeholder="Sort"
@@ -135,7 +135,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                             }}
                         />
                     </Box>
-                    <Box display={'flex'} gap={1} alignItems={'center'}>
+                    <Box display={'flex'} gap={1} alignItems={'center'} mr={9.5}>
                         <Typography variant="h5">Pagination:</Typography>
                         <Select
                             placeholder="Page Items"
@@ -244,7 +244,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         size={lgUp ? 'large' : 'medium'}
                     />
                 </Box>
-                <Box display={'flex'} justifyContent="flex-end" width="100%" mr={4} mb={lgUp ? 4 : 12}>
+                <Box display={'flex'} justifyContent="flex-end" width="100%" mr={11} mb={lgUp ? 4 : 12}>
                     <Button variant="contained" onClick={handleScrollToTop}>
                         Scroll to top
                     </Button>
