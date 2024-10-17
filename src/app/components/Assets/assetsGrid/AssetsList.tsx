@@ -318,6 +318,7 @@ const AssetsList = () => {
     const hasBlockedAssets = blockedAssets.length > 0;
     const isInIframe = window.self !== window.top;
     const hasIncludesGroupActive = hasIncludesGroup.active === 'all' || hasIncludesGroup.active === 'noSales';
+
     return (
         <Box>
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
@@ -340,9 +341,15 @@ const AssetsList = () => {
                 >
                     <Box display="flex" alignItems={'center'} gap={1}>
                         {lgUp && (
-                            <IconButton sx={{ color: theme.palette.grey[300] }} aria-label="menu" onClick={onMenuClick}>
-                                {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
-                            </IconButton>
+                            <Box ml={1.5}>
+                                <IconButton
+                                    sx={{ color: theme.palette.grey[300] }}
+                                    aria-label="menu"
+                                    onClick={onMenuClick}
+                                >
+                                    {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
+                                </IconButton>
+                            </Box>
                         )}
                         {hasCurated ||
                         !hasIncludesGroupActive ||
@@ -423,7 +430,7 @@ const AssetsList = () => {
                             </Box>
                         )}
 
-                        <Box display="flex" alignItems="center">
+                        <Box display="flex" alignItems="center" mr={2}>
                             {!lgUp && (
                                 <IconButton
                                     sx={{ marginLeft: 0, paddingLeft: 0 }}
@@ -596,6 +603,7 @@ const AssetsList = () => {
                                 justifyContent={'flex-end'}
                                 flexWrap={'wrap'}
                                 gap={1}
+                                mr={1.5}
                             >
                                 <Typography variant="h5">Pagination:</Typography>
                                 <Select

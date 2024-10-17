@@ -79,7 +79,7 @@ export default function StyleElements() {
                         },
                     }}
                 >
-                    <IconButton size="small" sx={{ padding: 0 }} onClick={handleClick}>
+                    <IconButton size="small" sx={{ padding: 0, marginLeft: 0.5 }} onClick={handleClick}>
                         <IconSettingsFilled height={29} />
                     </IconButton>
                 </Tooltip>
