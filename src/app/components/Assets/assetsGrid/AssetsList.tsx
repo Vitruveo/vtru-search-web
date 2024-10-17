@@ -14,7 +14,6 @@ import {
     Badge,
     Button,
     IconButton,
-    Container,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { IconArrowBarToLeft, IconCopy, IconArrowBarToRight, IconFilter } from '@tabler/icons-react';
@@ -28,7 +27,7 @@ import { DrawerAsset } from '../components/DrawerAsset';
 import DrawerStack from '../components/DrawerStack/DrawerStack';
 import AssetItem, { AssetCardContainer } from './AssetItem';
 import { useToggle } from '@/app/hooks/useToggle';
-import { getAssetsIdsFromURL } from '@/utils/url-assets';
+import { hasAssetsInURL } from '@/utils/url-assets';
 import { getAssetPrice, isAssetAvailable } from '@/utils/assets';
 import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
@@ -81,6 +80,9 @@ const AssetsList = () => {
     const drawerStack = useToggle();
 
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
+    const mdUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('md'));
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
+
     const { data: assets, totalPage, page: currentPage, limit } = useSelector((state) => state.assets.data);
     const { sort, maxPrice } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
@@ -113,6 +115,17 @@ const AssetsList = () => {
         }, 0);
     };
 
+    const getTabTitle = () => {
+        if (!hasCurated) return 'Search';
+        const title = gridTitle || videoTitle || slideshowTitle;
+        return `Stacks - ${title}`;
+    };
+
+    useEffect(() => {
+        const title = getTabTitle();
+        document.title = title;
+    }, [hasCurated, gridTitle, videoTitle, slideshowTitle]);
+
     useEffect(() => {
         const updateTotalFiltersApplied = () => {
             const total = getTotalFiltersApplied();
@@ -122,15 +135,10 @@ const AssetsList = () => {
     }, [values]);
 
     useEffect(() => {
-        const idsFromURL = getAssetsIdsFromURL();
+        const hasAsset = hasAssetsInURL();
 
-        if (idsFromURL?.length && idsFromURL[0] == '') {
-            return;
-        }
-
-        if (idsFromURL) {
+        if (hasAsset) {
             curateStack.activate();
-            setSelected(assets.filter((asset) => idsFromURL.includes(asset._id)));
         }
     }, []);
 
@@ -322,237 +330,20 @@ const AssetsList = () => {
             />
 
             {!isHidden?.order && (
-                <Stack
-                    width="100%"
-                    direction="row"
-                    display={lgUp ? 'flex' : 'block'}
-                    justifyContent="space-between"
-                    alignItems="center"
-                    mt={1}
-                    mb={3}
-                    p={3}
-                    pl={2}
-                    style={{
-                        marginBottom: lgUp || curateStack.isActive ? '20px' : 0,
-                        paddingTop: '7px',
-                    }}
+                <Box
+                    display={'flex'}
+                    alignItems={'center'}
+                    flexDirection={!smUp ? 'column-reverse' : 'row'}
+                    justifyContent={'space-between'}
+                    pr={4}
+                    mb={4}
                 >
-                    <Grid
-                        item
-                        xs={12}
-                        sm={'auto'}
-                        display={'flex'}
-                        gap={lgUp ? 4 : 2}
-                        flexDirection={lgUp ? 'row' : 'column'}
-                        alignItems="flex-start"
-                    >
+                    <Box display="flex" alignItems={'center'} gap={1}>
                         {lgUp && (
                             <IconButton sx={{ color: theme.palette.grey[300] }} aria-label="menu" onClick={onMenuClick}>
                                 {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
                             </IconButton>
                         )}
-                        <Box
-                            width="100%"
-                            maxWidth={350}
-                            justifyContent="space-between"
-                            display="flex"
-                            flexDirection="row"
-                            alignItems="center"
-                            gap={1}
-                        >
-                            <Typography variant="h4">Sort:</Typography>
-                            <Select
-                                placeholder="Sort"
-                                options={optionsForSelectSort}
-                                value={optionsForSelectSort.find((option) => option.value === sortOrder)}
-                                onChange={(e) => handleChangeSelectSortOrder(e)}
-                                styles={{
-                                    control: (base, state) => ({
-                                        ...base,
-                                        minWidth: '240px',
-                                        maxWidth: lgUp ? '' : '150px',
-                                        borderColor: state.isFocused
-                                            ? theme.palette.primary.main
-                                            : theme.palette.grey[200],
-                                        backgroundColor: theme.palette.background.paper,
-                                        boxShadow: '#FF0066',
-                                        '&:hover': { borderColor: '#FF0066' },
-                                    }),
-                                    menu: (base) => ({
-                                        ...base,
-                                        zIndex: 1000,
-                                        color: theme.palette.text.primary,
-                                        backgroundColor: theme.palette.background.paper,
-                                    }),
-                                    singleValue: (base) => ({
-                                        ...base,
-                                        color: theme.palette.text.primary,
-                                    }),
-                                    option: (base, state) => ({
-                                        ...base,
-                                        color: theme.palette.text.primary,
-                                        backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
-                                        '&:hover': { backgroundColor: theme.palette.action.hover },
-                                    }),
-                                    input: (base) => ({
-                                        ...base,
-                                        color: theme.palette.text.primary,
-                                    }),
-                                }}
-                            />
-                        </Box>
-
-                        <Box
-                            width="100%"
-                            justifyContent="space-between"
-                            display="flex"
-                            flexDirection="row"
-                            maxWidth={350}
-                            alignItems="center"
-                            gap={1}
-                        >
-                            <Typography variant="h4">Artists:</Typography>
-                            <Select
-                                placeholder="Artists"
-                                options={optionsForSelectGrouped}
-                                value={optionsForSelectGrouped.find((option) => option.value === groupByCreator)}
-                                onChange={(e) => handleChangeSelectGroupByCreator(e)}
-                                styles={{
-                                    control: (base, state) => ({
-                                        ...base,
-                                        minWidth: '240px',
-                                        maxWidth: lgUp ? '' : '150px',
-                                        borderColor: state.isFocused
-                                            ? theme.palette.primary.main
-                                            : theme.palette.grey[200],
-                                        backgroundColor: theme.palette.background.paper,
-                                        boxShadow: '#FF0066',
-                                        '&:hover': { borderColor: '#FF0066' },
-                                    }),
-                                    menu: (base) => ({
-                                        ...base,
-                                        zIndex: 1000,
-                                        color: theme.palette.text.primary,
-                                        backgroundColor: theme.palette.background.paper,
-                                    }),
-                                    singleValue: (base) => ({
-                                        ...base,
-                                        color: theme.palette.text.primary,
-                                    }),
-                                    option: (base, state) => ({
-                                        ...base,
-                                        color: theme.palette.text.primary,
-                                        backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
-                                        '&:hover': { backgroundColor: theme.palette.action.hover },
-                                    }),
-                                    input: (base) => ({
-                                        ...base,
-                                        color: theme.palette.text.primary,
-                                    }),
-                                }}
-                            />
-                        </Box>
-                    </Grid>
-                    <Box
-                        mt={lgUp ? 0 : 2}
-                        display={'flex'}
-                        flexDirection={!lgUp ? 'column-reverse' : 'row'}
-                        flexWrap="wrap"
-                        justifyContent={lgUp ? 'unset' : 'flex-start'}
-                    >
-                        {curateStack.isActive && (
-                            <Box display="flex" alignItems="center" gap={1}>
-                                <Button variant="contained" onClick={handleUnselectAll}>
-                                    Deselect All
-                                </Button>
-                                <Button variant="contained" onClick={handleSelectAll}>
-                                    Select All
-                                </Button>
-                                <Box sx={{ cursor: 'pointer' }} onClick={drawerStack.activate}>
-                                    {lgUp && (
-                                        <Box display="flex" alignItems="center" gap={2}>
-                                            <Button variant="contained" fullWidth>
-                                                {selected.length}{' '}
-                                                {language['search.assetList.curateStack.selected'] as string}
-                                            </Button>
-                                        </Box>
-                                    )}
-                                    {!lgUp && (
-                                        <Badge badgeContent={selected.length} color="primary" style={{ marginLeft: 2 }}>
-                                            <IconCopy width={20} color={iconColor} />
-                                        </Badge>
-                                    )}
-                                </Box>
-                            </Box>
-                        )}
-
-                        <Box sx={!lgUp ? { marginBottom: 2 } : {}} display="flex" alignItems="center">
-                            {!lgUp && (
-                                <IconButton
-                                    sx={{ marginLeft: 0, paddingLeft: 0 }}
-                                    size="small"
-                                    aria-label="menu"
-                                    onClick={onMenuClick}
-                                >
-                                    <IconFilter />
-                                </IconButton>
-                            )}
-                            <Switch onChange={handleChangeCurateStack} checked={curateStack.isActive} />
-                            <Box display={'flex'} gap={1}>
-                                <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
-                                    {language['search.assetList.curateStack'] as string}
-                                </Typography>
-
-                                {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
-                            </Box>
-                        </Box>
-                    </Box>
-                </Stack>
-            )}
-
-            <Grid
-                container
-                spacing={3}
-                padding={3}
-                pr={0}
-                sx={{
-                    overflow: 'auto',
-                    maxHeight:
-                        isHidden?.order && isHidden?.header
-                            ? '105vh'
-                            : isHidden?.order || isHidden?.header
-                              ? '95vh'
-                              : '85vh',
-                    justifyContent: 'flex-end',
-                }}
-                ref={topRef}
-            >
-                <Grid
-                    item
-                    xs={12}
-                    style={{
-                        paddingTop: 0,
-                    }}
-                >
-                    {(currentPage === 1 || currentPage === 0) &&
-                        !grid &&
-                        !video &&
-                        !slideshow &&
-                        !creatorId &&
-                        !portfolioWallets &&
-                        tabNavigation.assets?.length <= 0 &&
-                        tabNavigation.artists?.length <= 0 && <TabSliders />}
-                </Grid>
-
-                <Grid item xs={12} mr={4} mb={4}>
-                    <Box
-                        width="100%"
-                        display="flex"
-                        flexDirection={lgUp ? 'row' : 'column'}
-                        alignItems={lgUp ? 'flex-end' : 'flex-start'}
-                        justifyContent={'space-between'}
-                        gap={1}
-                    >
                         {hasCurated ||
                         !hasIncludesGroupActive ||
                         tabNavigation.assets?.length > 0 ||
@@ -604,8 +395,209 @@ const AssetsList = () => {
                         ) : (
                             <Box />
                         )}
-                        {!isHidden?.pageNavigation && (
-                            <Box display={'flex'} gap={1} flexDirection={lgUp ? 'row' : 'column'}>
+                    </Box>
+                    <Box display={'flex'} alignItems={'center'} flexDirection={!smUp ? 'column-reverse' : 'row'}>
+                        {curateStack.isActive && (
+                            <Box display="flex" alignItems="center" gap={1}>
+                                <Button variant="contained" onClick={handleUnselectAll}>
+                                    Deselect All
+                                </Button>
+                                <Button variant="contained" onClick={handleSelectAll}>
+                                    Select All
+                                </Button>
+                                <Box sx={{ cursor: 'pointer' }} onClick={drawerStack.activate}>
+                                    {lgUp && (
+                                        <Box display="flex" alignItems="center" gap={2}>
+                                            <Button variant="contained" fullWidth>
+                                                {selected.length}{' '}
+                                                {language['search.assetList.curateStack.selected'] as string}
+                                            </Button>
+                                        </Box>
+                                    )}
+                                    {!lgUp && (
+                                        <Badge badgeContent={selected.length} color="primary" style={{ marginLeft: 2 }}>
+                                            <IconCopy width={20} color={iconColor} />
+                                        </Badge>
+                                    )}
+                                </Box>
+                            </Box>
+                        )}
+
+                        <Box display="flex" alignItems="center">
+                            {!lgUp && (
+                                <IconButton
+                                    sx={{ marginLeft: 0, paddingLeft: 0 }}
+                                    size="small"
+                                    aria-label="menu"
+                                    onClick={onMenuClick}
+                                >
+                                    <IconFilter />
+                                </IconButton>
+                            )}
+                            {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
+                            <Switch onChange={handleChangeCurateStack} checked={curateStack.isActive} />
+                            <Box display={'flex'} gap={1}>
+                                <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
+                                    {language['search.assetList.curateStack'] as string}
+                                </Typography>
+                            </Box>
+                        </Box>
+                    </Box>
+                </Box>
+            )}
+
+            <Grid
+                container
+                spacing={3}
+                padding={3}
+                pr={0}
+                sx={{
+                    overflow: 'auto',
+                    maxHeight:
+                        isHidden?.order && isHidden?.header
+                            ? '105vh'
+                            : isHidden?.order || isHidden?.header
+                              ? '95vh'
+                              : '85vh',
+                    justifyContent: 'flex-end',
+                }}
+                ref={topRef}
+            >
+                <Grid
+                    item
+                    xs={12}
+                    style={{
+                        paddingTop: 0,
+                    }}
+                >
+                    {(currentPage === 1 || currentPage === 0) &&
+                        !grid &&
+                        !video &&
+                        !slideshow &&
+                        !creatorId &&
+                        !portfolioWallets &&
+                        tabNavigation.assets?.length <= 0 &&
+                        tabNavigation.artists?.length <= 0 && <TabSliders />}
+                </Grid>
+
+                <Grid item xs={12}>
+                    {!isHidden?.pageNavigation && (
+                        <Box
+                            display={'flex'}
+                            gap={1}
+                            flexDirection={lgUp ? 'row' : 'column'}
+                            justifyContent={'space-between'}
+                            pr={4}
+                            flexWrap={'wrap'}
+                        >
+                            {!isHidden?.order ? (
+                                <Box
+                                    display={'flex'}
+                                    justifyContent={'flex-end'}
+                                    alignItems={'center'}
+                                    flexWrap={'wrap'}
+                                    gap={lgUp ? 4 : 2}
+                                >
+                                    <Box maxWidth={350} display="flex" flexDirection="row" alignItems="center" gap={1}>
+                                        <Typography variant="h5">Sort:</Typography>
+                                        <Select
+                                            placeholder="Sort"
+                                            options={optionsForSelectSort}
+                                            value={optionsForSelectSort.find((option) => option.value === sortOrder)}
+                                            onChange={(e) => handleChangeSelectSortOrder(e)}
+                                            styles={{
+                                                control: (base, state) => ({
+                                                    ...base,
+                                                    width: '150px',
+                                                    borderColor: state.isFocused
+                                                        ? theme.palette.primary.main
+                                                        : theme.palette.grey[200],
+                                                    backgroundColor: theme.palette.background.paper,
+                                                    boxShadow: '#FF0066',
+                                                    '&:hover': { borderColor: '#FF0066' },
+                                                }),
+                                                menu: (base) => ({
+                                                    ...base,
+                                                    zIndex: 1000,
+                                                    color: theme.palette.text.primary,
+                                                    backgroundColor: theme.palette.background.paper,
+                                                }),
+                                                singleValue: (base) => ({
+                                                    ...base,
+                                                    color: theme.palette.text.primary,
+                                                }),
+                                                option: (base, state) => ({
+                                                    ...base,
+                                                    color: theme.palette.text.primary,
+                                                    backgroundColor: state.isFocused
+                                                        ? theme.palette.action.hover
+                                                        : 'transparent',
+                                                    '&:hover': { backgroundColor: theme.palette.action.hover },
+                                                }),
+                                                input: (base) => ({
+                                                    ...base,
+                                                    color: theme.palette.text.primary,
+                                                }),
+                                            }}
+                                        />
+                                    </Box>
+                                    <Box display="flex" flexDirection="row" maxWidth={350} alignItems="center" gap={1}>
+                                        <Typography variant="h5">Artists:</Typography>
+                                        <Select
+                                            placeholder="Artists"
+                                            options={optionsForSelectGrouped}
+                                            value={optionsForSelectGrouped.find(
+                                                (option) => option.value === groupByCreator
+                                            )}
+                                            onChange={(e) => handleChangeSelectGroupByCreator(e)}
+                                            styles={{
+                                                control: (base, state) => ({
+                                                    ...base,
+                                                    width: '150px',
+                                                    borderColor: state.isFocused
+                                                        ? theme.palette.primary.main
+                                                        : theme.palette.grey[200],
+                                                    backgroundColor: theme.palette.background.paper,
+                                                    boxShadow: '#FF0066',
+                                                    '&:hover': { borderColor: '#FF0066' },
+                                                }),
+                                                menu: (base) => ({
+                                                    ...base,
+                                                    zIndex: 1000,
+                                                    color: theme.palette.text.primary,
+                                                    backgroundColor: theme.palette.background.paper,
+                                                }),
+                                                singleValue: (base) => ({
+                                                    ...base,
+                                                    color: theme.palette.text.primary,
+                                                }),
+                                                option: (base, state) => ({
+                                                    ...base,
+                                                    color: theme.palette.text.primary,
+                                                    backgroundColor: state.isFocused
+                                                        ? theme.palette.action.hover
+                                                        : 'transparent',
+                                                    '&:hover': { backgroundColor: theme.palette.action.hover },
+                                                }),
+                                                input: (base) => ({
+                                                    ...base,
+                                                    color: theme.palette.text.primary,
+                                                }),
+                                            }}
+                                        />
+                                    </Box>
+                                </Box>
+                            ) : (
+                                <Box />
+                            )}
+                            <Box
+                                display={smUp ? 'flex' : 'none'}
+                                alignItems={'center'}
+                                justifyContent={'flex-end'}
+                                flexWrap={'wrap'}
+                                gap={1}
+                            >
+                                <Typography variant="h5">Pagination:</Typography>
                                 <Select
                                     placeholder="Page Items"
                                     options={[
@@ -620,7 +612,7 @@ const AssetsList = () => {
                                     styles={{
                                         control: (base, state) => ({
                                             ...base,
-                                            minWidth: '250px',
+                                            minWidth: '150px',
                                             borderColor: state.isFocused
                                                 ? theme.palette.primary.main
                                                 : theme.palette.grey[200],
@@ -660,7 +652,7 @@ const AssetsList = () => {
                                     styles={{
                                         control: (base, state) => ({
                                             ...base,
-                                            minWidth: '250px',
+                                            minWidth: '150px',
                                             borderColor: state.isFocused
                                                 ? theme.palette.primary.main
                                                 : theme.palette.grey[200],
@@ -693,9 +685,11 @@ const AssetsList = () => {
                                     }}
                                 />
                             </Box>
-                        )}
-                    </Box>
+                        </Box>
+                    )}
                 </Grid>
+
+                <Grid item xs={12} mr={4} mb={4}></Grid>
 
                 {!isHidden?.assets && (
                     <Grid
@@ -705,8 +699,7 @@ const AssetsList = () => {
                         overflow={'hidden'}
                         display={'flex'}
                         justifyContent={'center'}
-                        ml={4}
-                        mr={4}
+                        margin={'0 5%'}
                     >
                         {isLoading ? (
                             [...Array(15)].map((_, index) => (
@@ -717,7 +710,14 @@ const AssetsList = () => {
                                 </Grid>
                             ))
                         ) : assets.length > 0 ? (
-                            <>
+                            <Box
+                                display="flex"
+                                flexWrap="wrap"
+                                justifyContent={'flex-start'}
+                                width={'100%'}
+                                height={'100%'}
+                                gap={4}
+                            >
                                 {activeAssets.map((asset) => (
                                     <Grid item key={asset._id} display={'flex'} justifyContent={'center'}>
                                         <AssetCardContainer>
@@ -847,7 +847,7 @@ const AssetsList = () => {
                                             />
                                         </AssetCardContainer>
                                     ))}
-                            </>
+                            </Box>
                         ) : (
                             <Grid
                                 item

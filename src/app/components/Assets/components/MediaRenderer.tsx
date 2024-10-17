@@ -8,16 +8,29 @@ interface MediaRendererProps {
     fallbackSrc?: string;
     autoPlay?: boolean;
     preSource?: string;
+    type?: string;
+    muted?: boolean;
+    controls?: boolean;
+    onClick?: () => void;
 }
 
 const defaultFallbackSrc = 'https://via.placeholder.com/200';
 
-const MediaRendererMain = ({ src, fallbackSrc, autoPlay = false }: MediaRendererProps) => {
+const MediaRendererMain = ({
+    src,
+    fallbackSrc,
+    autoPlay = false,
+    type,
+    muted = true,
+    controls = false,
+    onClick,
+}: MediaRendererProps) => {
     const isMobile = useMediaQuery('(max-width: 900px)');
     const [loading, setLoading] = useState(true);
 
-    const isVideo = src.match(/\.(mp4|webm|ogg)$/) != null;
-    const isImage = src.match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
+    const isVideo = src.match(/\.(mp4|webm|ogg)$/) != null || type === 'video';
+    const isImage = src.match(/\.(jpeg|jpg|gif|png|webp)$/) != null || type === 'grid';
+    const isSlideshow = type === 'slideshow';
 
     return (
         <>
@@ -40,7 +53,8 @@ const MediaRendererMain = ({ src, fallbackSrc, autoPlay = false }: MediaRenderer
                 >
                     <video
                         autoPlay={!isMobile || autoPlay}
-                        muted
+                        muted={muted}
+                        controls={controls}
                         loop
                         preload="auto"
                         onLoadedData={() => setLoading(false)}
@@ -51,7 +65,7 @@ const MediaRendererMain = ({ src, fallbackSrc, autoPlay = false }: MediaRenderer
                         style={{
                             width: '100%',
                             height: '100%',
-                            objectFit: 'cover',
+                            objectFit: type ? 'contain' : 'cover',
                             borderRadius: 'inherit',
                             position: 'absolute',
                             top: 0,
@@ -82,7 +96,7 @@ const MediaRendererMain = ({ src, fallbackSrc, autoPlay = false }: MediaRenderer
                         display: loading ? 'none' : 'block',
                         width: '100%',
                         height: '100%',
-                        objectFit: 'cover',
+                        objectFit: type ? 'contain' : 'cover',
                         borderRadius: 'inherit',
                     }}
                     onLoad={() => setLoading(false)}
@@ -93,7 +107,38 @@ const MediaRendererMain = ({ src, fallbackSrc, autoPlay = false }: MediaRenderer
                 />
             )}
 
-            {!isVideo && !isImage && (
+            {isSlideshow && (
+                <>
+                    <iframe
+                        src={src}
+                        title="stack"
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: type ? 'contain' : 'cover',
+                            border: 'none',
+                        }}
+                        onLoad={() => setLoading(false)}
+                        onError={(event) => {
+                            event.currentTarget.src = fallbackSrc || defaultFallbackSrc;
+                            setLoading(false);
+                        }}
+                    />
+                    <div
+                        onClick={onClick}
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            cursor: 'pointer',
+                        }}
+                    />
+                </>
+            )}
+
+            {!isVideo && !isImage && !isSlideshow && (
                 <Stack justifyContent="center" alignItems="center" width="100%" height="100%">
                     <Typography variant="h6">Unsupported media type</Typography>
                 </Stack>
@@ -102,4 +147,4 @@ const MediaRendererMain = ({ src, fallbackSrc, autoPlay = false }: MediaRenderer
     );
 };
 
-export const MediaRenderer = React.memo(MediaRendererMain); 
+export const MediaRenderer = React.memo(MediaRendererMain);

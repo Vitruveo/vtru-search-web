@@ -84,6 +84,7 @@ function SpotlightSlider() {
                                         }}
                                         href="#"
                                         onClick={() => {}}
+                                        underline="none"
                                     >
                                         {creatorName}
                                     </Link>
