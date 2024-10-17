@@ -272,7 +272,7 @@ const Filters = () => {
                     }}
                 />
 
-                <FormGroup sx={{ display: 'flex', flexDirection: 'column', marginLeft: '8%' }}>
+                <FormGroup sx={{ display: 'flex', flexDirection: 'column', marginLeft: '5.5%' }}>
                     <Typography variant="h4">Filters</Typography>
                     <Box display={'grid'} gridTemplateColumns="130px 130px">
                         <FormControlLabel
