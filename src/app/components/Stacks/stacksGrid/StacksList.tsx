@@ -217,24 +217,20 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         />
                     </Box>
                 </Box>
-                <Box display={'flex'} flexWrap={'wrap'} justifyContent={'center'} margin={'0 5%'}>
-                    <Box
-                        display="flex"
-                        flexWrap="wrap"
-                        justifyContent={'flex-start'}
-                        width={'100%'}
-                        height={'100%'}
-                        gap={4}
-                    >
-                        {stacks.data.map((stack: Stack, index: number) => {
-                            return (
-                                <StackCardContainer key={index}>
-                                    <StackItem stack={stack} />
-                                </StackCardContainer>
-                            );
-                        })}
-                    </Box>
-                </Box>
+                <div
+                    style={{
+                        paddingInline: 'calc(2vw + 1rem)',
+                        width: '100%',
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, auto))',
+                        gap: '20px',
+                    }}
+                >
+                    {stacks.data.map((stack: Stack, index: number) => {
+                        return <StackItem key={index} stack={stack} />;
+                    })}{' '}
+                </div>
+
                 <Box mt={4} mb={2} display={'flex'} justifyContent="center" width="100%" alignItems="center">
                     <Pagination
                         count={stacks.totalPage}

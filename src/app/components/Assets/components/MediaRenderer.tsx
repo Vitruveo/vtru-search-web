@@ -96,7 +96,7 @@ const MediaRendererMain = ({
                         display: loading ? 'none' : 'block',
                         width: '100%',
                         height: '100%',
-                        objectFit: type ? 'contain' : 'cover',
+                        objectFit: 'cover',
                         borderRadius: 'inherit',
                     }}
                     onLoad={() => setLoading(false)}
