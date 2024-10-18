@@ -44,6 +44,8 @@ const Stacks = ({ data, actions }: StacksProps) => {
     const theme = useTheme();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const mdUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('md'));
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
+
     const topRef = useRef<HTMLDivElement>(null);
 
     const { onChangePage, onChangeSort, onChangeLimit, handleCurateStack } = actions;
@@ -70,9 +72,9 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     { flagname: 'XML', value: 'stacks/xml' },
                 ]}
             />
-            <Grid container justifyContent="end" alignItems="center" spacing={12} width="100%">
+            <Grid container justifyContent="end" alignItems="center" spacing={!smUp ? 11 : 12} width="100%">
                 <Grid item display={'flex'} alignItems={'center'} gap={2} mb={6} mt={2}>
-                    <Typography variant="h5" color={theme.palette.primary.main}>
+                    <Typography variant="h5" color={theme.palette.primary.main} ml={2.5}>
                         Curation is fun and easy. Try it now!
                     </Typography>
                     <Button
@@ -227,8 +229,12 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     }}
                 >
                     {stacks.data.map((stack: Stack, index: number) => {
-                        return <StackItem key={index} stack={stack} />;
-                    })}{' '}
+                        return (
+                            <StackCardContainer key={index}>
+                                <StackItem stack={stack} />
+                            </StackCardContainer>
+                        );
+                    })}
                 </div>
 
                 <Box mt={4} mb={2} display={'flex'} justifyContent="center" width="100%" alignItems="center">
