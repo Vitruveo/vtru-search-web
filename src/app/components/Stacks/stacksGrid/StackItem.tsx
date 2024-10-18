@@ -162,23 +162,9 @@ const StackItem = ({ stack }: Props) => {
 
 export const StackCardContainer = ({ children }: { children: React.ReactNode }) => {
     return (
-        <Grid
-            item
-            xl={3}
-            lg={4}
-            md={4}
-            sm={6}
-            xs={12}
-            display="flex"
-            alignItems="stretch"
-            sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
-        >
+        <Box>
             <ShowAnimation>{children}</ShowAnimation>
-        </Grid>
+        </Box>
     );
 };
 
