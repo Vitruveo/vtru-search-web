@@ -782,15 +782,7 @@ const AssetsList = () => {
                                     !creatorId &&
                                     !portfolioWallets &&
                                     tabNavigation.assets?.length <= 0 &&
-                                    tabNavigation.artists?.length <= 0 && (
-                                        <AdditionalAssetsFilterCard />
-                                        // <Grid item display={'flex'} justifyContent={'center'}>
-                                        //     <AssetCardContainer key={1}>
-                                        //         <Box width={'100%'} height={'100%'}>
-                                        //         </Box>
-                                        //     </AssetCardContainer>
-                                        // </Grid>
-                                    )}
+                                    tabNavigation.artists?.length <= 0 && <AdditionalAssetsFilterCard />}
 
                                 {showAdditionalAssets.value &&
                                     blockedAssets.map((asset) => (
