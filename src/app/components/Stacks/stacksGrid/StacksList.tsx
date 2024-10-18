@@ -71,7 +71,14 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     { flagname: 'XML', value: 'stacks/xml' },
                 ]}
             />
-            <Box paddingInline="93px" display="flex" alignItems="center" my={2} justifyContent="flex-end" gap={2}>
+            <Box
+                paddingInline="calc(2vw + 1rem)"
+                display="flex"
+                alignItems="center"
+                my={2}
+                justifyContent="flex-end"
+                gap={2}
+            >
                 <Typography variant="h5" color={theme.palette.primary.main} ml={2.5}>
                     Curation is fun and easy. Try it now!
                 </Typography>
@@ -89,7 +96,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
             </Box>
             <Box display="flex" flexWrap="wrap" justifyContent="center" overflow="auto" maxHeight="80vh" ref={topRef}>
                 <Box
-                    paddingInline="23px"
+                    paddingInline="calc(2vw + 1rem)"
                     display={mdUp ? 'flex' : 'none'}
                     justifyContent="space-between"
                     width="100%"
@@ -141,7 +148,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                             }}
                         />
                     </Box>
-                    <Box display={'flex'} gap={1} alignItems={'center'} mr={8.4}>
+                    <Box display={'flex'} gap={1} alignItems={'center'}>
                         <Typography variant="h5">Pagination:</Typography>
                         <Select
                             placeholder="Page Items"
