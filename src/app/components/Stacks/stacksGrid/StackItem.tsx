@@ -40,7 +40,7 @@ const StackItem = ({ stack }: Props) => {
         <>
             <BlankCard className="hoverCard" onClick={handleCardClick}>
                 <Box
-                    width={250}
+                    width={'100%'}
                     height={250}
                     borderRadius={'8px'}
                     position={'relative'}
@@ -59,7 +59,7 @@ const StackItem = ({ stack }: Props) => {
                     sx={{
                         p: 3,
                         pt: 2,
-                        width: '250px',
+                        width: '100%',
                         backgroundColor: theme.palette.grey[100],
                         '&:hover': { cursor: 'pointer' },
                     }}
@@ -162,23 +162,9 @@ const StackItem = ({ stack }: Props) => {
 
 export const StackCardContainer = ({ children }: { children: React.ReactNode }) => {
     return (
-        <Grid
-            item
-            xl={3}
-            lg={4}
-            md={4}
-            sm={6}
-            xs={12}
-            display="flex"
-            alignItems="stretch"
-            sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
-        >
+        <Box>
             <ShowAnimation>{children}</ShowAnimation>
-        </Grid>
+        </Box>
     );
 };
 

@@ -1,5 +1,5 @@
 import { Stack, StackData } from '@/features/stacks/types';
-import { Box, Button, Grid, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, Container, Grid, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useRef } from 'react';
 import Select, { SingleValue } from 'react-select';
@@ -44,6 +44,8 @@ const Stacks = ({ data, actions }: StacksProps) => {
     const theme = useTheme();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const mdUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('md'));
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
+
     const topRef = useRef<HTMLDivElement>(null);
 
     const { onChangePage, onChangeSort, onChangeLimit, handleCurateStack } = actions;
@@ -70,28 +72,40 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     { flagname: 'XML', value: 'stacks/xml' },
                 ]}
             />
-            <Grid container justifyContent="end" alignItems="center" spacing={12} width="100%">
-                <Grid item display={'flex'} alignItems={'center'} gap={2} mb={6} mt={2}>
-                    <Typography variant="h5" color={theme.palette.primary.main}>
-                        Curation is fun and easy. Try it now!
-                    </Typography>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            fontSize: '1rem',
-                            fontWeight: 'bold',
-                            width: '150px',
-                        }}
-                        onClick={handleCurateStack}
-                    >
-                        Curate Stack
-                    </Button>
-                </Grid>
-            </Grid>
+            <Box
+                paddingInline="calc(2vw + 1rem)"
+                display="flex"
+                alignItems="center"
+                my={2}
+                justifyContent="flex-end"
+                gap={2}
+            >
+                <Typography variant="h5" color={theme.palette.primary.main} ml={2.5}>
+                    Curation is fun and easy. Try it now!
+                </Typography>
+                <Button
+                    variant="contained"
+                    sx={{
+                        fontSize: '1rem',
+                        fontWeight: 'bold',
+                        width: '150px',
+                    }}
+                    onClick={handleCurateStack}
+                >
+                    Curate Stack
+                </Button>
+            </Box>
             <Box display="flex" flexWrap="wrap" justifyContent="center" overflow="auto" maxHeight="80vh" ref={topRef}>
-                <Box m={2} display={mdUp ? 'flex' : 'none'} justifyContent="space-between" width="100%" mb={8}>
-                    <Box display={'flex'} gap={1} alignItems={'center'} ml={1}>
-                        <Typography variant="h4">Sort:</Typography>
+                <Box
+                    paddingInline="calc(2vw + 1rem)"
+                    display={mdUp ? 'flex' : 'none'}
+                    justifyContent="space-between"
+                    width="100%"
+                    my={2}
+                    mb={4}
+                >
+                    <Box display={'flex'} gap={1} alignItems={'center'}>
+                        <Typography variant="h5">Sort:</Typography>
                         <Select
                             placeholder="Sort"
                             options={[
@@ -106,7 +120,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                             styles={{
                                 control: (base, state) => ({
                                     ...base,
-                                    width: '150px',
+                                    width: '130px',
                                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                                     backgroundColor: theme.palette.background.paper,
                                     boxShadow: '#FF0066',
@@ -135,7 +149,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                             }}
                         />
                     </Box>
-                    <Box display={'flex'} gap={1} alignItems={'center'} mr={9.5}>
+                    <Box display={'flex'} gap={1} alignItems={'center'}>
                         <Typography variant="h5">Pagination:</Typography>
                         <Select
                             placeholder="Page Items"
@@ -151,7 +165,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                             styles={{
                                 control: (base, state) => ({
                                     ...base,
-                                    minWidth: '150px',
+                                    minWidth: '100px',
                                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                                     backgroundColor: theme.palette.background.paper,
                                     boxShadow: '#FF0066',
@@ -180,14 +194,14 @@ const Stacks = ({ data, actions }: StacksProps) => {
                             }}
                         />
                         <Select
-                            placeholder="Select Page"
+                            placeholder="Select"
                             options={optionsForSelectPage}
                             value={selectValues.page}
                             onChange={onChangePage}
                             styles={{
                                 control: (base, state) => ({
                                     ...base,
-                                    minWidth: '150px',
+                                    minWidth: '100px',
                                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                                     backgroundColor: theme.palette.background.paper,
                                     boxShadow: '#FF0066',
@@ -217,24 +231,24 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         />
                     </Box>
                 </Box>
-                <Box display={'flex'} flexWrap={'wrap'} justifyContent={'center'} margin={'0 5%'}>
-                    <Box
-                        display="flex"
-                        flexWrap="wrap"
-                        justifyContent={'flex-start'}
-                        width={'100%'}
-                        height={'100%'}
-                        gap={4}
-                    >
-                        {stacks.data.map((stack: Stack, index: number) => {
-                            return (
-                                <StackCardContainer key={index}>
-                                    <StackItem stack={stack} />
-                                </StackCardContainer>
-                            );
-                        })}
-                    </Box>
-                </Box>
+                <div
+                    style={{
+                        paddingInline: 'calc(2vw + 1rem)',
+                        width: '100%',
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+                        gap: 30,
+                    }}
+                >
+                    {stacks.data.map((stack: Stack, index: number) => {
+                        return (
+                            <StackCardContainer key={index}>
+                                <StackItem stack={stack} />
+                            </StackCardContainer>
+                        );
+                    })}
+                </div>
+
                 <Box mt={4} mb={2} display={'flex'} justifyContent="center" width="100%" alignItems="center">
                     <Pagination
                         count={stacks.totalPage}

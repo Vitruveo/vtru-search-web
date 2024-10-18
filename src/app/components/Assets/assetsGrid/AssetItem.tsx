@@ -72,7 +72,7 @@ const AssetItem = ({
         <div
             style={{
                 border: assetView === asset ? '1px solid #FF0066' : '',
-                width: 250,
+                // width: 250,
                 cursor: 'pointer',
                 height: isHiddenCardDetail ? 250 : 380,
                 position: 'relative',
@@ -105,7 +105,7 @@ const AssetItem = ({
                         sx={{
                             position: 'absolute',
                             right: -10,
-                            top: -10,
+                            top: 18,
                             '& .MuiBadge-badge': {
                                 transform: 'scale(1.5)',
                                 fontSize: '0.8rem',
@@ -125,7 +125,7 @@ const AssetItem = ({
             <BlankCard className="hoverCard" onClick={handleClickImage}>
                 {!isHiddenCardDetail ? (
                     <>
-                        <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
+                        <Box height={250} borderRadius="8px 8px 0 0" position="relative">
                             <MediaRenderer src={media} fallbackSrc={'https://via.placeholder.com/250'} />
                         </Box>
 
