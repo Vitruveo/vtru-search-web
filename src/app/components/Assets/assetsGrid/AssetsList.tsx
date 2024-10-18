@@ -32,7 +32,7 @@ import { DrawerAsset } from '../components/DrawerAsset';
 import DrawerStack from '../components/DrawerStack/DrawerStack';
 import NumberOfFilters from '../components/numberOfFilters';
 import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
-import AssetItem, { AssetCardContainer } from './AssetItem';
+import { AssetCardContainer, AssetItem } from './AssetItem';
 import './AssetScroll.css';
 
 const optionsForSelectSort = [

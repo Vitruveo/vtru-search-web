@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/filters/slice';
 import { ShowAnimation } from '@/animations';
 import DeckEffect from '../components/DeckEffect';
-import { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 interface Props {
     assetView: Asset;
@@ -23,7 +23,7 @@ interface Props {
     countByCreator?: number;
 }
 
-const AssetItem = ({
+const AssetItemMain = ({
     assetView,
     asset,
     isCurated,
@@ -39,7 +39,6 @@ const AssetItem = ({
     const dispatch = useDispatch();
     const [isHovered, setIsHovered] = useState(false);
     const [showFanEffect, setShowFanEffect] = useState(false);
-    const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const optionIncludeGroup = useSelector((state) => state.assets.groupByCreator.active);
     const isHiddenCardDetail = useSelector((state) => state.customizer.hidden?.cardDetail);
 
@@ -234,4 +233,4 @@ export const AssetCardContainer = ({ children }: { children: React.ReactNode }) 
     </Grid>
 );
 
-export default AssetItem;
+export const AssetItem = React.memo(AssetItemMain);
