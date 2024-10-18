@@ -12,6 +12,7 @@ interface MediaRendererProps {
     muted?: boolean;
     controls?: boolean;
     onClick?: () => void;
+    objectFit?: 'cover' | 'contain';
 }
 
 const defaultFallbackSrc = 'https://via.placeholder.com/200';
@@ -23,6 +24,7 @@ const MediaRendererMain = ({
     type,
     muted = true,
     controls = false,
+    objectFit = 'cover',
     onClick,
 }: MediaRendererProps) => {
     const isMobile = useMediaQuery('(max-width: 900px)');
@@ -96,7 +98,7 @@ const MediaRendererMain = ({
                         display: loading ? 'none' : 'block',
                         width: '100%',
                         height: '100%',
-                        objectFit: 'cover',
+                        objectFit: objectFit,
                         borderRadius: 'inherit',
                     }}
                     onLoad={() => setLoading(false)}

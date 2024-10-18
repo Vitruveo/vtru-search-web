@@ -702,13 +702,21 @@ const AssetsList = () => {
                                 style={{
                                     width: '100%',
                                     display: 'grid',
-                                    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, auto))',
+                                    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
                                     gap: '25px 20px',
                                     paddingTop: '0',
                                 }}
                             >
                                 {[...Array(20)].map((_, index) => (
-                                    <Skeleton key={index} variant="rectangular" width={250} height={250} />
+                                    <Skeleton
+                                        key={index}
+                                        variant="rectangular"
+                                        width={250}
+                                        sx={{
+                                            margin: '0 auto',
+                                        }}
+                                        height={250}
+                                    />
                                 ))}
                             </div>
                         ) : assets.length > 0 ? (

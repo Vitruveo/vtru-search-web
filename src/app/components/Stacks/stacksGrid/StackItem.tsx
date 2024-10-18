@@ -2,7 +2,16 @@ import { ShowAnimation } from '@/animations';
 import { SEARCH_BASE_URL, SLIDESHOW_BASE_URL } from '@/constants/api';
 import { GENERAL_STORAGE_URL } from '@/constants/aws';
 import { Stack } from '@/features/stacks/types';
-import { Box, CardContent, IconButton, Modal, Stack as MuiStack, Tooltip, Typography } from '@mui/material';
+import {
+    Box,
+    CardContent,
+    IconButton,
+    Modal,
+    Stack as MuiStack,
+    Tooltip,
+    Typography,
+    useMediaQuery,
+} from '@mui/material';
 import { MediaRenderer } from '../../Assets/components/MediaRenderer';
 import BlankCard from '../../Shared/BlankCard';
 import { useTheme } from '@mui/material/styles';
@@ -15,6 +24,7 @@ interface Props {
 
 const StackItemMain = ({ stack }: Props) => {
     const theme = useTheme();
+    const smUp = useMediaQuery(theme.breakpoints.up('sm'));
     const [isOpenModal, setIsOpenModal] = useState(false);
 
     const handleModalOpen = (event: React.MouseEvent) => {
@@ -37,12 +47,17 @@ const StackItemMain = ({ stack }: Props) => {
     };
 
     return (
-        <>
+        <Box
+            sx={{
+                width: !smUp ? 250 : '100%',
+                margin: !smUp ? '0 auto' : 'unset',
+            }}
+        >
             <BlankCard className="hoverCard" onClick={handleCardClick}>
                 <Box
                     width={'100%'}
                     height={250}
-                    borderRadius={'8px'}
+                    minHeight={270}
                     position={'relative'}
                     p={2}
                     sx={{ '&:hover': { cursor: 'pointer' } }}
@@ -152,11 +167,12 @@ const StackItemMain = ({ stack }: Props) => {
                             type={stack.stacks.type}
                             controls
                             muted={false}
+                            objectFit="contain"
                         />
                     </Box>
                 </Box>
             </Modal>
-        </>
+        </Box>
     );
 };
 

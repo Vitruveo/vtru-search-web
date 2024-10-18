@@ -1,4 +1,4 @@
-import { Badge, Box, CardContent, Checkbox, Grid, Link, Paper, Stack, Typography } from '@mui/material';
+import { Badge, Box, CardContent, Checkbox, Grid, Link, Paper, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import BlankCard from '../../Shared/BlankCard';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
@@ -37,6 +37,7 @@ const AssetItemMain = ({
 }: Props) => {
     const theme = useTheme();
     const dispatch = useDispatch();
+    const smUp = useMediaQuery(theme.breakpoints.up('sm'));
     const [isHovered, setIsHovered] = useState(false);
     const [showFanEffect, setShowFanEffect] = useState(false);
     const optionIncludeGroup = useSelector((state) => state.assets.groupByCreator.active);
@@ -71,7 +72,8 @@ const AssetItemMain = ({
         <div
             style={{
                 border: assetView === asset ? '1px solid #FF0066' : '',
-                // width: 250,
+                width: !smUp ? 250 : 'unset',
+                margin: !smUp ? '0 auto' : '0',
                 cursor: 'pointer',
                 height: isHiddenCardDetail ? 250 : 380,
                 position: 'relative',
