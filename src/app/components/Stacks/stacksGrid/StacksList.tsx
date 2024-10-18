@@ -1,11 +1,11 @@
 import { Stack, StackData } from '@/features/stacks/types';
-import { Box, Button, Container, Grid, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useRef } from 'react';
 import Select, { SingleValue } from 'react-select';
 import '../../Assets/assetsGrid/AssetScroll.css';
 import Header from '../../Header';
-import StackItem, { StackCardContainer } from './StackItem';
+import { StackCardContainer, StackItem } from './StackItem';
 
 interface StacksProps {
     data: {
@@ -44,7 +44,6 @@ const Stacks = ({ data, actions }: StacksProps) => {
     const theme = useTheme();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const mdUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('md'));
-    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
 
     const topRef = useRef<HTMLDivElement>(null);
 
@@ -71,33 +70,35 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     { flagname: 'JSON', value: 'stacks/json' },
                     { flagname: 'XML', value: 'stacks/xml' },
                 ]}
+                hasSettings={false}
             />
-            <Box
-                paddingInline="calc(2vw + 1rem)"
-                display="flex"
-                alignItems="center"
-                my={2}
-                justifyContent="flex-end"
-                gap={2}
-            >
-                <Typography variant="h5" color={theme.palette.primary.main} ml={2.5}>
-                    Curation is fun and easy. Try it now!
-                </Typography>
-                <Button
-                    variant="contained"
-                    sx={{
-                        fontSize: '1rem',
-                        fontWeight: 'bold',
-                        width: '150px',
-                    }}
-                    onClick={handleCurateStack}
-                >
-                    Curate Stack
-                </Button>
-            </Box>
             <Box display="flex" flexWrap="wrap" justifyContent="center" overflow="auto" maxHeight="80vh" ref={topRef}>
                 <Box
-                    paddingInline="calc(2vw + 1rem)"
+                    paddingInline="24px"
+                    display="flex"
+                    alignItems="center"
+                    my={2}
+                    justifyContent="flex-end"
+                    gap={2}
+                    width="100%"
+                >
+                    <Typography variant="h5" color={theme.palette.primary.main} ml={2.5}>
+                        Curation is fun and easy. Try it now!
+                    </Typography>
+                    <Button
+                        variant="contained"
+                        sx={{
+                            fontSize: '1rem',
+                            fontWeight: 'bold',
+                            width: '150px',
+                        }}
+                        onClick={handleCurateStack}
+                    >
+                        Curate Stack
+                    </Button>
+                </Box>
+                <Box
+                    paddingInline="24px"
                     display={mdUp ? 'flex' : 'none'}
                     justifyContent="space-between"
                     width="100%"
@@ -233,16 +234,16 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 </Box>
                 <div
                     style={{
-                        paddingInline: 'calc(2vw + 1rem)',
+                        paddingInline: '24px',
                         width: '100%',
                         display: 'grid',
                         gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
                         gap: 30,
                     }}
                 >
-                    {stacks.data.map((stack: Stack, index: number) => {
+                    {stacks.data.map((stack: Stack) => {
                         return (
-                            <StackCardContainer key={index}>
+                            <StackCardContainer key={stack.stacks.id}>
                                 <StackItem stack={stack} />
                             </StackCardContainer>
                         );

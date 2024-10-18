@@ -32,15 +32,15 @@ import { DrawerAsset } from '../components/DrawerAsset';
 import DrawerStack from '../components/DrawerStack/DrawerStack';
 import NumberOfFilters from '../components/numberOfFilters';
 import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
-import AssetItem, { AssetCardContainer } from './AssetItem';
+import { AssetCardContainer, AssetItem } from './AssetItem';
 import './AssetScroll.css';
 
 const optionsForSelectSort = [
     { value: 'latest', label: 'Latest' },
     { value: 'priceHighToLow', label: 'Price – High to Low' },
     { value: 'priceLowToHigh', label: 'Price – Low to High' },
-    { value: 'creatorAZ', label: 'Creator – A-Z' },
-    { value: 'creatorZA', label: 'Creator – Z-A' },
+    { value: 'creatorAZ', label: 'Creator – a-z' },
+    { value: 'creatorZA', label: 'Creator – z-a' },
     { value: 'consignNewToOld', label: 'Consign Date – New to Old' },
     { value: 'consignOldToNew', label: 'Consign Date – Old to New' },
 ];
