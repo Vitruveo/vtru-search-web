@@ -55,7 +55,7 @@ const initialState: StateType = {
         assets: false,
         artistSpotlight: false,
     },
-    activeSlider: 'spotlight',
+    activeSlider: '1',
 };
 
 export const customizerSlice = createSlice({
