@@ -1,5 +1,5 @@
 import { Stack, StackData } from '@/features/stacks/types';
-import { Box, Button, Grid, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, Container, Grid, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useRef } from 'react';
 import Select, { SingleValue } from 'react-select';
@@ -91,7 +91,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
             <Box display="flex" flexWrap="wrap" justifyContent="center" overflow="auto" maxHeight="80vh" ref={topRef}>
                 <Box m={2} display={mdUp ? 'flex' : 'none'} justifyContent="space-between" width="100%" mb={8}>
                     <Box display={'flex'} gap={1} alignItems={'center'} ml={1}>
-                        <Typography variant="h4">Sort:</Typography>
+                        <Typography variant="h5">Sort:</Typography>
                         <Select
                             placeholder="Sort"
                             options={[
@@ -106,7 +106,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                             styles={{
                                 control: (base, state) => ({
                                     ...base,
-                                    width: '150px',
+                                    width: '130px',
                                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                                     backgroundColor: theme.palette.background.paper,
                                     boxShadow: '#FF0066',
@@ -151,7 +151,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                             styles={{
                                 control: (base, state) => ({
                                     ...base,
-                                    minWidth: '150px',
+                                    minWidth: '100px',
                                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                                     backgroundColor: theme.palette.background.paper,
                                     boxShadow: '#FF0066',
@@ -180,14 +180,14 @@ const Stacks = ({ data, actions }: StacksProps) => {
                             }}
                         />
                         <Select
-                            placeholder="Select Page"
+                            placeholder="Select"
                             options={optionsForSelectPage}
                             value={selectValues.page}
                             onChange={onChangePage}
                             styles={{
                                 control: (base, state) => ({
                                     ...base,
-                                    minWidth: '150px',
+                                    minWidth: '100px',
                                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                                     backgroundColor: theme.palette.background.paper,
                                     boxShadow: '#FF0066',

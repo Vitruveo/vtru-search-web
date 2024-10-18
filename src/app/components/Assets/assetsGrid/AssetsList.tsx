@@ -1,42 +1,39 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import Select, { SingleValue } from 'react-select';
-import { useSelector } from '@/store/hooks';
-import Image from 'next/image';
-import {
-    Pagination,
-    Box,
-    Grid,
-    Skeleton,
-    Typography,
-    Stack,
-    useMediaQuery,
-    Switch,
-    Badge,
-    Button,
-    IconButton,
-} from '@mui/material';
-import { Theme } from '@mui/material/styles';
-import { IconArrowBarToLeft, IconCopy, IconArrowBarToRight, IconFilter } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
-import { useDispatch } from '@/store/hooks';
+import { useToggle } from '@/app/hooks/useToggle';
+import { STORE_BASE_URL } from '@/constants/api';
 import { actions } from '@/features/assets';
+import { Asset } from '@/features/assets/types';
 import { actions as actionsFilters } from '@/features/filters/slice';
 import { actions as layoutActions } from '@/features/layout';
-import { Asset } from '@/features/assets/types';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { getAssetPrice, isAssetAvailable } from '@/utils/assets';
+import generateQueryParam from '@/utils/generateQueryParam';
+import { hasAssetsInURL } from '@/utils/url-assets';
+import {
+    Badge,
+    Box,
+    Button,
+    Grid,
+    IconButton,
+    Pagination,
+    Skeleton,
+    Switch,
+    Typography,
+    useMediaQuery,
+} from '@mui/material';
+import { Theme, useTheme } from '@mui/material/styles';
+import { IconArrowBarToLeft, IconArrowBarToRight, IconCopy, IconFilter } from '@tabler/icons-react';
+import Image from 'next/image';
+import emptyCart from 'public/images/products/empty-shopping-cart.svg';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import Select, { SingleValue } from 'react-select';
+import TabSliders from '../../Sliders/TabSliders';
 import { DrawerAsset } from '../components/DrawerAsset';
 import DrawerStack from '../components/DrawerStack/DrawerStack';
-import AssetItem, { AssetCardContainer } from './AssetItem';
-import { useToggle } from '@/app/hooks/useToggle';
-import { hasAssetsInURL } from '@/utils/url-assets';
-import { getAssetPrice, isAssetAvailable } from '@/utils/assets';
-import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
-import emptyCart from 'public/images/products/empty-shopping-cart.svg';
-import './AssetScroll.css';
 import NumberOfFilters from '../components/numberOfFilters';
-import { useTheme } from '@mui/material/styles';
-import generateQueryParam from '@/utils/generateQueryParam';
-import { STORE_BASE_URL } from '@/constants/api';
-import TabSliders from '../../Sliders/TabSliders';
+import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
+import AssetItem, { AssetCardContainer } from './AssetItem';
+import './AssetScroll.css';
 
 const optionsForSelectSort = [
     { value: 'latest', label: 'Latest' },
@@ -80,7 +77,6 @@ const AssetsList = () => {
     const drawerStack = useToggle();
 
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
-    const mdUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('md'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
 
     const { data: assets, totalPage, page: currentPage, limit } = useSelector((state) => state.assets.data);
@@ -515,7 +511,7 @@ const AssetsList = () => {
                                             styles={{
                                                 control: (base, state) => ({
                                                     ...base,
-                                                    width: '150px',
+                                                    width: '230px',
                                                     borderColor: state.isFocused
                                                         ? theme.palette.primary.main
                                                         : theme.palette.grey[200],
@@ -560,7 +556,7 @@ const AssetsList = () => {
                                             styles={{
                                                 control: (base, state) => ({
                                                     ...base,
-                                                    width: '150px',
+                                                    width: '180px',
                                                     borderColor: state.isFocused
                                                         ? theme.palette.primary.main
                                                         : theme.palette.grey[200],
@@ -620,7 +616,7 @@ const AssetsList = () => {
                                     styles={{
                                         control: (base, state) => ({
                                             ...base,
-                                            minWidth: '150px',
+                                            minWidth: '100px',
                                             borderColor: state.isFocused
                                                 ? theme.palette.primary.main
                                                 : theme.palette.grey[200],
@@ -653,14 +649,14 @@ const AssetsList = () => {
                                     }}
                                 />
                                 <Select
-                                    placeholder="Select Page"
+                                    placeholder="Select"
                                     options={optionsForSelect}
                                     value={currentPage > 1 ? { value: currentPage, label: currentPage } : null}
                                     onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
                                     styles={{
                                         control: (base, state) => ({
                                             ...base,
-                                            minWidth: '150px',
+                                            minWidth: '100px',
                                             borderColor: state.isFocused
                                                 ? theme.palette.primary.main
                                                 : theme.palette.grey[200],
