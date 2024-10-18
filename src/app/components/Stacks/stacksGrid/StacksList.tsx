@@ -1,11 +1,11 @@
 import { Stack, StackData } from '@/features/stacks/types';
-import { Box, Button, Container, Grid, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useRef } from 'react';
 import Select, { SingleValue } from 'react-select';
 import '../../Assets/assetsGrid/AssetScroll.css';
 import Header from '../../Header';
-import StackItem, { StackCardContainer } from './StackItem';
+import { StackCardContainer, StackItem } from './StackItem';
 
 interface StacksProps {
     data: {
@@ -44,7 +44,6 @@ const Stacks = ({ data, actions }: StacksProps) => {
     const theme = useTheme();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const mdUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('md'));
-    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
 
     const topRef = useRef<HTMLDivElement>(null);
 
@@ -240,9 +239,9 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         gap: 30,
                     }}
                 >
-                    {stacks.data.map((stack: Stack, index: number) => {
+                    {stacks.data.map((stack: Stack) => {
                         return (
-                            <StackCardContainer key={index}>
+                            <StackCardContainer key={stack.stacks.id}>
                                 <StackItem stack={stack} />
                             </StackCardContainer>
                         );
