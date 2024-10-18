@@ -222,8 +222,8 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         paddingInline: 'calc(2vw + 1rem)',
                         width: '100%',
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, auto))',
-                        gap: '20px',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+                        gap: 30,
                     }}
                 >
                     {stacks.data.map((stack: Stack, index: number) => {

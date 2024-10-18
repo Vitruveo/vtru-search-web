@@ -696,90 +696,82 @@ const AssetsList = () => {
                 <Grid item xs={12} mr={4} mb={4}></Grid>
 
                 {!isHidden?.assets && (
-                    <Grid
-                        container
-                        rowGap={hasIncludesGroupActive ? 2 : 2.85}
-                        columnGap={hasIncludesGroupActive ? 6 : 3}
-                        overflow={'hidden'}
-                        display={'flex'}
-                        justifyContent={'center'}
-                        margin={'0 5%'}
-                    >
+                    <Grid container paddingInline={4} paddingBottom={8} overflow={'hidden'}>
                         {isLoading ? (
-                            [...Array(15)].map((_, index) => (
-                                <Grid item key={index} display={'flex'} justifyContent={'center'}>
-                                    <AssetCardContainer>
-                                        <Skeleton variant="rectangular" width={250} height={250} />
-                                    </AssetCardContainer>
-                                </Grid>
-                            ))
+                            <div
+                                style={{
+                                    width: '100%',
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, auto))',
+                                    gap: '25px 20px',
+                                    paddingTop: '0',
+                                }}
+                            >
+                                {[...Array(20)].map((_, index) => (
+                                    <Skeleton key={index} variant="rectangular" width={250} height={250} />
+                                ))}
+                            </div>
                         ) : assets.length > 0 ? (
-                            <Box
-                                display="flex"
-                                flexWrap="wrap"
-                                justifyContent={'flex-start'}
-                                width={'100%'}
-                                height={'100%'}
-                                gap={4}
+                            <div
+                                style={{
+                                    width: '100%',
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+                                    gap: hasIncludesGroupActive ? '55px 40px' : 30,
+                                    paddingTop: hasIncludesGroupActive ? '24px' : '0',
+                                }}
                             >
                                 {activeAssets.map((asset) => (
-                                    <Grid item key={asset._id} display={'flex'} justifyContent={'center'}>
-                                        <AssetCardContainer>
-                                            <AssetItem
-                                                isAvailable={isAssetAvailable(asset)}
-                                                assetView={assetView}
-                                                asset={asset}
-                                                isCurated={curateStack.isActive}
-                                                checkedCurate={selected.some((item) => item._id === asset._id)}
-                                                handleChangeCurate={() => {
-                                                    handleCheckCurate(asset);
-                                                }}
-                                                handleClickImage={() => {
-                                                    if (isInIframe) {
-                                                        window.open(`${STORE_BASE_URL}/${asset.username}/${asset._id}`);
+                                    <AssetItem
+                                        key={asset._id}
+                                        isAvailable={isAssetAvailable(asset)}
+                                        assetView={assetView}
+                                        asset={asset}
+                                        isCurated={curateStack.isActive}
+                                        checkedCurate={selected.some((item) => item._id === asset._id)}
+                                        handleChangeCurate={() => {
+                                            handleCheckCurate(asset);
+                                        }}
+                                        handleClickImage={() => {
+                                            if (isInIframe) {
+                                                window.open(`${STORE_BASE_URL}/${asset.username}/${asset._id}`);
 
-                                                        return;
+                                                return;
+                                            }
+
+                                            if (hasIncludesGroupActive) {
+                                                if (asset?.framework?.createdBy) {
+                                                    dispatch(actions.setInitialPage());
+                                                    dispatch(actionsFilters.changeCreatorId(asset.framework.createdBy));
+                                                    generateQueryParam('creatorId', asset.framework.createdBy);
+                                                    dispatch(
+                                                        actions.setGroupByCreator({
+                                                            active: 'no',
+                                                            name: '',
+                                                        })
+                                                    );
+
+                                                    if (Array.isArray(asset.assetMetadata?.creators.formData)) {
+                                                        dispatch(
+                                                            actions.changeGroupByCreatorName(
+                                                                asset.assetMetadata?.creators.formData[0].name
+                                                            )
+                                                        );
+                                                    } else {
+                                                        dispatch(actions.changeGroupByCreatorName('Unknown'));
                                                     }
 
-                                                    if (hasIncludesGroupActive) {
-                                                        if (asset?.framework?.createdBy) {
-                                                            dispatch(actions.setInitialPage());
-                                                            dispatch(
-                                                                actionsFilters.changeCreatorId(
-                                                                    asset.framework.createdBy
-                                                                )
-                                                            );
-                                                            generateQueryParam('creatorId', asset.framework.createdBy);
-                                                            dispatch(
-                                                                actions.setGroupByCreator({
-                                                                    active: 'no',
-                                                                    name: '',
-                                                                })
-                                                            );
+                                                    handleScrollToTop();
+                                                }
 
-                                                            if (Array.isArray(asset.assetMetadata?.creators.formData)) {
-                                                                dispatch(
-                                                                    actions.changeGroupByCreatorName(
-                                                                        asset.assetMetadata?.creators.formData[0].name
-                                                                    )
-                                                                );
-                                                            } else {
-                                                                dispatch(actions.changeGroupByCreatorName('Unknown'));
-                                                            }
+                                                return;
+                                            }
 
-                                                            handleScrollToTop();
-                                                        }
-
-                                                        return;
-                                                    }
-
-                                                    handleAssetImageClick(asset);
-                                                }}
-                                                price={getAssetPrice(asset)}
-                                                countByCreator={asset.countByCreator}
-                                            />
-                                        </AssetCardContainer>
-                                    </Grid>
+                                            handleAssetImageClick(asset);
+                                        }}
+                                        price={getAssetPrice(asset)}
+                                        countByCreator={asset.countByCreator}
+                                    />
                                 ))}
 
                                 {((isLastPage && hasActiveAssets) || (hasActiveAssets && hasBlockedAssets)) &&
@@ -791,13 +783,13 @@ const AssetsList = () => {
                                     !portfolioWallets &&
                                     tabNavigation.assets?.length <= 0 &&
                                     tabNavigation.artists?.length <= 0 && (
-                                        <Grid item display={'flex'} justifyContent={'center'}>
-                                            <AssetCardContainer key={1}>
-                                                <Box width={'100%'} height={'100%'}>
-                                                    <AdditionalAssetsFilterCard />
-                                                </Box>
-                                            </AssetCardContainer>
-                                        </Grid>
+                                        <AdditionalAssetsFilterCard />
+                                        // <Grid item display={'flex'} justifyContent={'center'}>
+                                        //     <AssetCardContainer key={1}>
+                                        //         <Box width={'100%'} height={'100%'}>
+                                        //         </Box>
+                                        //     </AssetCardContainer>
+                                        // </Grid>
                                     )}
 
                                 {showAdditionalAssets.value &&
@@ -851,7 +843,7 @@ const AssetsList = () => {
                                             />
                                         </AssetCardContainer>
                                     ))}
-                            </Box>
+                            </div>
                         ) : (
                             <Grid
                                 item
