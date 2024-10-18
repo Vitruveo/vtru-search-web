@@ -17,9 +17,10 @@ interface Props {
         flagname: string;
         value: string;
     }[];
+    hasSettings?: boolean;
 }
 
-const Header = ({ rssOptions }: Props) => {
+const Header = ({ rssOptions, hasSettings = true }: Props) => {
     const dispatch = useDispatch();
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
@@ -98,7 +99,7 @@ const Header = ({ rssOptions }: Props) => {
                     justifyContent="center"
                     alignItems="center"
                     style={{
-                        marginRight: '70px',
+                        marginRight: hasSettings ? 70 : 0,
                     }}
                 >
                     {!lgDown && (
