@@ -66,7 +66,6 @@ const AssetsList = () => {
 
     const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
-    const [selected, setSelected] = useState<Asset[]>([]);
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
     const [sortOrder, setSortOrder] = useState<string>('latest');
     const [groupByCreator, setGroupByCreator] = useState<string>('no');
@@ -80,7 +79,7 @@ const AssetsList = () => {
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
 
     const { data: assets, totalPage, page: currentPage, limit } = useSelector((state) => state.assets.data);
-    const { sort, maxPrice } = useSelector((state) => state.assets);
+    const { sort, maxPrice, curateStacks } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
     const hasIncludesGroup = useSelector((state) => state.assets.groupByCreator);
     const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets);
@@ -181,19 +180,10 @@ const AssetsList = () => {
     };
 
     const handleCheckCurate = (asset: Asset) => {
-        const isSelected = selected.some((item) => item._id === asset._id);
+        const isSelected = curateStacks.some((item) => item._id === asset._id);
 
-        if (isSelected) {
-            setSelected((prevSelected) => {
-                const updatedSelection = prevSelected.filter((item) => item._id !== asset._id);
-                return updatedSelection;
-            });
-        } else {
-            setSelected((prevSelected) => {
-                const updatedSelection = [...prevSelected, asset];
-                return updatedSelection;
-            });
-        }
+        if (isSelected) dispatch(actions.setCurateStacks(curateStacks.filter((item) => item._id !== asset._id)));
+        else dispatch(actions.setCurateStacks([...curateStacks, asset]));
     };
 
     const handleScrollToTop = () => {
@@ -283,23 +273,12 @@ const AssetsList = () => {
         if (!curateStack.isActive) handleChangeSelectGroupByCreator({ value: 'no', label: 'Ungrouped – All' });
     };
 
-    const handleSelectAll = () => {
-        setSelected((prev) => {
-            const selectedMap = [...prev, ...assets].reduce((acc, asset) => {
-                return {
-                    ...acc,
-                    [asset._id]: asset,
-                };
-            }, {});
-
-            return Object.values(selectedMap);
-        });
-    };
-    const handleUnselectAll = () => setSelected([]);
+    const handleSelectAll = () => dispatch(actions.setCurateStacks(assets));
+    const handleUnselectAll = () => dispatch(actions.setCurateStacks([]));
 
     const onMenuClick = () => dispatch(layoutActions.toggleSidebar());
 
-    const iconColor = selected.length > 0 ? '#763EBD' : 'currentColor';
+    const iconColor = curateStacks.length > 0 ? '#763EBD' : 'currentColor';
 
     const onAssetDrawerClose = () => {
         assetDrawer.deactivate();
@@ -319,12 +298,7 @@ const AssetsList = () => {
         <Box>
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
 
-            <DrawerStack
-                selected={selected}
-                drawerStackOpen={drawerStack.isActive}
-                onClose={drawerStack.deactivate}
-                setSelected={setSelected}
-            />
+            <DrawerStack drawerStackOpen={drawerStack.isActive} onClose={drawerStack.deactivate} />
 
             {!isHidden?.order && (
                 <Box
@@ -412,13 +386,17 @@ const AssetsList = () => {
                                     {lgUp && (
                                         <Box display="flex" alignItems="center" gap={2}>
                                             <Button variant="contained" fullWidth>
-                                                {selected.length}{' '}
+                                                {curateStacks.length}{' '}
                                                 {language['search.assetList.curateStack.selected'] as string}
                                             </Button>
                                         </Box>
                                     )}
                                     {!lgUp && (
-                                        <Badge badgeContent={selected.length} color="primary" style={{ marginLeft: 2 }}>
+                                        <Badge
+                                            badgeContent={curateStacks.length}
+                                            color="primary"
+                                            style={{ marginLeft: 2 }}
+                                        >
                                             <IconCopy width={20} color={iconColor} />
                                         </Badge>
                                     )}
@@ -738,7 +716,7 @@ const AssetsList = () => {
                                         assetView={assetView}
                                         asset={asset}
                                         isCurated={curateStack.isActive}
-                                        checkedCurate={selected.some((item) => item._id === asset._id)}
+                                        checkedCurate={curateStacks?.some((item) => item._id === asset._id)}
                                         handleChangeCurate={() => {
                                             handleCheckCurate(asset);
                                         }}
@@ -803,7 +781,7 @@ const AssetsList = () => {
                                                 assetView={assetView}
                                                 asset={asset}
                                                 isCurated={curateStack.isActive}
-                                                checkedCurate={selected.some((item) => item._id === asset._id)}
+                                                checkedCurate={curateStacks.some((item) => item._id === asset._id)}
                                                 handleChangeCurate={() => {
                                                     handleCheckCurate(asset);
                                                 }}

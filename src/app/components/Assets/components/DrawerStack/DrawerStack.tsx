@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import update from 'immutability-helper';
 import { Box, Button, Typography, Drawer, TextField, useMediaQuery, Theme, IconButton } from '@mui/material';
 import { DndProvider } from 'react-dnd';
@@ -9,6 +9,7 @@ import { Asset } from '@/features/assets/types';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { useSelector } from '@/store/hooks';
 import { actions as actionsCreator } from '@/features/creator';
+import { actions as actionsAssets } from '@/features/assets';
 import { useToggle } from '@/app/hooks/useToggle';
 import { MediaRenderer } from '../MediaRenderer';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -17,21 +18,20 @@ import { CardDnd } from '../CardDnd';
 
 interface Props {
     drawerStackOpen: boolean;
-    selected: Asset[];
-    setSelected: Dispatch<SetStateAction<Asset[]>>;
     onClose(): void;
 }
 
-function DrawerStack({ drawerStackOpen, selected, onClose, setSelected }: Props) {
+function DrawerStack({ drawerStackOpen, onClose }: Props) {
     const dispatch = useDispatch();
     const { language } = useI18n();
 
-    const modalSwitch = useToggle();
-    const [cards, setCards] = useState<Asset[]>(selected);
-    const [statedLogin, setStatedLogin] = useState(false);
-
+    const curateStacks = useSelector((state) => state.assets.curateStacks);
     const isLogged = useSelector((state) => state.creator.token !== '');
     const { loading, wasSended } = useSelector((state) => state.creator);
+
+    const modalSwitch = useToggle();
+    const [cards, setCards] = useState<Asset[]>(curateStacks);
+    const [statedLogin, setStatedLogin] = useState(false);
 
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
@@ -41,7 +41,11 @@ function DrawerStack({ drawerStackOpen, selected, onClose, setSelected }: Props)
         }
     }, [isLogged]);
 
-    useEffect(() => setCards(selected), [selected]);
+    useEffect(() => setCards(curateStacks), [curateStacks]);
+
+    useEffect(() => {
+        dispatch(actionsAssets.setCurateStacks(cards));
+    }, [cards]);
 
     const handleMoveCard = useCallback((dragIndex: number, hoverIndex: number) => {
         setCards((prevCards) =>
@@ -54,7 +58,12 @@ function DrawerStack({ drawerStackOpen, selected, onClose, setSelected }: Props)
         );
     }, []);
 
-    const handleRemove = (asset: Asset) => setSelected((prev) => prev.filter((item) => item._id !== asset._id));
+    const handleRemove = (asset: Asset) => {
+        setCards((prevCards) => {
+            const updated = prevCards.filter((item) => item._id !== asset._id);
+            return updated;
+        });
+    };
 
     const renderCard = useCallback((asset: Asset, index: number) => {
         return (
@@ -180,15 +189,10 @@ function DrawerStack({ drawerStackOpen, selected, onClose, setSelected }: Props)
     );
 }
 
-export default function DrawerStackHoc({ drawerStackOpen, selected, onClose, setSelected }: Props) {
+export default function DrawerStackHoc({ drawerStackOpen, onClose }: Props) {
     return (
         <DndProvider backend={HTML5Backend}>
-            <DrawerStack
-                drawerStackOpen={drawerStackOpen}
-                selected={selected}
-                onClose={onClose}
-                setSelected={setSelected}
-            />
+            <DrawerStack drawerStackOpen={drawerStackOpen} onClose={onClose} />
         </DndProvider>
     );
 }
