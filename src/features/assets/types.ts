@@ -26,6 +26,7 @@ export interface AssetsSliceState {
         name: string;
     };
     paused: boolean;
+    selected: Asset[];
 }
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';

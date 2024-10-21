@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import update from 'immutability-helper';
 import { Box, Button, Typography, Drawer, TextField, useMediaQuery, Theme, IconButton } from '@mui/material';
 import { DndProvider } from 'react-dnd';
@@ -9,6 +9,7 @@ import { Asset } from '@/features/assets/types';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { useSelector } from '@/store/hooks';
 import { actions as actionsCreator } from '@/features/creator';
+import { actions as actionsAssets } from '@/features/assets';
 import { useToggle } from '@/app/hooks/useToggle';
 import { MediaRenderer } from '../MediaRenderer';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -18,11 +19,12 @@ import { CardDnd } from '../CardDnd';
 interface Props {
     drawerStackOpen: boolean;
     selected: Asset[];
-    setSelected: Dispatch<SetStateAction<Asset[]>>;
     onClose(): void;
 }
 
-function DrawerStack({ drawerStackOpen, selected, onClose, setSelected }: Props) {
+function DrawerStack({ drawerStackOpen, selected, onClose }: Props) {
+    console.log(selected.length);
+
     const dispatch = useDispatch();
     const { language } = useI18n();
 
@@ -54,7 +56,16 @@ function DrawerStack({ drawerStackOpen, selected, onClose, setSelected }: Props)
         );
     }, []);
 
-    const handleRemove = (asset: Asset) => setSelected((prev) => prev.filter((item) => item._id !== asset._id));
+    const handleRemove = useCallback(
+        (asset: Asset) => {
+            setCards((prevCards) => {
+                const updated = prevCards.filter((item) => item._id !== asset._id);
+                dispatch(actionsAssets.setSelected(updated));
+                return updated;
+            });
+        },
+        [selected]
+    );
 
     const renderCard = useCallback((asset: Asset, index: number) => {
         return (
@@ -169,10 +180,10 @@ function DrawerStack({ drawerStackOpen, selected, onClose, setSelected }: Props)
                     )}
 
                     <Box mt={2} display="flex" gap={2} flexWrap="wrap">
-                        {cards.length === 0 && (
+                        {cards?.length === 0 && (
                             <Typography>{language['search.drawer.stack.noSelectedAssets'] as string}</Typography>
                         )}
-                        {cards.map((asset, i) => renderCard(asset, i))}
+                        {cards?.map((asset, i) => renderCard(asset, i))}
                     </Box>
                 </Box>
             </Drawer>
@@ -180,15 +191,10 @@ function DrawerStack({ drawerStackOpen, selected, onClose, setSelected }: Props)
     );
 }
 
-export default function DrawerStackHoc({ drawerStackOpen, selected, onClose, setSelected }: Props) {
+export default function DrawerStackHoc({ drawerStackOpen, selected, onClose }: Props) {
     return (
         <DndProvider backend={HTML5Backend}>
-            <DrawerStack
-                drawerStackOpen={drawerStackOpen}
-                selected={selected}
-                onClose={onClose}
-                setSelected={setSelected}
-            />
+            <DrawerStack drawerStackOpen={drawerStackOpen} selected={selected} onClose={onClose} />
         </DndProvider>
     );
 }

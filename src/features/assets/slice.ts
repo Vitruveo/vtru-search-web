@@ -42,6 +42,7 @@ export const initialState: AssetsSliceState = {
         name: '',
     },
     paused: false,
+    selected: [],
 };
 
 export const assetsSlice = createSlice({
@@ -154,6 +155,9 @@ export const assetsSlice = createSlice({
         generateSlideshow: (state, action: PayloadAction<GenerateSlideshowParams>) => {},
         setSlideshow: (state, action: PayloadAction<string>) => {
             state.slideshow = action.payload;
+        },
+        setSelected: (state, action: PayloadAction<AssetsSliceState['selected']>) => {
+            state.selected = action.payload;
         },
     },
 });
