@@ -14,6 +14,8 @@ type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export const Dashboard = ({ data }: DashboardProps) => {
+    const { data: dashBoardData } = data;
+
     const [value, setValue] = useState<Value>([new Date(), new Date()]);
     if (data.loading) return <Loading />;
 
@@ -28,7 +30,7 @@ export const Dashboard = ({ data }: DashboardProps) => {
                     sx={{ background: 'linear-gradient(to right, #0000FF, #00FFFF)' }}
                 >
                     <Box mt={10}>
-                        <Typography variant="h1">{data.arts}</Typography>
+                        <Typography variant="h1">{dashBoardData.arts}</Typography>
                         <Typography>Arts</Typography>
                     </Box>
                     <Image src="/images/dashboard/nft_icon.svg" alt="Nft icon" width={70} height={70} />
@@ -42,7 +44,7 @@ export const Dashboard = ({ data }: DashboardProps) => {
                 >
                     <Box mt={10}>
                         <Typography variant="h1" color="white">
-                            {data.consigned}
+                            {dashBoardData.consigned}
                         </Typography>
                         <Typography color="white">Consigned arts</Typography>
                     </Box>
@@ -57,7 +59,7 @@ export const Dashboard = ({ data }: DashboardProps) => {
                 >
                     <Box mt={10}>
                         <Typography variant="h1" color="white">
-                            {data.activeConsigned}
+                            {dashBoardData.activeConsigned}
                         </Typography>
                         <Typography color="white">Active consigned arts</Typography>
                     </Box>
@@ -72,7 +74,7 @@ export const Dashboard = ({ data }: DashboardProps) => {
                 >
                     <Box mt={10}>
                         <Typography variant="h1" color="white">
-                            {data.artsSold}
+                            {dashBoardData.artsSold}
                         </Typography>
                         <Typography color="white">Sold arts</Typography>
                     </Box>

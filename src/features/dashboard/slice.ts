@@ -4,13 +4,7 @@ import { DashboardState, ResponseDashboard } from './types';
 export const initialState: DashboardState = {
     loading: false,
     error: null,
-    creators: 0,
-    arts: 0,
-    consigned: 0,
-    activeConsigned: 0,
-    totalPrice: 0,
-    artsSold: 0,
-    averagePrice: 0,
+    data: { creators: 0, arts: 0, consigned: 0, activeConsigned: 0, totalPrice: 0, artsSold: 0, averagePrice: 0 },
 };
 
 export const dashboardSlice = createSlice({
@@ -24,13 +18,7 @@ export const dashboardSlice = createSlice({
         setDashboardData: (state, action: PayloadAction<ResponseDashboard>) => {
             state.loading = false;
             state.error = null;
-            state.creators = action.payload.creators;
-            state.arts = action.payload.arts;
-            state.consigned = action.payload.consigned;
-            state.activeConsigned = action.payload.activeConsigned;
-            state.totalPrice = action.payload.totalPrice;
-            state.artsSold = action.payload.artsSold;
-            state.averagePrice = action.payload.averagePrice;
+            state.data = action.payload;
         },
         setError: (state, action: PayloadAction<string>) => {
             state.loading = false;

@@ -11,11 +11,5 @@ export interface ResponseDashboard {
 export interface DashboardState {
     loading: boolean;
     error: string | null;
-    creators: number;
-    arts: number;
-    consigned: number;
-    activeConsigned: number;
-    totalPrice: number;
-    artsSold: number;
-    averagePrice: number;
+    data: ResponseDashboard;
 }
