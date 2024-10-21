@@ -707,7 +707,7 @@ const AssetsList = () => {
                         overflow={'hidden'}
                         display={'flex'}
                         justifyContent={'center'}
-                        margin={'0 5%'}
+                        margin={'0 1.5%'}
                     >
                         {isLoading ? (
                             [...Array(15)].map((_, index) => (

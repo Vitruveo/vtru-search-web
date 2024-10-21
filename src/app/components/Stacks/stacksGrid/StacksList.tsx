@@ -217,7 +217,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         />
                     </Box>
                 </Box>
-                <Box display={'flex'} flexWrap={'wrap'} justifyContent={'center'} margin={'0 5%'}>
+                <Box display={'flex'} flexWrap={'wrap'} justifyContent={'center'} margin={'0 1.5%'}>
                     <Box
                         display="flex"
                         flexWrap="wrap"
