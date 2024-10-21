@@ -106,7 +106,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                             styles={{
                                 control: (base, state) => ({
                                     ...base,
-                                    width: '150px',
+                                    width: '130px',
                                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                                     backgroundColor: theme.palette.background.paper,
                                     boxShadow: '#FF0066',
@@ -151,7 +151,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                             styles={{
                                 control: (base, state) => ({
                                     ...base,
-                                    minWidth: '150px',
+                                    minWidth: '100px',
                                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                                     backgroundColor: theme.palette.background.paper,
                                     boxShadow: '#FF0066',
@@ -180,14 +180,14 @@ const Stacks = ({ data, actions }: StacksProps) => {
                             }}
                         />
                         <Select
-                            placeholder="Select Page"
+                            placeholder="Select"
                             options={optionsForSelectPage}
                             value={selectValues.page}
                             onChange={onChangePage}
                             styles={{
                                 control: (base, state) => ({
                                     ...base,
-                                    minWidth: '150px',
+                                    minWidth: '100px',
                                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                                     backgroundColor: theme.palette.background.paper,
                                     boxShadow: '#FF0066',

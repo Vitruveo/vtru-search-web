@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import cookie from 'cookiejs';
 import Select, { SingleValue } from 'react-select';
 import { useSelector } from '@/store/hooks';
 import Image from 'next/image';
@@ -141,6 +142,17 @@ const AssetsList = () => {
             curateStack.activate();
         }
     }, []);
+
+    useEffect(() => {
+        if (!grid && !video && !slideshow) {
+            // clear cookies
+            const domain = window.location.hostname.replace('search.', '');
+            cookie.remove('grid');
+            document.cookie = 'grid=; path=/; domain=' + domain + '; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            cookie.remove('video');
+            document.cookie = 'video=; path=/; domain=' + domain + '; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+    }, [grid, video, slideshow]);
 
     useEffect(() => {
         if (grid || video || slideshow) setGroupByCreator('no');
@@ -515,7 +527,7 @@ const AssetsList = () => {
                                             styles={{
                                                 control: (base, state) => ({
                                                     ...base,
-                                                    width: '150px',
+                                                    width: '230px',
                                                     borderColor: state.isFocused
                                                         ? theme.palette.primary.main
                                                         : theme.palette.grey[200],
@@ -560,7 +572,7 @@ const AssetsList = () => {
                                             styles={{
                                                 control: (base, state) => ({
                                                     ...base,
-                                                    width: '150px',
+                                                    width: '180px',
                                                     borderColor: state.isFocused
                                                         ? theme.palette.primary.main
                                                         : theme.palette.grey[200],
@@ -620,7 +632,7 @@ const AssetsList = () => {
                                     styles={{
                                         control: (base, state) => ({
                                             ...base,
-                                            minWidth: '150px',
+                                            minWidth: '100px',
                                             borderColor: state.isFocused
                                                 ? theme.palette.primary.main
                                                 : theme.palette.grey[200],
@@ -653,14 +665,14 @@ const AssetsList = () => {
                                     }}
                                 />
                                 <Select
-                                    placeholder="Select Page"
+                                    placeholder="Select"
                                     options={optionsForSelect}
                                     value={currentPage > 1 ? { value: currentPage, label: currentPage } : null}
                                     onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
                                     styles={{
                                         control: (base, state) => ({
                                             ...base,
-                                            minWidth: '150px',
+                                            minWidth: '100px',
                                             borderColor: state.isFocused
                                                 ? theme.palette.primary.main
                                                 : theme.palette.grey[200],

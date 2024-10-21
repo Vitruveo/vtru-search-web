@@ -15,15 +15,15 @@ const AssetsSidebar = () => {
     const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
     const isHiddenFilter = useSelector((state) => state.customizer.hidden?.filter);
 
- useEffect(() => {
+    const onSidebarClose = () => {
+        dispatch(actions.closeSidebar());
+    };
+
+    useEffect(() => {
         if (!lgUp) onSidebarClose();
     }, [lgUp]);
 
     if (isHiddenFilter) return null;
-
-    const onSidebarClose = () => {
-        dispatch(actions.closeSidebar());
-    };
 
     return (
         <Drawer
