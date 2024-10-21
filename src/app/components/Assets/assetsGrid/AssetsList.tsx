@@ -79,7 +79,7 @@ const AssetsList = () => {
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
 
     const { data: assets, totalPage, page: currentPage, limit } = useSelector((state) => state.assets.data);
-    const { sort, maxPrice, selected } = useSelector((state) => state.assets);
+    const { sort, maxPrice, curateStacks } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
     const hasIncludesGroup = useSelector((state) => state.assets.groupByCreator);
     const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets);
@@ -180,10 +180,10 @@ const AssetsList = () => {
     };
 
     const handleCheckCurate = (asset: Asset) => {
-        const isSelected = selected?.some((item) => item._id === asset._id);
+        const isSelected = curateStacks.some((item) => item._id === asset._id);
 
-        if (isSelected) dispatch(actions.setSelected(selected.filter((item) => item._id !== asset._id)));
-        else dispatch(actions.setSelected([...(selected || []), asset]));
+        if (isSelected) dispatch(actions.setCurateStacks(curateStacks.filter((item) => item._id !== asset._id)));
+        else dispatch(actions.setCurateStacks([...curateStacks, asset]));
     };
 
     const handleScrollToTop = () => {
@@ -273,12 +273,12 @@ const AssetsList = () => {
         if (!curateStack.isActive) handleChangeSelectGroupByCreator({ value: 'no', label: 'Ungrouped – All' });
     };
 
-    const handleSelectAll = () => dispatch(actions.setSelected(assets));
-    const handleUnselectAll = () => dispatch(actions.setSelected([]));
+    const handleSelectAll = () => dispatch(actions.setCurateStacks(assets));
+    const handleUnselectAll = () => dispatch(actions.setCurateStacks([]));
 
     const onMenuClick = () => dispatch(layoutActions.toggleSidebar());
 
-    const iconColor = selected?.length > 0 ? '#763EBD' : 'currentColor';
+    const iconColor = curateStacks.length > 0 ? '#763EBD' : 'currentColor';
 
     const onAssetDrawerClose = () => {
         assetDrawer.deactivate();
@@ -298,7 +298,7 @@ const AssetsList = () => {
         <Box>
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
 
-            <DrawerStack selected={selected} drawerStackOpen={drawerStack.isActive} onClose={drawerStack.deactivate} />
+            <DrawerStack drawerStackOpen={drawerStack.isActive} onClose={drawerStack.deactivate} />
 
             {!isHidden?.order && (
                 <Box
@@ -386,14 +386,14 @@ const AssetsList = () => {
                                     {lgUp && (
                                         <Box display="flex" alignItems="center" gap={2}>
                                             <Button variant="contained" fullWidth>
-                                                {selected?.length}{' '}
+                                                {curateStacks.length}{' '}
                                                 {language['search.assetList.curateStack.selected'] as string}
                                             </Button>
                                         </Box>
                                     )}
                                     {!lgUp && (
                                         <Badge
-                                            badgeContent={selected?.length}
+                                            badgeContent={curateStacks.length}
                                             color="primary"
                                             style={{ marginLeft: 2 }}
                                         >
@@ -716,7 +716,7 @@ const AssetsList = () => {
                                         assetView={assetView}
                                         asset={asset}
                                         isCurated={curateStack.isActive}
-                                        checkedCurate={selected?.some((item) => item._id === asset._id)}
+                                        checkedCurate={curateStacks?.some((item) => item._id === asset._id)}
                                         handleChangeCurate={() => {
                                             handleCheckCurate(asset);
                                         }}
@@ -781,7 +781,7 @@ const AssetsList = () => {
                                                 assetView={assetView}
                                                 asset={asset}
                                                 isCurated={curateStack.isActive}
-                                                checkedCurate={selected.some((item) => item._id === asset._id)}
+                                                checkedCurate={curateStacks.some((item) => item._id === asset._id)}
                                                 handleChangeCurate={() => {
                                                     handleCheckCurate(asset);
                                                 }}

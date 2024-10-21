@@ -18,22 +18,20 @@ import { CardDnd } from '../CardDnd';
 
 interface Props {
     drawerStackOpen: boolean;
-    selected: Asset[];
     onClose(): void;
 }
 
-function DrawerStack({ drawerStackOpen, selected, onClose }: Props) {
-    console.log(selected.length);
-
+function DrawerStack({ drawerStackOpen, onClose }: Props) {
     const dispatch = useDispatch();
     const { language } = useI18n();
 
-    const modalSwitch = useToggle();
-    const [cards, setCards] = useState<Asset[]>(selected);
-    const [statedLogin, setStatedLogin] = useState(false);
-
+    const curateStacks = useSelector((state) => state.assets.curateStacks);
     const isLogged = useSelector((state) => state.creator.token !== '');
     const { loading, wasSended } = useSelector((state) => state.creator);
+
+    const modalSwitch = useToggle();
+    const [cards, setCards] = useState<Asset[]>(curateStacks);
+    const [statedLogin, setStatedLogin] = useState(false);
 
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
@@ -43,7 +41,11 @@ function DrawerStack({ drawerStackOpen, selected, onClose }: Props) {
         }
     }, [isLogged]);
 
-    useEffect(() => setCards(selected), [selected]);
+    useEffect(() => setCards(curateStacks), [curateStacks]);
+
+    useEffect(() => {
+        dispatch(actionsAssets.setCurateStacks(cards));
+    }, [cards]);
 
     const handleMoveCard = useCallback((dragIndex: number, hoverIndex: number) => {
         setCards((prevCards) =>
@@ -56,16 +58,12 @@ function DrawerStack({ drawerStackOpen, selected, onClose }: Props) {
         );
     }, []);
 
-    const handleRemove = useCallback(
-        (asset: Asset) => {
-            setCards((prevCards) => {
-                const updated = prevCards.filter((item) => item._id !== asset._id);
-                dispatch(actionsAssets.setSelected(updated));
-                return updated;
-            });
-        },
-        [selected]
-    );
+    const handleRemove = (asset: Asset) => {
+        setCards((prevCards) => {
+            const updated = prevCards.filter((item) => item._id !== asset._id);
+            return updated;
+        });
+    };
 
     const renderCard = useCallback((asset: Asset, index: number) => {
         return (
@@ -180,10 +178,10 @@ function DrawerStack({ drawerStackOpen, selected, onClose }: Props) {
                     )}
 
                     <Box mt={2} display="flex" gap={2} flexWrap="wrap">
-                        {cards?.length === 0 && (
+                        {cards.length === 0 && (
                             <Typography>{language['search.drawer.stack.noSelectedAssets'] as string}</Typography>
                         )}
-                        {cards?.map((asset, i) => renderCard(asset, i))}
+                        {cards.map((asset, i) => renderCard(asset, i))}
                     </Box>
                 </Box>
             </Drawer>
@@ -191,10 +189,10 @@ function DrawerStack({ drawerStackOpen, selected, onClose }: Props) {
     );
 }
 
-export default function DrawerStackHoc({ drawerStackOpen, selected, onClose }: Props) {
+export default function DrawerStackHoc({ drawerStackOpen, onClose }: Props) {
     return (
         <DndProvider backend={HTML5Backend}>
-            <DrawerStack drawerStackOpen={drawerStackOpen} selected={selected} onClose={onClose} />
+            <DrawerStack drawerStackOpen={drawerStackOpen} onClose={onClose} />
         </DndProvider>
     );
 }

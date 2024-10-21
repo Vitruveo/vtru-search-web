@@ -42,7 +42,7 @@ export const initialState: AssetsSliceState = {
         name: '',
     },
     paused: false,
-    selected: [],
+    curateStacks: [],
 };
 
 export const assetsSlice = createSlice({
@@ -156,8 +156,8 @@ export const assetsSlice = createSlice({
         setSlideshow: (state, action: PayloadAction<string>) => {
             state.slideshow = action.payload;
         },
-        setSelected: (state, action: PayloadAction<AssetsSliceState['selected']>) => {
-            state.selected = action.payload;
+        setCurateStacks: (state, action: PayloadAction<AssetsSliceState['curateStacks']>) => {
+            state.curateStacks = action.payload;
         },
     },
 });
