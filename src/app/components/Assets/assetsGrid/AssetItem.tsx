@@ -1,4 +1,4 @@
-import { Badge, Box, CardContent, Checkbox, Grid, Link, Paper, Stack, Typography } from '@mui/material';
+import { Badge, Box, CardContent, Checkbox, Grid, Link, Paper, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import BlankCard from '../../Shared/BlankCard';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/filters/slice';
 import { ShowAnimation } from '@/animations';
 import DeckEffect from '../components/DeckEffect';
-import { useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 interface Props {
     assetView: Asset;
@@ -23,7 +23,7 @@ interface Props {
     countByCreator?: number;
 }
 
-const AssetItem = ({
+const AssetItemMain = ({
     assetView,
     asset,
     isCurated,
@@ -37,9 +37,9 @@ const AssetItem = ({
 }: Props) => {
     const theme = useTheme();
     const dispatch = useDispatch();
+    const smUp = useMediaQuery(theme.breakpoints.up('sm'));
     const [isHovered, setIsHovered] = useState(false);
     const [showFanEffect, setShowFanEffect] = useState(false);
-    const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const optionIncludeGroup = useSelector((state) => state.assets.groupByCreator.active);
     const isHiddenCardDetail = useSelector((state) => state.customizer.hidden?.cardDetail);
 
@@ -64,28 +64,32 @@ const AssetItem = ({
         }
     };
 
+    const media = useMemo(() => {
+        return `${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`;
+    }, [asset?.formats?.preview?.path]);
+
     return (
         <div
             style={{
-                border: assetView === asset ? '1px solid #00d6f4' : '',
+                border: assetView === asset ? '1px solid #FF0066' : '',
                 width: 250,
+                margin: '0 auto',
                 cursor: 'pointer',
                 height: isHiddenCardDetail ? 250 : 380,
-                marginRight: '32px',
                 position: 'relative',
                 borderRadius: '15px',
             }}
             onMouseEnter={() => {
                 setIsHovered(true);
-                if (asset?.countByCreator && asset?.countByCreator > 1)
-                    hoverTimeoutRef.current = setTimeout(() => setShowFanEffect(true), 500);
+                // if (asset?.countByCreator && asset?.countByCreator > 1)
+                //     hoverTimeoutRef.current = setTimeout(() => setShowFanEffect(true), 500);
             }}
             onMouseLeave={() => {
                 setIsHovered(false);
-                if (hoverTimeoutRef.current) {
-                    clearTimeout(hoverTimeoutRef.current);
-                    hoverTimeoutRef.current = null;
-                }
+                // if (hoverTimeoutRef.current) {
+                //     clearTimeout(hoverTimeoutRef.current);
+                //     hoverTimeoutRef.current = null;
+                // }
                 setShowFanEffect(false);
             }}
             onClick={() => {
@@ -102,7 +106,7 @@ const AssetItem = ({
                         sx={{
                             position: 'absolute',
                             right: -10,
-                            top: -10,
+                            top: 18,
                             '& .MuiBadge-badge': {
                                 transform: 'scale(1.5)',
                                 fontSize: '0.8rem',
@@ -122,11 +126,8 @@ const AssetItem = ({
             <BlankCard className="hoverCard" onClick={handleClickImage}>
                 {!isHiddenCardDetail ? (
                     <>
-                        <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
-                            <MediaRenderer
-                                src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
-                                fallbackSrc={'https://via.placeholder.com/250'}
-                            />
+                        <Box height={250} borderRadius="8px 8px 0 0" position="relative">
+                            <MediaRenderer src={media} fallbackSrc={'https://via.placeholder.com/250'} />
                         </Box>
 
                         <CardContent sx={{ p: 3, pt: 2 }} style={{ backgroundColor: theme.palette.grey[100] }}>
@@ -155,6 +156,7 @@ const AssetItem = ({
                                     whiteSpace="nowrap"
                                     textOverflow="ellipsis"
                                     href="#"
+                                    underline="none"
                                     onClick={onCreatorNameClick}
                                 >
                                     {creatorName}
@@ -206,10 +208,7 @@ const AssetItem = ({
                         </CardContent>
                     </>
                 ) : (
-                    <MediaRenderer
-                        src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
-                        fallbackSrc={'https://via.placeholder.com/250'}
-                    />
+                    <MediaRenderer src={media} fallbackSrc={'https://via.placeholder.com/250'} />
                 )}
             </BlankCard>
         </div>
@@ -236,4 +235,4 @@ export const AssetCardContainer = ({ children }: { children: React.ReactNode }) 
     </Grid>
 );
 
-export default AssetItem;
+export const AssetItem = React.memo(AssetItemMain);

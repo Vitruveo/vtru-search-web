@@ -3,6 +3,7 @@ import { Avatar, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions as actionsCreator } from '@/features/creator';
 import { disconnectWebSocket } from '@/services/socket';
+import Image from 'next/image';
 
 export const AvatarProfile = () => {
     const dispatch = useDispatch();
@@ -23,14 +24,18 @@ export const AvatarProfile = () => {
 
     const handleLogout = () => {
         dispatch(actionsCreator.logout());
+        localStorage.removeItem('auth');
         disconnectWebSocket();
     };
 
-    const src = avatar != null && avatar !== '' ? avatar : '/images/profile/default.png';
+    const checkAvatar = avatar != null && avatar !== '';
+    const src = checkAvatar ? avatar : '/images/profile/default.png';
 
     return (
         <>
             <IconButton
+                size="small"
+                sx={{ padding: 0 }}
                 aria-label="more"
                 id="long-button"
                 aria-controls={open ? 'long-menu' : undefined}
@@ -38,7 +43,11 @@ export const AvatarProfile = () => {
                 aria-haspopup="true"
                 onClick={handleClick}
             >
-                <Avatar src={src} sx={{ width: 35, height: 35 }} />
+                {checkAvatar ? (
+                    <Avatar src={src} sx={{ width: 29, height: 29 }} />
+                ) : (
+                    <Image alt="" style={{ marginLeft: '5px' }} src={src} width={25} height={29} />
+                )}
             </IconButton>
             <Menu
                 id="long-menu"
@@ -55,7 +64,7 @@ export const AvatarProfile = () => {
                     <Typography>{username || ''}</Typography>
                 </MenuItem>
                 <MenuItem sx={{ py: 2, px: 3 }} onClick={handleLogout}>
-                    <Typography color="#00d6f4">Logout</Typography>
+                    <Typography color="#FF0066">Logout</Typography>
                 </MenuItem>
             </Menu>
         </>

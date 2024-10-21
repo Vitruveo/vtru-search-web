@@ -7,6 +7,11 @@ export const addAssetsToURL = (assets: Asset[]) => {
     window.history.pushState({}, '', url.toString());
 };
 
+export const hasAssetsInURL = () => {
+    const url = new URL(window.location.href);
+    return url.searchParams.has('assets');
+};
+
 export const getAssetsIdsFromURL = () => {
     const url = new URL(window.location.href);
     const assetIds = url.searchParams.get('assets')?.split(',');

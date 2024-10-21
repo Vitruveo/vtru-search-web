@@ -58,7 +58,7 @@ const language: Translation = {
     'search.assetFilter.taxonomy.title.style': 'Style',
     'search.assetFilter.taxonomy.title.subject': 'Subject',
 
-    'search.assetFilter.creators': 'Creators',
+    'search.assetFilter.creators': 'Artists',
     'search.assetFilter.creators.title': 'Title',
     'search.assetFilter.creators.title.name': 'Name',
     'search.assetFilter.creators.title.profileUrl': 'Profile URL',
@@ -71,7 +71,7 @@ const language: Translation = {
     'search.assetFilter.portfolio.placeholder': 'Wallet address',
 
     /* Asset List */
-    'search.assetList.curateStack': 'Curate stack',
+    'search.assetList.curateStack': 'Curate Stack',
     'search.assetList.curateStack.selected': 'Selected',
 
     'search.assetList.visualization.description': 'Description',

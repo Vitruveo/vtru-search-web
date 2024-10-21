@@ -12,6 +12,7 @@ import type {
     GetCreatorParams,
     MakeVideoParams,
     MakeVideoResponse,
+    ResponseArtistsSpotlight,
     ResponseAsserCreator,
     ResponseAssetGroupByCreator,
     ResponseAssets,
@@ -65,6 +66,21 @@ function* getAssetsLastSold() {
     }
 }
 
+function* getArtistsSpotlight() {
+    try {
+        const URL_ARTISTS_SPOTLIGHT = `${API_BASE_URL}/assets/public/artistSpotlight`;
+
+        const response: AxiosResponse<APIResponse<ResponseArtistsSpotlight>> = yield call(
+            axios.get,
+            URL_ARTISTS_SPOTLIGHT
+        );
+
+        yield put(actions.setArtistSpotlight(response.data.data));
+    } catch (error) {
+        // handle error
+    }
+}
+
 function* getAssetsGroupByCreator() {
     try {
         const groupByCreator: string = yield select((state: AppState) => state.assets.groupByCreator.active);
@@ -74,9 +90,12 @@ function* getAssetsGroupByCreator() {
 
         const wallets: string[] = yield select((state: AppState) => state.filters.portfolio.wallets);
         const page: number = yield select((state: AppState) => state.assets.data.page);
+        const limit: number = yield select((state: AppState) => state.assets.data.limit);
         const order: string = yield select((state: AppState) => state.assets.sort.order);
         const sold: string = yield select((state: AppState) => state.assets.sort.sold);
         const name: string = yield select((state: AppState) => state.filters.name);
+        const hasBts: string = yield select((state: AppState) => state.filters.hasBts);
+        const artists: string[] = yield select((state: AppState) => state.filters.tabNavigation.artists);
 
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
@@ -124,24 +143,32 @@ function* getAssetsGroupByCreator() {
 
         buildQuery.grouped = groupByCreator;
 
+        if (artists.length) {
+            buildQuery['framework.createdBy'] = {
+                $in: artists,
+            };
+        }
+
         const response: AxiosResponse<APIResponse<ResponseAssetGroupByCreator>> = yield call(
-            axios.get,
+            axios.post,
             `${API_BASE_URL}/assets/public/groupByCreator`,
             {
-                params: {
-                    query: buildQuery,
-                    limit: 24,
-                    page: page || 1,
-                    name: name.trim() || null,
-                    sort: {
-                        order,
-                        isIncludeSold: sold === 'yes' ? true : false,
-                    },
+                query: buildQuery,
+                limit: limit || 25,
+                page: page || 1,
+                name: name.trim() || null,
+                sort: {
+                    order,
+                    isIncludeSold: sold === 'yes' ? true : false,
                 },
+                hasBts,
             }
         );
 
-        yield put(actions.loadAssetsLastSold());
+        if (page === 1 || page === 0) {
+            yield put(actions.loadAssetsLastSold());
+        }
+
         yield put(
             actions.setData({
                 data: response.data.data.data.map((item) => ({
@@ -174,6 +201,9 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         const video: FilterSliceState['video'] = yield select((state: AppState) => state.filters.video);
         const slideshow: FilterSliceState['slideshow'] = yield select((state: AppState) => state.filters.slideshow);
         const grid: FilterSliceState['grid'] = yield select((state: AppState) => state.filters.grid);
+        const tabNavigation: FilterSliceState['tabNavigation'] = yield select(
+            (state: AppState) => state.filters.tabNavigation
+        );
 
         if (video.assets.length > 0) {
             ids = video.assets;
@@ -181,18 +211,23 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             ids = slideshow.assets;
         } else if (grid.assets.length > 0) {
             ids = grid.assets;
+        } else if (tabNavigation.assets.length > 0) {
+            ids = tabNavigation.assets;
         }
 
         const wallets: string[] = yield select((state: AppState) => state.filters.portfolio.wallets);
         const creatorId: string = yield select((state: AppState) => state.filters.creatorId);
         const name: string = yield select((state: AppState) => state.filters.name);
         const page: number = yield select((state: AppState) => state.assets.data.page);
+        const limit: number = yield select((state: AppState) => state.assets.data.limit);
         const order: string = yield select((state: AppState) => state.assets.sort.order);
         const sold: string = yield select((state: AppState) => state.assets.sort.sold);
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
         const filtersCreators: FilterSliceState['creators'] = yield select((state: AppState) => state.filters.creators);
+        const hasBts: FilterSliceState['hasBts'] = yield select((state: AppState) => state.filters.hasBts);
         const price: FilterSliceState['price'] = yield select((state: AppState) => state.filters.price);
+        const creatorName: string = yield select((state: AppState) => state.assets.groupByCreator.name);
         const colorPrecision: FilterSliceState['colorPrecision'] = yield select(
             (state: AppState) => state.filters.colorPrecision
         );
@@ -250,24 +285,23 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
 
         const URL_ASSETS_SEARCH = `${API_BASE_URL}/assets/public/search`;
 
-        const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.get, URL_ASSETS_SEARCH, {
-            params: {
-                limit: 24,
-                page: page || 1,
-                query: buildQuery,
-                minPrice: price.min,
-                maxPrice: price.max,
-                name: name.trim() ? name : null,
-                precision: colorPrecision.value,
-                showAdditionalAssets,
-                sort: {
-                    order,
-                    isIncludeSold: sold === 'yes' ? true : false,
-                },
+        const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.post, URL_ASSETS_SEARCH, {
+            limit: limit || 25,
+            page: page || 1,
+            query: buildQuery,
+            minPrice: price.min,
+            maxPrice: price.max,
+            name: name.trim() ? name : null,
+            precision: colorPrecision.value,
+            showAdditionalAssets,
+            sort: {
+                order,
+                isIncludeSold: sold === 'yes' ? true : false,
             },
+            hasBts,
         });
 
-        if (page === 1 || page === 0) {
+        if (!creatorId && ids.length === 0 && (page === 1 || page === 0)) {
             yield put(actions.loadAssetsLastSold());
         }
 
@@ -283,6 +317,11 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
             })
         );
         yield put(actions.setTags(response.data.data.tags.sort((a, b) => (a.count > b.count ? -1 : 1))));
+
+        if (creatorId && !creatorName && response.data.data.data.length > 0) {
+            const artistName = response.data.data.data[0]?.assetMetadata?.creators?.formData?.[0]?.name || 'Unknown';
+            yield put(actions.changeGroupByCreatorName(artistName));
+        }
     } catch (error) {
         // Handle error
     }
@@ -422,6 +461,7 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
             {
                 artworks: action.payload.artworks,
                 title: action.payload.title,
+                description: action.payload.description,
                 sound: action.payload.sound,
                 fees: action.payload.fees,
                 timestamp: action.payload.timestamp,
@@ -455,6 +495,7 @@ function* generateSlideshow(action: PayloadAction<GenerateSlideshowParams>) {
             {
                 assets: action.payload.assets,
                 title: action.payload.title,
+                description: action.payload.description,
                 fees: action.payload.fees,
                 display: action.payload.display,
                 interval: action.payload.interval,
@@ -469,6 +510,49 @@ function* generateSlideshow(action: PayloadAction<GenerateSlideshowParams>) {
         yield put(actions.setSlideshow(response.data.data));
     } catch (error) {
         // something
+    }
+}
+
+function* getTabNavigation(action: PayloadAction<string>) {
+    try {
+        if (action.payload.toLowerCase().includes('artist')) {
+            const ids: string[] = yield select((state: AppState) =>
+                state.assets.artistSpotlight.map((item) => item._id)
+            );
+            yield put(actionsFilter.changeTabNavigation({ assets: [], title: action.payload, artists: ids }));
+
+            // clear others
+            yield put(actionsFilter.clearGrid());
+            yield put(actionsFilter.clearSlideshow());
+            yield put(actionsFilter.clearVideo());
+
+            yield put(actions.setInitialPage());
+
+            yield put(
+                actions.setGroupByCreator({
+                    active: 'all',
+                    name: '',
+                })
+            );
+
+            return;
+        }
+
+        const option = action.payload.toLowerCase().includes('spotlight') ? 'spotlight' : 'lastSold';
+        const ids: string[] = yield select((state: AppState) => state.assets[option].map((item) => item._id));
+        yield put(actionsFilter.changeTabNavigation({ assets: ids, title: action.payload, artists: [] }));
+
+        // clear others
+        yield put(actionsFilter.clearGrid());
+        yield put(actionsFilter.clearSlideshow());
+        yield put(actionsFilter.clearVideo());
+
+        yield put(actionsFilter.resetCreatorId());
+        yield put(actions.noGroupByCreator());
+        yield put(actions.setInitialPage());
+        yield put(actions.loadAssets({ page: 1 }));
+    } catch (error) {
+        // handle error
     }
 }
 
@@ -494,11 +578,13 @@ export function* assetsSagas() {
         takeEvery(actions.setSort.type, getAssets),
         takeEvery(actionsFilter.change.type, getAssets),
         debounce(500, actions.setCurrentPage.type, getAssets),
+        debounce(500, actions.setLimit.type, getAssets),
         takeEvery(actionsFilter.changePrice.type, getAssets),
         debounce(1000, actionsFilter.changeName.type, getAssets),
         takeEvery(actionsFilter.changeColorPrecision.type, getAssets),
         takeEvery(actionsFilter.changeCreatorId.type, getAssets),
         takeEvery(actionsFilter.changePortfolioWallets.type, getAssets),
+        takeEvery(actionsFilter.changeHasBts.type, getAssets),
 
         // Group by creator
         takeEvery(actions.startGrouped.type, getAssetsGroupByCreator),
@@ -506,19 +592,23 @@ export function* assetsSagas() {
         takeEvery(actions.setGroupByCreator.type, getAssetsGroupByCreator),
         takeEvery(actions.setSort.type, getAssetsGroupByCreator),
         debounce(500, actions.setCurrentPage.type, getAssetsGroupByCreator),
+        debounce(500, actions.setLimit.type, getAssetsGroupByCreator),
         takeEvery(actionsFilter.change.type, getAssetsGroupByCreator),
         debounce(1000, actionsFilter.changeName.type, getAssetsGroupByCreator),
         takeEvery(actionsFilter.changePortfolioWallets.type, getAssetsGroupByCreator),
+        takeEvery(actionsFilter.changeHasBts.type, getAssetsGroupByCreator),
 
         // Sold
         takeEvery(actions.loadAssetsLastSold.type, getAssetsLastSold),
         takeEvery(actions.loadAssetsLastSold.type, getAssetsSpotlight),
+        takeEvery(actions.loadAssetsLastSold.type, getArtistsSpotlight),
 
         takeEvery(actions.loadCreator.type, getCreator),
         takeEvery(actions.makeVideo.type, makeVideo),
         takeEvery(actions.setGridId.type, getGrid),
         takeEvery(actions.setVideoId.type, getVideo),
         takeEvery(actions.setSlideshowId.type, getSlideshow),
+        takeEvery(actions.setTabNavigation.type, getTabNavigation),
 
         takeEvery(actions.generateSlideshow.type, generateSlideshow),
 

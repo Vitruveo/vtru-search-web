@@ -34,6 +34,7 @@ export const BuildTheme = (config: any = {}) => {
             direction: config.direction,
         })
     );
+
     theme.components = components(theme);
 
     return theme;
@@ -46,7 +47,6 @@ const ThemeSettings = () => {
         direction: activDir,
         theme: activeTheme,
     });
-    document;
     useEffect(() => {
         document.dir = activDir as string;
     }, [activDir]);

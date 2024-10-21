@@ -69,19 +69,21 @@ export default function StyleElements() {
 
     return (
         <Box>
-            <Tooltip
-                title="Settings"
-                arrow
-                componentsProps={{
-                    tooltip: {
-                        sx: { fontSize: '0.8rem' },
-                    },
-                }}
-            >
-                <IconButton onClick={handleClick}>
-                    <IconSettingsFilled />
-                </IconButton>
-            </Tooltip>
+            <Box sx={{ height: 29, paddingLeft: 0.5, display: 'flex' }}>
+                <Tooltip
+                    title="Settings"
+                    arrow
+                    componentsProps={{
+                        tooltip: {
+                            sx: { fontSize: '0.8rem' },
+                        },
+                    }}
+                >
+                    <IconButton size="small" sx={{ padding: 0, marginLeft: 0.5 }} onClick={handleClick}>
+                        <IconSettingsFilled height={29} />
+                    </IconButton>
+                </Tooltip>
+            </Box>
             <Menu
                 anchorEl={anchorEl}
                 open={open}
@@ -106,12 +108,31 @@ export default function StyleElements() {
                     <Switch
                         onChange={() => handleChange('recentlySold', TypeAction.SET_RECENTLYSOLD)}
                         checked={state.recentlySold}
+                        disabled={state.spotlight && state.assets && state.artistSpotlight}
                     />
-                    Hide Carousels
+                    Hide Recently Sold
                 </MenuItem>
                 <MenuItem>
                     <Switch
-                        onChange={() => handleChange('pageNavigation', TypeAction.SET_PAGENAVIGATION)}
+                        onChange={() => handleChange('spotlight', TypeAction.SET_SPOTLIGHT)}
+                        checked={state.spotlight}
+                        disabled={state.recentlySold && state.assets && state.artistSpotlight}
+                    />
+                    Hide Artwork Spotlight
+                </MenuItem>
+                <MenuItem>
+                    <Switch
+                        onChange={() => handleChange('artistSpotlight', TypeAction.SET_ARTISTSPOTLIGHT)}
+                        checked={state.artistSpotlight}
+                        disabled={state.recentlySold && state.assets && state.spotlight}
+                    />
+                    Hide Artist Spotlight
+                </MenuItem>
+                <MenuItem>
+                    <Switch
+                        onChange={() => {
+                            if (!state.assets) handleChange('pageNavigation', TypeAction.SET_PAGENAVIGATION);
+                        }}
                         checked={state.pageNavigation}
                     />
                     Hide Page Navigation
@@ -122,6 +143,17 @@ export default function StyleElements() {
                         checked={state.cardDetail}
                     />
                     Hide Card Detail
+                </MenuItem>
+                <MenuItem>
+                    <Switch
+                        onChange={() => {
+                            handleChange('assets', TypeAction.SET_ASSETS);
+                            handleChange('pageNavigation', TypeAction.SET_PAGENAVIGATION);
+                        }}
+                        checked={state.assets}
+                        disabled={state.recentlySold && state.spotlight}
+                    />
+                    Hide Digital Assets
                 </MenuItem>
                 <Divider />
                 <MenuItem>

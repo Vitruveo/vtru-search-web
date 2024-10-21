@@ -5,6 +5,7 @@ import { FilterSliceState } from './types';
 import { DeepPartial } from '../common/types';
 import { clearAssetsFromURL } from '@/utils/url-assets';
 import { extractObjects } from '@/utils/extractObjects';
+import { init } from 'next/dist/compiled/webpack/webpack';
 
 export const initialState: FilterSliceState = {
     name: '',
@@ -53,6 +54,7 @@ export const initialState: FilterSliceState = {
             awardUrl: '',
         },
     },
+    hasBts: '',
     price: {
         min: 0,
         max: 0,
@@ -77,6 +79,11 @@ export const initialState: FilterSliceState = {
     },
     slideshow: {
         assets: [],
+        title: '',
+    },
+    tabNavigation: {
+        assets: [],
+        artists: [],
         title: '',
     },
     creatorId: '',
@@ -162,6 +169,7 @@ export const filterSlice = createSlice({
                 wallets: [],
             };
             state.reseted += 1;
+            state.hasBts = '';
 
             const payload = extractObjects(initialState);
 
@@ -223,6 +231,13 @@ export const filterSlice = createSlice({
                 title: '',
             };
         },
+        clearTabNavigation: (state) => {
+            state.tabNavigation = {
+                assets: [],
+                artists: [],
+                title: '',
+            };
+        },
         resetCreatorId: (state) => {
             state.creatorId = '';
         },
@@ -246,6 +261,7 @@ export const filterSlice = createSlice({
             state.reseted += 1;
             state.creatorId = '';
             state.portfolio = initialState.portfolio;
+            state.hasBts = initialState.hasBts;
             clearAssetsFromURL();
         },
         changePrice: (state, action: PayloadAction<{ min: number; max: number }>) => {
@@ -258,6 +274,9 @@ export const filterSlice = createSlice({
             state.colorPrecision = {
                 value: action.payload,
             };
+        },
+        changeHasBts: (state, action: PayloadAction<string>) => {
+            state.hasBts = action.payload;
         },
         changeShowAdditionalAssets: (state, action: PayloadAction<boolean>) => {
             state.showAdditionalAssets.value = action.payload;
@@ -285,6 +304,7 @@ export const filterSlice = createSlice({
                 aiGeneration: 'no',
             };
             state.reseted += 1;
+            state.hasBts = initialState.hasBts;
             clearAssetsFromURL();
         },
         changeSlideshow: (
@@ -313,6 +333,7 @@ export const filterSlice = createSlice({
                 aiGeneration: 'no',
             };
             state.reseted += 1;
+            state.hasBts = initialState.hasBts;
             clearAssetsFromURL();
         },
         changeVideo: (
@@ -338,6 +359,34 @@ export const filterSlice = createSlice({
                 aiGeneration: 'no',
             };
             state.reseted += 1;
+            state.hasBts = initialState.hasBts;
+            clearAssetsFromURL();
+        },
+        changeTabNavigation: (
+            state,
+            action: PayloadAction<{
+                assets: string[];
+                artists: string[];
+                title: string;
+            }>
+        ) => {
+            if (action.payload) {
+                state.tabNavigation = action.payload;
+            }
+
+            // clear other filters
+            state.name = '';
+            state.context = initialState.context;
+            state.taxonomy = initialState.taxonomy;
+            state.creators = initialState.creators;
+            state.provenance = initialState.provenance;
+            state.price = initialState.price;
+            state.shortCuts = {
+                nudity: 'no',
+                aiGeneration: 'no',
+            };
+            state.reseted += 1;
+            state.hasBts = initialState.hasBts;
             clearAssetsFromURL();
         },
         changePortfolioWallets: (state, action: PayloadAction<{ wallets: string[] }>) => {

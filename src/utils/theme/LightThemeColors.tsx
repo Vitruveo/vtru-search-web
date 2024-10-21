@@ -37,9 +37,9 @@ const LightThemeColors = [
         name: 'PURPLE_THEME',
         palette: {
             primary: {
-                main: '#00d6f4',
+                main: '#FF0066',
                 light: '#F2ECF9',
-                dark: '#149cb0',
+                dark: '#CC0052',
                 contrastText: '#ffffff',
             },
             secondary: {

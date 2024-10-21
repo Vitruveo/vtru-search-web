@@ -21,9 +21,11 @@ import { createTwitterIntent } from '@/utils/twitter';
 interface VideoStackProps {
     selectedAssets: Asset[];
     title: string;
+    description: string;
+    fees: number;
 }
 
-export default function Slideshow({ selectedAssets, title }: VideoStackProps) {
+export default function Slideshow({ selectedAssets, title, description, fees }: VideoStackProps) {
     const dispatch = useDispatch();
 
     const slideshow = useSelector((state) => state.assets.slideshow);
@@ -43,7 +45,8 @@ export default function Slideshow({ selectedAssets, title }: VideoStackProps) {
             actions.generateSlideshow({
                 assets: selectedAssets.map((asset) => asset._id.toString()),
                 title,
-                fees: 10,
+                description,
+                fees,
                 display,
                 interval,
             })
@@ -55,7 +58,7 @@ export default function Slideshow({ selectedAssets, title }: VideoStackProps) {
             <>
                 <Box mt={2}>
                     <a
-                        style={{ color: '#00d6f4', textDecoration: 'underline' }}
+                        style={{ color: '#FF0066', textDecoration: 'underline' }}
                         href={url}
                         target="_blank"
                         rel="noreferrer"

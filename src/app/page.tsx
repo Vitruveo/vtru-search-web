@@ -23,6 +23,7 @@ const Search = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
 
     const searchParams = useSearchParams();
     const grid = searchParams.get('grid');
@@ -31,6 +32,7 @@ const Search = () => {
     const groupByCreator = searchParams.get('groupByCreator');
     const sort_sold = searchParams.get('sort_sold');
     const sort_order = searchParams.get('sort_order');
+    const creatorId = searchParams.get('creatorId');
 
     useEffect(() => {
         params.forEach((param) => {
@@ -60,16 +62,24 @@ const Search = () => {
         dispatch(actions.initialParams(initialParams));
         dispatch(actionsAssets.initialSort({ order: sort_order || 'latest', sold: sort_sold || 'no' }));
 
-        if (!groupByCreator || groupByCreator === 'no' || !['noSales', 'all'].includes(groupByCreator))
+        if (creatorId) {
             dispatch(actionsAssets.startNormal());
-        else dispatch(actionsAssets.startGrouped(groupByCreator));
+        } else if (groupByCreator && (groupByCreator === 'no' || !['noSales', 'all'].includes(groupByCreator)))
+            dispatch(actionsAssets.startNormal());
+        else if (groupByCreator && groupByCreator === 'noSales') dispatch(actionsAssets.startGrouped('noSales'));
+        else dispatch(actionsAssets.startGrouped('all'));
     }, [searchParams]);
 
     const isInIframe = window.self !== window.top;
 
     return (
         <div>
-            <Header />
+            <Header
+                rssOptions={[
+                    { flagname: 'JSON', value: 'json' },
+                    { flagname: 'XML', value: 'xml' },
+                ]}
+            />
             <PageContainer title="Search" description="this is Search">
                 <AppCard>
                     <AssetsSidebar />
@@ -81,10 +91,10 @@ const Search = () => {
             <Box
                 display={isInIframe ? 'none' : 'inherit'}
                 position={'fixed'}
-                top={lgUp ? 15 : 9}
-                right={-32}
+                top={lgUp ? 21 : smUp ? 17 : 13}
+                right={-5}
                 bgcolor={theme.palette.grey[100]}
-                width={100}
+                width={lgUp || smUp ? 85 : 77}
                 zIndex={9999}
             >
                 <StyleElements />

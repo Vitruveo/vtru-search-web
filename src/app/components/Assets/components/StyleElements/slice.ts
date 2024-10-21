@@ -3,8 +3,11 @@ export const initialState = {
     order: false,
     header: false,
     recentlySold: false,
+    spotlight: false,
+    artistSpotlight: false,
     pageNavigation: false,
     cardDetail: false,
+    assets: false,
 };
 
 export enum TypeAction {
@@ -12,8 +15,11 @@ export enum TypeAction {
     SET_ORDER = 'SET_ORDER',
     SET_HEADER = 'SET_HEADER',
     SET_RECENTLYSOLD = 'SET_RECENTLYSOLD',
+    SET_SPOTLIGHT = 'SET_SPOTLIGHT',
+    SET_ARTISTSPOTLIGHT = 'SET_ARTISTSPOTLIGHT',
     SET_PAGENAVIGATION = 'SET_PAGENAVIGATION',
     SET_CARDDETAIL = 'SET_CARDDETAIL',
+    SET_ASSETS = 'SET_ASSETS',
 }
 
 interface Action {
@@ -25,8 +31,11 @@ interface State {
     order: boolean;
     header: boolean;
     recentlySold: boolean;
+    spotlight: boolean;
+    artistSpotlight: boolean;
     pageNavigation: boolean;
     cardDetail: boolean;
+    assets: boolean;
 }
 
 export const reducer = (state: State, action: Action) => {
@@ -51,6 +60,11 @@ export const reducer = (state: State, action: Action) => {
                 ...state,
                 recentlySold: !state.recentlySold,
             };
+        case 'SET_SPOTLIGHT':
+            return {
+                ...state,
+                spotlight: !state.spotlight,
+            };
         case 'SET_PAGENAVIGATION':
             return {
                 ...state,
@@ -60,6 +74,16 @@ export const reducer = (state: State, action: Action) => {
             return {
                 ...state,
                 cardDetail: !state.cardDetail,
+            };
+        case 'SET_ASSETS':
+            return {
+                ...state,
+                assets: !state.assets,
+            };
+        case 'SET_ARTISTSPOTLIGHT':
+            return {
+                ...state,
+                artistSpotlight: !state.artistSpotlight,
             };
     }
     throw Error('Unknown action: ' + action.type);

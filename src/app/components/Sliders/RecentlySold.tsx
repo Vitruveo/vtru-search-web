@@ -82,6 +82,7 @@ function RecentlySoldSlider() {
                                             whiteSpace: 'nowrap',
                                             textOverflow: 'ellipsis',
                                         }}
+                                        underline="none"
                                         href="#"
                                         onClick={() => {}}
                                     >

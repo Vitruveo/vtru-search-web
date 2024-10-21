@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react';
-import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import { Avatar, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import Image from 'next/image';
 import Link from 'next/link';
 
-export const Rss = () => {
+interface Props {
+    options: {
+        flagname: string;
+        value: string;
+    }[];
+}
+
+export const Rss = ({ options }: Props) => {
     const theme = useTheme();
 
     const [queryString, setQueryString] = useState('');
@@ -26,26 +32,24 @@ export const Rss = () => {
         setAnchorEl(event.currentTarget);
     };
 
-    const options = [
-        {
-            flagname: 'JSON',
-            value: `json/${queryString}`,
-        },
-        {
-            flagname: 'XML',
-            value: `xml/${queryString}`,
-        },
-    ];
-
     return (
         <>
-            <IconButton aria-label="more" id="long-button" aria-haspopup="true" onClick={handleClick}>
-                <Image
+            <IconButton
+                sx={{ padding: 0 }}
+                aria-label="more"
+                id="long-button"
+                aria-haspopup="true"
+                onClick={handleClick}
+            >
+                <Avatar
                     src="/images/icons/rss.png"
-                    width={39}
-                    height={39}
-                    alt=""
-                    style={{ borderRadius: '50%', cursor: 'pointer' }}
+                    sx={{
+                        width: 29,
+                        height: 29,
+                        margin: 0,
+                        padding: 0,
+                        lineHeight: '1',
+                    }}
                 />
             </IconButton>
             <Menu
@@ -65,7 +69,7 @@ export const Rss = () => {
                         sx={{ py: 2, px: 3 }}
                         onClick={() => {
                             if (option.value) {
-                                window.open(option.value, '_blank');
+                                window.open(`${option.value}/${queryString}`, '_blank');
                             }
                         }}
                     >
@@ -76,7 +80,7 @@ export const Rss = () => {
                                 color: theme.palette.text.primary,
                             }}
                         >
-                            <Typography> {option.flagname}</Typography>
+                            <Typography>{option.flagname}</Typography>
                         </Link>
                     </MenuItem>
                 ))}

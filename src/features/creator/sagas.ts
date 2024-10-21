@@ -1,5 +1,6 @@
 import { all, takeLatest, put, call, select } from 'redux-saga/effects';
 import axios, { AxiosResponse } from 'axios';
+import cookie from 'cookiejs';
 
 import { API_BASE_URL } from '@/constants/api';
 import { APIResponse } from '../common/types';
@@ -37,6 +38,13 @@ function* verifyCode() {
                 code,
             }
         );
+
+        // save cookie
+        const host = window.location.hostname;
+        const domain = host.replace('search.', '');
+
+        cookie.set('auth', response.data.data.token, { path: '/', domain });
+
         yield put(
             actionsCreator.setLogged({
                 username: response.data.data.creator.username,

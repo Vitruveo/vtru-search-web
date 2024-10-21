@@ -1,36 +1,78 @@
 import Image from 'next/image';
-import { Box } from '@mui/material';
+import { Box, Theme, Typography, useMediaQuery } from '@mui/material';
 
 import { useSelector } from '@/store/hooks';
-import VtruTitle from '../VtruTitle';
 import { useDispatch } from 'react-redux';
 import { actions } from '@/features/assets';
 import { actions as actionsFilters } from '@/features/filters/slice';
 
-const LogoLtrDark = () => (
-    <Box display="flex" marginTop={2} alignItems="center">
-        <Image
-            style={{ marginRight: '5px' }}
-            src={'/images/logos/VTRU_Search.png'}
-            alt="logo"
-            height={35}
-            width={35}
-            priority
-        />
-        <Box marginLeft={1}>
-            <VtruTitle vtruRem="1.2rem" studioRem="1.2rem" />
+const LogoLtrDark = () => {
+    const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
+    return (
+        <Box display="flex" alignItems="end">
+            <Image
+                style={{ display: 'inline-block', alignSelf: 'baseline', marginRight: '5px' }}
+                src={'/images/logos/XIBIT-logo_dark.png'}
+                alt="logo"
+                height={40}
+                width={120}
+                priority
+            />
+            <Typography
+                sx={{
+                    fontSize: 9,
+                    marginLeft: 1,
+                    display: lgDown ? 'none' : 'block',
+                    textDecoration: 'none',
+                    cursor: 'pointer',
+                    letterSpacing: '3px',
+                    color: 'white',
+                    fontWeight: 500,
+                    '&:hover': {
+                        color: '#e0e0e0',
+                    },
+                }}
+                onClick={() => window.open('https://vitruveo.xyz', '_blank', 'noopener,noreferrer')}
+            >
+                BY VITRUVEO
+            </Typography>
         </Box>
-    </Box>
-);
+    );
+};
 
-const LogoLtrLight = () => (
-    <Box display="flex" marginTop={2} alignItems="center">
-        <Image src={'/images/logos/VTRU_Search.png'} alt="logo" height={35} width={35} priority />
-        <Box marginLeft={1}>
-            <VtruTitle vtruRem="1.2rem" studioRem="1.2rem" />
+const LogoLtrLight = () => {
+    const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
+    return (
+        <Box display="flex" alignItems="end">
+            <Image
+                style={{ display: 'inline-block', alignSelf: 'baseline', marginRight: '5px' }}
+                src={'/images/logos/XIBIT-logo_light.png'}
+                alt="logo"
+                height={40}
+                width={120}
+                priority
+            />
+            <Typography
+                sx={{
+                    fontSize: 9,
+                    marginLeft: 1,
+                    display: lgDown ? 'none' : 'block',
+                    textDecoration: 'none',
+                    cursor: 'pointer',
+                    letterSpacing: '3px',
+                    color: 'black',
+                    fontWeight: 500,
+                    '&:hover': {
+                        color: '#333',
+                    },
+                }}
+                onClick={() => window.open('https://vitruveo.xyz', '_blank', 'noopener,noreferrer')}
+            >
+                BY VITRUVEO
+            </Typography>
         </Box>
-    </Box>
-);
+    );
+};
 
 const Logo = () => {
     const dispatch = useDispatch();
@@ -39,21 +81,18 @@ const Logo = () => {
 
     const returnToPageOne = () => {
         const params = new URLSearchParams(window.location.search);
-
+        const keysToDelete: string[] = [];
         params.forEach((_, key) => {
-            if (!key.includes('_hidden')) params.delete(key);
+            if (!key.includes('_hidden')) keysToDelete.push(key);
             else params.set(key, params.get(key) || '');
         });
+        keysToDelete.forEach((key) => params.delete(key));
 
-        params.set('sort_order', 'latest');
-        params.set('sort_sold', 'no');
-        params.set('taxonomy_aiGeneration', 'partial,none');
-        params.set('taxonomy_nudity', 'no');
-        params.set('groupByCreator', 'no');
         params.delete('creatorId');
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
 
+        dispatch(actionsFilters.clearTabNavigation());
         dispatch(actions.resetGroupByCreator());
         dispatch(actionsFilters.reset({ maxPrice }));
     };

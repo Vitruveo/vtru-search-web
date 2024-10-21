@@ -45,6 +45,7 @@ export interface FilterSliceState {
             awardUrl: string;
         };
     };
+    hasBts: string;
     price: {
         min: number;
         max: number;
@@ -69,6 +70,11 @@ export interface FilterSliceState {
     };
     slideshow: {
         assets: string[];
+        title: string;
+    };
+    tabNavigation: {
+        assets: string[];
+        artists: string[];
         title: string;
     };
     creatorId: string;
