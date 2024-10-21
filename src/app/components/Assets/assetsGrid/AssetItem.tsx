@@ -72,8 +72,8 @@ const AssetItemMain = ({
         <div
             style={{
                 border: assetView === asset ? '1px solid #FF0066' : '',
-                width: !smUp ? 250 : 'unset',
-                margin: !smUp ? '0 auto' : '0',
+                width: 250,
+                margin: '0 auto',
                 cursor: 'pointer',
                 height: isHiddenCardDetail ? 250 : 380,
                 position: 'relative',

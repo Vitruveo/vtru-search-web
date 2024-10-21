@@ -722,7 +722,9 @@ const AssetsList = () => {
                         ) : assets.length > 0 ? (
                             <div
                                 style={{
-                                    width: '100%',
+                                    width: 'auto',
+                                    minWidth: '79%',
+                                    margin: '0 auto',
                                     display: 'grid',
                                     gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
                                     gap: hasIncludesGroupActive ? '55px 40px' : 30,
