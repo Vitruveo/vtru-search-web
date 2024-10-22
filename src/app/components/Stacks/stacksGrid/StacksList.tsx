@@ -77,7 +77,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 flexWrap="wrap"
                 justifyContent="center"
                 overflow="auto"
-                maxHeight="calc(100vh - 100px)"
+                maxHeight={'100vh'}
                 ref={topRef}
             >
                 <Box
