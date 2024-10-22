@@ -95,7 +95,7 @@ function DrawerStack({ drawerStackOpen, onClose }: Props) {
             <PublishStackModal isOpen={modalSwitch.isActive} onClose={modalSwitch.deactivate} selectedAssets={cards} />
 
             <Drawer anchor="right" open={drawerStackOpen} onClose={onClose}>
-                <Box width={mdUp ? 400 : 224} p={4}>
+                <Box width={mdUp ? 400 : 300} p={4}>
                     <Button
                         fullWidth
                         variant="contained"
@@ -177,7 +177,7 @@ function DrawerStack({ drawerStackOpen, onClose }: Props) {
                         </>
                     )}
 
-                    <Box mt={2} display="flex" gap={2} flexWrap="wrap">
+                    <Box mt={2} display="flex" gap={2} flexWrap="wrap" justifyContent={mdUp ? 'unset' : 'center'}>
                         {cards.length === 0 && (
                             <Typography>{language['search.drawer.stack.noSelectedAssets'] as string}</Typography>
                         )}

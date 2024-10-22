@@ -304,10 +304,12 @@ const AssetsList = () => {
                 <Box
                     display={'flex'}
                     alignItems={'center'}
-                    flexDirection={!smUp ? 'column-reverse' : 'row'}
+                    flexDirection={'row'}
                     justifyContent={'space-between'}
                     pr={4}
                     mb={4}
+                    mt={2}
+                    ml={2}
                 >
                     <Box display="flex" alignItems={'center'} gap={1}>
                         {lgUp && (
@@ -404,7 +406,7 @@ const AssetsList = () => {
                             </Box>
                         )}
 
-                        <Box display="flex" alignItems="center" mr={2}>
+                        <Box display="flex" alignItems="center" mr={8}>
                             {!lgUp && (
                                 <IconButton
                                     sx={{ marginLeft: 0, paddingLeft: 0 }}
@@ -478,6 +480,7 @@ const AssetsList = () => {
                                     alignItems={'center'}
                                     flexWrap={'wrap'}
                                     gap={lgUp ? 4 : 2}
+                                    mr={7.5}
                                 >
                                     <Box maxWidth={350} display="flex" flexDirection="row" alignItems="center" gap={1}>
                                         <Typography variant="h5">Sort:</Typography>
@@ -577,7 +580,7 @@ const AssetsList = () => {
                                 justifyContent={'flex-end'}
                                 flexWrap={'wrap'}
                                 gap={1}
-                                mr={1.5}
+                                mr={7.5}
                             >
                                 <Typography variant="h5">Pagination:</Typography>
                                 <Select

@@ -42,7 +42,7 @@ export default function TabSliders() {
     if (hidden?.spotlight && hidden?.recentlySold && hidden?.artistSpotlight) return null;
     return (
         <Box
-            sx={{ width: lgUp && !isFilterHidden && isSidebarOpen ? 'calc(100vw - 350px)' : 'calc(100vw - 65px)' }}
+            sx={{ width: lgUp && !isFilterHidden && isSidebarOpen ? 'calc(100vw - 350px)' : 'calc(100vw - 40px)' }}
             minHeight={500}
         >
             <TabContext value={tabValue}>

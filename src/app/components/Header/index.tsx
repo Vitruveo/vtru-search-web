@@ -50,10 +50,6 @@ const Header = ({ rssOptions, hasSettings = true }: Props) => {
         justifyContent: 'space-between',
     }));
 
-    const onMenuClick = () => {
-        dispatch(actions.toggleSidebar());
-    };
-
     const handleToggleTheme = () => {
         dispatch(customizerActionsCreators.setTheme(customizer.activeMode === 'light'));
     };

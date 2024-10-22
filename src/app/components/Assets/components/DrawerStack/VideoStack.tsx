@@ -145,7 +145,7 @@ export default function VideoStack({
                     {isPlaying ? <IconPlayerPause /> : <IconPlayerPlay />}
                 </Button>
             </Box>
-            <Box height={150} />
+            <Box height={100} />
             <Typography variant="caption">Note: Video is limited to first 16 curated items.</Typography>
             <Button
                 disabled={loadingVideo || selectedAssets.length === 0 || title.length === 0}
@@ -154,7 +154,7 @@ export default function VideoStack({
                 onClick={handleDispatchMakeVideo}
             >
                 {language['search.drawer.stack.button.publish'] as string}
-            </Button>{' '}
+            </Button>
         </>
     );
 }
