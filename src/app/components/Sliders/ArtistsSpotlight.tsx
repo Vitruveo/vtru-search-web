@@ -19,7 +19,7 @@ export default function ArtistsSpotlight() {
 
     return (
         <Box minHeight={250}>
-            <Marquee>
+            <Marquee style={{ overflow: 'hidden' }}>
                 {artists.map((artist, index) => {
                     const creatorName = artist?.name[0] || 'No creator';
                     const nextAssetExists = index + 1 < artists.length;

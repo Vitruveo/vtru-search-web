@@ -20,7 +20,7 @@ function RecentlySoldSlider() {
 
     return (
         <Box minHeight={250}>
-            <Marquee>
+            <Marquee style={{ overflow: 'hidden' }}>
                 {assets.map((asset, index) => {
                     const assetTitle = asset?.title || 'No Title';
                     const creatorName = asset?.username || 'No creator';

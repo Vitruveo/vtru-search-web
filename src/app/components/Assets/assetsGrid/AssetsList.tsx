@@ -320,18 +320,16 @@ const AssetsList = () => {
                 <Box
                     display={'flex'}
                     alignItems={'center'}
-                    flexDirection={smUp ? 'row' : 'column-reverse'}
                     justifyContent={'space-between'}
-                    pr={4}
                     mb={4}
                     mt={2}
-                    ml={2}
+                    paddingInline={3}
                 >
                     <Box display="flex" alignItems={'center'} gap={1}>
                         {lgUp && (
-                            <Box ml={1.5}>
+                            <Box>
                                 <IconButton
-                                    sx={{ color: theme.palette.grey[300] }}
+                                    sx={{ color: theme.palette.grey[300], padding: 0 }}
                                     aria-label="menu"
                                     onClick={onMenuClick}
                                 >
@@ -391,7 +389,12 @@ const AssetsList = () => {
                             <Box />
                         )}
                     </Box>
-                    <Box display={'flex'} alignItems={'center'} flexDirection={!smUp ? 'column-reverse' : 'row'}>
+                    <Box
+                        display={'flex'}
+                        alignItems={smUp ? 'center' : 'flex-end'}
+                        flexDirection={!smUp ? 'column-reverse' : 'row'}
+                        gap={smUp ? 'unset' : 2}
+                    >
                         {curateStack.isActive && (
                             <Box display="flex" alignItems="center" gap={1}>
                                 <Button variant="contained" onClick={handleUnselectAll}>
@@ -422,7 +425,7 @@ const AssetsList = () => {
                             </Box>
                         )}
 
-                        <Box display="flex" alignItems="center" mr={8}>
+                        <Box display="flex" alignItems="center">
                             {!lgUp && (
                                 <IconButton
                                     sx={{ marginLeft: 0, paddingLeft: 0 }}
@@ -479,14 +482,13 @@ const AssetsList = () => {
                         tabNavigation.artists?.length <= 0 && <TabSliders />}
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid item xs={12} paddingInline={3}>
                     {!isHidden?.pageNavigation && (
                         <Box
                             display={'flex'}
                             gap={1}
                             flexDirection={lgUp ? 'row' : 'column'}
                             justifyContent={'space-between'}
-                            pr={4}
                             flexWrap={'wrap'}
                         >
                             {!isHidden?.order ? (
@@ -496,7 +498,6 @@ const AssetsList = () => {
                                     alignItems={'center'}
                                     flexWrap={'wrap'}
                                     gap={lgUp ? 4 : 2}
-                                    mr={7.5}
                                 >
                                     <Box maxWidth={350} display="flex" flexDirection="row" alignItems="center" gap={1}>
                                         <Typography variant="h5">Sort:</Typography>
@@ -596,7 +597,6 @@ const AssetsList = () => {
                                 justifyContent={'flex-end'}
                                 flexWrap={'wrap'}
                                 gap={1}
-                                mr={7.5}
                             >
                                 <Typography variant="h5">Pagination:</Typography>
                                 <Select
