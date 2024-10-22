@@ -319,7 +319,8 @@ const AssetsList = () => {
             {!isHidden?.order && (
                 <Box
                     display={'flex'}
-                    alignItems={'center'}
+                    flexDirection={smUp ? 'row' : 'column'}
+                    alignItems={smUp ? 'center' : 'flex-end'}
                     justifyContent={'space-between'}
                     mb={4}
                     mt={2}
@@ -368,6 +369,7 @@ const AssetsList = () => {
                                             border: 'none',
                                             background: 'none',
                                             cursor: 'pointer',
+                                            padding: 0,
                                         }}
                                         onClick={returnToPageOne}
                                     >
