@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
 import Select, { SingleValue } from 'react-select';
 import '../../Assets/assetsGrid/AssetScroll.css';
 import Header from '../../Header';
-import StackItem, { StackCardContainer } from './StackItem';
+import { StackCardContainer, StackItem } from './StackItem';
 
 interface StacksProps {
     data: {
@@ -44,6 +44,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
     const theme = useTheme();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const mdUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('md'));
+
     const topRef = useRef<HTMLDivElement>(null);
 
     const { onChangePage, onChangeSort, onChangeLimit, handleCurateStack } = actions;
@@ -69,10 +70,26 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     { flagname: 'JSON', value: 'stacks/json' },
                     { flagname: 'XML', value: 'stacks/xml' },
                 ]}
+                hasSettings={false}
             />
-            <Grid container justifyContent="end" alignItems="center" spacing={12} width="100%">
-                <Grid item display={'flex'} alignItems={'center'} gap={2} mb={6} mt={2}>
-                    <Typography variant="h5" color={theme.palette.primary.main}>
+            <Box
+                display="flex"
+                flexWrap="wrap"
+                justifyContent="center"
+                overflow="auto"
+                maxHeight="calc(100vh - 100px)"
+                ref={topRef}
+            >
+                <Box
+                    paddingInline="24px"
+                    display="flex"
+                    alignItems="center"
+                    my={2}
+                    justifyContent="flex-end"
+                    gap={2}
+                    width="100%"
+                >
+                    <Typography variant="h5" color={theme.palette.primary.main} ml={2.5}>
                         Curation is fun and easy. Try it now!
                     </Typography>
                     <Button
@@ -86,12 +103,17 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     >
                         Curate Stack
                     </Button>
-                </Grid>
-            </Grid>
-            <Box display="flex" flexWrap="wrap" justifyContent="center" overflow="auto" maxHeight="80vh" ref={topRef}>
-                <Box m={2} display={mdUp ? 'flex' : 'none'} justifyContent="space-between" width="100%" mb={8}>
-                    <Box display={'flex'} gap={1} alignItems={'center'} ml={1}>
-                        <Typography variant="h4">Sort:</Typography>
+                </Box>
+                <Box
+                    paddingInline="24px"
+                    display={mdUp ? 'flex' : 'none'}
+                    justifyContent="space-between"
+                    width="100%"
+                    my={2}
+                    mb={4}
+                >
+                    <Box display={'flex'} gap={1} alignItems={'center'}>
+                        <Typography variant="h5">Sort:</Typography>
                         <Select
                             placeholder="Sort"
                             options={[
@@ -135,7 +157,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                             }}
                         />
                     </Box>
-                    <Box display={'flex'} gap={1} alignItems={'center'} mr={9.5}>
+                    <Box display={'flex'} gap={1} alignItems={'center'}>
                         <Typography variant="h5">Pagination:</Typography>
                         <Select
                             placeholder="Page Items"
@@ -217,24 +239,27 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         />
                     </Box>
                 </Box>
-                <Box display={'flex'} flexWrap={'wrap'} justifyContent={'center'} margin={'0 1.5%'}>
-                    <Box
-                        display="flex"
-                        flexWrap="wrap"
-                        justifyContent={'flex-start'}
-                        width={'100%'}
-                        height={'100%'}
-                        gap={4}
-                    >
-                        {stacks.data.map((stack: Stack, index: number) => {
-                            return (
-                                <StackCardContainer key={index}>
-                                    <StackItem stack={stack} />
-                                </StackCardContainer>
-                            );
-                        })}
-                    </Box>
-                </Box>
+                <div
+                    style={{
+                        width: 'auto',
+                        minWidth: '79%',
+                        margin: '0 auto',
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                        gap: 30,
+                        paddingTop: '0',
+                        overflow: 'hidden',
+                    }}
+                >
+                    {stacks.data.map((stack: Stack) => {
+                        return (
+                            <StackCardContainer key={stack.stacks.id}>
+                                <StackItem stack={stack} />
+                            </StackCardContainer>
+                        );
+                    })}
+                </div>
+
                 <Box mt={4} mb={2} display={'flex'} justifyContent="center" width="100%" alignItems="center">
                     <Pagination
                         count={stacks.totalPage}

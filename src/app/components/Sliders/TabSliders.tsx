@@ -17,7 +17,7 @@ export default function TabSliders() {
     const hidden = useSelector((state) => state.customizer.hidden);
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
 
-    const [tabValue, setTabValue] = useState(activeSlider === 'spotlight' ? '1' : '2');
+    const [tabValue, setTabValue] = useState(activeSlider);
 
     useEffect(() => {
         if (hidden?.spotlight && hidden?.recentlySold && hidden?.artistSpotlight) return;

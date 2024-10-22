@@ -1,4 +1,4 @@
-import { Badge, Box, CardContent, Checkbox, Grid, Link, Paper, Stack, Typography } from '@mui/material';
+import { Badge, Box, CardContent, Checkbox, Grid, Link, Paper, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import BlankCard from '../../Shared/BlankCard';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/filters/slice';
 import { ShowAnimation } from '@/animations';
 import DeckEffect from '../components/DeckEffect';
-import { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 interface Props {
     assetView: Asset;
@@ -23,7 +23,7 @@ interface Props {
     countByCreator?: number;
 }
 
-const AssetItem = ({
+const AssetItemMain = ({
     assetView,
     asset,
     isCurated,
@@ -39,7 +39,6 @@ const AssetItem = ({
     const dispatch = useDispatch();
     const [isHovered, setIsHovered] = useState(false);
     const [showFanEffect, setShowFanEffect] = useState(false);
-    const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const optionIncludeGroup = useSelector((state) => state.assets.groupByCreator.active);
     const isHiddenCardDetail = useSelector((state) => state.customizer.hidden?.cardDetail);
 
@@ -73,6 +72,7 @@ const AssetItem = ({
             style={{
                 border: assetView === asset ? '1px solid #FF0066' : '',
                 width: 250,
+                margin: '0 auto',
                 cursor: 'pointer',
                 height: isHiddenCardDetail ? 250 : 380,
                 position: 'relative',
@@ -105,7 +105,7 @@ const AssetItem = ({
                         sx={{
                             position: 'absolute',
                             right: -10,
-                            top: -10,
+                            top: 18,
                             '& .MuiBadge-badge': {
                                 transform: 'scale(1.5)',
                                 fontSize: '0.8rem',
@@ -125,7 +125,7 @@ const AssetItem = ({
             <BlankCard className="hoverCard" onClick={handleClickImage}>
                 {!isHiddenCardDetail ? (
                     <>
-                        <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
+                        <Box height={250} borderRadius="8px 8px 0 0" position="relative">
                             <MediaRenderer src={media} fallbackSrc={'https://via.placeholder.com/250'} />
                         </Box>
 
@@ -234,4 +234,4 @@ export const AssetCardContainer = ({ children }: { children: React.ReactNode }) 
     </Grid>
 );
 
-export default AssetItem;
+export const AssetItem = React.memo(AssetItemMain);
