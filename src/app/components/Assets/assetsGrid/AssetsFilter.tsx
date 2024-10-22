@@ -274,18 +274,24 @@ const Filters = () => {
 
                 <FormGroup sx={{ display: 'flex', flexDirection: 'column', marginLeft: '5.5%' }}>
                     <Typography variant="h4">Filters</Typography>
-                    <Box display={'grid'} gridTemplateColumns="130px 130px">
+                    <Box display="flex">
                         <FormControlLabel
                             control={<Checkbox onChange={handleChangeNudity} checked={isHideNuditychecked} />}
                             label={'Hide Nudity'}
+                            sx={{
+                                width: '50%',
+                            }}
                         />
                         <FormControlLabel
                             control={<Checkbox onChange={handleChangeAI} checked={isHideAIchecked} />}
                             label={'Hide AI'}
+                            sx={{
+                                width: '50%',
+                            }}
                         />
                     </Box>
 
-                    <Box display={'grid'} gridTemplateColumns="130px 130px">
+                    <Box display="flex">
                         <FormControlLabel
                             control={
                                 <Checkbox
@@ -295,8 +301,7 @@ const Filters = () => {
                             }
                             label={'Photography'}
                             sx={{
-                                width: '100%',
-                                wordBreak: 'break-word',
+                                width: '50%',
                             }}
                         />
                         <FormControlLabel
@@ -308,12 +313,11 @@ const Filters = () => {
                             }
                             label={'Animation'}
                             sx={{
-                                width: '100%',
-                                wordBreak: 'break-word',
+                                width: '50%',
                             }}
                         />
                     </Box>
-                    <Box display={'grid'} gridTemplateColumns="130px 130px">
+                    <Box display="flex">
                         <FormControlLabel
                             control={
                                 <Checkbox
@@ -322,6 +326,9 @@ const Filters = () => {
                                 />
                             }
                             label={'Physical Art'}
+                            sx={{
+                                width: '50%',
+                            }}
                         />
                         <FormControlLabel
                             control={
@@ -331,16 +338,25 @@ const Filters = () => {
                                 />
                             }
                             label={'Digital Art'}
+                            sx={{
+                                width: '50%',
+                            }}
                         />
                     </Box>
-                    <Box display={'grid'} gridTemplateColumns="130px 130px">
+                    <Box display="flex">
                         <FormControlLabel
                             control={<Checkbox onChange={handleChangeIsIncludeSold} checked={isIncludeSold} />}
                             label={'Include Sold'}
+                            sx={{
+                                width: '50%',
+                            }}
                         />
                         <FormControlLabel
                             control={<Checkbox onChange={handleChangeHasBTS} checked={hasBts} />}
                             label={'Has BTS'}
+                            sx={{
+                                width: '50%',
+                            }}
                         />
                     </Box>
                 </FormGroup>

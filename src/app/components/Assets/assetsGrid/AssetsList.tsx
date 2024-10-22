@@ -728,7 +728,7 @@ const AssetsList = () => {
                             <div
                                 style={{
                                     width: 'auto',
-                                    minWidth: '79%',
+                                    minWidth: smUp ? '79%' : 'unset',
                                     margin: '0 auto',
                                     display: 'grid',
                                     gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
