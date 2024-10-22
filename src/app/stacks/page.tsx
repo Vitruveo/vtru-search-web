@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/stacks';
 import { SEARCH_BASE_URL } from '@/constants/api';
+import PageContainer from '../components/Container/PageContainer';
 
 const Stacks = () => {
     const dispatch = useDispatch();
@@ -45,12 +46,12 @@ const Stacks = () => {
     const handleCurateStack = () => window.open(`${SEARCH_BASE_URL}?groupByCreator=no&assets`, '_blank');
 
     return (
-        <>
+        <PageContainer title="Stacks">
             <StackList
                 data={{ stacks, selectValues, optionsForSelectPage }}
                 actions={{ onChangeSort, onChangePage, onChangeLimit, handleCurateStack }}
             />
-        </>
+        </PageContainer>
     );
 };
 
