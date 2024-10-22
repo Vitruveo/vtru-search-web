@@ -37,7 +37,6 @@ const AssetItemMain = ({
 }: Props) => {
     const theme = useTheme();
     const dispatch = useDispatch();
-    const smUp = useMediaQuery(theme.breakpoints.up('sm'));
     const [isHovered, setIsHovered] = useState(false);
     const [showFanEffect, setShowFanEffect] = useState(false);
     const optionIncludeGroup = useSelector((state) => state.assets.groupByCreator.active);

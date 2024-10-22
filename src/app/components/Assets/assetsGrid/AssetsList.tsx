@@ -705,7 +705,7 @@ const AssetsList = () => {
                                     margin: '0 auto',
                                     display: 'grid',
                                     gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-                                    gap: hasIncludesGroupActive ? '55px 40px' : 30,
+                                    gap: hasIncludesGroupActive ? '90px' : 30,
                                     paddingTop: hasIncludesGroupActive ? '24px' : '0',
                                 }}
                             >

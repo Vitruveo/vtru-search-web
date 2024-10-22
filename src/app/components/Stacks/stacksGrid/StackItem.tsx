@@ -5,6 +5,7 @@ import { Stack } from '@/features/stacks/types';
 import {
     Box,
     CardContent,
+    Grid,
     IconButton,
     Modal,
     Stack as MuiStack,
@@ -47,12 +48,7 @@ const StackItemMain = ({ stack }: Props) => {
     };
 
     return (
-        <Box
-            sx={{
-                width: !smUp ? 250 : '100%',
-                margin: !smUp ? '0 auto' : 'unset',
-            }}
-        >
+        <Box width={280} margin={'0 auto'}>
             <BlankCard className="hoverCard" onClick={handleCardClick}>
                 <Box
                     width={'100%'}
@@ -178,9 +174,23 @@ const StackItemMain = ({ stack }: Props) => {
 
 export const StackCardContainer = ({ children }: { children: React.ReactNode }) => {
     return (
-        <Box>
+        <Grid
+            item
+            xl={3}
+            lg={4}
+            md={4}
+            sm={6}
+            xs={12}
+            display="flex"
+            alignItems="stretch"
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}
+        >
             <ShowAnimation>{children}</ShowAnimation>
-        </Box>
+        </Grid>
     );
 };
 
