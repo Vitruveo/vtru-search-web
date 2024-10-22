@@ -44,6 +44,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
     const theme = useTheme();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const mdUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('md'));
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
 
     const topRef = useRef<HTMLDivElement>(null);
 
@@ -77,7 +78,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 flexWrap="wrap"
                 justifyContent="center"
                 overflow="auto"
-                maxHeight="calc(100vh - 100px)"
+                maxHeight={'100vh'}
                 ref={topRef}
             >
                 <Box
@@ -97,7 +98,9 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         sx={{
                             fontSize: '1rem',
                             fontWeight: 'bold',
-                            width: '150px',
+                            width: smUp ? '150px' : '180px',
+                            paddingInline: smUp ? 'unset' : '30px',
+                            whiteSpace: 'nowrap',
                         }}
                         onClick={handleCurateStack}
                     >

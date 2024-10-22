@@ -109,14 +109,9 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
                 </Box>
 
                 <Box display="flex" alignItems="center" mb={3} flexDirection={{ xs: 'column', sm: 'row' }}>
-                    <Box>
-                        <Typography width={{ xs: '100%', sm: 120 }} mb={{ xs: 1, sm: 0 }}>
-                            Description
-                        </Typography>
-                        <Typography variant="caption" width={{ xs: '100%', sm: 120 }} mb={{ xs: 1, sm: 0 }}>
-                            (Limit 200 characters)
-                        </Typography>
-                    </Box>
+                    <Typography width={{ xs: '100%', sm: 120 }} mb={{ xs: 1, sm: 0 }}>
+                        Description <span style={{ display: 'block' }}>(Limit 200 characters)</span>
+                    </Typography>
                     <TextField multiline value={description} fullWidth onChange={onDescriptionChange} />
                 </Box>
 

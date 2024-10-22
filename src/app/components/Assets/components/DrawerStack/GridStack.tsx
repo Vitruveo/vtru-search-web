@@ -20,9 +20,9 @@ interface GridStackProps {
 }
 
 const sizes = {
-    '2x2': 40,
-    '3x3': 26,
-    '4x4': 19,
+    '2x2': 26,
+    '3x3': 16.9,
+    '4x4': 12.35,
 } as { [key: string]: number };
 
 export default function GridStack({ selectedAssets, title, description, fees }: GridStackProps) {
@@ -164,7 +164,7 @@ export default function GridStack({ selectedAssets, title, description, fees }: 
                 <Typography fontWeight={'bold'}> 🖼️ An image grid looks great on social media</Typography>
             </Box>
 
-            <Grid container mt={4} mb={4} gap={4} justifyContent={'center'}>
+            <Grid container mt={4} mb={4} gap={2} display={'flex'} flexDirection={'row'} justifyContent={'center'}>
                 <Box
                     display={'grid'}
                     gridTemplateColumns={'repeat(2, 1fr)'}

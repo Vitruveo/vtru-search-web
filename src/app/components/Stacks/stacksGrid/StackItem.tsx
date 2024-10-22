@@ -150,10 +150,12 @@ const StackItemMain = ({ stack }: Props) => {
                         <IconX />
                     </IconButton>
                     <Box display={'flex'} gap={1}>
-                        <Typography variant="h5">{stack.stacks.title}</Typography>
-                        <Typography variant="h5">curated by</Typography>
-                        <Typography variant="h5" fontStyle={'italic'} color={theme.palette.primary.main}>
-                            {stack.username}
+                        <Typography variant="h5">
+                            <span>{stack.stacks.title}</span>
+                            <span> curated by </span>
+                            <span style={{ fontStyle: 'italic', color: theme.palette.primary.main }}>
+                                {stack.username}
+                            </span>
                         </Typography>
                     </Box>
                     <Box style={{ height: 'calc(100vh - 80px)' }}>

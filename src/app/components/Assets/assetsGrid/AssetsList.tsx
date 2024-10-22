@@ -33,7 +33,7 @@ import { DrawerAsset } from '../components/DrawerAsset';
 import DrawerStack from '../components/DrawerStack/DrawerStack';
 import NumberOfFilters from '../components/numberOfFilters';
 import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
-import { AssetCardContainer, AssetItem } from './AssetItem';
+import { AssetItem } from './AssetItem';
 import './AssetScroll.css';
 
 const optionsForSelectSort = [
@@ -319,17 +319,18 @@ const AssetsList = () => {
             {!isHidden?.order && (
                 <Box
                     display={'flex'}
-                    alignItems={'center'}
-                    flexDirection={!smUp ? 'column-reverse' : 'row'}
+                    flexDirection={smUp ? 'row' : 'column'}
+                    alignItems={smUp ? 'center' : 'flex-end'}
                     justifyContent={'space-between'}
-                    pr={4}
                     mb={4}
+                    mt={2}
+                    paddingInline={3}
                 >
                     <Box display="flex" alignItems={'center'} gap={1}>
                         {lgUp && (
-                            <Box ml={1.5}>
+                            <Box>
                                 <IconButton
-                                    sx={{ color: theme.palette.grey[300] }}
+                                    sx={{ color: theme.palette.grey[300], padding: 0 }}
                                     aria-label="menu"
                                     onClick={onMenuClick}
                                 >
@@ -368,6 +369,7 @@ const AssetsList = () => {
                                             border: 'none',
                                             background: 'none',
                                             cursor: 'pointer',
+                                            padding: 0,
                                         }}
                                         onClick={returnToPageOne}
                                     >
@@ -389,7 +391,12 @@ const AssetsList = () => {
                             <Box />
                         )}
                     </Box>
-                    <Box display={'flex'} alignItems={'center'} flexDirection={!smUp ? 'column-reverse' : 'row'}>
+                    <Box
+                        display={'flex'}
+                        alignItems={smUp ? 'center' : 'flex-end'}
+                        flexDirection={!smUp ? 'column-reverse' : 'row'}
+                        gap={smUp ? 'unset' : 2}
+                    >
                         {curateStack.isActive && (
                             <Box display="flex" alignItems="center" gap={1}>
                                 <Button variant="contained" onClick={handleUnselectAll}>
@@ -420,7 +427,7 @@ const AssetsList = () => {
                             </Box>
                         )}
 
-                        <Box display="flex" alignItems="center" mr={2}>
+                        <Box display="flex" alignItems="center">
                             {!lgUp && (
                                 <IconButton
                                     sx={{ marginLeft: 0, paddingLeft: 0 }}
@@ -477,14 +484,13 @@ const AssetsList = () => {
                         tabNavigation.artists?.length <= 0 && <TabSliders />}
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid item xs={12} paddingInline={3}>
                     {!isHidden?.pageNavigation && (
                         <Box
                             display={'flex'}
                             gap={1}
                             flexDirection={lgUp ? 'row' : 'column'}
                             justifyContent={'space-between'}
-                            pr={4}
                             flexWrap={'wrap'}
                         >
                             {!isHidden?.order ? (
@@ -593,7 +599,6 @@ const AssetsList = () => {
                                 justifyContent={'flex-end'}
                                 flexWrap={'wrap'}
                                 gap={1}
-                                mr={1.5}
                             >
                                 <Typography variant="h5">Pagination:</Typography>
                                 <Select
@@ -725,7 +730,7 @@ const AssetsList = () => {
                             <div
                                 style={{
                                     width: 'auto',
-                                    minWidth: '79%',
+                                    minWidth: smUp ? '79%' : 'unset',
                                     margin: '0 auto',
                                     display: 'grid',
                                     gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
@@ -795,7 +800,11 @@ const AssetsList = () => {
                                     !creatorId &&
                                     !portfolioWallets &&
                                     tabNavigation.assets?.length <= 0 &&
-                                    tabNavigation.artists?.length <= 0 && <AdditionalAssetsFilterCard />}
+                                    tabNavigation.artists?.length <= 0 && (
+                                        <Box display={'flex'} justifyContent={'center'}>
+                                            <AdditionalAssetsFilterCard />
+                                        </Box>
+                                    )}
 
                                 {showAdditionalAssets.value &&
                                     blockedAssets.map((asset) => (
