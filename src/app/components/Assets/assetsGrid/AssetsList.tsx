@@ -35,6 +35,7 @@ import NumberOfFilters from '../components/numberOfFilters';
 import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
 import { AssetItem } from './AssetItem';
 import './AssetScroll.css';
+import { useMediaScreen } from '@/app/hooks/useMediaScreen';
 
 const optionsForSelectSort = [
     { value: 'latest', label: 'Latest' },
@@ -77,7 +78,8 @@ const AssetsList = () => {
     const drawerStack = useToggle();
 
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
-    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
+    // const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
+    const { isMobile: smUp } = useMediaScreen();
 
     const { data: assets, totalPage, page: currentPage, limit } = useSelector((state) => state.assets.data);
     const { sort, maxPrice, curateStacks } = useSelector((state) => state.assets);
@@ -391,9 +393,9 @@ const AssetsList = () => {
                     </Box>
                     <Box
                         display={'flex'}
-                        alignItems={smUp ? 'center' : 'flex-end'}
-                        flexDirection={!smUp ? 'column-reverse' : 'row'}
-                        gap={smUp ? 'unset' : 2}
+                        alignItems={smUp ? 'flex-end' : 'center'}
+                        flexDirection={smUp ? 'column-reverse' : 'row'}
+                        gap={smUp ? 2 : 'unset'}
                     >
                         {curateStack.isActive && (
                             <Box display="flex" alignItems="center" gap={1}>
@@ -592,7 +594,7 @@ const AssetsList = () => {
                                 <Box />
                             )}
                             <Box
-                                display={smUp ? 'flex' : 'none'}
+                                display={smUp ? 'none' : 'flex'}
                                 alignItems={'center'}
                                 justifyContent={'flex-end'}
                                 flexWrap={'wrap'}
