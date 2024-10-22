@@ -25,7 +25,7 @@ export const AdditionalAssetsFilterCard = () => {
     };
 
     return (
-        <Box height="100%" minHeight={380} mt={hasIncludesGroup ? 2 : 0}>
+        <Box width={250} height="100%" minHeight={380} mt={hasIncludesGroup ? 2 : 0}>
             <BlankCard className="hoverCard">
                 <Box display="flex" flexDirection="column" justifyContent="space-between" height="100%">
                     <Box width={250} borderRadius="8px 8px 0 0" position="relative" sx={{ p: 3, pt: 2 }}>

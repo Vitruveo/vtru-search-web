@@ -33,7 +33,7 @@ import { DrawerAsset } from '../components/DrawerAsset';
 import DrawerStack from '../components/DrawerStack/DrawerStack';
 import NumberOfFilters from '../components/numberOfFilters';
 import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
-import { AssetCardContainer, AssetItem } from './AssetItem';
+import { AssetItem } from './AssetItem';
 import './AssetScroll.css';
 
 const optionsForSelectSort = [
@@ -798,7 +798,11 @@ const AssetsList = () => {
                                     !creatorId &&
                                     !portfolioWallets &&
                                     tabNavigation.assets?.length <= 0 &&
-                                    tabNavigation.artists?.length <= 0 && <AdditionalAssetsFilterCard />}
+                                    tabNavigation.artists?.length <= 0 && (
+                                        <Box display={'flex'} justifyContent={'center'}>
+                                            <AdditionalAssetsFilterCard />
+                                        </Box>
+                                    )}
 
                                 {showAdditionalAssets.value &&
                                     blockedAssets.map((asset) => (
