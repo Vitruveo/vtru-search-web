@@ -1,5 +1,5 @@
 import { Stack, StackData } from '@/features/stacks/types';
-import { Box, Button, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, Grid, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useRef } from 'react';
 import Select, { SingleValue } from 'react-select';
@@ -72,7 +72,14 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 ]}
                 hasSettings={false}
             />
-            <Box display="flex" flexWrap="wrap" justifyContent="center" overflow="auto" maxHeight="80vh" ref={topRef}>
+            <Box
+                display="flex"
+                flexWrap="wrap"
+                justifyContent="center"
+                overflow="auto"
+                maxHeight="calc(100vh - 100px)"
+                ref={topRef}
+            >
                 <Box
                     paddingInline="24px"
                     display="flex"
@@ -234,11 +241,14 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 </Box>
                 <div
                     style={{
-                        paddingInline: '24px',
-                        width: '100%',
+                        width: 'auto',
+                        minWidth: '79%',
+                        margin: '0 auto',
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
                         gap: 30,
+                        paddingTop: '0',
+                        overflow: 'hidden',
                     }}
                 >
                     {stacks.data.map((stack: Stack) => {
