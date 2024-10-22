@@ -320,7 +320,7 @@ const AssetsList = () => {
                 <Box
                     display={'flex'}
                     alignItems={'center'}
-                    flexDirection={'row'}
+                    flexDirection={smUp ? 'row' : 'column-reverse'}
                     justifyContent={'space-between'}
                     pr={4}
                     mb={4}
