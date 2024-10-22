@@ -317,16 +317,7 @@ const AssetsList = () => {
             <DrawerStack drawerStackOpen={drawerStack.isActive} onClose={drawerStack.deactivate} />
 
             {!isHidden?.order && (
-                <Box
-                    display={'flex'}
-                    alignItems={'center'}
-                    flexDirection={smUp ? 'row' : 'column-reverse'}
-                    justifyContent={'space-between'}
-                    pr={4}
-                    mb={4}
-                    mt={2}
-                    ml={2}
-                >
+                <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} pr={4} mb={4} mt={2}>
                     <Box display="flex" alignItems={'center'} gap={1}>
                         {lgUp && (
                             <Box ml={1.5}>

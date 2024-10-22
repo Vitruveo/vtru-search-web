@@ -98,6 +98,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                             fontSize: '1rem',
                             fontWeight: 'bold',
                             width: '150px',
+                            whiteSpace: 'nowrap',
                         }}
                         onClick={handleCurateStack}
                     >
