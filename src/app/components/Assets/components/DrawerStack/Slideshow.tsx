@@ -1,14 +1,4 @@
-import {
-    Box,
-    Button,
-    FormControl,
-    FormControlLabel,
-    FormLabel,
-    Input,
-    Radio,
-    RadioGroup,
-    TextField,
-} from '@mui/material';
+import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 
 import { Asset } from '@/features/assets/types';
 import { useDispatch, useSelector } from '@/store/hooks';
@@ -17,6 +7,7 @@ import { useState } from 'react';
 import { ShareButton } from './ShareButton';
 import { SLIDESHOW_BASE_URL } from '@/constants/api';
 import { createTwitterIntent } from '@/utils/twitter';
+import { useI18n } from '@/app/hooks/useI18n';
 
 interface VideoStackProps {
     selectedAssets: Asset[];
@@ -27,7 +18,7 @@ interface VideoStackProps {
 
 export default function Slideshow({ selectedAssets, title, description, fees }: VideoStackProps) {
     const dispatch = useDispatch();
-
+    const { language } = useI18n();
     const slideshow = useSelector((state) => state.assets.slideshow);
 
     const [display, setDisplay] = useState('Alternate');
@@ -63,7 +54,7 @@ export default function Slideshow({ selectedAssets, title, description, fees }: 
                         target="_blank"
                         rel="noreferrer"
                     >
-                        Open slideshow
+                        {language['search.drawer.stack.slideshow.open'] as string}
                     </a>
                 </Box>
 
@@ -78,7 +69,7 @@ export default function Slideshow({ selectedAssets, title, description, fees }: 
         <>
             <Box mb={2}>
                 <FormControl>
-                    <FormLabel>Interval (seconds)</FormLabel>
+                    <FormLabel>{language['search.drawer.stack.slideshow.interval'] as string}</FormLabel>
                     <TextField
                         type="number"
                         value={interval}
@@ -88,7 +79,7 @@ export default function Slideshow({ selectedAssets, title, description, fees }: 
                 </FormControl>
             </Box>
             <FormControl>
-                <FormLabel>Info Bar</FormLabel>
+                <FormLabel>{language['search.drawer.stack.slideshow.infobar'] as string}</FormLabel>
                 <RadioGroup
                     name="radio-buttons-group"
                     sx={{
@@ -100,10 +91,26 @@ export default function Slideshow({ selectedAssets, title, description, fees }: 
                     value={display}
                     onChange={(event) => setDisplay(event.target.value)}
                 >
-                    <FormControlLabel value="Alternate" control={<Radio />} label="Alternate" />
-                    <FormControlLabel value="Left/Up" control={<Radio />} label="Left/Up" />
-                    <FormControlLabel value="Right/Down" control={<Radio />} label="Right/Down" />
-                    <FormControlLabel value="Hide" control={<Radio />} label="Hide" />
+                    <FormControlLabel
+                        value="Alternate"
+                        control={<Radio />}
+                        label={language['search.drawer.stack.slideshow.option.alternate'] as string}
+                    />
+                    <FormControlLabel
+                        value="Left/Up"
+                        control={<Radio />}
+                        label={language['search.drawer.stack.slideshow.option.leftUp'] as string}
+                    />
+                    <FormControlLabel
+                        value="Right/Down"
+                        control={<Radio />}
+                        label={language['search.drawer.stack.slideshow.option.RightDown'] as string}
+                    />
+                    <FormControlLabel
+                        value="Hide"
+                        control={<Radio />}
+                        label={language['search.drawer.stack.slideshow.option.hide'] as string}
+                    />
                 </RadioGroup>
             </FormControl>
             <Button
@@ -112,7 +119,7 @@ export default function Slideshow({ selectedAssets, title, description, fees }: 
                 fullWidth
                 onClick={handleSubmit}
             >
-                Generate slideshow
+                {language['search.drawer.stack.slideshow.button.publish'] as string}
             </Button>
         </>
     );
