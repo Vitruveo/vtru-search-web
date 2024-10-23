@@ -14,6 +14,17 @@ const language: Translation = {
 
     /* Asset Filter */
     'search.assetFilter.search.placeholder': 'Поиск актива',
+    'search.assetFilter.shortcut.nudity': 'Скрыть обнаженность',
+    'search.assetFilter.shortcut.ia': 'Скрыть ИИ',
+    'search.assetFilter.shortcut.photography': 'Фотография',
+    'search.assetFilter.shortcut.animation': 'Анимация',
+    'search.assetFilter.shortcut.physicalArt': 'Физическое искусство',
+    'search.assetFilter.shortcut.digitalArt': 'Цифровое искусство',
+    'search.assetFilter.shortcut.includeSold': 'Включить проданные',
+    'search.assetFilter.shortcut.hasBTS': 'есть BTS',
+
+    'search.assetFilter.licenses': 'Лицензии',
+    'search.assetFilter.licenses.price': 'Цена',
 
     'search.assetFilter.resetFilters': 'Сбросить фильтры',
 
@@ -32,6 +43,8 @@ const language: Translation = {
     'search.assetFilter.context.title.culture': 'Культура',
     'search.assetFilter.context.title.mood': 'Настроение',
     'search.assetFilter.context.title.colors': 'Цвета',
+    'search.assetFilter.context.title.colors.precision': 'Точность',
+    'search.assetFilter.context.title.colors.addColor': 'Добавить цвет',
     'search.assetFilter.context.title.orientation': 'Ориентация',
 
     'search.assetFilter.context.culture.african': 'Африканский',

@@ -277,14 +277,14 @@ const Filters = () => {
                     <Box display="flex">
                         <FormControlLabel
                             control={<Checkbox onChange={handleChangeNudity} checked={isHideNuditychecked} />}
-                            label={'Hide Nudity'}
+                            label={language['search.assetFilter.shortcut.nudity'] as string}
                             sx={{
                                 width: '50%',
                             }}
                         />
                         <FormControlLabel
                             control={<Checkbox onChange={handleChangeAI} checked={isHideAIchecked} />}
-                            label={'Hide AI'}
+                            label={language['search.assetFilter.shortcut.ia'] as string}
                             sx={{
                                 width: '50%',
                             }}
@@ -299,7 +299,7 @@ const Filters = () => {
                                     checked={selectedCategories.includes('photography')}
                                 />
                             }
-                            label={'Photography'}
+                            label={language['search.assetFilter.shortcut.photography'] as string}
                             sx={{
                                 width: '50%',
                             }}
@@ -311,7 +311,7 @@ const Filters = () => {
                                     checked={selectedCategories.includes('video')}
                                 />
                             }
-                            label={'Animation'}
+                            label={language['search.assetFilter.shortcut.animation'] as string}
                             sx={{
                                 width: '50%',
                             }}
@@ -325,7 +325,7 @@ const Filters = () => {
                                     checked={selectedObjectTypes.includes('physicalart')}
                                 />
                             }
-                            label={'Physical Art'}
+                            label={language['search.assetFilter.shortcut.physicalArt'] as string}
                             sx={{
                                 width: '50%',
                             }}
@@ -337,7 +337,7 @@ const Filters = () => {
                                     checked={selectedObjectTypes.includes('digitalart')}
                                 />
                             }
-                            label={'Digital Art'}
+                            label={language['search.assetFilter.shortcut.digitalArt'] as string}
                             sx={{
                                 width: '50%',
                             }}
@@ -346,14 +346,14 @@ const Filters = () => {
                     <Box display="flex">
                         <FormControlLabel
                             control={<Checkbox onChange={handleChangeIsIncludeSold} checked={isIncludeSold} />}
-                            label={'Include Sold'}
+                            label={language['search.assetFilter.shortcut.includeSold'] as string}
                             sx={{
                                 width: '50%',
                             }}
                         />
                         <FormControlLabel
                             control={<Checkbox onChange={handleChangeHasBTS} checked={hasBts} />}
-                            label={'Has BTS'}
+                            label={language['search.assetFilter.shortcut.hasBTS'] as string}
                             sx={{
                                 width: '50%',
                             }}
@@ -361,10 +361,10 @@ const Filters = () => {
                     </Box>
                 </FormGroup>
 
-                <AssetFilterAccordion title="Licenses">
+                <AssetFilterAccordion title={language['search.assetFilter.licenses'] as string}>
                     <Box>
                         <Typography fontSize="0.85rem" fontWeight="700" mb={1}>
-                            Price
+                            {language['search.assetFilter.licenses.price'] as string}
                         </Typography>
                         <Box mx={1}>
                             <Range afterChange={afterPriceChange} />

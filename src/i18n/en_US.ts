@@ -14,6 +14,17 @@ const language: Translation = {
 
     /* Asset Filter */
     'search.assetFilter.search.placeholder': 'Search Asset',
+    'search.assetFilter.shortcut.nudity': 'Hide Nudity',
+    'search.assetFilter.shortcut.ia': 'Hide AI',
+    'search.assetFilter.shortcut.photography': 'Photography',
+    'search.assetFilter.shortcut.animation': 'Animation',
+    'search.assetFilter.shortcut.physicalArt': 'Physical Art',
+    'search.assetFilter.shortcut.digitalArt': 'Digital Art',
+    'search.assetFilter.shortcut.includeSold': 'Include Sold',
+    'search.assetFilter.shortcut.hasBTS': 'has BTS',
+
+    'search.assetFilter.licenses': 'Licenses',
+    'search.assetFilter.licenses.price': 'Price',
 
     'search.assetFilter.resetFilters': 'Reset filters',
 
@@ -32,6 +43,8 @@ const language: Translation = {
     'search.assetFilter.context.title.culture': 'Culture',
     'search.assetFilter.context.title.mood': 'Mood',
     'search.assetFilter.context.title.colors': 'Colors',
+    'search.assetFilter.context.title.colors.precision': 'Precision',
+    'search.assetFilter.context.title.colors.addColor': 'Add color',
     'search.assetFilter.context.title.orientation': 'Orientation',
 
     'search.assetFilter.context.culture.african': 'African',

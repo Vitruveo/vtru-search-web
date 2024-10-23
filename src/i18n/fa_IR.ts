@@ -14,6 +14,17 @@ const language: Translation = {
 
     /* Asset Filter */
     'search.assetFilter.search.placeholder': 'جستجوی دارایی',
+    'search.assetFilter.shortcut.nudity': 'پنهان کردن عریانی',
+    'search.assetFilter.shortcut.ia': 'پنهان کردن هوش مصنوعی',
+    'search.assetFilter.shortcut.photography': 'عکاسی',
+    'search.assetFilter.shortcut.animation': 'انیمیشن',
+    'search.assetFilter.shortcut.physicalArt': 'هنر فیزیکی',
+    'search.assetFilter.shortcut.digitalArt': 'هنر دیجیتال',
+    'search.assetFilter.shortcut.includeSold': 'شامل فروخته شده',
+    'search.assetFilter.shortcut.hasBTS': 'دارای BTS',
+
+    'search.assetFilter.licenses': 'لایسنس',
+    'search.assetFilter.licenses.price': 'قیمت',
 
     'search.assetFilter.resetFilters': 'بازنشانی فیلترها',
 
@@ -32,6 +43,8 @@ const language: Translation = {
     'search.assetFilter.context.title.culture': 'فرهنگ',
     'search.assetFilter.context.title.mood': 'حالت روحی',
     'search.assetFilter.context.title.colors': 'رنگ‌ها',
+    'search.assetFilter.context.title.colors.precision': 'دقت',
+    'search.assetFilter.context.title.colors.addColor': 'افزودن رنگ',
     'search.assetFilter.context.title.orientation': 'جهت‌گیری',
 
     'search.assetFilter.context.culture.african': 'آفریقایی',
