@@ -8,8 +8,10 @@ import { changeActiveSlider } from '@/features/customizer/slice';
 import { actions } from '@/features/assets/slice';
 import { IconEye } from '@tabler/icons-react';
 import ArtistsSpotlight from './ArtistsSpotlight';
+import { useI18n } from '@/app/hooks/useI18n';
 
 export default function TabSliders() {
+    const { language } = useI18n();
     const dispatch = useDispatch();
     const activeSlider = useSelector((state) => state.customizer.activeSlider);
     const isFilterHidden = useSelector((state) => state.customizer.hidden?.filter);
@@ -55,9 +57,24 @@ export default function TabSliders() {
                         variant="scrollable"
                         scrollButtons="auto"
                     >
-                        {!hidden?.spotlight && <Tab label={<Label label={'Artwork Spotlight'} />} value="1" />}
-                        {!hidden?.artistSpotlight && <Tab label={<Label label={'Artist Spotlight'} />} value="2" />}
-                        {!hidden?.recentlySold && <Tab label={<Label label={'Recently Sold'} />} value="3" />}
+                        {!hidden?.spotlight && (
+                            <Tab
+                                label={<Label label={language['search.tabSliders.artworkSpotlight'] as string} />}
+                                value="1"
+                            />
+                        )}
+                        {!hidden?.artistSpotlight && (
+                            <Tab
+                                label={<Label label={language['search.tabSliders.artistSpotlight'] as string} />}
+                                value="2"
+                            />
+                        )}
+                        {!hidden?.recentlySold && (
+                            <Tab
+                                label={<Label label={language['search.tabSliders.recentlySold'] as string} />}
+                                value="3"
+                            />
+                        )}
                     </TabList>
                 </Box>
                 {!hidden?.spotlight && (

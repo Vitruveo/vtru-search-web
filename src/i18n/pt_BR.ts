@@ -86,9 +86,22 @@ const language: Translation = {
     /* Asset List */
     'search.assetList.curateStack': 'Seleção',
     'search.assetList.curateStack.selected': 'Selecionados',
-
+    'search.assetList.curateStack.selectAll': 'Selecionar tudo',
+    'search.assetList.curateStack.deselectAll': 'Desmarcar tudo',
     'search.assetList.visualization.description': 'Descrição',
     'search.assetList.visualization.view': 'Visualizar',
+    'search.assetList.resetsearch': 'Redefinir search',
+    'search.assetList.scrollToTop': 'Rolar para o topo',
+
+    // Paginations and order
+    'search.pagination': 'Paginação',
+    'search.order.sort': 'Ordenar',
+    'search.order.artists': 'Artistas',
+
+    // Tab Sliders
+    'search.tabSliders.artworkSpotlight': 'Obras de Arte em destaque',
+    'search.tabSliders.artistSpotlight': 'Artistas em destaque',
+    'search.tabSliders.recentlySold': 'Vendidos Recentemente',
 };
 
 export default language;

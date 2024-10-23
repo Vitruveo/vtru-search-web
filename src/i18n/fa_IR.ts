@@ -86,9 +86,22 @@ const language: Translation = {
     /* Asset List */
     'search.assetList.curateStack': 'پشته نگهداری',
     'search.assetList.curateStack.selected': 'انتخاب شده',
-
+    'search.assetList.curateStack.selectAll': 'انتخاب همه',
+    'search.assetList.curateStack.deselectAll': 'عدم انتخاب همه',
     'search.assetList.visualization.description': 'توضیحات',
     'search.assetList.visualization.view': 'دیدن',
+    'search.assetList.resetsearch': 'search را بازنشانی کنید',
+    'search.assetList.scrollToTop': 'به بالا حرکت کنید',
+
+    // Paginations and order
+    'search.pagination': 'صفحه بندی',
+    'search.order.sort': 'مرتب سازی',
+    'search.order.artists': 'هنرمندان',
+
+    // Tab Sliders
+    'search.tabSliders.artworkSpotlight': 'آثار هنری کانون توجه',
+    'search.tabSliders.artistSpotlight': 'هنرمندان کانون توجه',
+    'search.tabSliders.recentlySold': 'اخیراً فروخته شده',
 };
 
 export default language;

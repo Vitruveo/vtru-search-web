@@ -86,9 +86,22 @@ const language: Translation = {
     /* Asset List */
     'search.assetList.curateStack': 'Стек Куратора',
     'search.assetList.curateStack.selected': 'Выбранный/Выбранная',
-
+    'search.assetList.curateStack.selectAll': 'Выбрать все',
+    'search.assetList.curateStack.deselectAll': 'Снять выделение',
     'search.assetList.visualization.description': 'Описание',
     'search.assetList.visualization.view': 'Просмотр',
+    'search.assetList.resetsearch': 'Сбросить search',
+    'search.assetList.scrollToTop': 'Прокрутить вверх',
+
+    // Paginations and order
+    'search.pagination': 'Пагинация',
+    'search.order.sort': 'Сортировать',
+    'search.order.artists': 'Художники',
+
+    // Tab Sliders
+    'search.tabSliders.artworkSpotlight': 'Произведения искусства в центре внимания',
+    'search.tabSliders.artistSpotlight': 'Художники в центре внимания',
+    'search.tabSliders.recentlySold': 'Недавно продано',
 };
 
 export default language;

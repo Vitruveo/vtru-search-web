@@ -86,9 +86,22 @@ const language: Translation = {
     /* Asset List */
     'search.assetList.curateStack': 'Curate Stack',
     'search.assetList.curateStack.selected': 'Selected',
-
+    'search.assetList.curateStack.selectAll': 'Select all',
+    'search.assetList.curateStack.deselectAll': 'Deselect all',
     'search.assetList.visualization.description': 'Description',
     'search.assetList.visualization.view': 'View',
+    'search.assetList.resetsearch': 'Reset search',
+    'search.assetList.scrollToTop': 'Scroll to top',
+
+    // Paginations and order
+    'search.pagination': 'Pagination',
+    'search.order.sort': 'Sort',
+    'search.order.artists': 'Artists',
+
+    // Tab Sliders
+    'search.tabSliders.artworkSpotlight': 'Artworks Spotlight',
+    'search.tabSliders.artistSpotlight': 'Artists Spotlight',
+    'search.tabSliders.recentlySold': 'Recently Sold',
 };
 
 export default language;
