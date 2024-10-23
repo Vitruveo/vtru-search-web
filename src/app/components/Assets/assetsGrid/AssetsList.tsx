@@ -36,23 +36,24 @@ import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
 import { AssetItem } from './AssetItem';
 import './AssetScroll.css';
 
-const optionsForSelectSort = [
-    { value: 'latest', label: 'Latest' },
-    { value: 'priceHighToLow', label: 'Price – High to Low' },
-    { value: 'priceLowToHigh', label: 'Price – Low to High' },
-    { value: 'creatorAZ', label: 'Creator – a-z' },
-    { value: 'creatorZA', label: 'Creator – z-a' },
-    { value: 'consignNewToOld', label: 'Consign Date – New to Old' },
-    { value: 'consignOldToNew', label: 'Consign Date – Old to New' },
-];
-
-const optionsForSelectGrouped = [
-    { value: 'no', label: 'Ungrouped – All' },
-    { value: 'all', label: 'Grouped – All' },
-    { value: 'noSales', label: 'Grouped – No Sales' },
-];
-
 const AssetsList = () => {
+    const { language } = useI18n();
+    const optionsForSelectSort = [
+        { value: 'latest', label: language['search.select.sort.option.latest'] as string },
+        { value: 'priceHighToLow', label: language['search.select.sort.option.priceHighToLow'] as string },
+        { value: 'priceLowToHigh', label: language['search.select.sort.option.priceLowToHigh'] as string },
+        { value: 'creatorAZ', label: language['search.select.sort.option.creatorAZ'] as string },
+        { value: 'creatorZA', label: language['search.select.sort.option.creatorZA'] as string },
+        { value: 'consignNewToOld', label: language['search.select.sort.option.consignDateNewToOld'] as string },
+        { value: 'consignOldToNew', label: language['search.select.sort.option.consignDateOldToNew'] as string },
+    ];
+
+    const optionsForSelectGrouped = [
+        { value: 'no', label: language['search.select.grouped.option.ungrouped'] as string },
+        { value: 'all', label: language['search.select.grouped.option.grouped'] as string },
+        { value: 'noSales', label: language['search.select.grouped.option.groupedNoSales'] as string },
+    ];
+
     const dispatch = useDispatch();
     const theme = useTheme();
     const params = new URLSearchParams(window.location.search);
@@ -65,7 +66,6 @@ const AssetsList = () => {
 
     const hasCurated = grid || video || slideshow;
 
-    const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
     const [sortOrder, setSortOrder] = useState<string>('latest');

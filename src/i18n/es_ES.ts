@@ -125,6 +125,26 @@ const language: Translation = {
     'search.tabSliders.artworkSpotlight': 'Obras de arte destacadas',
     'search.tabSliders.artistSpotlight': 'Artistas destacados',
     'search.tabSliders.recentlySold': 'Vendidos recientemente',
+
+    // options for select
+    'search.select.sort.option.latest': 'Último',
+    'search.select.sort.option.priceHighToLow': 'Precio – De mayor a menor',
+    'search.select.sort.option.priceLowToHigh': 'Precio – De menor a mayor',
+    'search.select.sort.option.creatorAZ': 'Creador – A a Z',
+    'search.select.sort.option.creatorZA': 'Creador – Z a A',
+    'search.select.sort.option.titleAZ': 'Título – A a Z',
+    'search.select.sort.option.titleZA': 'Título – Z a A',
+    'search.select.sort.option.curatorAZ': 'Curador – A a Z',
+    'search.select.sort.option.curatorZA': 'Curador – Z a A',
+    'search.select.sort.option.consignDateNewToOld': 'Fecha de consignación – De nuevo a viejo',
+    'search.select.sort.option.consignDateOldToNew': 'Fecha de consignación – De viejo a nuevo',
+    'search.select.grouped.option.ungrouped': 'Sin agrupar – Todos',
+    'search.select.grouped.option.grouped': 'Agrupado – Todos',
+    'search.select.grouped.option.groupedNoSales': 'Agrupado – Sin ventas',
+
+    // Stacks
+    'search.stacks.curation.label': '¡La curación es divertida y fácil. Pruébalo ahora!',
+    'search.stacks.stackItem.curatedBy': 'Curado por',
 };
 
 export default language;

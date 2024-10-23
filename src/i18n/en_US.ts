@@ -121,10 +121,30 @@ const language: Translation = {
     'search.order.sort': 'Sort',
     'search.order.artists': 'Artists',
 
+    // options for select
+    'search.select.sort.option.latest': 'Latest',
+    'search.select.sort.option.priceHighToLow': 'Price – High to Low',
+    'search.select.sort.option.priceLowToHigh': 'Price – Low to High',
+    'search.select.sort.option.creatorAZ': 'Creator – A to Z',
+    'search.select.sort.option.creatorZA': 'Creator – Z to A',
+    'search.select.sort.option.titleAZ': 'Title – A to Z',
+    'search.select.sort.option.titleZA': 'Title – Z to A',
+    'search.select.sort.option.curatorAZ': 'Curator – A to Z',
+    'search.select.sort.option.curatorZA': 'Curator – Z to A',
+    'search.select.sort.option.consignDateNewToOld': 'Consign Date – New to Old',
+    'search.select.sort.option.consignDateOldToNew': 'Consign Date – Old to New',
+    'search.select.grouped.option.ungrouped': 'Ungrouped – All',
+    'search.select.grouped.option.grouped': 'Grouped – All',
+    'search.select.grouped.option.groupedNoSales': 'Grouped – No Sales',
+
     // Tab Sliders
     'search.tabSliders.artworkSpotlight': 'Artworks Spotlight',
     'search.tabSliders.artistSpotlight': 'Artists Spotlight',
     'search.tabSliders.recentlySold': 'Recently Sold',
+
+    // Stacks
+    'search.stacks.curation.label': 'Curation is fun and easy. Try it now!',
+    'search.stacks.stackItem.curatedBy': 'Curated by',
 };
 
 export default language;

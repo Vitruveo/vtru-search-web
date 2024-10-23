@@ -18,6 +18,7 @@ import BlankCard from '../../Shared/BlankCard';
 import { useTheme } from '@mui/material/styles';
 import { IconInfoCircle, IconPlayerPlayFilled, IconX } from '@tabler/icons-react';
 import React, { useState } from 'react';
+import { useI18n } from '@/app/hooks/useI18n';
 
 interface Props {
     stack: Stack;
@@ -25,7 +26,7 @@ interface Props {
 
 const StackItemMain = ({ stack }: Props) => {
     const theme = useTheme();
-    const smUp = useMediaQuery(theme.breakpoints.up('sm'));
+    const { language } = useI18n();
     const [isOpenModal, setIsOpenModal] = useState(false);
 
     const handleModalOpen = (event: React.MouseEvent) => {
@@ -152,7 +153,7 @@ const StackItemMain = ({ stack }: Props) => {
                     <Box display={'flex'} gap={1}>
                         <Typography variant="h5">
                             <span>{stack.stacks.title}</span>
-                            <span> curated by </span>
+                            <span> {language['search.stacks.stackItem.curatedBy'] as string} </span>
                             <span style={{ fontStyle: 'italic', color: theme.palette.primary.main }}>
                                 {stack.username}
                             </span>

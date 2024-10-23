@@ -1,11 +1,12 @@
 import { Stack, StackData } from '@/features/stacks/types';
-import { Box, Button, Grid, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useRef } from 'react';
 import Select, { SingleValue } from 'react-select';
 import '../../Assets/assetsGrid/AssetScroll.css';
 import Header from '../../Header';
 import { StackCardContainer, StackItem } from './StackItem';
+import { useI18n } from '@/app/hooks/useI18n';
 
 interface StacksProps {
     data: {
@@ -42,6 +43,7 @@ interface StacksProps {
 
 const Stacks = ({ data, actions }: StacksProps) => {
     const theme = useTheme();
+    const { language } = useI18n();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const mdUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('md'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
@@ -91,7 +93,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     width="100%"
                 >
                     <Typography variant="h5" color={theme.palette.primary.main} ml={2.5}>
-                        Curation is fun and easy. Try it now!
+                        {language['search.stacks.curation.label'] as string}
                     </Typography>
                     <Button
                         variant="contained"
@@ -104,7 +106,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         }}
                         onClick={handleCurateStack}
                     >
-                        Curate Stack
+                        {language['search.assetList.curateStack'] as string}
                     </Button>
                 </Box>
                 <Box
@@ -116,15 +118,21 @@ const Stacks = ({ data, actions }: StacksProps) => {
                     mb={4}
                 >
                     <Box display={'flex'} gap={1} alignItems={'center'}>
-                        <Typography variant="h5">Sort:</Typography>
+                        <Typography variant="h5">{language['search.order.sort'] as string}:</Typography>
                         <Select
                             placeholder="Sort"
                             options={[
-                                { value: 'latest', label: 'Latest' },
-                                { value: 'titleAZ', label: 'Title a-z' },
-                                { value: 'titleZA', label: 'Title z-a' },
-                                { value: 'CuratorAZ', label: 'Curator a-z' },
-                                { value: 'CuratorZA', label: 'Curator z-a' },
+                                { value: 'latest', label: language['search.select.sort.option.latest'] as string },
+                                { value: 'titleAZ', label: language['search.select.sort.option.titleAZ'] as string },
+                                { value: 'titleZA', label: language['search.select.sort.option.titleZA'] as string },
+                                {
+                                    value: 'CuratorAZ',
+                                    label: language['search.select.sort.option.curatorAZ'] as string,
+                                },
+                                {
+                                    value: 'CuratorZA',
+                                    label: language['search.select.sort.option.curatorZA'] as string,
+                                },
                             ]}
                             value={selectValues.sort}
                             onChange={onChangeSort}
@@ -161,7 +169,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         />
                     </Box>
                     <Box display={'flex'} gap={1} alignItems={'center'}>
-                        <Typography variant="h5">Pagination:</Typography>
+                        <Typography variant="h5">{language['search.pagination'] as string}:</Typography>
                         <Select
                             placeholder="Page Items"
                             options={[
@@ -272,9 +280,9 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         size={lgUp ? 'large' : 'medium'}
                     />
                 </Box>
-                <Box display={'flex'} justifyContent="flex-end" width="100%" mr={11} mb={lgUp ? 4 : 12}>
+                <Box display={'flex'} justifyContent="flex-end" width="100%" mr={11} mb={12}>
                     <Button variant="contained" onClick={handleScrollToTop}>
-                        Scroll to top
+                        {language['search.assetList.scrollToTop'] as string}
                     </Button>
                 </Box>
             </Box>

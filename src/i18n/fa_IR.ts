@@ -125,6 +125,26 @@ const language: Translation = {
     'search.tabSliders.artworkSpotlight': 'آثار هنری کانون توجه',
     'search.tabSliders.artistSpotlight': 'هنرمندان کانون توجه',
     'search.tabSliders.recentlySold': 'اخیراً فروخته شده',
+
+    // options for select
+    'search.select.sort.option.latest': 'Навтарин',
+    'search.select.sort.option.priceHighToLow': 'Нарх – Аз баланд то паст',
+    'search.select.sort.option.priceLowToHigh': 'Нарх – Аз паст то баланд',
+    'search.select.sort.option.creatorAZ': 'Эҷодкор – Аз А то Я',
+    'search.select.sort.option.creatorZA': 'Эҷодкор – Аз Я то А',
+    'search.select.sort.option.titleAZ': 'Унвон – Аз А то Я',
+    'search.select.sort.option.titleZA': 'Унвон – Аз Я то А',
+    'search.select.sort.option.curatorAZ': 'Куратор – Аз А то Я',
+    'search.select.sort.option.curatorZA': 'Куратор – Аз Я то А',
+    'search.select.sort.option.consignDateNewToOld': 'Санаи консигнатсия – Аз нав то кӯҳна',
+    'search.select.sort.option.consignDateOldToNew': 'Санаи консигнатсия – Аз кӯҳна то нав',
+    'search.select.grouped.option.ungrouped': 'Бе гурӯҳ – Ҳама',
+    'search.select.grouped.option.grouped': 'Гурӯҳбандӣ – Ҳама',
+    'search.select.grouped.option.groupedNoSales': 'Гурӯҳбандӣ – Бе фурӯш',
+
+    // Stacks
+    'search.stacks.curation.label': 'نگهداری سرگرم کننده و آسان است. اکنون امتحان کنید!',
+    'search.stacks.stackItem.curatedBy': 'نگهداری شده توسط',
 };
 
 export default language;

@@ -125,6 +125,26 @@ const language: Translation = {
     'search.tabSliders.artworkSpotlight': 'Произведения искусства в центре внимания',
     'search.tabSliders.artistSpotlight': 'Художники в центре внимания',
     'search.tabSliders.recentlySold': 'Недавно продано',
+
+    // options for select
+    'search.select.sort.option.latest': 'Последние',
+    'search.select.sort.option.priceHighToLow': 'Цена – от высокой к низкой',
+    'search.select.sort.option.priceLowToHigh': 'Цена – от низкой к высокой',
+    'search.select.sort.option.creatorAZ': 'Создатель – от А до Я',
+    'search.select.sort.option.creatorZA': 'Создатель – от Я до А',
+    'search.select.sort.option.titleAZ': 'Название – от А до Я',
+    'search.select.sort.option.titleZA': 'Название – от Я до А',
+    'search.select.sort.option.curatorAZ': 'Куратор – от А до Я',
+    'search.select.sort.option.curatorZA': 'Куратор – от Я до А',
+    'search.select.sort.option.consignDateNewToOld': 'Дата консигнации – от новой к старой',
+    'search.select.sort.option.consignDateOldToNew': 'Дата консигнации – от старой к новой',
+    'search.select.grouped.option.ungrouped': 'Без группировки – Все',
+    'search.select.grouped.option.grouped': 'С группировкой – Все',
+    'search.select.grouped.option.groupedNoSales': 'С группировкой – Без продаж',
+
+    // Stacks
+    'search.stacks.curation.label': 'Кураторство - это весело и легко. Попробуйте сейчас!',
+    'search.stacks.stackItem.curatedBy': 'Куратор',
 };
 
 export default language;
