@@ -1,9 +1,18 @@
 import { Box } from '@mui/material';
 import Header from '../Header';
+import { Asset } from '@/features/assets/types';
 
-interface StoreProps {}
+interface StoreProps {
+    data: {
+        asset: Asset;
+        loading: boolean;
+    };
+}
 
-const Store = (props: StoreProps) => {
+const Store = ({ data }: StoreProps) => {
+    const { asset, loading } = data;
+
+    if (loading) return <h1>Loading...</h1>;
     return (
         <Box>
             <Header
@@ -13,7 +22,7 @@ const Store = (props: StoreProps) => {
                 ]}
                 hasSettings={false}
             />
-            <h1>Hello from store item </h1>
+            <p>{JSON.stringify(asset)}</p>
         </Box>
     );
 };
