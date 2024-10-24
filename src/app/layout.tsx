@@ -1,19 +1,20 @@
 'use client';
-import React, { useEffect } from 'react';
-import { Provider } from 'react-redux';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { PersistGate } from 'redux-persist/integration/react';
-import CssBaseline from '@mui/material/CssBaseline';
 import store, { persistor } from '@/store';
-import { Inter } from 'next/font/google';
+import '@/utils/i18n';
 import { NextAppDirEmotionCacheProvider } from '@/utils/theme/EmotionCache';
 import { ThemeSettings } from '@/utils/theme/Theme';
 import { themeConfig } from '@/utils/theme/ThemeConfig';
-import CustomizedSnackbar from './common/toastr';
-import { useToastr } from './hooks/useToastr';
-import '@/utils/i18n';
-import 'toastr/build/toastr.min.css';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { Inter } from 'next/font/google';
+import React from 'react';
 import 'react-image-crop/dist/ReactCrop.css';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import 'toastr/build/toastr.min.css';
+import CustomizedSnackbar from './common/toastr';
+import Web3WagmiProvider from './components/Store/providers/wagmiProvider';
+import { useToastr } from './hooks/useToastr';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -45,9 +46,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </head>
             <body style={{ overflow: 'hidden' }} className={inter.className}>
                 <Provider store={store}>
-                    <PersistGate loading={null} persistor={persistor}>
-                        <MyApp>{children}</MyApp>
-                    </PersistGate>
+                    <Web3WagmiProvider>
+                        <PersistGate loading={null} persistor={persistor}>
+                            <MyApp>{children}</MyApp>
+                        </PersistGate>
+                    </Web3WagmiProvider>
                 </Provider>
             </body>
         </html>
