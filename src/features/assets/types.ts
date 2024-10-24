@@ -106,13 +106,28 @@ export interface Asset {
         createdBy: string | null;
         updatedBy: string | null;
     };
-    consignArtwork: {
-        listing: string;
-        status: 'blocked' | 'active';
+    consignArtwork?: {
+        listing?: string;
+        status?: string;
+        assetKey: string;
+        tokenUri: string;
+    };
+    contractExplorer?: {
+        transactionHash: string;
+    };
+    mintExplorer: {
+        transactionHash: string;
+        explorerUrl: string;
+        address: string;
+        createdAt: Date;
     };
     countByCreator?: number;
     paths?: string[];
     username: string;
+    vault: {
+        transactionhash: string | null;
+        vaultAddress: string | null;
+    };
 }
 
 export interface Tags {

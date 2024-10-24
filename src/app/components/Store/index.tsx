@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import Header from '../Header';
 import { Asset } from '@/features/assets/types';
+import PanelMint from './components/PanelMint';
 
 interface StoreProps {
     data: {
@@ -22,6 +23,7 @@ const Store = ({ data }: StoreProps) => {
                 ]}
                 hasSettings={false}
             />
+            <PanelMint asset={asset} />
             <p>{JSON.stringify(asset)}</p>
         </Box>
     );

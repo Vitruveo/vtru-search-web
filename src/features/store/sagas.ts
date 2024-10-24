@@ -4,14 +4,15 @@ import { Asset } from '../assets/types';
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { actions } from './slice';
+import { APIResponse } from '../common/types';
 
 function* getStoreAsset({ payload }: PayloadAction<{ id: string }>) {
     try {
         const URL_STORE_ASSET = `${API_BASE_URL}/assets/store/${payload.id}`;
 
-        const response: AxiosResponse<Asset> = yield call(axios.get, URL_STORE_ASSET);
+        const response: AxiosResponse<APIResponse<Asset>> = yield call(axios.get, URL_STORE_ASSET);
 
-        yield put(actions.setAsset(response.data));
+        yield put(actions.setAsset(response.data.data));
     } catch (error) {
         // Handle error
     }

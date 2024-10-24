@@ -13,7 +13,6 @@ export const storeSlice = createSlice({
     initialState,
     reducers: {
         getAssetRequest: (_state, _action: PayloadAction<{ id: string }>) => {},
-        getAssetCreatorRequest: () => {},
         startLoading: (state) => {
             state.loading = true;
         },
