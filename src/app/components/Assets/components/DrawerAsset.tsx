@@ -4,7 +4,7 @@ import cookie from 'cookiejs';
 import { Theme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
 import { AWS_BASE_URL_S3, GENERAL_STORAGE_URL } from '@/constants/aws';
-import { STORE_BASE_URL } from '@/constants/api';
+import { SEARCH_BASE_URL } from '@/constants/api';
 import { useSelector } from '@/store/hooks';
 import { MediaRenderer } from './MediaRenderer';
 import Avatar from './Avatar';
@@ -41,7 +41,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
             cookie.remove('video');
             document.cookie = 'video=; path=/; domain=' + domain + '; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         }
-        window.open(`${STORE_BASE_URL}/${creator.username}/${assetView?._id}`);
+        window.open(`${SEARCH_BASE_URL}/${creator.username}/${assetView?._id}`);
     };
 
     const width = lgUp ? 400 : mdUp ? 300 : 200;
