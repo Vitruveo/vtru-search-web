@@ -1,7 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import { Button, useMediaQuery } from '@mui/material';
 import styles from './index.module.css';
-import Image from 'next/image';
 
 type ActionButtonProps = {
     title: string;
@@ -65,33 +65,27 @@ export default function ActionButton({
     return (
         <Button
             className={styles.main}
-            sx={isMobile ? { width: '80px', height: '80px' } : { padding: 0 }}
+            sx={isMobile ? { width: '80px', height: '80px' } : {}}
             type="button"
             onClick={onClick}
         >
-            <div
-                style={{
-                    position: 'relative',
-                    width: isMobile ? '80px' : '100px',
-                    height: isMobile ? '80px' : '100px',
-                    border: selected ? '4px solid #FF0066' : 'none',
-                    borderRadius: 8,
-                    overflow: 'hidden',
+            <img
+                src={media}
+                alt={title}
+                onLoad={() => {
+                    if (handleLoad && handleSelect) {
+                        handleLoad();
+                        handleSelect(title.toLowerCase());
+                    }
                 }}
-            >
-                <Image
-                    src={media}
-                    alt={title}
-                    layout="fill"
-                    objectFit="cover"
-                    onLoadingComplete={() => {
-                        if (handleLoad && handleSelect) {
-                            handleLoad();
-                            handleSelect(title.toLowerCase());
-                        }
-                    }}
-                />
-            </div>
+                style={{
+                    minWidth: isMobile ? '80px' : '100px',
+                    height: isMobile ? '80px' : 100,
+                    borderRadius: 8,
+                    objectFit: 'cover',
+                    border: selected ? '4px solid #FF0066' : 'none',
+                }}
+            />
             <div className={styles.highlight}>{title}</div>
         </Button>
     );

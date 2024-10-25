@@ -22,9 +22,10 @@ export const getAssetPrice = (asset: Asset | LastSoldAsset | SpotlightAsset) => 
 interface FormatPriceProps {
     price: number;
     withUS?: boolean;
+    decimals?: boolean;
 }
 
-export const formatPrice = ({ price = 0, withUS = false }: FormatPriceProps) => {
+export const formatPrice = ({ price = 0, withUS = false, decimals = false }: FormatPriceProps) => {
     let language = 'en-US';
     if (typeof navigator !== 'undefined' && navigator.language) {
         language = navigator.language;
@@ -32,8 +33,8 @@ export const formatPrice = ({ price = 0, withUS = false }: FormatPriceProps) => 
     const formatedPrice = price.toLocaleString(language, {
         style: 'currency',
         currency: 'USD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
+        minimumFractionDigits: decimals ? 2 : 0,
+        maximumFractionDigits: decimals ? 2 : 0,
     });
     return !withUS ? formatedPrice.replace('US', '') : formatedPrice;
 };

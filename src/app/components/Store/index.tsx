@@ -71,7 +71,7 @@ const Store = ({ data }: StoreProps) => {
         );
 
     return (
-        <LazyLoad once style={{ minWidth: 1300 }}>
+        <LazyLoad once style={{ maxWidth: 1300 }}>
             <Box display="flex" flexDirection="column" gap={3}>
                 <Grid
                     container
@@ -101,24 +101,29 @@ const Store = ({ data }: StoreProps) => {
                             onClick={() => handleOpen(image)}
                         />
                     </Grid>
+                    {isMobile && (
+                        <Grid item xs={12}>
+                            <ActionButtons asset={asset} setImage={setImage} handleLoad={handleLoad} />
+                        </Grid>
+                    )}
                     <Grid item md={6} width="100%">
-                        <Box display="flex" flexDirection="column" justifyContent="space-between" height="100%">
+                        <Box display="flex" flexDirection="column" justifyContent="space-between" height="100%" gap={2}>
                             <Box display="flex" flexDirection="column" gap={1}>
                                 <Typography variant="h1" sx={{ color: '#ffff' }}>
                                     {asset.assetMetadata?.context.formData.title}
                                 </Typography>
                                 <User creator={creatorAvatar} creatorName={username} asset={asset} />
                             </Box>
-                            <Box>
-                                <PanelMint asset={asset} />
-                            </Box>
+                            <PanelMint asset={asset} />
                         </Box>
                     </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                    <Grid item md={6} width="100%">
-                        <ActionButtons asset={asset} setImage={setImage} handleLoad={handleLoad} />
-                    </Grid>
+                    {!isMobile && (
+                        <Grid item md={6} width="100%">
+                            <ActionButtons asset={asset} setImage={setImage} handleLoad={handleLoad} />
+                        </Grid>
+                    )}
                     <Grid item md={6} width="100%">
                         {asset?.consignArtwork?.listing && (
                             <Activity
@@ -156,13 +161,15 @@ const Store = ({ data }: StoreProps) => {
                     <About data={asset?.assetMetadata?.context.formData.description} />
                 </Grid>
                 <Grid container spacing={2}>
-                    <Grid item md={6} width="100%">
-                        <AboutCreator
-                            data={asset?.assetMetadata?.creators?.formData as unknown as Creators[]}
-                            creatorAvatar={creatorAvatar}
-                            creatorLoading={creatorLoading}
-                        />
-                    </Grid>
+                    {!isMobile && (
+                        <Grid item md={6} width="100%">
+                            <AboutCreator
+                                data={asset?.assetMetadata?.creators?.formData as unknown as Creators[]}
+                                creatorAvatar={creatorAvatar}
+                                creatorLoading={creatorLoading}
+                            />
+                        </Grid>
+                    )}
                     <Grid item md={6} width="100%">
                         {asset?.assetMetadata && (
                             <MetadataList
@@ -172,6 +179,15 @@ const Store = ({ data }: StoreProps) => {
                             />
                         )}
                     </Grid>
+                    {isMobile && (
+                        <Grid item md={6} width="100%">
+                            <AboutCreator
+                                data={asset?.assetMetadata?.creators?.formData as unknown as Creators[]}
+                                creatorAvatar={creatorAvatar}
+                                creatorLoading={creatorLoading}
+                            />
+                        </Grid>
+                    )}
                     <Grid item xs={12} sx={{ paddingBottom: '200px' }}>
                         <Typography variant="body1" sx={{ textAlign: 'center' }}>
                             Version: {pkgJson.version}

@@ -22,7 +22,7 @@ export default function TotalPrice({ title, value }: TotalPriceProps) {
                     justifyContent={'flex-end'}
                     maxWidth={120}
                 >
-                    {formatPrice({ price: value, withUS: true })}
+                    {formatPrice({ price: value, withUS: true, decimals: true })}
                 </Box>
             </Grid>
         </Grid>

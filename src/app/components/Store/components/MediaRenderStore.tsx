@@ -1,5 +1,4 @@
-import { useMediaQuery } from '@mui/material';
-import Image from 'next/image';
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from 'react';
 
 interface MediaPreviewProps {
@@ -13,7 +12,6 @@ interface MediaPreviewProps {
 const MediaRenderStoreMain = ({ media, alt, height, width, onClick }: MediaPreviewProps): React.JSX.Element => {
     const isVideo = media.match(/\.(mp4|webm|ogg)$/) != null;
     const [key, setKey] = useState(0);
-    const isMobile = useMediaQuery('(max-width: 900px)');
 
     useEffect(() => {
         setKey((prev) => prev + 1);
@@ -39,25 +37,20 @@ const MediaRenderStoreMain = ({ media, alt, height, width, onClick }: MediaPrevi
     }
 
     return (
-        <div
+        <img
+            src={media}
+            width={width}
+            height={height}
+            alt={alt}
+            onClick={onClick}
             style={{
                 display: 'block',
-                margin: '0 auto',
+                borderRadius: '10px',
                 cursor: 'pointer',
-                position: 'relative',
-                width,
-                height,
+                objectFit: 'contain',
             }}
-        >
-            <Image
-                src={media}
-                alt={alt}
-                onClick={onClick}
-                draggable={false}
-                fill
-                style={{ objectFit: isMobile ? 'cover' : 'contain', borderRadius: 10 }}
-            />
-        </div>
+            draggable={false}
+        />
     );
 };
 

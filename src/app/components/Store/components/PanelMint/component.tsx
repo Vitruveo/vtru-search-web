@@ -73,7 +73,7 @@ export const PanelMint = ({ data, actions }: PanelMintProps) => {
     } = data;
     const { handleMintNFT, handleCloseModalMinted } = actions;
 
-    const formattedPrice = formatPrice({ price: credits, withUS: true });
+    const formattedPrice = formatPrice({ price: credits, withUS: true, decimals: true });
 
     const { state, message } = loading;
 
@@ -123,17 +123,29 @@ export const PanelMint = ({ data, actions }: PanelMintProps) => {
                             <Box display={'flex'} flexDirection={'column'} gap={0.2}>
                                 <PanelMintInfo
                                     title="Usable Credits"
-                                    content={formatPrice({ price: buyCapability.grantBalance, withUS: true })}
+                                    content={formatPrice({
+                                        price: buyCapability.grantBalance,
+                                        withUS: true,
+                                        decimals: true,
+                                    })}
                                     disable
                                 />
                                 <PanelMintInfo
                                     title="Usable Balance"
-                                    content={formatPrice({ price: buyCapability.nonGrantBalance, withUS: true })}
+                                    content={formatPrice({
+                                        price: buyCapability.nonGrantBalance,
+                                        withUS: true,
+                                        decimals: true,
+                                    })}
                                     disable
                                 />
                                 <PanelMintInfo
                                     title="Transaction Balance"
-                                    content={formatPrice({ price: buyCapability.transactionBalance, withUS: true })}
+                                    content={formatPrice({
+                                        price: buyCapability.transactionBalance,
+                                        withUS: true,
+                                        decimals: true,
+                                    })}
                                     disable
                                 />
                             </Box>

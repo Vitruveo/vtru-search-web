@@ -34,17 +34,18 @@ export default function Fees({ title, value, fees }: FeesProps) {
             </Grid>
             <Grid item xs={12} sm={8} md={8} lg={8} xl={8}>
                 <Box display={'flex'} alignItems={'center'} gap={1} justifyContent={'flex-end'} maxWidth={150}>
-                    {formatPrice({ price: value, withUS: true })}
+                    {formatPrice({ price: value, withUS: true, decimals: true })}
                     <Tooltip
                         placement="right"
                         title={
                             <>
                                 Platform ({fees.platform.porcent}%):{' '}
-                                {formatPrice({ price: fees.platform.value, withUS: true })} <br />
+                                {formatPrice({ price: fees.platform.value, withUS: true, decimals: true })} <br />
                                 {fees.curator.value > 0 && (
                                     <>
                                         Curator ({fees.curator.porcent}%):{' '}
-                                        {formatPrice({ price: fees.curator.value, withUS: true })} <br />{' '}
+                                        {formatPrice({ price: fees.curator.value, withUS: true, decimals: true })}{' '}
+                                        <br />{' '}
                                     </>
                                 )}
                             </>
