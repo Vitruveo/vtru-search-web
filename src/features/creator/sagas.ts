@@ -43,7 +43,8 @@ function* verifyCode() {
         const host = window.location.hostname;
         const domain = host.replace('search.', '');
 
-        cookie.set('auth', response.data.data.token, { path: '/', domain });
+        cookie.set('auth', response.data.data.token, { path: '/', domain, expires: 30 });
+        localStorage.setItem('auth', response.data.data.token);
 
         yield put(
             actionsCreator.setLogged({
