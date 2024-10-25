@@ -14,6 +14,8 @@ import { About } from './components/About';
 import AboutCreator from './components/AboutCreator/AboutCreator';
 import { Creators } from '../Assets/types';
 import '../Assets/assetsGrid/AssetScroll.css';
+import MetadataList from './components/Metadata/MetadataList';
+import pkgJson from '../../../../package.json';
 
 interface StoreProps {
     data: {
@@ -29,6 +31,7 @@ const Store = ({ data }: StoreProps) => {
     const { asset, loading, creatorAvatar, username, creatorLoading } = data;
     const [size, setSize] = useState({ width: 300, height: 300 });
     const [image, setImage] = useState<string>('');
+    const [expandedAccordion, setExpandedAccordion] = useState<string | false>(false);
 
     const handleLoad = () => {
         setImage(`${AWS_BASE_URL_S3}/${asset.formats?.original?.path}`);
@@ -38,6 +41,10 @@ const Store = ({ data }: StoreProps) => {
         if (asset.formats?.original?.definition === 'landscape') {
             setSize({ width: 500, height: 300 });
         }
+    };
+
+    const handleAccordionChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
+        setExpandedAccordion(isExpanded ? panel : false);
     };
 
     useEffect(() => {
@@ -140,6 +147,20 @@ const Store = ({ data }: StoreProps) => {
                                 creatorAvatar={creatorAvatar}
                                 creatorLoading={creatorLoading}
                             />
+                        </Grid>
+                        <Grid item md={6} width="100%">
+                            {asset?.assetMetadata && (
+                                <MetadataList
+                                    asset={asset}
+                                    expandedAccordion={expandedAccordion}
+                                    handleAccordionChange={handleAccordionChange}
+                                />
+                            )}
+                        </Grid>
+                        <Grid item xs={12} sx={{ paddingBottom: '200px' }}>
+                            <Typography variant="body1" sx={{ textAlign: 'center' }}>
+                                Version: {pkgJson.version}
+                            </Typography>
                         </Grid>
                     </Grid>
                 </Box>
