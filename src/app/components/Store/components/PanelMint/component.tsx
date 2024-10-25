@@ -1,5 +1,5 @@
 import { Box, Button, Card, Typography } from '@mui/material';
-import Table from '../Table';
+import PanelMintInfo from '../PanelMintInfo';
 import Licenses from '../Licenses';
 import { formatPrice } from '@/utils/assets';
 import { LoadingAvailableLincenses } from '../LoadingAvailableLicenses';
@@ -73,7 +73,7 @@ export const PanelMint = ({ data, actions }: PanelMintProps) => {
     } = data;
     const { handleMintNFT, handleCloseModalMinted } = actions;
 
-    const formattedPrice = formatPrice(credits);
+    const formattedPrice = formatPrice({ price: credits, withUS: true });
 
     const { state, message } = loading;
 
@@ -106,25 +106,40 @@ export const PanelMint = ({ data, actions }: PanelMintProps) => {
                         <Typography variant="h4">Digital Artwork License</Typography>
                     </Box>
                     <Licenses title="License type" license={license} />
-                    <Table title="Price" content={contentMessage()} />
-                    {isConnected && available && chain && (
-                        <>
-                            <Fees
-                                title="Fees"
-                                value={platformFee.value + feesCurator.value}
-                                fees={{
-                                    platform: platformFee,
-                                    curator: feesCurator,
-                                }}
-                            />
-                            <TotalPrice title="Total" value={totalFee} />
-                            <Table title="Usable Credits" content={formatPrice(buyCapability.grantBalance)} />
-                            <Table title="Usable Balance" content={formatPrice(buyCapability.nonGrantBalance)} />
-                            <Table
-                                title="Transaction Balance"
-                                content={formatPrice(buyCapability.transactionBalance)}
-                            />
-                        </>
+                    {isConnected && available && chain ? (
+                        <Box display={'flex'} flexDirection={'column'} gap={1.5}>
+                            <Box>
+                                <PanelMintInfo title="Price" content={contentMessage()} />
+                                <Fees
+                                    title="Fees"
+                                    value={platformFee.value + feesCurator.value}
+                                    fees={{
+                                        platform: platformFee,
+                                        curator: feesCurator,
+                                    }}
+                                />
+                                <TotalPrice title="Total" value={totalFee} />
+                            </Box>
+                            <Box display={'flex'} flexDirection={'column'} gap={0.2}>
+                                <PanelMintInfo
+                                    title="Usable Credits"
+                                    content={formatPrice({ price: buyCapability.grantBalance, withUS: true })}
+                                    disable
+                                />
+                                <PanelMintInfo
+                                    title="Usable Balance"
+                                    content={formatPrice({ price: buyCapability.nonGrantBalance, withUS: true })}
+                                    disable
+                                />
+                                <PanelMintInfo
+                                    title="Transaction Balance"
+                                    content={formatPrice({ price: buyCapability.transactionBalance, withUS: true })}
+                                    disable
+                                />
+                            </Box>
+                        </Box>
+                    ) : (
+                        <PanelMintInfo title="Price" content={contentMessage()} />
                     )}
 
                     <Button

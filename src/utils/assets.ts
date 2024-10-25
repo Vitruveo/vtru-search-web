@@ -9,17 +9,22 @@ export const getAssetPrice = (asset: Asset | LastSoldAsset | SpotlightAsset) => 
 
     switch (license.editionOption) {
         case 'elastic':
-            return formatPrice(license.elastic.editionPrice);
+            return formatPrice({ price: license.elastic.editionPrice });
         case 'single':
-            return formatPrice(license.single.editionPrice);
+            return formatPrice({ price: license.single.editionPrice });
         case 'unlimited':
-            return formatPrice(license.unlimited.editionPrice);
+            return formatPrice({ price: license.unlimited.editionPrice });
         default:
             return 'N/A';
     }
 };
 
-export const formatPrice = (price = 0) => {
+interface FormatPriceProps {
+    price: number;
+    withUS?: boolean;
+}
+
+export const formatPrice = ({ price = 0, withUS = false }: FormatPriceProps) => {
     let language = 'en-US';
     if (typeof navigator !== 'undefined' && navigator.language) {
         language = navigator.language;
@@ -30,5 +35,5 @@ export const formatPrice = (price = 0) => {
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
     });
-    return formatedPrice.replace('US', '');
+    return !withUS ? formatedPrice.replace('US', '') : formatedPrice;
 };

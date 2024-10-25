@@ -43,8 +43,8 @@ export const Range = ({ afterChange }: RangeProps) => {
                 }}
             />
             <Stack direction="row" justifyContent="space-between" p={0}>
-                <Typography fontSize={11}>{formatPrice(minPrice)}</Typography>
-                <Typography fontSize={11}>{formatPrice(maxPrice)}</Typography>
+                <Typography fontSize={11}>{formatPrice({ price: minPrice })}</Typography>
+                <Typography fontSize={11}>{formatPrice({ price: maxPrice })}</Typography>
             </Stack>
         </Box>
     );

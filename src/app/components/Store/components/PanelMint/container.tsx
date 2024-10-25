@@ -297,7 +297,7 @@ export const Container = ({ asset }: Props) => {
     return (
         <PanelMint
             data={{
-                license: asset.licenses.nft.license,
+                license: asset.licenses?.nft.license,
                 credits: state.credits,
                 walletCredits: state.walletCredits,
                 blocked: asset.consignArtwork?.status === 'blocked',

@@ -19,8 +19,8 @@ interface FeesProps {
 
 export default function Fees({ title, value, fees }: FeesProps) {
     return (
-        <Grid container spacing={2} style={{ justifyContent: 'space-between', paddingBottom: 16 }}>
-            <Grid item xs={8} sm={2}>
+        <Grid container spacing={2} style={{ justifyContent: 'space-between' }}>
+            <Grid item xs={8} sm={2} alignItems={'center'} display={'flex'}>
                 <Typography
                     variant="body1"
                     fontWeight="bold"
@@ -33,8 +33,8 @@ export default function Fees({ title, value, fees }: FeesProps) {
                 </Typography>
             </Grid>
             <Grid item xs={12} sm={8} md={8} lg={8} xl={8}>
-                <Box display={'flex'} alignItems={'center'} gap={1} justifyContent={'flex-end'} maxWidth={152}>
-                    {formatPrice(value)}
+                <Box display={'flex'} alignItems={'center'} gap={1} justifyContent={'flex-end'} maxWidth={150}>
+                    {formatPrice({ price: value, withUS: true })}
                     <Tooltip
                         style={{
                             padding: 1,
@@ -43,10 +43,12 @@ export default function Fees({ title, value, fees }: FeesProps) {
                         placement="right"
                         title={
                             <>
-                                Platform ({fees.platform.porcent}%): {formatPrice(fees.platform.value)} <br />
+                                Platform ({fees.platform.porcent}%):{' '}
+                                {formatPrice({ price: fees.platform.value, withUS: true })} <br />
                                 {fees.curator.value > 0 && (
                                     <>
-                                        Curator ({fees.curator.porcent}%): {formatPrice(fees.curator.value)} <br />{' '}
+                                        Curator ({fees.curator.porcent}%):{' '}
+                                        {formatPrice({ price: fees.curator.value, withUS: true })} <br />{' '}
                                     </>
                                 )}
                             </>

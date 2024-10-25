@@ -16,7 +16,7 @@ export default function Licenses({ title, license }: LicensesProps) {
                 </Typography>
             </Grid>
             <Grid item xs={12} sm={8} md={8} lg={8} xl={8}>
-                <Box display="flex" gap={1} justifyContent={'flex-end'} maxWidth={152}>
+                <Box display="flex" gap={1} justifyContent={'flex-end'} maxWidth={150}>
                     <Typography
                         variant="body1"
                         style={{

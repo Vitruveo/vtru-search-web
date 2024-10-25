@@ -18,6 +18,21 @@ function* getStoreAsset({ payload }: PayloadAction<{ id: string }>) {
     }
 }
 
+function* getStoreCreator({ payload }: PayloadAction<{ id: string }>) {
+    try {
+        const URL_STORE_CREATOR = `${API_BASE_URL}/creators/avatar/${payload.id}`;
+
+        const response: AxiosResponse<APIResponse<string>> = yield call(axios.get, URL_STORE_CREATOR);
+
+        yield put(actions.setCreatorAvatar(response.data.data));
+    } catch (error) {
+        // Handle error
+    }
+}
+
 export default function* storeSagas() {
-    yield all([takeEvery(actions.getAssetRequest.type, getStoreAsset)]);
+    yield all([
+        takeEvery(actions.getAssetRequest.type, getStoreAsset),
+        takeEvery(actions.getCreatorRequest.type, getStoreCreator),
+    ]);
 }

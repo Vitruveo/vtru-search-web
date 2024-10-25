@@ -4,6 +4,7 @@ import { AssetState } from './types';
 
 export const initialState: AssetState = {
     asset: {} as Asset,
+    creatorAvatar: '',
     loading: false,
     error: null,
 };
@@ -13,6 +14,7 @@ export const storeSlice = createSlice({
     initialState,
     reducers: {
         getAssetRequest: (_state, _action: PayloadAction<{ id: string }>) => {},
+        getCreatorRequest: (_state, _action: PayloadAction<{ id: string }>) => {},
         startLoading: (state) => {
             state.loading = true;
         },
@@ -21,6 +23,9 @@ export const storeSlice = createSlice({
         },
         setAsset: (state, action: PayloadAction<AssetState['asset']>) => {
             state.asset = action.payload;
+        },
+        setCreatorAvatar: (state, action: PayloadAction<string>) => {
+            state.creatorAvatar = action.payload;
         },
         setError: (state, action: PayloadAction<string>) => {
             state.error = action.payload;

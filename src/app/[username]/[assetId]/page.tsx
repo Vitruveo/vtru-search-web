@@ -5,13 +5,14 @@ import StoreItem from '@/app/components/Store';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useEffect } from 'react';
 import { actions } from '@/features/store';
+import Header from '@/app/components/Header';
 
 const Store = () => {
     const dispatch = useDispatch();
     const params = useParams();
-    const { assetId } = params;
+    const { assetId, username } = params;
 
-    const { asset, loading } = useSelector((state) => state.store);
+    const { asset, loading, creatorAvatar } = useSelector((state) => state.store);
 
     useEffect(() => {
         const getAsset = () => {
@@ -20,9 +21,24 @@ const Store = () => {
         getAsset();
     }, [assetId]);
 
+    useEffect(() => {
+        const getCreator = () => {
+            if (asset && asset.framework?.createdBy)
+                dispatch(actions.getCreatorRequest({ id: asset.framework.createdBy }));
+        };
+        getCreator();
+    }, [asset]);
+
     return (
         <PageContainer>
-            <StoreItem data={{ asset, loading }} />
+            <Header
+                rssOptions={[
+                    { flagname: 'JSON', value: 'stacks/json' },
+                    { flagname: 'XML', value: 'stacks/xml' },
+                ]}
+                hasSettings={false}
+            />
+            <StoreItem data={{ asset, loading, creatorAvatar, username: username as string }} />
         </PageContainer>
     );
 };
