@@ -36,10 +36,6 @@ export default function Fees({ title, value, fees }: FeesProps) {
                 <Box display={'flex'} alignItems={'center'} gap={1} justifyContent={'flex-end'} maxWidth={150}>
                     {formatPrice({ price: value, withUS: true })}
                     <Tooltip
-                        style={{
-                            padding: 1,
-                            cursor: 'pointer',
-                        }}
                         placement="right"
                         title={
                             <>
@@ -54,7 +50,7 @@ export default function Fees({ title, value, fees }: FeesProps) {
                             </>
                         }
                     >
-                        <IconInfoCircle />
+                        <IconInfoCircle style={{ transform: 'translateY(0%)', cursor: 'pointer' }} />
                     </Tooltip>
                 </Box>
             </Grid>

@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { useEffect } from 'react';
 import { actions } from '@/features/store';
 import Header from '@/app/components/Header';
-import AppCard from '@/app/components/Shared/AppCard';
 import { Box } from '@mui/material';
 
 const Store = () => {

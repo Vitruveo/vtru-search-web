@@ -1,5 +1,6 @@
 import { formatDate } from '@/utils/assets';
 import { Box, Card, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 export interface ActivityProps {
     listing: {
@@ -17,6 +18,7 @@ export interface ActivityProps {
 }
 
 export default function Activity({ listing }: ActivityProps) {
+    const theme = useTheme();
     const formattedDate = (date: string | Date) => {
         const parsedDate = new Date(date);
         const day = parsedDate.getUTCDate();
@@ -69,6 +71,7 @@ export default function Activity({ listing }: ActivityProps) {
                                             rel="noreferrer"
                                             style={{
                                                 textDecoration: 'underline',
+                                                color: theme.palette.primary.main,
                                             }}
                                         >
                                             {item.link.text}

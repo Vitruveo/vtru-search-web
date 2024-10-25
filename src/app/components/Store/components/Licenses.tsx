@@ -38,14 +38,10 @@ export default function Licenses({ title, license }: LicensesProps) {
                         </a>
                     </Typography>
                     <Tooltip
-                        style={{
-                            padding: 1,
-                            cursor: 'pointer',
-                        }}
                         placement="right"
                         title={'The license link provides more information about your rights when buying this artwork.'}
                     >
-                        <IconInfoCircle />
+                        <IconInfoCircle style={{ transform: 'translateY:(0%)', cursor: 'pointer' }} />
                     </Tooltip>
                 </Box>
             </Grid>
