@@ -60,6 +60,7 @@ const MediaRendererMain = ({
                         loop
                         preload="auto"
                         onLoadedData={() => setLoading(false)}
+                        onClick={onClick}
                         onError={(event) => {
                             event.currentTarget.src = fallbackSrc || defaultFallbackSrc;
                             setLoading(false);
@@ -102,6 +103,7 @@ const MediaRendererMain = ({
                         borderRadius: 'inherit',
                     }}
                     onLoad={() => setLoading(false)}
+                    onClick={onClick}
                     onError={(event) => {
                         event.currentTarget.src = fallbackSrc || defaultFallbackSrc;
                         setLoading(false);

@@ -16,6 +16,8 @@ import { Creators } from '../Assets/types';
 import '../Assets/assetsGrid/AssetScroll.css';
 import MetadataList from './components/Metadata/MetadataList';
 import pkgJson from '../../../../package.json';
+import { Background } from './components/Background';
+import Modal from './components/Modal/Modal';
 
 interface StoreProps {
     data: {
@@ -32,6 +34,14 @@ const Store = ({ data }: StoreProps) => {
     const [size, setSize] = useState({ width: 300, height: 300 });
     const [image, setImage] = useState<string>('');
     const [expandedAccordion, setExpandedAccordion] = useState<string | false>(false);
+    const [open, setOpen] = useState(false);
+    const [contents, setContents] = useState<string>('');
+
+    const handleClose = () => setOpen(false);
+    const handleOpen = (content: string) => {
+        setContents(content);
+        setOpen(true);
+    };
 
     const handleLoad = () => {
         setImage(`${AWS_BASE_URL_S3}/${asset.formats?.original?.path}`);
@@ -83,7 +93,7 @@ const Store = ({ data }: StoreProps) => {
                             minHeight={'600px'}
                         >
                             <Box width={size.width} height={size.height}>
-                                <MediaRenderer src={image} />
+                                <MediaRenderer src={image} onClick={() => handleOpen(image)} />
                             </Box>
                         </Grid>
                         <Grid item md={6} width="100%">
@@ -163,6 +173,14 @@ const Store = ({ data }: StoreProps) => {
                             </Typography>
                         </Grid>
                     </Grid>
+                    <Background path={asset?.formats?.preview?.path} />
+                    <Modal
+                        open={open}
+                        handleClose={handleClose}
+                        content={contents}
+                        baseUrl={AWS_BASE_URL_S3}
+                        path={asset.formats?.original?.path}
+                    />
                 </Box>
             </LazyLoad>
         </Box>
