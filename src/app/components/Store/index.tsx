@@ -11,6 +11,9 @@ import { EXPLORER_URL } from '@/constants/web3';
 import { SEARCH_BASE_URL } from '@/constants/api';
 import Activity from './components/Activity';
 import { About } from './components/About';
+import AboutCreator from './components/AboutCreator/AboutCreator';
+import { Creators } from '../Assets/types';
+import '../Assets/assetsGrid/AssetScroll.css';
 
 interface StoreProps {
     data: {
@@ -18,11 +21,12 @@ interface StoreProps {
         loading: boolean;
         username: string;
         creatorAvatar: string;
+        creatorLoading: boolean;
     };
 }
 
 const Store = ({ data }: StoreProps) => {
-    const { asset, loading, creatorAvatar, username } = data;
+    const { asset, loading, creatorAvatar, username, creatorLoading } = data;
     const [size, setSize] = useState({ width: 300, height: 300 });
     const [image, setImage] = useState<string>('');
 
@@ -48,7 +52,7 @@ const Store = ({ data }: StoreProps) => {
         );
 
     return (
-        <Box display={'flex'} justifyContent={'center'} height={'100vh'}>
+        <Box display={'flex'} justifyContent={'center'} height="1000px" overflow={'auto'}>
             <LazyLoad once style={{ maxWidth: 1300 }}>
                 <Box display="flex" flexDirection="column" gap={3}>
                     <Grid
@@ -128,6 +132,15 @@ const Store = ({ data }: StoreProps) => {
                     </Grid>
                     <Grid item>
                         <About data={asset?.assetMetadata?.context.formData.description} />
+                    </Grid>
+                    <Grid container spacing={2}>
+                        <Grid item md={6} width="100%">
+                            <AboutCreator
+                                data={asset?.assetMetadata?.creators?.formData as unknown as Creators[]}
+                                creatorAvatar={creatorAvatar}
+                                creatorLoading={creatorLoading}
+                            />
+                        </Grid>
                     </Grid>
                 </Box>
             </LazyLoad>

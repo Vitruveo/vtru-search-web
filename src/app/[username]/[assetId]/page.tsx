@@ -12,7 +12,7 @@ const Store = () => {
     const params = useParams();
     const { assetId, username } = params;
 
-    const { asset, loading, creatorAvatar } = useSelector((state) => state.store);
+    const { asset, loading, creatorAvatar, creatorLoading } = useSelector((state) => state.store);
 
     useEffect(() => {
         const getAsset = () => {
@@ -38,7 +38,7 @@ const Store = () => {
                 ]}
                 hasSettings={false}
             />
-            <StoreItem data={{ asset, loading, creatorAvatar, username: username as string }} />
+            <StoreItem data={{ asset, loading, creatorAvatar, username: username as string, creatorLoading }} />
         </PageContainer>
     );
 };

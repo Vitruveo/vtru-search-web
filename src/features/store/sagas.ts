@@ -7,6 +7,7 @@ import { actions } from './slice';
 import { APIResponse } from '../common/types';
 
 function* getStoreAsset({ payload }: PayloadAction<{ id: string }>) {
+    yield put(actions.startLoading());
     try {
         const URL_STORE_ASSET = `${API_BASE_URL}/assets/store/${payload.id}`;
 
@@ -16,9 +17,11 @@ function* getStoreAsset({ payload }: PayloadAction<{ id: string }>) {
     } catch (error) {
         // Handle error
     }
+    yield put(actions.finishLoading());
 }
 
 function* getStoreCreator({ payload }: PayloadAction<{ id: string }>) {
+    yield put(actions.startCreatorLoading());
     try {
         const URL_STORE_CREATOR = `${API_BASE_URL}/creators/avatar/${payload.id}`;
 
@@ -28,6 +31,7 @@ function* getStoreCreator({ payload }: PayloadAction<{ id: string }>) {
     } catch (error) {
         // Handle error
     }
+    yield put(actions.finishCreatorLoading());
 }
 
 export default function* storeSagas() {
