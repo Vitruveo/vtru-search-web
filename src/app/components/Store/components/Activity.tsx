@@ -84,6 +84,7 @@ export default function Activity({ listing }: ActivityProps) {
                                             rel="noreferrer"
                                             style={{
                                                 textDecoration: 'underline',
+                                                color: theme.palette.primary.main,
                                             }}
                                         >
                                             {item.extra.text}

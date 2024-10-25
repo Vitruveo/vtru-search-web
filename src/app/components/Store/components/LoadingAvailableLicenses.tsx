@@ -1,10 +1,12 @@
 import { Box, CircularProgress, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 interface Props {
     message: string;
 }
 
 export const LoadingAvailableLincenses = ({ message }: Props) => {
+    const theme = useTheme();
     return (
         <Box
             sx={{
@@ -13,7 +15,7 @@ export const LoadingAvailableLincenses = ({ message }: Props) => {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: 'white',
+                backgroundColor: theme.palette.background.paper,
                 padding: '1rem',
                 borderRadius: '1rem',
                 gap: '1rem',

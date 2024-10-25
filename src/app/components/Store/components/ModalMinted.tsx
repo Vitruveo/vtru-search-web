@@ -1,4 +1,5 @@
 import { Box, Modal as MuiModal, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 interface ModalProps {
     open: boolean;
@@ -7,6 +8,7 @@ interface ModalProps {
 }
 
 export default function ModalMinted({ open, handleClose, link }: ModalProps) {
+    const theme = useTheme();
     return (
         <MuiModal open={open} onClose={handleClose}>
             <Box
@@ -20,8 +22,8 @@ export default function ModalMinted({ open, handleClose, link }: ModalProps) {
                     <Typography
                         variant="h3"
                         style={{
-                            backgroundColor: '#FF0066',
-                            color: '#ffff',
+                            backgroundColor: theme.palette.primary.main,
+                            color: '#fff',
                             borderRadius: 4,
                             borderEndEndRadius: 0,
                             textAlign: 'center',
@@ -36,8 +38,7 @@ export default function ModalMinted({ open, handleClose, link }: ModalProps) {
                         flexDirection="column"
                         gap={5}
                         sx={{
-                            backgroundColor: '#fff',
-
+                            backgroundColor: theme.palette.background.paper,
                             borderTopLeftRadius: 0,
                             borderTopRightRadius: 0,
                         }}
@@ -46,7 +47,15 @@ export default function ModalMinted({ open, handleClose, link }: ModalProps) {
                             A Digital Asset of this artwork has been added to your wallet!
                         </Typography>
 
-                        <a href={link} target="_blank" rel="noreferrer">
+                        <a
+                            href={link}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                                textDecoration: 'underline',
+                                color: theme.palette.primary.main,
+                            }}
+                        >
                             View Transaction
                         </a>
                     </Box>
