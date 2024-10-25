@@ -69,121 +69,119 @@ const Store = ({ data }: StoreProps) => {
         );
 
     return (
-        <Box display={'flex'} justifyContent={'center'} height="1000px" overflow={'auto'}>
-            <LazyLoad once style={{ maxWidth: 1300 }}>
-                <Box display="flex" flexDirection="column" gap={3}>
+        <LazyLoad once style={{ maxWidth: 1300 }}>
+            <Box display="flex" flexDirection="column" gap={3}>
+                <Grid
+                    container
+                    spacing={2}
+                    padding={3}
+                    sx={{
+                        backgroundColor: '#000000',
+                        height: 'auto',
+                        minHeight: '700px',
+                    }}
+                >
                     <Grid
-                        container
-                        spacing={2}
-                        padding={3}
-                        sx={{
-                            backgroundColor: '#000000',
-                            height: 'auto',
-                            minHeight: '700px',
-                        }}
+                        item
+                        md={6}
+                        width="100%"
+                        alignItems="center"
+                        display="flex"
+                        justifyContent={'center'}
+                        height="100%"
+                        minHeight={'600px'}
                     >
-                        <Grid
-                            item
-                            md={6}
-                            width="100%"
-                            alignItems="center"
-                            display="flex"
-                            justifyContent={'center'}
-                            height="100%"
-                            minHeight={'600px'}
-                        >
-                            <Box width={size.width} height={size.height}>
-                                <MediaRenderer src={image} onClick={() => handleOpen(image)} />
+                        <Box width={size.width} height={size.height}>
+                            <MediaRenderer src={image} onClick={() => handleOpen(image)} />
+                        </Box>
+                    </Grid>
+                    <Grid item md={6} width="100%">
+                        <Box display="flex" flexDirection="column" justifyContent="space-between" height="100%">
+                            <Box display="flex" flexDirection="column" gap={1}>
+                                <Typography variant="h1" sx={{ color: '#ffff' }}>
+                                    {asset.assetMetadata?.context.formData.title}
+                                </Typography>
+                                <User creator={creatorAvatar} creatorName={username} asset={asset} />
                             </Box>
-                        </Grid>
-                        <Grid item md={6} width="100%">
-                            <Box display="flex" flexDirection="column" justifyContent="space-between" height="100%">
-                                <Box display="flex" flexDirection="column" gap={1}>
-                                    <Typography variant="h1" sx={{ color: '#ffff' }}>
-                                        {asset.assetMetadata?.context.formData.title}
-                                    </Typography>
-                                    <User creator={creatorAvatar} creatorName={username} asset={asset} />
-                                </Box>
-                                <Box>
-                                    <PanelMint asset={asset} />
-                                </Box>
+                            <Box>
+                                <PanelMint asset={asset} />
                             </Box>
-                        </Grid>
+                        </Box>
                     </Grid>
-                    <Grid container spacing={2}>
-                        <Grid item md={6} width="100%">
-                            <ActionButtons asset={asset} setImage={setImage} handleLoad={handleLoad} />
-                        </Grid>
-                        <Grid item md={6} width="100%">
-                            {asset?.consignArtwork?.listing && (
-                                <Activity
-                                    listing={[
-                                        {
-                                            title: 'Licensed',
-                                            date: asset?.mintExplorer?.createdAt,
-                                            link: {
-                                                text: 'Transaction',
-                                                url: `${EXPLORER_URL}/tx/${asset?.mintExplorer?.transactionHash}`,
-                                            },
-                                            extra: {
-                                                text: 'Portfolio',
-                                                url: `${SEARCH_BASE_URL}?portfolio_wallets=${asset?.mintExplorer?.address}`,
-                                            },
+                </Grid>
+                <Grid container spacing={2}>
+                    <Grid item md={6} width="100%">
+                        <ActionButtons asset={asset} setImage={setImage} handleLoad={handleLoad} />
+                    </Grid>
+                    <Grid item md={6} width="100%">
+                        {asset?.consignArtwork?.listing && (
+                            <Activity
+                                listing={[
+                                    {
+                                        title: 'Licensed',
+                                        date: asset?.mintExplorer?.createdAt,
+                                        link: {
+                                            text: 'Transaction',
+                                            url: `${EXPLORER_URL}/tx/${asset?.mintExplorer?.transactionHash}`,
                                         },
-                                        {
-                                            title: 'Consigned to Vault',
-                                            date: asset.consignArtwork.listing,
-                                            link: {
-                                                text: asset?.vault?.vaultAddress
-                                                    ? `${asset?.vault?.vaultAddress.slice(0, 6)}...${asset?.vault?.vaultAddress.slice(-6)}`
-                                                    : '',
-                                                url: asset?.vault?.vaultAddress
-                                                    ? `${EXPLORER_URL}/address/${asset?.vault?.vaultAddress}`
-                                                    : '',
-                                            },
+                                        extra: {
+                                            text: 'Portfolio',
+                                            url: `${SEARCH_BASE_URL}?portfolio_wallets=${asset?.mintExplorer?.address}`,
                                         },
-                                    ]}
-                                />
-                            )}
-                        </Grid>
-                    </Grid>
-                    <Grid item>
-                        <About data={asset?.assetMetadata?.context.formData.description} />
-                    </Grid>
-                    <Grid container spacing={2}>
-                        <Grid item md={6} width="100%">
-                            <AboutCreator
-                                data={asset?.assetMetadata?.creators?.formData as unknown as Creators[]}
-                                creatorAvatar={creatorAvatar}
-                                creatorLoading={creatorLoading}
+                                    },
+                                    {
+                                        title: 'Consigned to Vault',
+                                        date: asset.consignArtwork.listing,
+                                        link: {
+                                            text: asset?.vault?.vaultAddress
+                                                ? `${asset?.vault?.vaultAddress.slice(0, 6)}...${asset?.vault?.vaultAddress.slice(-6)}`
+                                                : '',
+                                            url: asset?.vault?.vaultAddress
+                                                ? `${EXPLORER_URL}/address/${asset?.vault?.vaultAddress}`
+                                                : '',
+                                        },
+                                    },
+                                ]}
                             />
-                        </Grid>
-                        <Grid item md={6} width="100%">
-                            {asset?.assetMetadata && (
-                                <MetadataList
-                                    asset={asset}
-                                    expandedAccordion={expandedAccordion}
-                                    handleAccordionChange={handleAccordionChange}
-                                />
-                            )}
-                        </Grid>
-                        <Grid item xs={12} sx={{ paddingBottom: '200px' }}>
-                            <Typography variant="body1" sx={{ textAlign: 'center' }}>
-                                Version: {pkgJson.version}
-                            </Typography>
-                        </Grid>
+                        )}
                     </Grid>
-                    <Background path={asset?.formats?.preview?.path} />
-                    <Modal
-                        open={open}
-                        handleClose={handleClose}
-                        content={contents}
-                        baseUrl={AWS_BASE_URL_S3}
-                        path={asset.formats?.original?.path}
-                    />
-                </Box>
-            </LazyLoad>
-        </Box>
+                </Grid>
+                <Grid item>
+                    <About data={asset?.assetMetadata?.context.formData.description} />
+                </Grid>
+                <Grid container spacing={2}>
+                    <Grid item md={6} width="100%">
+                        <AboutCreator
+                            data={asset?.assetMetadata?.creators?.formData as unknown as Creators[]}
+                            creatorAvatar={creatorAvatar}
+                            creatorLoading={creatorLoading}
+                        />
+                    </Grid>
+                    <Grid item md={6} width="100%">
+                        {asset?.assetMetadata && (
+                            <MetadataList
+                                asset={asset}
+                                expandedAccordion={expandedAccordion}
+                                handleAccordionChange={handleAccordionChange}
+                            />
+                        )}
+                    </Grid>
+                    <Grid item xs={12} sx={{ paddingBottom: '200px' }}>
+                        <Typography variant="body1" sx={{ textAlign: 'center' }}>
+                            Version: {pkgJson.version}
+                        </Typography>
+                    </Grid>
+                </Grid>
+                <Background path={asset?.formats?.preview?.path} />
+                <Modal
+                    open={open}
+                    handleClose={handleClose}
+                    content={contents}
+                    baseUrl={AWS_BASE_URL_S3}
+                    path={asset.formats?.original?.path}
+                />
+            </Box>
+        </LazyLoad>
     );
 };
 
