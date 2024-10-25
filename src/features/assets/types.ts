@@ -72,6 +72,7 @@ interface Format {
     load?: boolean;
     path: string;
     name?: string;
+    definition?: string;
 }
 
 export interface Asset {

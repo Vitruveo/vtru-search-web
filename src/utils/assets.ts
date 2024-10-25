@@ -37,3 +37,18 @@ export const formatPrice = ({ price = 0, withUS = false }: FormatPriceProps) => 
     });
     return !withUS ? formatedPrice.replace('US', '') : formatedPrice;
 };
+
+export interface formatDateProps {
+    year: number;
+    month: number;
+    day: number;
+}
+
+export function formatDate({ day, month, year }: formatDateProps) {
+    const language = navigator.language || 'en-US';
+    const rowDate = new Date(Date.UTC(year, month, day));
+    const formattedDate = rowDate.toLocaleDateString(language, {
+        timeZone: 'UTC',
+    });
+    return formattedDate;
+}

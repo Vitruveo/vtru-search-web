@@ -1,0 +1,12 @@
+.main {
+    width: 100px;
+    height: 100px;
+    position: relative;
+}
+
+.highlight {
+    background-color: rgba(0, 0, 0, 0.767);
+    width: 100%;
+    color: #ffffff;
+    position: absolute;
+}

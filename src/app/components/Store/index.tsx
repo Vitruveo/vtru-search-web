@@ -1,11 +1,16 @@
 import { Asset } from '@/features/assets/types';
-import { Box, CircularProgress, Grid, Typography, useMediaQuery } from '@mui/material';
+import { Box, CircularProgress, Grid, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import LazyLoad from 'react-lazyload';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import PanelMint from './components/PanelMint';
 import { User } from './components/User';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import ActionButtons from './components/ActionButtons/ActionButtonList';
+import { EXPLORER_URL } from '@/constants/web3';
+import { SEARCH_BASE_URL } from '@/constants/api';
+import Activity from './components/Activity';
+import { About } from './components/About';
 
 interface StoreProps {
     data: {
@@ -18,9 +23,18 @@ interface StoreProps {
 
 const Store = ({ data }: StoreProps) => {
     const { asset, loading, creatorAvatar, username } = data;
-
     const [size, setSize] = useState({ width: 300, height: 300 });
     const [image, setImage] = useState<string>('');
+
+    const handleLoad = () => {
+        setImage(`${AWS_BASE_URL_S3}/${asset.formats?.original?.path}`);
+        if (asset.formats?.original?.definition === 'portrait') {
+            setSize({ width: 430, height: 630 });
+        }
+        if (asset.formats?.original?.definition === 'landscape') {
+            setSize({ width: 500, height: 300 });
+        }
+    };
 
     useEffect(() => {
         if (asset.formats?.preview.path) setImage(`${AWS_BASE_URL_S3}/${asset.formats?.preview.path}`);
@@ -34,8 +48,8 @@ const Store = ({ data }: StoreProps) => {
         );
 
     return (
-        <Box maxHeight={1300} display={'flex'} justifyContent={'center'} height={'100vh'}>
-            <LazyLoad once style={{ minWidth: 1300 }}>
+        <Box display={'flex'} justifyContent={'center'} height={'100vh'}>
+            <LazyLoad once style={{ maxWidth: 1300 }}>
                 <Box display="flex" flexDirection="column" gap={3}>
                     <Grid
                         container
@@ -74,6 +88,46 @@ const Store = ({ data }: StoreProps) => {
                                 </Box>
                             </Box>
                         </Grid>
+                    </Grid>
+                    <Grid container spacing={2}>
+                        <Grid item md={6} width="100%">
+                            <ActionButtons asset={asset} setImage={setImage} handleLoad={handleLoad} />
+                        </Grid>
+                        <Grid item md={6} width="100%">
+                            {asset?.consignArtwork?.listing && (
+                                <Activity
+                                    listing={[
+                                        {
+                                            title: 'Licensed',
+                                            date: asset?.mintExplorer?.createdAt,
+                                            link: {
+                                                text: 'Transaction',
+                                                url: `${EXPLORER_URL}/tx/${asset?.mintExplorer?.transactionHash}`,
+                                            },
+                                            extra: {
+                                                text: 'Portfolio',
+                                                url: `${SEARCH_BASE_URL}?portfolio_wallets=${asset?.mintExplorer?.address}`,
+                                            },
+                                        },
+                                        {
+                                            title: 'Consigned to Vault',
+                                            date: asset.consignArtwork.listing,
+                                            link: {
+                                                text: asset?.vault?.vaultAddress
+                                                    ? `${asset?.vault?.vaultAddress.slice(0, 6)}...${asset?.vault?.vaultAddress.slice(-6)}`
+                                                    : '',
+                                                url: asset?.vault?.vaultAddress
+                                                    ? `${EXPLORER_URL}/address/${asset?.vault?.vaultAddress}`
+                                                    : '',
+                                            },
+                                        },
+                                    ]}
+                                />
+                            )}
+                        </Grid>
+                    </Grid>
+                    <Grid item>
+                        <About data={asset?.assetMetadata?.context.formData.description} />
                     </Grid>
                 </Box>
             </LazyLoad>
