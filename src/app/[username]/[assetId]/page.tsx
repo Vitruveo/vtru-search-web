@@ -1,51 +1,49 @@
-'use client';
-import PageContainer from '@/app/components/Container/PageContainer';
-import { useParams } from 'next/navigation';
-import StoreItem from '@/app/components/Store';
-import { useDispatch, useSelector } from '@/store/hooks';
-import { useEffect } from 'react';
-import { actions } from '@/features/store';
-import Header from '@/app/components/Header';
-import { Box } from '@mui/material';
+import { Metadata } from 'next';
 
-const Store = () => {
-    const dispatch = useDispatch();
-    const params = useParams();
-    const { assetId, username } = params;
+// constants
+import { API_BASE_URL } from '@/constants/api';
+import { AWS_BASE_URL_S3 } from '@/constants/aws';
 
-    const { asset, loading, creatorAvatar, creatorLoading } = useSelector((state) => state.store);
+// component
+import Component from './Component';
 
-    useEffect(() => {
-        const getAsset = () => {
-            if (assetId && typeof assetId === 'string') dispatch(actions.getAssetRequest({ id: assetId }));
-        };
-        getAsset();
-    }, [assetId]);
+interface Props {
+    params: {
+        assetId: string;
+        username: string;
+    };
+}
 
-    useEffect(() => {
-        const getCreator = () => {
-            if (asset && asset.framework?.createdBy)
-                dispatch(actions.getCreatorRequest({ id: asset.framework.createdBy }));
-        };
-        getCreator();
-    }, [asset]);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const response = await fetch(`${API_BASE_URL}/assets/store/${params.assetId}`).then((res) => res.json());
 
-    return (
-        <PageContainer>
-            <Header
-                rssOptions={[
-                    { flagname: 'JSON', value: 'stacks/json' },
-                    { flagname: 'XML', value: 'stacks/xml' },
-                ]}
-                hasSettings={false}
-            />
-            <Box display={'flex'} justifyContent={'center'} overflow={'auto'}>
-                <Box height={'100vh'} maxWidth={1300}>
-                    <StoreItem data={{ asset, loading, creatorAvatar, username: username as string, creatorLoading }} />
-                </Box>
-            </Box>
-        </PageContainer>
-    );
-};
+    const asset = response.data;
 
-export default Store;
+    const metaOg = {
+        title: asset.assetMetadata.context.formData.title,
+        description: asset.assetMetadata.context.formData.description,
+        url: `${AWS_BASE_URL_S3}/${asset.formats.preview.path}`,
+        image: `${AWS_BASE_URL_S3}/${asset.formats.preview.path}`,
+    };
+
+    return {
+        title: metaOg.title,
+        description: metaOg.description,
+        openGraph: {
+            title: metaOg.title,
+            description: metaOg.description,
+            url: metaOg.url,
+            images: [metaOg.image],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: metaOg.title,
+            description: metaOg.description,
+            images: [metaOg.image],
+        },
+    };
+}
+
+export default async function StorePageRoute() {
+    return <Component />;
+}
