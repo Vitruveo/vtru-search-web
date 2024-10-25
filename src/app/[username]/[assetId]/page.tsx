@@ -39,8 +39,10 @@ const Store = () => {
                 ]}
                 hasSettings={false}
             />
-            <Box display={'flex'} justifyContent={'center'} overflow={'auto'} height={'100vh'}>
-                <StoreItem data={{ asset, loading, creatorAvatar, username: username as string, creatorLoading }} />
+            <Box display={'flex'} justifyContent={'center'} overflow={'auto'}>
+                <Box height={'100vh'} maxWidth={1300}>
+                    <StoreItem data={{ asset, loading, creatorAvatar, username: username as string, creatorLoading }} />
+                </Box>
             </Box>
         </PageContainer>
     );

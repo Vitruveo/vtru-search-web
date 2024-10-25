@@ -1,8 +1,7 @@
 import { Asset } from '@/features/assets/types';
-import { Box, CircularProgress, Grid, Typography } from '@mui/material';
+import { Box, CircularProgress, Grid, Typography, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import LazyLoad from 'react-lazyload';
-import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import PanelMint from './components/PanelMint';
 import { User } from './components/User';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
@@ -18,6 +17,7 @@ import MetadataList from './components/Metadata/MetadataList';
 import pkgJson from '../../../../package.json';
 import { Background } from './components/Background';
 import Modal from './components/Modal/Modal';
+import { MediaRenderStore } from './components/MediaRenderStore';
 
 interface StoreProps {
     data: {
@@ -36,6 +36,8 @@ const Store = ({ data }: StoreProps) => {
     const [expandedAccordion, setExpandedAccordion] = useState<string | false>(false);
     const [open, setOpen] = useState(false);
     const [contents, setContents] = useState<string>('');
+
+    const isMobile = useMediaQuery('(max-width: 900px)');
 
     const handleClose = () => setOpen(false);
     const handleOpen = (content: string) => {
@@ -69,7 +71,7 @@ const Store = ({ data }: StoreProps) => {
         );
 
     return (
-        <LazyLoad once style={{ maxWidth: 1300 }}>
+        <LazyLoad once style={{ minWidth: 1300 }}>
             <Box display="flex" flexDirection="column" gap={3}>
                 <Grid
                     container
@@ -91,9 +93,13 @@ const Store = ({ data }: StoreProps) => {
                         height="100%"
                         minHeight={'600px'}
                     >
-                        <Box width={size.width} height={size.height}>
-                            <MediaRenderer src={image} onClick={() => handleOpen(image)} />
-                        </Box>
+                        <MediaRenderStore
+                            media={image}
+                            width={isMobile ? '100%' : size.width}
+                            height={size.height}
+                            alt="original"
+                            onClick={() => handleOpen(image)}
+                        />
                     </Grid>
                     <Grid item md={6} width="100%">
                         <Box display="flex" flexDirection="column" justifyContent="space-between" height="100%">
