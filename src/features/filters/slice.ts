@@ -45,14 +45,18 @@ export const initialState: FilterSliceState = {
         country: [],
         plusCode: '',
         blockchain: [],
-        exhibitions: {
-            exhibitionName: '',
-            exhibitionUrl: '',
-        },
-        awards: {
-            awardName: '',
-            awardUrl: '',
-        },
+        exhibitions: [
+            {
+                exhibitionName: '',
+                exhibitionUrl: '',
+            },
+        ],
+        awards: [
+            {
+                awardName: '',
+                awardUrl: '',
+            },
+        ],
     },
     hasBts: '',
     price: {
@@ -133,14 +137,18 @@ export const filterSlice = createSlice({
                 country: [],
                 plusCode: '',
                 blockchain: [],
-                exhibitions: {
-                    exhibitionName: '',
-                    exhibitionUrl: '',
-                },
-                awards: {
-                    awardName: '',
-                    awardUrl: '',
-                },
+                exhibitions: [
+                    {
+                        exhibitionName: '',
+                        exhibitionUrl: '',
+                    },
+                ],
+                awards: [
+                    {
+                        awardName: '',
+                        awardUrl: '',
+                    },
+                ],
             };
             state.price = {
                 min: 0,

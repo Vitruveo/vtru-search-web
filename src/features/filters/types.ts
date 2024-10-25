@@ -39,11 +39,11 @@ export interface FilterSliceState {
         exhibitions: {
             exhibitionName: string;
             exhibitionUrl: string;
-        };
+        }[];
         awards: {
             awardName: string;
             awardUrl: string;
-        };
+        }[];
     };
     hasBts: string;
     price: {
