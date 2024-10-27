@@ -46,8 +46,11 @@ function* reconnect() {
         if (typeof document === 'undefined') return;
 
         const auth = cookie.get('auth');
+        const authLocal = localStorage.getItem('auth');
 
-        if (!auth || typeof auth !== 'string') return;
+        const token = authLocal || auth;
+
+        if (!token || typeof token !== 'string') return;
 
         const me: AxiosResponse<
             APIResponse<{
@@ -58,7 +61,7 @@ function* reconnect() {
             }>
         > = yield call(axios.get, `${API_BASE_URL}/creators/me`, {
             headers: {
-                Authorization: `Bearer ${auth}`,
+                Authorization: `Bearer ${token}`,
             },
         });
 
@@ -66,7 +69,7 @@ function* reconnect() {
             yield put(
                 actionsCreator.setLogged({
                     username: me.data.data.username,
-                    token: auth,
+                    token: token,
                     id: me.data.data._id,
                     avatar: me.data.data.profile.avatar,
                 })
@@ -85,6 +88,7 @@ function* reconnect() {
 
         // remove cookie
         cookie.remove('auth');
+        localStorage.removeItem('auth');
     }
 }
 
