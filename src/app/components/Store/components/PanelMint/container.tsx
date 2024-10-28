@@ -273,8 +273,6 @@ export const Container = ({ asset }: Props) => {
                     payload: `${EXPLORER_URL}/tx/${response.data.hash}`,
                 });
                 dispatchAction({ type: TypeActions.SET_OPEN_MODAL_MINTED, payload: true });
-
-                dispatch(actions.getAssetRequest({ id: asset._id }));
             })
             .catch(() => {
                 dispatchAction({
@@ -289,6 +287,7 @@ export const Container = ({ asset }: Props) => {
 
     const handleCloseModalMinted = async () => {
         dispatchAction({ type: TypeActions.SET_OPEN_MODAL_MINTED, payload: false });
+        dispatch(actions.getAssetRequest({ id: asset._id }));
 
         await fetchAssetLicenses();
         await fetchAvailableCredits();
