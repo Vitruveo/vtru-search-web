@@ -6,7 +6,7 @@ import { useTheme } from '@mui/material/styles';
 import { useSelector } from '@/store/hooks';
 import { AWS_BASE_URL_S3 } from '@/constants/aws';
 import { SpotlightAsset } from '@/features/assets/types';
-import { STORE_BASE_URL } from '@/constants/api';
+import { SEARCH_BASE_URL } from '@/constants/api';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import { formatPrice } from '@/utils/assets';
 
@@ -15,7 +15,7 @@ function SpotlightSlider() {
     const theme = useTheme();
 
     const handleClickItem = (asset: SpotlightAsset) => {
-        window.open(`${STORE_BASE_URL}/${asset?.username || 'preview'}/${asset?._id}`);
+        window.open(`${SEARCH_BASE_URL}/${asset?.username}/${asset?._id}`);
     };
 
     return (
