@@ -11,6 +11,8 @@ import { creatorSagas } from '@/features/creator';
 import stacksSaga from '@/features/stacks/sagas';
 import wsSagas from '@/features/ws/sagas';
 import storeSagas from '@/features/store/sagas';
+import profileCreatorSaga from '@/features/profile/creator/sagas';
+import profileAssetsSaga from '@/features/profile/assets/sagas';
 
 // slices
 import { filterSlice } from '@/features/filters';
@@ -22,6 +24,8 @@ import { toastrSlice } from '@/features/toastr';
 import { wsSlice } from '@/features/ws/slice';
 import { stacksSlice } from '@/features/stacks/slice';
 import { storeSlice } from '@/features/store/slice';
+import { profileCreatorSlice } from '@/features/profile/creator/slice';
+import { profileAssetsSlice } from '@/features/profile/assets/slice';
 
 const sagaMiddleware = createSagaMiddleware({
     onError: (error, errorInfo) => {
@@ -63,6 +67,8 @@ const rootReducer = combineReducers({
     toastr: toastrSlice.reducer,
     stacks: stacksSlice.reducer,
     store: storeSlice.reducer,
+    profileCreator: profileCreatorSlice.reducer,
+    profileAssets: profileAssetsSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -80,7 +86,15 @@ export const store = configureStore({
 
 // Run sagas
 function* rootSaga() {
-    yield all([spawn(assetsSagas), spawn(creatorSagas), spawn(wsSagas), spawn(stacksSaga), spawn(storeSagas)]);
+    yield all([
+        spawn(assetsSagas),
+        spawn(creatorSagas),
+        spawn(wsSagas),
+        spawn(stacksSaga),
+        spawn(storeSagas),
+        spawn(profileCreatorSaga),
+        spawn(profileAssetsSaga),
+    ]);
 }
 
 sagaMiddleware.run(rootSaga);

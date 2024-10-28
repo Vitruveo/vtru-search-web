@@ -1,5 +1,5 @@
 import { Stack, StackData } from '@/features/stacks/types';
-import { Box, Button, Grid, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useRef } from 'react';
 import Select, { SingleValue } from 'react-select';
