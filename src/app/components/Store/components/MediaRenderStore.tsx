@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
 interface MediaPreviewProps {
@@ -37,20 +37,19 @@ const MediaRenderStoreMain = ({ media, alt, height, width, onClick }: MediaPrevi
     }
 
     return (
-        <img
-            src={media}
-            width={width}
-            height={height}
-            alt={alt}
-            onClick={onClick}
-            style={{
-                display: 'block',
-                borderRadius: '10px',
-                cursor: 'pointer',
-                objectFit: 'contain',
-            }}
-            draggable={false}
-        />
+        <div style={{ width, height, position: 'relative' }}>
+            <Image
+                src={media}
+                alt={alt}
+                onClick={onClick}
+                style={{
+                    cursor: 'pointer',
+                    objectFit: 'contain',
+                }}
+                fill
+                draggable={false}
+            />
+        </div>
     );
 };
 

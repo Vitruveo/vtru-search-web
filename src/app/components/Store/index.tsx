@@ -71,7 +71,7 @@ const Store = ({ data }: StoreProps) => {
         );
 
     return (
-        <LazyLoad once style={{ maxWidth: 1300 }}>
+        <LazyLoad once style={{ minWidth: 1300 }}>
             <Box display="flex" flexDirection="column" gap={3}>
                 <Grid
                     container

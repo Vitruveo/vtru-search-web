@@ -24,14 +24,16 @@ export default function MetadataList({ asset, expandedAccordion, handleAccordion
             >
                 <MetadataContext content={asset.assetMetadata?.context.formData as Context} />
             </MetadataAccordion>
-            <MetadataAccordion
-                title="Description"
-                last={false}
-                expanded={expandedAccordion === 'description'}
-                onChange={handleAccordionChange('description')}
-            >
-                <Description data={asset.mediaAuxiliary?.description} />
-            </MetadataAccordion>
+            {asset.mediaAuxiliary?.description && (
+                <MetadataAccordion
+                    title="Description"
+                    last={false}
+                    expanded={expandedAccordion === 'description'}
+                    onChange={handleAccordionChange('description')}
+                >
+                    <Description data={asset.mediaAuxiliary?.description} />
+                </MetadataAccordion>
+            )}
             <MetadataAccordion
                 title="Taxonomy"
                 last={false}
@@ -42,7 +44,7 @@ export default function MetadataList({ asset, expandedAccordion, handleAccordion
             </MetadataAccordion>
             <MetadataAccordion
                 title="Provenance"
-                last={false}
+                last={true}
                 expanded={expandedAccordion === 'provenance'}
                 onChange={handleAccordionChange('provenance')}
             >
