@@ -7,6 +7,7 @@ export const initialState: ProfileCreatorSliceState = {
     error: null,
     data: {
         id: '',
+        username: '',
         avatar: '',
         artsQuantity: 0,
     },

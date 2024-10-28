@@ -6,6 +6,7 @@ export interface ProfileCreatorSliceState {
 
 export interface ProfileCreator {
     id: string;
+    username: string;
     avatar: string;
     artsQuantity: number;
 }

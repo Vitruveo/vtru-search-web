@@ -62,7 +62,7 @@ export default function Profile() {
                 ]}
                 hasSettings={false}
             />
-            <Creator data={{ creator: { ...creatorData, username }, loading: creatorLoading }} />
+            <Creator data={{ creator: creatorData, loading: creatorLoading }} />
             <Assets
                 data={{
                     assets: assetsData,

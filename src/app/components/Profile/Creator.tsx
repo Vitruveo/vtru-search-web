@@ -5,7 +5,7 @@ import Avatar from '../Assets/components/Avatar';
 
 interface ProfileCreatorProps {
     data: {
-        creator: ProfileCreator & { username: string };
+        creator: ProfileCreator;
         loading: boolean;
     };
 }
