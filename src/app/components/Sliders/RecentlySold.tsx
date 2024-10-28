@@ -24,7 +24,7 @@ function RecentlySoldSlider() {
                 {assets.map((asset, index) => {
                     const assetTitle = asset?.title || 'No Title';
                     const creatorName = asset?.username || 'No creator';
-                    const price = formatPrice(asset.price);
+                    const price = formatPrice({ price: asset.price });
 
                     const nextAssetExists = index + 1 < assets.length;
 

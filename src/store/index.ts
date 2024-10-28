@@ -10,6 +10,7 @@ import { assetsSagas } from '@/features/assets';
 import { creatorSagas } from '@/features/creator';
 import stacksSaga from '@/features/stacks/sagas';
 import wsSagas from '@/features/ws/sagas';
+import storeSagas from '@/features/store/sagas';
 
 // slices
 import { filterSlice } from '@/features/filters';
@@ -20,6 +21,7 @@ import { layoutSlice } from '@/features/layout';
 import { toastrSlice } from '@/features/toastr';
 import { wsSlice } from '@/features/ws/slice';
 import { stacksSlice } from '@/features/stacks/slice';
+import { storeSlice } from '@/features/store/slice';
 
 const sagaMiddleware = createSagaMiddleware({
     onError: (error, errorInfo) => {
@@ -60,6 +62,7 @@ const rootReducer = combineReducers({
     ws: wsSlice.reducer,
     toastr: toastrSlice.reducer,
     stacks: stacksSlice.reducer,
+    store: storeSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -77,7 +80,7 @@ export const store = configureStore({
 
 // Run sagas
 function* rootSaga() {
-    yield all([spawn(assetsSagas), spawn(creatorSagas), spawn(wsSagas), spawn(stacksSaga)]);
+    yield all([spawn(assetsSagas), spawn(creatorSagas), spawn(wsSagas), spawn(stacksSaga), spawn(storeSagas)]);
 }
 
 sagaMiddleware.run(rootSaga);

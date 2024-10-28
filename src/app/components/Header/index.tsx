@@ -1,16 +1,17 @@
-import { useDispatch } from 'react-redux';
-import { AppBar, Avatar, Box, IconButton, Stack, Toolbar, Tooltip, Typography } from '@mui/material';
+import { customizerActionsCreators } from '@/features/customizer';
+import { useSelector } from '@/store/hooks';
+import { AppBar, Avatar, Box, IconButton, Stack, Toolbar, Typography } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { IconMenu2, IconMoon, IconSun } from '@tabler/icons-react';
-import { useSelector } from '@/store/hooks';
-import { actions } from '@/features/layout';
-import Language from '../Language';
-import { AvatarProfile } from '../AvatarProfile';
-import Logo from '../Shared/Logo';
-import { Rss } from '../Rss';
+import { IconMoon, IconSun } from '@tabler/icons-react';
+import { useDispatch } from 'react-redux';
 import AllProjectsMenu from '../AllProjectsMenu';
-import { customizerActionsCreators } from '@/features/customizer';
+import { AvatarProfile } from '../AvatarProfile';
+import Language from '../Language';
+import { Rss } from '../Rss';
+import Logo from '../Shared/Logo';
+import ConnectWallet from '../ConnectWallet';
+import { useParams } from 'next/navigation';
 
 interface Props {
     rssOptions: {
@@ -21,6 +22,7 @@ interface Props {
 }
 
 const Header = ({ rssOptions, hasSettings = true }: Props) => {
+    const params = useParams();
     const dispatch = useDispatch();
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
@@ -73,10 +75,6 @@ const Header = ({ rssOptions, hasSettings = true }: Props) => {
                             <Logo />
                         </Box>
                         {lgDown && <AllProjectsMenu />}
-
-                        {/* <IconButton size="small" color="inherit" aria-label="menu" onClick={onMenuClick}>
-                            <IconMenu2 />
-                        </IconButton> */}
                     </Box>
                 ) : (
                     <Box sx={{ width: 'auto', overflow: 'hidden' }}>
@@ -128,6 +126,7 @@ const Header = ({ rssOptions, hasSettings = true }: Props) => {
                             <IconMoon width={29} height={29} />
                         )}
                     </IconButton>
+                    {params?.username && params?.assetId && <ConnectWallet />}
                 </Stack>
             </ToolbarStyled>
         </AppBarStyled>
