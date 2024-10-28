@@ -8,6 +8,8 @@ import { SEARCH_BASE_URL } from '@/constants/api';
 import { useSelector } from '@/store/hooks';
 import { MediaRenderer } from './MediaRenderer';
 import Avatar from './Avatar';
+import Link from 'next/link';
+import { useTheme } from '@mui/material/styles';
 
 interface Props {
     drawerOpen: boolean;
@@ -16,10 +18,11 @@ interface Props {
 }
 
 export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
+    const theme = useTheme();
     const { language } = useI18n();
 
-    const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
-    const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
+    const lgUp = useMediaQuery((mq: Theme) => mq.breakpoints.up('lg'));
+    const mdUp = useMediaQuery((mq: Theme) => mq.breakpoints.up('md'));
 
     const creator = useSelector((state) => state.assets.creator);
     const paused = useSelector((state) => state.assets.paused);
@@ -65,9 +68,18 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                     <Avatar baseUrl={GENERAL_STORAGE_URL} path={creator.avatar} />
                     {Array.isArray(assetView?.assetMetadata?.creators?.formData) &&
                         assetView?.assetMetadata?.creators?.formData?.length > 0 && (
-                            <Typography variant="h6">
-                                {assetView?.assetMetadata?.creators?.formData[0].name || 'No creator'}
-                            </Typography>
+                            <Box display={'flex'} flexDirection={'column'} gap={1}>
+                                <Typography variant="h6" maxWidth={width - 40} sx={{ wordBreak: 'break-word' }}>
+                                    {assetView?.assetMetadata?.creators?.formData[0].name || 'No creator'}
+                                </Typography>
+                                <Link
+                                    href={`${SEARCH_BASE_URL}/${creator.username}`}
+                                    target="_blank"
+                                    style={{ color: theme.palette.primary.main }}
+                                >
+                                    View Profile
+                                </Link>
+                            </Box>
                         )}
                 </Box>
                 <Box mb={3}>
