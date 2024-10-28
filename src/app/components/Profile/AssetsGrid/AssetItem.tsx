@@ -22,10 +22,10 @@ const AssetItemMain = ({ asset, username }: Props) => {
     };
 
     return (
-        <Box width={250} onClick={handleClick} sx={{ '&:hover': { cursor: 'pointer' } }}>
+        <Box width={280} onClick={handleClick} sx={{ '&:hover': { cursor: 'pointer' } }}>
             <BlankCard className="hoverCard">
                 <>
-                    <Box height={250} borderRadius="8px 8px 0 0" position="relative">
+                    <Box height={280} borderRadius="8px 8px 0 0" position="relative">
                         <MediaRenderer
                             src={`${AWS_BASE_URL_S3}/${asset.formats.preview.path}`}
                             fallbackSrc={'https://via.placeholder.com/250'}
