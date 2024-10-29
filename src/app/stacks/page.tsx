@@ -7,11 +7,21 @@ import { actions } from '@/features/stacks';
 import { SEARCH_BASE_URL } from '@/constants/api';
 import PageContainer from '../components/Container/PageContainer';
 import { useI18n } from '../hooks/useI18n';
+import StyleElements from '../components/Stacks/components/StyleElements';
+import { Box, Theme, useMediaQuery } from '@mui/material';
+import Header from '../components/Header';
+import { useTheme } from '@mui/material/styles';
 
 const Stacks = () => {
     const { language } = useI18n();
     const dispatch = useDispatch();
+    const theme = useTheme();
+    const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
+
     const stacks = useSelector((state) => state.stacks.data);
+    const hiddenElement = useSelector((state) => state.customizer.hiddenStack);
+
     const [selectValues, setSelectValues] = useState({
         limit: { value: '25', label: '25' },
         page: { value: '1', label: '1' },
@@ -20,6 +30,7 @@ const Stacks = () => {
 
     useEffect(() => {
         dispatch(actions.loadStacks());
+        dispatch(actions.loadStacksSpotlight());
     }, []);
 
     const optionsForSelectPage = useMemo(() => {
@@ -47,12 +58,36 @@ const Stacks = () => {
 
     const handleCurateStack = () => window.open(`${SEARCH_BASE_URL}?groupByCreator=no&assets`, '_blank');
 
+    const isInIframe = window.self !== window.top;
+
     return (
         <PageContainer title="Stacks">
-            <StackList
-                data={{ stacks, selectValues, optionsForSelectPage }}
-                actions={{ onChangeSort, onChangePage, onChangeLimit, handleCurateStack }}
-            />
+            <>
+                {!hiddenElement?.header && (
+                    <Header
+                        rssOptions={[
+                            { flagname: 'JSON', value: 'stacks/json' },
+                            { flagname: 'XML', value: 'stacks/xml' },
+                        ]}
+                    />
+                )}
+                <StackList
+                    data={{ stacks, selectValues, optionsForSelectPage, hiddenElement }}
+                    actions={{ onChangeSort, onChangePage, onChangeLimit, handleCurateStack }}
+                />
+
+                <Box
+                    display={isInIframe ? 'none' : 'inherit'}
+                    position={'fixed'}
+                    top={lgUp ? 21 : smUp ? 17 : 13}
+                    right={-5}
+                    bgcolor={theme.palette.grey[100]}
+                    width={lgUp || smUp ? 85 : 77}
+                    zIndex={9999}
+                >
+                    <StyleElements />
+                </Box>
+            </>
         </PageContainer>
     );
 };

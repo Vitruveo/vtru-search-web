@@ -8,6 +8,7 @@ export interface StackSliceState {
     loading: boolean;
     error: string | null;
     data: StackData;
+    spotlight: Stack[];
     sort: string;
 }
 
@@ -28,9 +29,6 @@ export interface Stack {
         type: string;
         quantity: number;
     };
-    assetDetails: {
-        preview: string;
-    }[];
 }
 
 export interface StackData {

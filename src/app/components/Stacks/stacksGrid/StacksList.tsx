@@ -1,12 +1,13 @@
+import { useI18n } from '@/app/hooks/useI18n';
+import { StateKeysStack } from '@/features/customizer/slice';
 import { Stack, StackData } from '@/features/stacks/types';
-import { Box, Button, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, Grid, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useRef } from 'react';
 import Select, { SingleValue } from 'react-select';
 import '../../Assets/assetsGrid/AssetScroll.css';
-import Header from '../../Header';
+import StackSpotlightSlider from '../../Sliders/StackSpotlight';
 import { StackCardContainer, StackItem } from './StackItem';
-import { useI18n } from '@/app/hooks/useI18n';
 
 interface StacksProps {
     data: {
@@ -17,6 +18,7 @@ interface StacksProps {
             sort: { value: string; label: string };
         };
         optionsForSelectPage: { value: string; label: string }[];
+        hiddenElement?: { [key in StateKeysStack]: boolean };
     };
     actions: {
         onChangeSort: (
@@ -51,7 +53,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
     const topRef = useRef<HTMLDivElement>(null);
 
     const { onChangePage, onChangeSort, onChangeLimit, handleCurateStack } = actions;
-    const { stacks, selectValues, optionsForSelectPage } = data;
+    const { stacks, selectValues, optionsForSelectPage, hiddenElement } = data;
 
     const handleScrollToTop = () => {
         if (topRef.current) {
@@ -67,14 +69,27 @@ const Stacks = ({ data, actions }: StacksProps) => {
     }, [stacks.page]);
 
     return (
-        <Box>
-            <Header
-                rssOptions={[
-                    { flagname: 'JSON', value: 'stacks/json' },
-                    { flagname: 'XML', value: 'stacks/xml' },
-                ]}
-                hasSettings={false}
-            />
+        <Box mt={10}>
+            {!hiddenElement?.curate && (
+                <Grid container justifyContent="end" alignItems="center" spacing={6.4} width="100%">
+                    <Grid item display={'flex'} alignItems={'center'} gap={2} mb={2} mt={-8}>
+                        <Typography variant="h5" color={theme.palette.primary.main}>
+                            Curation is fun and easy. Try it now!
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            sx={{
+                                fontSize: '1rem',
+                                fontWeight: 'bold',
+                                width: '150px',
+                            }}
+                            onClick={handleCurateStack}
+                        >
+                            Curate Stack
+                        </Button>
+                    </Grid>
+                </Grid>
+            )}
             <Box
                 display="flex"
                 flexWrap="wrap"
@@ -83,6 +98,11 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 maxHeight={'100vh'}
                 ref={topRef}
             >
+                {!hiddenElement?.spotlight && (
+                    <Grid item xs={12} mb={10} mr={6} width={'94.5%'}>
+                        <StackSpotlightSlider />
+                    </Grid>
+                )}
                 <Box
                     paddingInline="24px"
                     display="flex"
