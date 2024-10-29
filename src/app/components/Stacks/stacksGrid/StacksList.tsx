@@ -71,7 +71,15 @@ const Stacks = ({ data, actions }: StacksProps) => {
     return (
         <Box>
             {!hiddenElement?.curate && (
-                <Box padding="24px" display="flex" alignItems="center" justifyContent="flex-end" gap={2} width="100%">
+                <Box
+                    paddingBlock="24px"
+                    paddingInline={smUp ? '95px' : '15px'}
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="flex-end"
+                    gap={2}
+                    width="100%"
+                >
                     <Typography variant="h5" color={theme.palette.primary.main} ml={2.5}>
                         {language['search.stacks.curation.label'] as string}
                     </Typography>
@@ -95,155 +103,162 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 flexWrap="wrap"
                 justifyContent="center"
                 overflow="auto"
-                maxHeight={'calc(100vh - 85px)'}
+                maxHeight={`calc(100vh - ${hiddenElement?.curate && hiddenElement.spotlight && hiddenElement.header ? 10 : 85}px)`}
                 ref={topRef}
             >
                 {!hiddenElement?.spotlight && (
-                    <Grid item xs={12} mb={10} mr={6} width={'94.5%'}>
+                    <Grid item xs={12} mb={10} mr={6} width={'97.5%'} margin={'0 auto'}>
                         <StackSpotlightSlider />
                     </Grid>
                 )}
-                <Box
-                    paddingInline="24px"
-                    display={mdUp ? 'flex' : 'none'}
-                    justifyContent="space-between"
-                    width="100%"
-                    my={2}
-                    mb={4}
-                >
-                    <Box display={'flex'} gap={1} alignItems={'center'}>
-                        <Typography variant="h5">{language['search.order.sort'] as string}:</Typography>
-                        <Select
-                            placeholder="Sort"
-                            options={[
-                                { value: 'latest', label: language['search.select.sort.option.latest'] as string },
-                                { value: 'titleAZ', label: language['search.select.sort.option.titleAZ'] as string },
-                                { value: 'titleZA', label: language['search.select.sort.option.titleZA'] as string },
-                                {
-                                    value: 'CuratorAZ',
-                                    label: language['search.select.sort.option.curatorAZ'] as string,
-                                },
-                                {
-                                    value: 'CuratorZA',
-                                    label: language['search.select.sort.option.curatorZA'] as string,
-                                },
-                            ]}
-                            value={selectValues.sort}
-                            onChange={onChangeSort}
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    width: '130px',
-                                    borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
-                                    backgroundColor: theme.palette.background.paper,
-                                    boxShadow: '#FF0066',
-                                    '&:hover': { borderColor: '#FF0066' },
-                                }),
-                                menu: (base) => ({
-                                    ...base,
-                                    zIndex: 1000,
-                                    color: theme.palette.text.primary,
-                                    backgroundColor: theme.palette.background.paper,
-                                }),
-                                singleValue: (base) => ({
-                                    ...base,
-                                    color: theme.palette.text.primary,
-                                }),
-                                option: (base, state) => ({
-                                    ...base,
-                                    color: theme.palette.text.primary,
-                                    backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
-                                    '&:hover': { backgroundColor: theme.palette.action.hover },
-                                }),
-                                input: (base) => ({
-                                    ...base,
-                                    color: theme.palette.text.primary,
-                                }),
-                            }}
-                        />
+                {!hiddenElement?.navigation && (
+                    <Box display={mdUp ? 'flex' : 'none'} justifyContent="space-between" width="100%" my={2} mb={4}>
+                        <Box display={'flex'} gap={1} alignItems={'center'} paddingInline={'24px'}>
+                            <Typography variant="h5">{language['search.order.sort'] as string}:</Typography>
+                            <Select
+                                placeholder="Sort"
+                                options={[
+                                    { value: 'latest', label: language['search.select.sort.option.latest'] as string },
+                                    {
+                                        value: 'titleAZ',
+                                        label: language['search.select.sort.option.titleAZ'] as string,
+                                    },
+                                    {
+                                        value: 'titleZA',
+                                        label: language['search.select.sort.option.titleZA'] as string,
+                                    },
+                                    {
+                                        value: 'CuratorAZ',
+                                        label: language['search.select.sort.option.curatorAZ'] as string,
+                                    },
+                                    {
+                                        value: 'CuratorZA',
+                                        label: language['search.select.sort.option.curatorZA'] as string,
+                                    },
+                                ]}
+                                value={selectValues.sort}
+                                onChange={onChangeSort}
+                                styles={{
+                                    control: (base, state) => ({
+                                        ...base,
+                                        width: '130px',
+                                        borderColor: state.isFocused
+                                            ? theme.palette.primary.main
+                                            : theme.palette.grey[200],
+                                        backgroundColor: theme.palette.background.paper,
+                                        boxShadow: '#FF0066',
+                                        '&:hover': { borderColor: '#FF0066' },
+                                    }),
+                                    menu: (base) => ({
+                                        ...base,
+                                        zIndex: 1000,
+                                        color: theme.palette.text.primary,
+                                        backgroundColor: theme.palette.background.paper,
+                                    }),
+                                    singleValue: (base) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                    }),
+                                    option: (base, state) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                        backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
+                                        '&:hover': { backgroundColor: theme.palette.action.hover },
+                                    }),
+                                    input: (base) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                    }),
+                                }}
+                            />
+                        </Box>
+                        <Box display={'flex'} gap={1} alignItems={'center'} paddingInline={'90px'}>
+                            <Typography variant="h5">{language['search.pagination'] as string}:</Typography>
+                            <Select
+                                placeholder="Page Items"
+                                options={[
+                                    { value: '25', label: '25' },
+                                    { value: '50', label: '50' },
+                                    { value: '100', label: '100' },
+                                    { value: '150', label: '150' },
+                                    { value: '200', label: '200' },
+                                ]}
+                                value={selectValues.limit}
+                                onChange={onChangeLimit}
+                                styles={{
+                                    control: (base, state) => ({
+                                        ...base,
+                                        minWidth: '100px',
+                                        borderColor: state.isFocused
+                                            ? theme.palette.primary.main
+                                            : theme.palette.grey[200],
+                                        backgroundColor: theme.palette.background.paper,
+                                        boxShadow: '#FF0066',
+                                        '&:hover': { borderColor: '#FF0066' },
+                                    }),
+                                    menu: (base) => ({
+                                        ...base,
+                                        zIndex: 1000,
+                                        color: theme.palette.text.primary,
+                                        backgroundColor: theme.palette.background.paper,
+                                    }),
+                                    singleValue: (base) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                    }),
+                                    option: (base, state) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                        backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
+                                        '&:hover': { backgroundColor: theme.palette.action.hover },
+                                    }),
+                                    input: (base) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                    }),
+                                }}
+                            />
+                            <Select
+                                placeholder="Select"
+                                options={optionsForSelectPage}
+                                value={selectValues.page}
+                                onChange={onChangePage}
+                                styles={{
+                                    control: (base, state) => ({
+                                        ...base,
+                                        minWidth: '100px',
+                                        borderColor: state.isFocused
+                                            ? theme.palette.primary.main
+                                            : theme.palette.grey[200],
+                                        backgroundColor: theme.palette.background.paper,
+                                        boxShadow: '#FF0066',
+                                        '&:hover': { borderColor: '#FF0066' },
+                                    }),
+                                    menu: (base) => ({
+                                        ...base,
+                                        zIndex: 1000,
+                                        color: theme.palette.text.primary,
+                                        backgroundColor: theme.palette.background.paper,
+                                    }),
+                                    singleValue: (base) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                    }),
+                                    option: (base, state) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                        backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
+                                        '&:hover': { backgroundColor: theme.palette.action.hover },
+                                    }),
+                                    input: (base) => ({
+                                        ...base,
+                                        color: theme.palette.text.primary,
+                                    }),
+                                }}
+                            />
+                        </Box>
                     </Box>
-                    <Box display={'flex'} gap={1} alignItems={'center'}>
-                        <Typography variant="h5">{language['search.pagination'] as string}:</Typography>
-                        <Select
-                            placeholder="Page Items"
-                            options={[
-                                { value: '25', label: '25' },
-                                { value: '50', label: '50' },
-                                { value: '100', label: '100' },
-                                { value: '150', label: '150' },
-                                { value: '200', label: '200' },
-                            ]}
-                            value={selectValues.limit}
-                            onChange={onChangeLimit}
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    minWidth: '100px',
-                                    borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
-                                    backgroundColor: theme.palette.background.paper,
-                                    boxShadow: '#FF0066',
-                                    '&:hover': { borderColor: '#FF0066' },
-                                }),
-                                menu: (base) => ({
-                                    ...base,
-                                    zIndex: 1000,
-                                    color: theme.palette.text.primary,
-                                    backgroundColor: theme.palette.background.paper,
-                                }),
-                                singleValue: (base) => ({
-                                    ...base,
-                                    color: theme.palette.text.primary,
-                                }),
-                                option: (base, state) => ({
-                                    ...base,
-                                    color: theme.palette.text.primary,
-                                    backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
-                                    '&:hover': { backgroundColor: theme.palette.action.hover },
-                                }),
-                                input: (base) => ({
-                                    ...base,
-                                    color: theme.palette.text.primary,
-                                }),
-                            }}
-                        />
-                        <Select
-                            placeholder="Select"
-                            options={optionsForSelectPage}
-                            value={selectValues.page}
-                            onChange={onChangePage}
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    minWidth: '100px',
-                                    borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
-                                    backgroundColor: theme.palette.background.paper,
-                                    boxShadow: '#FF0066',
-                                    '&:hover': { borderColor: '#FF0066' },
-                                }),
-                                menu: (base) => ({
-                                    ...base,
-                                    zIndex: 1000,
-                                    color: theme.palette.text.primary,
-                                    backgroundColor: theme.palette.background.paper,
-                                }),
-                                singleValue: (base) => ({
-                                    ...base,
-                                    color: theme.palette.text.primary,
-                                }),
-                                option: (base, state) => ({
-                                    ...base,
-                                    color: theme.palette.text.primary,
-                                    backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
-                                    '&:hover': { backgroundColor: theme.palette.action.hover },
-                                }),
-                                input: (base) => ({
-                                    ...base,
-                                    color: theme.palette.text.primary,
-                                }),
-                            }}
-                        />
-                    </Box>
-                </Box>
+                )}
                 <div
                     style={{
                         width: 'auto',
@@ -264,21 +279,26 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         );
                     })}
                 </div>
-
-                <Box mt={4} mb={2} display={'flex'} justifyContent="center" width="100%" alignItems="center">
-                    <Pagination
-                        count={stacks.totalPage}
-                        page={stacks.page}
-                        onChange={(_e, value) => onChangePage({ value: value.toString(), label: value.toString() })}
-                        color="primary"
-                        size={lgUp ? 'large' : 'medium'}
-                    />
-                </Box>
-                <Box display={'flex'} justifyContent="flex-end" width="100%" mr={11} mb={12}>
-                    <Button variant="contained" onClick={handleScrollToTop}>
-                        {language['search.assetList.scrollToTop'] as string}
-                    </Button>
-                </Box>
+                {!hiddenElement?.navigation && (
+                    <>
+                        <Box mt={4} mb={2} display={'flex'} justifyContent="center" width="100%" alignItems="center">
+                            <Pagination
+                                count={stacks.totalPage}
+                                page={stacks.page}
+                                onChange={(_e, value) =>
+                                    onChangePage({ value: value.toString(), label: value.toString() })
+                                }
+                                color="primary"
+                                size={lgUp ? 'large' : 'medium'}
+                            />
+                        </Box>
+                        <Box display={'flex'} justifyContent="flex-end" width="100%" mr={11} mb={12}>
+                            <Button variant="contained" onClick={handleScrollToTop}>
+                                {language['search.assetList.scrollToTop'] as string}
+                            </Button>
+                        </Box>
+                    </>
+                )}
             </Box>
         </Box>
     );
