@@ -1,78 +1,48 @@
-'use client';
-import { actions as actionsCreator } from '@/features/profile/creator';
-import { actions as actionsAssets } from '@/features/profile/assets';
-import { useDispatch, useSelector } from '@/store/hooks';
-import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import Assets from '../components/Profile/AssetsGrid/AssetsList';
-import Creator from '../components/Profile/Creator';
-import PageContainer from '../components/Container/PageContainer';
-import Header from '../components/Header';
-import { SingleValue } from 'react-select';
+import { Metadata } from 'next';
 
-export default function Profile() {
-    const dispatch = useDispatch();
-    const params = useParams();
-    const username = params.username as string;
-    const [selectValues, setSelectValues] = useState({
-        limit: { value: '25', label: '25' },
-        page: { value: '1', label: '1' },
-        sort: { value: 'latest', label: 'Latest' },
-    });
-    const { data: creatorData, loading: creatorLoading } = useSelector((state) => state.profileCreator);
-    const { data: assetsData, loading: assetsLoading } = useSelector((state) => state.profileAssets);
+// constants
+import { API_BASE_URL } from '@/constants/api';
+import { GENERAL_STORAGE_URL } from '@/constants/aws';
 
-    useEffect(() => {
-        dispatch(actionsCreator.loadProfileCreator({ username }));
-    }, [username]);
+// component
+import Component from './Component';
 
-    useEffect(() => {
-        if (creatorData.id) dispatch(actionsAssets.loadProfileAssets());
-    }, [creatorData.id]);
+interface Props {
+    params: { username: string };
+}
 
-    const optionsForSelectPage = useMemo(() => {
-        const options: { value: string; label: string }[] = [];
-        for (let i = 1; i <= assetsData.totalPage; i++) {
-            options.push({ value: i.toString(), label: i.toString() });
-        }
-        return options;
-    }, [assetsData.totalPage]);
-
-    const onChangeLimit = useCallback((e: SingleValue<{ value: string; label: string }>) => {
-        dispatch(actionsAssets.setLimit(Number(e!.value)));
-        setSelectValues((prev) => ({ ...prev, limit: { value: e!.value, label: e!.label } }));
-    }, []);
-
-    const onChangePage = useCallback((e: SingleValue<{ value: string; label: string }>) => {
-        dispatch(actionsAssets.setPage(Number(e!.value)));
-        setSelectValues((prev) => ({ ...prev, page: { value: e!.value, label: e!.label } }));
-    }, []);
-
-    const onChangeSort = useCallback((e: SingleValue<{ value: string; label: string }>) => {
-        dispatch(actionsAssets.setSort(e!.value));
-        setSelectValues((prev) => ({ ...prev, sort: { value: e!.value, label: e!.label } }));
-    }, []);
-
-    return (
-        <PageContainer>
-            <Header
-                rssOptions={[
-                    { flagname: 'JSON', value: 'stacks/json' },
-                    { flagname: 'XML', value: 'stacks/xml' },
-                ]}
-                hasSettings={false}
-            />
-            <Creator data={{ creator: creatorData, loading: creatorLoading }} />
-            <Assets
-                data={{
-                    assets: assetsData,
-                    loading: assetsLoading,
-                    optionsForSelectPage,
-                    selectValues,
-                    username,
-                }}
-                actions={{ onChangeSort, onChangePage, onChangeLimit }}
-            />
-        </PageContainer>
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const response = await fetch(`${API_BASE_URL}/creators/public/profile/${params.username}`).then((res) =>
+        res.json()
     );
+
+    const profile = response.data;
+
+    const metaOg = {
+        title: profile.username,
+        description: profile.artsQuantity,
+        url: `${GENERAL_STORAGE_URL}/${profile.avatar}`,
+        image: `${GENERAL_STORAGE_URL}/${profile.avatar}`,
+    };
+
+    return {
+        title: metaOg.title,
+        description: metaOg.description,
+        openGraph: {
+            title: metaOg.title,
+            description: metaOg.description,
+            url: metaOg.url,
+            images: [metaOg.image],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: metaOg.title,
+            description: metaOg.description,
+            images: [metaOg.image],
+        },
+    };
+}
+
+export default async function ProfilePageRoute() {
+    return <Component />;
 }
