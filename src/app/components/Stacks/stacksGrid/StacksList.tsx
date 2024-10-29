@@ -69,49 +69,9 @@ const Stacks = ({ data, actions }: StacksProps) => {
     }, [stacks.page]);
 
     return (
-        <Box mt={10}>
+        <Box>
             {!hiddenElement?.curate && (
-                <Grid container justifyContent="end" alignItems="center" spacing={6.4} width="100%">
-                    <Grid item display={'flex'} alignItems={'center'} gap={2} mb={2} mt={-8}>
-                        <Typography variant="h5" color={theme.palette.primary.main}>
-                            Curation is fun and easy. Try it now!
-                        </Typography>
-                        <Button
-                            variant="contained"
-                            sx={{
-                                fontSize: '1rem',
-                                fontWeight: 'bold',
-                                width: '150px',
-                            }}
-                            onClick={handleCurateStack}
-                        >
-                            Curate Stack
-                        </Button>
-                    </Grid>
-                </Grid>
-            )}
-            <Box
-                display="flex"
-                flexWrap="wrap"
-                justifyContent="center"
-                overflow="auto"
-                maxHeight={'100vh'}
-                ref={topRef}
-            >
-                {!hiddenElement?.spotlight && (
-                    <Grid item xs={12} mb={10} mr={6} width={'94.5%'}>
-                        <StackSpotlightSlider />
-                    </Grid>
-                )}
-                <Box
-                    paddingInline="24px"
-                    display="flex"
-                    alignItems="center"
-                    my={2}
-                    justifyContent="flex-end"
-                    gap={2}
-                    width="100%"
-                >
+                <Box padding="24px" display="flex" alignItems="center" justifyContent="flex-end" gap={2} width="100%">
                     <Typography variant="h5" color={theme.palette.primary.main} ml={2.5}>
                         {language['search.stacks.curation.label'] as string}
                     </Typography>
@@ -129,6 +89,20 @@ const Stacks = ({ data, actions }: StacksProps) => {
                         {language['search.assetList.curateStack'] as string}
                     </Button>
                 </Box>
+            )}
+            <Box
+                display="flex"
+                flexWrap="wrap"
+                justifyContent="center"
+                overflow="auto"
+                maxHeight={'calc(100vh - 85px)'}
+                ref={topRef}
+            >
+                {!hiddenElement?.spotlight && (
+                    <Grid item xs={12} mb={10} mr={6} width={'94.5%'}>
+                        <StackSpotlightSlider />
+                    </Grid>
+                )}
                 <Box
                     paddingInline="24px"
                     display={mdUp ? 'flex' : 'none'}
