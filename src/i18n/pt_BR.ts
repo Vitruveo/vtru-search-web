@@ -33,6 +33,7 @@ const language: Translation = {
     'search.drawer.stack.verifyCode': 'Verificar código',
     'search.drawer.stack.resendCode': 'Reenviar código',
     'search.drawer.stack.changeEmail': 'Alterar e-mail',
+    'search.drawer.stack.viewProfile': 'Ver perfil',
     'search.drawer.stack.publishStack': 'Publicar Stack',
     'search.drawer.stack.noSelectedAssets': 'Nenhum ativo selecionado',
     'search.drawer.stack.description': 'Descrição',

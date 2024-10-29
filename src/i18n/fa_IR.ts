@@ -33,6 +33,7 @@ const language: Translation = {
     'search.drawer.stack.verifyCode': 'تأیید کد',
     'search.drawer.stack.resendCode': 'ارسال مجدد کد',
     'search.drawer.stack.changeEmail': 'تغییر ایمیل',
+    'search.drawer.stack.viewProfile': 'مشاهده پروفایل',
     'search.drawer.stack.publishStack': 'انتشار پشته',
     'search.drawer.stack.noSelectedAssets': 'هیچ دارایی انتخاب نشده است',
     'search.drawer.stack.description': 'توضیحات',

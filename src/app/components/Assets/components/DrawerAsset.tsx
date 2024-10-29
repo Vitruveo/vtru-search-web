@@ -77,7 +77,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                                     target="_blank"
                                     style={{ color: theme.palette.primary.main }}
                                 >
-                                    View Profile
+                                    {language['search.drawer.stack.viewProfile'] as string}
                                 </Link>
                             </Box>
                         )}
