@@ -1,3 +1,4 @@
+import { useI18n } from '@/app/hooks/useI18n';
 import { useSelector } from '@/store/hooks';
 import { Box, Button, Slider, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -13,6 +14,7 @@ export const maxPrecision = 100;
 
 export function InputColor({ name, onClick, afterPrecisionChange }: Props) {
     const theme = useTheme();
+    const { language } = useI18n();
     const inputRef = useRef<HTMLInputElement>(null);
     const defaultPrecisionValue = useSelector((state) => state.filters.colorPrecision.value);
     const reseted = useSelector((state) => state.filters.reseted);
@@ -30,7 +32,7 @@ export function InputColor({ name, onClick, afterPrecisionChange }: Props) {
     return (
         <Stack gap={2}>
             <Box>
-                <Typography>Precision</Typography>
+                <Typography>{language['search.assetFilter.context.title.colors.precision'] as string}</Typography>
                 <Box px={1}>
                     <Slider
                         key={reseted}
@@ -63,7 +65,7 @@ export function InputColor({ name, onClick, afterPrecisionChange }: Props) {
                         color: theme.palette.primary.contrastText,
                     }}
                 >
-                    Add Color
+                    {language['search.assetFilter.context.title.colors.addColor'] as string}
                 </Button>
             </Box>
         </Stack>

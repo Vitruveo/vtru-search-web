@@ -14,16 +14,50 @@ const language: Translation = {
 
     /* Asset Filter */
     'search.assetFilter.search.placeholder': 'جستجوی دارایی',
+    'search.assetFilter.shortcut.nudity': 'پنهان کردن عریانی',
+    'search.assetFilter.shortcut.ia': 'پنهان کردن هوش مصنوعی',
+    'search.assetFilter.shortcut.photography': 'عکاسی',
+    'search.assetFilter.shortcut.animation': 'انیمیشن',
+    'search.assetFilter.shortcut.physicalArt': 'هنر فیزیکی',
+    'search.assetFilter.shortcut.digitalArt': 'هنر دیجیتال',
+    'search.assetFilter.shortcut.includeSold': 'شامل فروخته شده',
+    'search.assetFilter.shortcut.hasBTS': 'دارای BTS',
+
+    'search.assetFilter.licenses': 'لایسنس',
+    'search.assetFilter.licenses.price': 'قیمت',
 
     'search.assetFilter.resetFilters': 'بازنشانی فیلترها',
 
+    'search.drawer.stack.login': 'ورود با ایمیل شما',
+    'search.drawer.stack.sendCode': 'ارسال کد',
+    'search.drawer.stack.verifyCode': 'تأیید کد',
+    'search.drawer.stack.resendCode': 'ارسال مجدد کد',
+    'search.drawer.stack.changeEmail': 'تغییر ایمیل',
     'search.drawer.stack.publishStack': 'انتشار پشته',
-    'search.drawer.stack.noSelectedAssets': 'هیچ دارایی انتخاب نشده‌ای وجود ندارد',
-    'search.drawer.stack.description': 'توضیح',
+    'search.drawer.stack.noSelectedAssets': 'هیچ دارایی انتخاب نشده است',
+    'search.drawer.stack.description': 'توضیحات',
+    'search.drawer.stack.descriptionLimit': 'محدودیت ۲۰۰ کاراکتر',
     'search.drawer.stack.slideshow': 'نمایش اسلاید',
-    'search.drawer.stack.webGallery': 'گالری وب',
-    'search.drawer.stack.videoGallery': 'گالری ویدیو',
+    'search.drawer.stack.webGallery': 'شبکه',
+    'search.drawer.stack.videoGallery': 'ویدیوها',
     'search.drawer.stack.title': 'عنوان',
+    'search.drawer.stack.curatorFee': 'هزینه متصدی',
+    'search.drawer.stack.video.subtitle': 'بیایید از مجموعه شگفت‌انگیز شما یک ویدئو بسازیم',
+    'search.drawer.stack.video.note': 'توجه: ویدئو محدود به اولین ۱۶ آیتم منتخب است.',
+    'search.drawer.stack.video.not.support': 'مرورگر شما از تگ ویدیو پشتیبانی نمی‌کند.',
+    'search.drawer.stack.video.share': 'اکنون ویدیوی خود را با جهان به اشتراک بگذارید',
+    'search.drawer.stack.grid.subtitle': 'یک شبکه تصویری در شبکه‌های اجتماعی عالی به نظر می‌رسد',
+    'search.drawer.stack.grid.note': 'توجه: شبکه محدود به اولین ۱۶ آیتم منتخب است.',
+    'search.drawer.stack.grid.generating': 'در حال تولید شبکه تصویری...',
+    'search.drawer.stack.grid.share': 'اکنون شبکه تصویری خود را با جهان به اشتراک بگذارید',
+    'search.drawer.stack.slideshow.interval': 'فاصله (ثانیه)',
+    'search.drawer.stack.slideshow.infobar': 'نوار اطلاعات',
+    'search.drawer.stack.slideshow.option.alternate': 'متناوب',
+    'search.drawer.stack.slideshow.option.leftUp': 'چپ/بالا',
+    'search.drawer.stack.slideshow.option.RightDown': 'راست/پایین',
+    'search.drawer.stack.slideshow.option.hide': 'پنهان کردن',
+    'search.drawer.stack.slideshow.button.publish': 'تولید نمایش اسلاید',
+    'search.drawer.stack.slideshow.open': 'باز کردن نمایش اسلاید',
     'search.drawer.stack.button.publish': 'انتشار',
     'search.drawer.stack.sound': 'صدا',
 
@@ -32,6 +66,8 @@ const language: Translation = {
     'search.assetFilter.context.title.culture': 'فرهنگ',
     'search.assetFilter.context.title.mood': 'حالت روحی',
     'search.assetFilter.context.title.colors': 'رنگ‌ها',
+    'search.assetFilter.context.title.colors.precision': 'دقت',
+    'search.assetFilter.context.title.colors.addColor': 'افزودن رنگ',
     'search.assetFilter.context.title.orientation': 'جهت‌گیری',
 
     'search.assetFilter.context.culture.african': 'آفریقایی',
@@ -73,9 +109,42 @@ const language: Translation = {
     /* Asset List */
     'search.assetList.curateStack': 'پشته نگهداری',
     'search.assetList.curateStack.selected': 'انتخاب شده',
-
+    'search.assetList.curateStack.selectAll': 'انتخاب همه',
+    'search.assetList.curateStack.deselectAll': 'عدم انتخاب همه',
     'search.assetList.visualization.description': 'توضیحات',
     'search.assetList.visualization.view': 'دیدن',
+    'search.assetList.resetsearch': 'search را بازنشانی کنید',
+    'search.assetList.scrollToTop': 'به بالا حرکت کنید',
+
+    // Paginations and order
+    'search.pagination': 'صفحه بندی',
+    'search.order.sort': 'مرتب سازی',
+    'search.order.artists': 'هنرمندان',
+
+    // Tab Sliders
+    'search.tabSliders.artworkSpotlight': 'آثار هنری کانون توجه',
+    'search.tabSliders.artistSpotlight': 'هنرمندان کانون توجه',
+    'search.tabSliders.recentlySold': 'اخیراً فروخته شده',
+
+    // options for select
+    'search.select.sort.option.latest': 'Навтарин',
+    'search.select.sort.option.priceHighToLow': 'Нарх – Аз баланд то паст',
+    'search.select.sort.option.priceLowToHigh': 'Нарх – Аз паст то баланд',
+    'search.select.sort.option.creatorAZ': 'Эҷодкор – Аз А то Я',
+    'search.select.sort.option.creatorZA': 'Эҷодкор – Аз Я то А',
+    'search.select.sort.option.titleAZ': 'Унвон – Аз А то Я',
+    'search.select.sort.option.titleZA': 'Унвон – Аз Я то А',
+    'search.select.sort.option.curatorAZ': 'Куратор – Аз А то Я',
+    'search.select.sort.option.curatorZA': 'Куратор – Аз Я то А',
+    'search.select.sort.option.consignDateNewToOld': 'Санаи консигнатсия – Аз нав то кӯҳна',
+    'search.select.sort.option.consignDateOldToNew': 'Санаи консигнатсия – Аз кӯҳна то нав',
+    'search.select.grouped.option.ungrouped': 'Бе гурӯҳ – Ҳама',
+    'search.select.grouped.option.grouped': 'Гурӯҳбандӣ – Ҳама',
+    'search.select.grouped.option.groupedNoSales': 'Гурӯҳбандӣ – Бе фурӯш',
+
+    // Stacks
+    'search.stacks.curation.label': 'نگهداری سرگرم کننده و آسان است. اکنون امتحان کنید!',
+    'search.stacks.stackItem.curatedBy': 'نگهداری شده توسط',
 };
 
 export default language;

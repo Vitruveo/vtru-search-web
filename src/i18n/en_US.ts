@@ -14,16 +14,50 @@ const language: Translation = {
 
     /* Asset Filter */
     'search.assetFilter.search.placeholder': 'Search Asset',
+    'search.assetFilter.shortcut.nudity': 'Hide Nudity',
+    'search.assetFilter.shortcut.ia': 'Hide AI',
+    'search.assetFilter.shortcut.photography': 'Photography',
+    'search.assetFilter.shortcut.animation': 'Animation',
+    'search.assetFilter.shortcut.physicalArt': 'Physical Art',
+    'search.assetFilter.shortcut.digitalArt': 'Digital Art',
+    'search.assetFilter.shortcut.includeSold': 'Include Sold',
+    'search.assetFilter.shortcut.hasBTS': 'has BTS',
+
+    'search.assetFilter.licenses': 'Licenses',
+    'search.assetFilter.licenses.price': 'Price',
 
     'search.assetFilter.resetFilters': 'Reset filters',
 
+    'search.drawer.stack.login': 'Login with your email',
+    'search.drawer.stack.sendCode': 'Send code',
+    'search.drawer.stack.verifyCode': 'Verify code',
+    'search.drawer.stack.resendCode': 'Resend code',
+    'search.drawer.stack.changeEmail': 'Change email',
     'search.drawer.stack.publishStack': 'Publish Stack',
     'search.drawer.stack.noSelectedAssets': 'No selected assets',
     'search.drawer.stack.description': 'Description',
-    'search.drawer.stack.slideshow': 'Slideshow (coming soon)',
-    'search.drawer.stack.webGallery': 'Web Gallery (coming soon)',
-    'search.drawer.stack.videoGallery': 'Video Gallery',
+    'search.drawer.stack.descriptionLimit': 'Limit 200 characters',
+    'search.drawer.stack.slideshow': 'Slideshow',
+    'search.drawer.stack.webGallery': 'Grid',
+    'search.drawer.stack.videoGallery': 'Video',
     'search.drawer.stack.title': 'Title',
+    'search.drawer.stack.curatorFee': 'Curator Fee',
+    'search.drawer.stack.video.subtitle': "Let's make a video from your amazing curation",
+    'search.drawer.stack.video.note': 'Note: Video is limited to first 16 curated items.',
+    'search.drawer.stack.video.not.support': 'Your browser does not support the video tag.',
+    'search.drawer.stack.video.share': 'Now share your video with the world!',
+    'search.drawer.stack.grid.subtitle': 'An image grid looks great on social media',
+    'search.drawer.stack.grid.note': 'Note: Grid is limited to the first 16 curated items.',
+    'search.drawer.stack.grid.generating': 'Generating image grid...',
+    'search.drawer.stack.grid.share': 'Now share your image grid with the world',
+    'search.drawer.stack.slideshow.interval': 'Interval (seconds)',
+    'search.drawer.stack.slideshow.infobar': 'Info bar',
+    'search.drawer.stack.slideshow.option.alternate': 'Alternate',
+    'search.drawer.stack.slideshow.option.leftUp': 'Left/Up',
+    'search.drawer.stack.slideshow.option.RightDown': 'Right/Down',
+    'search.drawer.stack.slideshow.option.hide': 'Hide',
+    'search.drawer.stack.slideshow.button.publish': 'Generate Slideshow',
+    'search.drawer.stack.slideshow.open': 'Open slideshow',
     'search.drawer.stack.button.publish': 'Publish',
     'search.drawer.stack.sound': 'Sound',
 
@@ -32,6 +66,8 @@ const language: Translation = {
     'search.assetFilter.context.title.culture': 'Culture',
     'search.assetFilter.context.title.mood': 'Mood',
     'search.assetFilter.context.title.colors': 'Colors',
+    'search.assetFilter.context.title.colors.precision': 'Precision',
+    'search.assetFilter.context.title.colors.addColor': 'Add color',
     'search.assetFilter.context.title.orientation': 'Orientation',
 
     'search.assetFilter.context.culture.african': 'African',
@@ -73,9 +109,42 @@ const language: Translation = {
     /* Asset List */
     'search.assetList.curateStack': 'Curate Stack',
     'search.assetList.curateStack.selected': 'Selected',
-
+    'search.assetList.curateStack.selectAll': 'Select all',
+    'search.assetList.curateStack.deselectAll': 'Deselect all',
     'search.assetList.visualization.description': 'Description',
     'search.assetList.visualization.view': 'View',
+    'search.assetList.resetsearch': 'Reset search',
+    'search.assetList.scrollToTop': 'Scroll to top',
+
+    // Paginations and order
+    'search.pagination': 'Pagination',
+    'search.order.sort': 'Sort',
+    'search.order.artists': 'Artists',
+
+    // options for select
+    'search.select.sort.option.latest': 'Latest',
+    'search.select.sort.option.priceHighToLow': 'Price – High to Low',
+    'search.select.sort.option.priceLowToHigh': 'Price – Low to High',
+    'search.select.sort.option.creatorAZ': 'Creator – A to Z',
+    'search.select.sort.option.creatorZA': 'Creator – Z to A',
+    'search.select.sort.option.titleAZ': 'Title – A to Z',
+    'search.select.sort.option.titleZA': 'Title – Z to A',
+    'search.select.sort.option.curatorAZ': 'Curator – A to Z',
+    'search.select.sort.option.curatorZA': 'Curator – Z to A',
+    'search.select.sort.option.consignDateNewToOld': 'Consign Date – New to Old',
+    'search.select.sort.option.consignDateOldToNew': 'Consign Date – Old to New',
+    'search.select.grouped.option.ungrouped': 'Ungrouped – All',
+    'search.select.grouped.option.grouped': 'Grouped – All',
+    'search.select.grouped.option.groupedNoSales': 'Grouped – No Sales',
+
+    // Tab Sliders
+    'search.tabSliders.artworkSpotlight': 'Artworks Spotlight',
+    'search.tabSliders.artistSpotlight': 'Artists Spotlight',
+    'search.tabSliders.recentlySold': 'Recently Sold',
+
+    // Stacks
+    'search.stacks.curation.label': 'Curation is fun and easy. Try it now!',
+    'search.stacks.stackItem.curatedBy': 'Curated by',
 };
 
 export default language;

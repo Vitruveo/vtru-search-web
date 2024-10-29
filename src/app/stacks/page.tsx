@@ -6,14 +6,16 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/stacks';
 import { SEARCH_BASE_URL } from '@/constants/api';
 import PageContainer from '../components/Container/PageContainer';
+import { useI18n } from '../hooks/useI18n';
 
 const Stacks = () => {
+    const { language } = useI18n();
     const dispatch = useDispatch();
     const stacks = useSelector((state) => state.stacks.data);
     const [selectValues, setSelectValues] = useState({
         limit: { value: '25', label: '25' },
         page: { value: '1', label: '1' },
-        sort: { value: 'latest', label: 'Latest' },
+        sort: { value: 'latest', label: language['search.select.sort.option.latest'] as string },
     });
 
     useEffect(() => {

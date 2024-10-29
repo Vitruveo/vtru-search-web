@@ -91,7 +91,7 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
 
                 <Box display="flex" alignItems="center" mb={3} flexDirection={{ xs: 'column', sm: 'row' }}>
                     <Typography width={{ xs: '100%', sm: 120 }} mb={{ xs: 1, sm: 0 }}>
-                        Curator Fee
+                        {language['search.drawer.stack.curatorFee'] as string}
                     </Typography>
                     <Box width={'100%'} display={'flex'} gap={2} alignItems={'center'}>
                         <Typography>{curatorFeeValue}%</Typography>
@@ -110,7 +110,10 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
 
                 <Box display="flex" alignItems="center" mb={3} flexDirection={{ xs: 'column', sm: 'row' }}>
                     <Typography width={{ xs: '100%', sm: 120 }} mb={{ xs: 1, sm: 0 }}>
-                        Description <span style={{ display: 'block' }}>(Limit 200 characters)</span>
+                        {language['search.drawer.stack.description'] as string}{' '}
+                        <span style={{ display: 'block' }}>
+                            ({language['search.drawer.stack.descriptionLimit'] as string})
+                        </span>
                     </Typography>
                     <TextField multiline value={description} fullWidth onChange={onDescriptionChange} />
                 </Box>
@@ -122,9 +125,9 @@ export const PublishStackModal = ({ selectedAssets, isOpen, onClose }: PublishSt
                             variant="scrollable"
                             scrollButtons="auto"
                         >
-                            <Tab label="Video" value="1" />
-                            <Tab label="Grid" value="2" />
-                            <Tab label="Slideshow" value="3" />
+                            <Tab label={language['search.drawer.stack.videoGallery'] as string} value="1" />
+                            <Tab label={language['search.drawer.stack.webGallery'] as string} value="2" />
+                            <Tab label={language['search.drawer.stack.slideshow'] as string} value="3" />
                         </TabList>
                     </Box>
                     <TabPanel value="1">

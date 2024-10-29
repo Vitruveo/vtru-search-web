@@ -14,16 +14,50 @@ const language: Translation = {
 
     /* Asset Filter */
     'search.assetFilter.search.placeholder': 'Поиск актива',
+    'search.assetFilter.shortcut.nudity': 'Скрыть обнаженность',
+    'search.assetFilter.shortcut.ia': 'Скрыть ИИ',
+    'search.assetFilter.shortcut.photography': 'Фотография',
+    'search.assetFilter.shortcut.animation': 'Анимация',
+    'search.assetFilter.shortcut.physicalArt': 'Физическое искусство',
+    'search.assetFilter.shortcut.digitalArt': 'Цифровое искусство',
+    'search.assetFilter.shortcut.includeSold': 'Включить проданные',
+    'search.assetFilter.shortcut.hasBTS': 'есть BTS',
+
+    'search.assetFilter.licenses': 'Лицензии',
+    'search.assetFilter.licenses.price': 'Цена',
 
     'search.assetFilter.resetFilters': 'Сбросить фильтры',
 
+    'search.drawer.stack.login': 'Войти с помощью электронной почты',
+    'search.drawer.stack.sendCode': 'Отправить код',
+    'search.drawer.stack.verifyCode': 'Проверить код',
+    'search.drawer.stack.resendCode': 'Отправить код повторно',
+    'search.drawer.stack.changeEmail': 'Изменить электронную почту',
     'search.drawer.stack.publishStack': 'Опубликовать стек',
     'search.drawer.stack.noSelectedAssets': 'Нет выбранных активов',
     'search.drawer.stack.description': 'Описание',
+    'search.drawer.stack.descriptionLimit': 'Лимит 200 символов',
     'search.drawer.stack.slideshow': 'Слайд-шоу',
-    'search.drawer.stack.webGallery': 'Веб-галерея',
-    'search.drawer.stack.videoGallery': 'Видео галерея',
+    'search.drawer.stack.webGallery': 'сетка',
+    'search.drawer.stack.videoGallery': 'видео',
     'search.drawer.stack.title': 'Заголовок',
+    'search.drawer.stack.curatorFee': 'Комиссия куратора',
+    'search.drawer.stack.video.subtitle': 'Давайте сделаем видео из вашей удивительной кураторской работы',
+    'search.drawer.stack.video.note': 'Примечание: Видео ограничено первыми 16 курируемыми элементами.',
+    'search.drawer.stack.video.not.support': 'Ваш браузер не поддерживает тег видео.',
+    'search.drawer.stack.video.share': 'Теперь поделитесь своим видео с миром!',
+    'search.drawer.stack.grid.subtitle': 'Сетка изображений отлично смотрится в социальных сетях',
+    'search.drawer.stack.grid.note': 'Примечание: Сетка ограничена первыми 16 курируемыми элементами.',
+    'search.drawer.stack.grid.generating': 'Генерация сетки изображений...',
+    'search.drawer.stack.grid.share': 'Теперь поделитесь своей сеткой изображений с миром',
+    'search.drawer.stack.slideshow.interval': 'Интервал (секунды)',
+    'search.drawer.stack.slideshow.infobar': 'Инфо-панель',
+    'search.drawer.stack.slideshow.option.alternate': 'Чередовать',
+    'search.drawer.stack.slideshow.option.leftUp': 'Влево/Вверх',
+    'search.drawer.stack.slideshow.option.RightDown': 'Вправо/Вниз',
+    'search.drawer.stack.slideshow.option.hide': 'Скрыть',
+    'search.drawer.stack.slideshow.button.publish': 'Создать слайд-шоу',
+    'search.drawer.stack.slideshow.open': 'Открыть слайд-шоу',
     'search.drawer.stack.button.publish': 'Опубликовать',
     'search.drawer.stack.sound': 'Звук',
 
@@ -32,6 +66,8 @@ const language: Translation = {
     'search.assetFilter.context.title.culture': 'Культура',
     'search.assetFilter.context.title.mood': 'Настроение',
     'search.assetFilter.context.title.colors': 'Цвета',
+    'search.assetFilter.context.title.colors.precision': 'Точность',
+    'search.assetFilter.context.title.colors.addColor': 'Добавить цвет',
     'search.assetFilter.context.title.orientation': 'Ориентация',
 
     'search.assetFilter.context.culture.african': 'Африканский',
@@ -73,9 +109,42 @@ const language: Translation = {
     /* Asset List */
     'search.assetList.curateStack': 'Стек Куратора',
     'search.assetList.curateStack.selected': 'Выбранный/Выбранная',
-
+    'search.assetList.curateStack.selectAll': 'Выбрать все',
+    'search.assetList.curateStack.deselectAll': 'Снять выделение',
     'search.assetList.visualization.description': 'Описание',
     'search.assetList.visualization.view': 'Просмотр',
+    'search.assetList.resetsearch': 'Сбросить search',
+    'search.assetList.scrollToTop': 'Прокрутить вверх',
+
+    // Paginations and order
+    'search.pagination': 'Пагинация',
+    'search.order.sort': 'Сортировать',
+    'search.order.artists': 'Художники',
+
+    // Tab Sliders
+    'search.tabSliders.artworkSpotlight': 'Произведения искусства в центре внимания',
+    'search.tabSliders.artistSpotlight': 'Художники в центре внимания',
+    'search.tabSliders.recentlySold': 'Недавно продано',
+
+    // options for select
+    'search.select.sort.option.latest': 'Последние',
+    'search.select.sort.option.priceHighToLow': 'Цена – от высокой к низкой',
+    'search.select.sort.option.priceLowToHigh': 'Цена – от низкой к высокой',
+    'search.select.sort.option.creatorAZ': 'Создатель – от А до Я',
+    'search.select.sort.option.creatorZA': 'Создатель – от Я до А',
+    'search.select.sort.option.titleAZ': 'Название – от А до Я',
+    'search.select.sort.option.titleZA': 'Название – от Я до А',
+    'search.select.sort.option.curatorAZ': 'Куратор – от А до Я',
+    'search.select.sort.option.curatorZA': 'Куратор – от Я до А',
+    'search.select.sort.option.consignDateNewToOld': 'Дата консигнации – от новой к старой',
+    'search.select.sort.option.consignDateOldToNew': 'Дата консигнации – от старой к новой',
+    'search.select.grouped.option.ungrouped': 'Без группировки – Все',
+    'search.select.grouped.option.grouped': 'С группировкой – Все',
+    'search.select.grouped.option.groupedNoSales': 'С группировкой – Без продаж',
+
+    // Stacks
+    'search.stacks.curation.label': 'Кураторство - это весело и легко. Попробуйте сейчас!',
+    'search.stacks.stackItem.curatedBy': 'Куратор',
 };
 
 export default language;

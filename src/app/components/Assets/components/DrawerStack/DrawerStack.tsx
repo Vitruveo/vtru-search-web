@@ -108,7 +108,9 @@ function DrawerStack({ drawerStackOpen, onClose }: Props) {
                         }}
                         disabled={statedLogin && !isLogged}
                     >
-                        {!isLogged ? 'Login with your email' : 'Publish Stack'}
+                        {!isLogged
+                            ? (language['search.drawer.stack.login'] as string)
+                            : (language['search.drawer.stack.publishStack'] as string)}
                     </Button>
 
                     {!isLogged && (
@@ -128,7 +130,7 @@ function DrawerStack({ drawerStackOpen, onClose }: Props) {
                                         sx={{ marginTop: 2 }}
                                         disabled={loading}
                                     >
-                                        Send Code
+                                        {language['search.drawer.stack.sendCode'] as string}
                                     </Button>
                                 </Box>
                             )}
@@ -148,7 +150,7 @@ function DrawerStack({ drawerStackOpen, onClose }: Props) {
                                         sx={{ marginTop: 2 }}
                                         disabled={loading}
                                     >
-                                        Verify code
+                                        {language['search.drawer.stack.verifyCode'] as string}
                                     </Button>
                                     <Box mt={1} display="flex" justifyContent="space-between">
                                         <Button
@@ -159,7 +161,7 @@ function DrawerStack({ drawerStackOpen, onClose }: Props) {
                                             }}
                                             onClick={() => dispatch(actionsCreator.resendCode())}
                                         >
-                                            Resend code
+                                            {language['search.drawer.stack.resendCode'] as string}
                                         </Button>
                                         <Button
                                             size="small"
@@ -169,7 +171,7 @@ function DrawerStack({ drawerStackOpen, onClose }: Props) {
                                             }}
                                             onClick={() => dispatch(actionsCreator.resetEmail())}
                                         >
-                                            Change email
+                                            {language['search.drawer.stack.changeEmail'] as string}
                                         </Button>
                                     </Box>
                                 </Box>
