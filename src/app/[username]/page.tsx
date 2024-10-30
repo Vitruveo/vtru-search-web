@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     const metaOg = {
         title: profile.username,
-        description: profile.artsQuantity,
+        description: 'Profile Xibit',
         url: `${GENERAL_STORAGE_URL}/${profile.avatar}`,
         image: `${GENERAL_STORAGE_URL}/${profile.avatar}`,
     };

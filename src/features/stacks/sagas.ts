@@ -39,7 +39,7 @@ function* getStacks() {
 function* getStacksSpotlight() {
     try {
         const URL_SPOTLIGHT = `${API_BASE_URL}/creators/public/stackSpotlight`;
-        const response: AxiosResponse<APIResponse<Stack[]>> = yield call(axios.get, URL_SPOTLIGHT);
+        const response: AxiosResponse<APIResponse<{ stack: Stack }[]>> = yield call(axios.get, URL_SPOTLIGHT);
         yield put(actions.setSpotlight(response.data.data));
     } catch (error) {
         // Handle error

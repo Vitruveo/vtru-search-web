@@ -10,6 +10,7 @@ import { MediaRenderer } from '../Assets/components/MediaRenderer';
 
 function StackSpotlightSlider() {
     const stacks = useSelector((state) => state.stacks.spotlight);
+
     const theme = useTheme();
 
     const handleClickItem = (stack: Stack) => {
@@ -25,9 +26,9 @@ function StackSpotlightSlider() {
     return (
         <Box minHeight={250}>
             <Marquee>
-                {stacks.map((stack, index) => {
-                    const stackTitle = stack?.stacks.title || 'No Title';
-                    const creatorName = stack?.username || 'No creator';
+                {stacks.map((item, index) => {
+                    const stackTitle = item.stack?.stacks.title || 'No Title';
+                    const creatorName = item.stack?.username || 'No creator';
 
                     return (
                         <Box
@@ -36,7 +37,7 @@ function StackSpotlightSlider() {
                             justifyContent="center"
                             alignItems="center"
                             m={2}
-                            onClick={() => handleClickItem(stack)}
+                            onClick={() => handleClickItem(item.stack)}
                             sx={{
                                 backgroundColor: theme.palette.grey[100],
                                 ':hover': {
@@ -48,11 +49,11 @@ function StackSpotlightSlider() {
                         >
                             <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
                                 <MediaRenderer
-                                    key={stack.stacks.id}
-                                    src={handleImage(stack)}
+                                    key={item.stack.stacks.id}
+                                    src={handleImage(item.stack)}
                                     fallbackSrc={'https://via.placeholder.com/250'}
-                                    type={stack.stacks.type}
-                                    onClick={() => handleClickItem(stack)}
+                                    type={item.stack.stacks.type}
+                                    onClick={() => handleClickItem(item.stack)}
                                 />
                             </Box>
                             <CardContent
@@ -64,7 +65,7 @@ function StackSpotlightSlider() {
                             >
                                 <StackMui direction="column" mb={4} gap={1}>
                                     <Typography
-                                        title={stack.stacks.title}
+                                        title={item.stack.stacks.title}
                                         variant="h5"
                                         sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
                                         width="100%"
@@ -86,9 +87,9 @@ function StackSpotlightSlider() {
                                         >
                                             {creatorName}
                                         </Typography>
-                                        <Typography variant="h6" sx={{ whiteSpace: 'nowrap' }}>
-                                            (+{stack.stacks.quantity} stacks)
-                                        </Typography>
+                                        {/* <Typography variant="h6" sx={{ whiteSpace: 'nowrap' }}>
+                                            (+{item.stack.stacks.quantity} stacks)
+                                        </Typography> */}
                                     </Box>
                                 </StackMui>
                             </CardContent>
