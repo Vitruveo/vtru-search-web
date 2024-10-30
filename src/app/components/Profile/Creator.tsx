@@ -2,6 +2,7 @@ import { GENERAL_STORAGE_URL } from '@/constants/aws';
 import { ProfileCreator } from '@/features/profile/creator/types';
 import { Box, Skeleton, Theme, Typography, useMediaQuery } from '@mui/material';
 import Avatar from '../Assets/components/Avatar';
+import Social from './Social';
 
 interface ProfileCreatorProps {
     data: {
@@ -33,6 +34,7 @@ export default function Creator({ data }: ProfileCreatorProps) {
                 <Avatar baseUrl={GENERAL_STORAGE_URL} path={creator.avatar} size="large" />
                 <Box display={'flex'} flexDirection={'column'} gap={1}>
                     <Typography variant="h1">@{creator.username}</Typography>
+                    {creator.socials && <Social social={creator.socials} />}
                     <Typography variant="body1">{creator.artsQuantity} arts</Typography>
                 </Box>
             </Box>
