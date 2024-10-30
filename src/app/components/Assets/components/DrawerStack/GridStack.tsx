@@ -80,7 +80,7 @@ export default function GridStack({ selectedAssets, title, description, fees }: 
         return (
             <>
                 <Box display={'flex'} justifyContent={'center'}>
-                    <Typography fontWeight={'bold'}>Now share your image grid with the world</Typography>
+                    <Typography fontWeight={'bold'}>{language['search.drawer.stack.grid.share'] as string}</Typography>
                 </Box>
                 <Box display={'flex'} flexDirection={'row'} gap={5} mt={4} mb={4} justifyContent={'center'}>
                     <Box
@@ -142,7 +142,11 @@ export default function GridStack({ selectedAssets, title, description, fees }: 
                         ))}
                     </Box>
                 </Box>
-                {grid.loading && <Typography variant="caption">Generating image grid...</Typography>}
+                {grid.loading && (
+                    <Typography variant="caption">
+                        {language['search.drawer.stack.grid.generating'] as string}
+                    </Typography>
+                )}
                 {grid.path && (
                     <Box display={'flex'} justifyContent={'center'}>
                         <ShareButton
@@ -161,7 +165,10 @@ export default function GridStack({ selectedAssets, title, description, fees }: 
     return (
         <>
             <Box display={'flex'} justifyContent={'center'}>
-                <Typography fontWeight={'bold'}> 🖼️ An image grid looks great on social media</Typography>
+                <Typography fontWeight={'bold'}>
+                    {' '}
+                    🖼️ {language['search.drawer.stack.grid.subtitle'] as string}
+                </Typography>
             </Box>
 
             <Grid container mt={4} mb={4} gap={2} display={'flex'} flexDirection={'row'} justifyContent={'center'}>
@@ -251,7 +258,7 @@ export default function GridStack({ selectedAssets, title, description, fees }: 
                 </Box>
             </Grid>
 
-            <Typography variant="caption">Note: Grid is limited to the first 16 curated items.</Typography>
+            <Typography variant="caption">{language['search.drawer.stack.grid.note'] as string}</Typography>
             <Button
                 variant="contained"
                 fullWidth

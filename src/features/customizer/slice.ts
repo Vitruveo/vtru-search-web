@@ -10,6 +10,8 @@ export type StateKeys =
     | 'pageNavigation'
     | 'cardDetail'
     | 'assets';
+
+export type StateKeysStack = 'header' | 'curate' | 'spotlight' | 'navigation';
 interface StateType {
     activeDir?: string | any;
     activeMode?: string; // This can be light or dark
@@ -26,6 +28,7 @@ interface StateType {
     isCardShadow?: boolean;
     borderRadius?: number | any;
     hidden?: { [key in StateKeys]: boolean };
+    hiddenStack?: { [key in StateKeysStack]: boolean };
     activeSlider: string;
 }
 
@@ -56,6 +59,12 @@ const initialState: StateType = {
         artistSpotlight: false,
     },
     activeSlider: '1',
+    hiddenStack: {
+        header: false,
+        curate: false,
+        spotlight: false,
+        navigation: false,
+    },
 };
 
 export const customizerSlice = createSlice({
@@ -107,6 +116,9 @@ export const customizerSlice = createSlice({
         setHidden: (state: StateType, action: PayloadAction<{ key: StateKeys; hidden: boolean }>) => {
             if (state.hidden) state.hidden[action.payload.key] = action.payload.hidden;
         },
+        setHiddenStack: (state: StateType, action: PayloadAction<{ key: StateKeysStack; hidden: boolean }>) => {
+            if (state.hiddenStack) state.hiddenStack[action.payload.key] = action.payload.hidden;
+        },
         reset: (state: StateType) => {
             state.hidden = {
                 filter: false,
@@ -118,6 +130,14 @@ export const customizerSlice = createSlice({
                 cardDetail: false,
                 assets: false,
                 artistSpotlight: false,
+            };
+        },
+        resetStack: (state: StateType) => {
+            state.hiddenStack = {
+                header: false,
+                curate: false,
+                spotlight: false,
+                navigation: false,
             };
         },
     },
@@ -136,7 +156,9 @@ export const {
     setLanguage,
     setCardShadow,
     setHidden,
+    setHiddenStack,
     reset,
+    resetStack,
     changeActiveSlider,
 } = customizerSlice.actions;
 

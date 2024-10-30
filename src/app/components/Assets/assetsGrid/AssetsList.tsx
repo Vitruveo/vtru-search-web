@@ -36,23 +36,24 @@ import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
 import { AssetItem } from './AssetItem';
 import './AssetScroll.css';
 
-const optionsForSelectSort = [
-    { value: 'latest', label: 'Latest' },
-    { value: 'priceHighToLow', label: 'Price – High to Low' },
-    { value: 'priceLowToHigh', label: 'Price – Low to High' },
-    { value: 'creatorAZ', label: 'Creator – a-z' },
-    { value: 'creatorZA', label: 'Creator – z-a' },
-    { value: 'consignNewToOld', label: 'Consign Date – New to Old' },
-    { value: 'consignOldToNew', label: 'Consign Date – Old to New' },
-];
-
-const optionsForSelectGrouped = [
-    { value: 'no', label: 'Ungrouped – All' },
-    { value: 'all', label: 'Grouped – All' },
-    { value: 'noSales', label: 'Grouped – No Sales' },
-];
-
 const AssetsList = () => {
+    const { language } = useI18n();
+    const optionsForSelectSort = [
+        { value: 'latest', label: language['search.select.sort.option.latest'] as string },
+        { value: 'priceHighToLow', label: language['search.select.sort.option.priceHighToLow'] as string },
+        { value: 'priceLowToHigh', label: language['search.select.sort.option.priceLowToHigh'] as string },
+        { value: 'creatorAZ', label: language['search.select.sort.option.creatorAZ'] as string },
+        { value: 'creatorZA', label: language['search.select.sort.option.creatorZA'] as string },
+        { value: 'consignNewToOld', label: language['search.select.sort.option.consignDateNewToOld'] as string },
+        { value: 'consignOldToNew', label: language['search.select.sort.option.consignDateOldToNew'] as string },
+    ];
+
+    const optionsForSelectGrouped = [
+        { value: 'no', label: language['search.select.grouped.option.ungrouped'] as string },
+        { value: 'all', label: language['search.select.grouped.option.grouped'] as string },
+        { value: 'noSales', label: language['search.select.grouped.option.groupedNoSales'] as string },
+    ];
+
     const dispatch = useDispatch();
     const theme = useTheme();
     const params = new URLSearchParams(window.location.search);
@@ -65,7 +66,6 @@ const AssetsList = () => {
 
     const hasCurated = grid || video || slideshow;
 
-    const { language } = useI18n();
     const [assetView, setAssetView] = useState<any>();
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
     const [sortOrder, setSortOrder] = useState<string>('latest');
@@ -382,7 +382,7 @@ const AssetsList = () => {
                                                 fontSize: 14,
                                             }}
                                         >
-                                            Reset search
+                                            {language['search.assetList.resetsearch'] as string}
                                         </Typography>
                                     </button>
                                 )}
@@ -400,10 +400,10 @@ const AssetsList = () => {
                         {curateStack.isActive && (
                             <Box display="flex" alignItems="center" gap={1}>
                                 <Button variant="contained" onClick={handleUnselectAll}>
-                                    Deselect All
+                                    {language['search.assetList.curateStack.deselectAll'] as string}
                                 </Button>
                                 <Button variant="contained" onClick={handleSelectAll}>
-                                    Select All
+                                    {language['search.assetList.curateStack.selectAll'] as string}
                                 </Button>
                                 <Box sx={{ cursor: 'pointer' }} onClick={drawerStack.activate}>
                                     {lgUp && (
@@ -502,7 +502,7 @@ const AssetsList = () => {
                                     gap={lgUp ? 4 : 2}
                                 >
                                     <Box maxWidth={350} display="flex" flexDirection="row" alignItems="center" gap={1}>
-                                        <Typography variant="h5">Sort:</Typography>
+                                        <Typography variant="h5">{language['search.order.sort'] as string}:</Typography>
                                         <Select
                                             placeholder="Sort"
                                             options={optionsForSelectSort}
@@ -545,7 +545,9 @@ const AssetsList = () => {
                                         />
                                     </Box>
                                     <Box display="flex" flexDirection="row" maxWidth={350} alignItems="center" gap={1}>
-                                        <Typography variant="h5">Artists:</Typography>
+                                        <Typography variant="h5">
+                                            {language['search.order.artists'] as string}:
+                                        </Typography>
                                         <Select
                                             placeholder="Artists"
                                             options={optionsForSelectGrouped}
@@ -600,7 +602,7 @@ const AssetsList = () => {
                                 flexWrap={'wrap'}
                                 gap={1}
                             >
-                                <Typography variant="h5">Pagination:</Typography>
+                                <Typography variant="h5">{language['search.pagination'] as string}:</Typography>
                                 <Select
                                     placeholder="Page Items"
                                     options={[
@@ -909,7 +911,7 @@ const AssetsList = () => {
                             mb={lgUp ? 4 : 12}
                         >
                             <Button variant="contained" onClick={handleScrollToTop}>
-                                Scroll to top
+                                {language['search.assetList.scrollToTop'] as string}
                             </Button>
                         </Box>
                     </>

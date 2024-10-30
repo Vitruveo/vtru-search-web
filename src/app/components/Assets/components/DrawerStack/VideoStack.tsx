@@ -87,14 +87,18 @@ export default function VideoStack({
         return (
             <>
                 <Box display="flex" justifyContent="center">
-                    {loadingVideo ? <CircularProgress /> : <Typography>Now share your video with the world</Typography>}
+                    {loadingVideo ? (
+                        <CircularProgress />
+                    ) : (
+                        <Typography>{language['search.drawer.stack.video.share'] as string}</Typography>
+                    )}
                 </Box>
 
                 {hasVideo && (
                     <Box mt={2}>
                         <video width="100%" controls>
                             <source src={video} type="video/mp4" />
-                            Your browser does not support the video tag.
+                            {language['search.drawer.stack.video.not.support'] as string}
                         </video>
                     </Box>
                 )}
@@ -117,7 +121,10 @@ export default function VideoStack({
     return (
         <>
             <Box display={'flex'} justifyContent={'center'}>
-                <Typography fontWeight={'bold'}> 📹 Let&apos;s make a video from your amazing curation</Typography>
+                <Typography fontWeight={'bold'}>
+                    {' '}
+                    📹 {language['search.drawer.stack.video.subtitle'] as string}
+                </Typography>
             </Box>
             <Box display="flex" alignItems="center" mb={2} mt={2}>
                 <Typography width={150}>{language['search.drawer.stack.sound'] as string}</Typography>
@@ -146,7 +153,7 @@ export default function VideoStack({
                 </Button>
             </Box>
             <Box height={100} />
-            <Typography variant="caption">Note: Video is limited to first 16 curated items.</Typography>
+            <Typography variant="caption">{language['search.drawer.stack.video.note'] as string}</Typography>
             <Button
                 disabled={loadingVideo || selectedAssets.length === 0 || title.length === 0}
                 variant="contained"

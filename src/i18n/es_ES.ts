@@ -14,16 +14,51 @@ const language: Translation = {
 
     /* Asset Filter */
     'search.assetFilter.search.placeholder': 'Búsqueda de Activos',
+    'search.assetFilter.shortcut.nudity': 'Ocultar desnudez',
+    'search.assetFilter.shortcut.ia': 'Ocultar IA',
+    'search.assetFilter.shortcut.photography': 'Fotografía',
+    'search.assetFilter.shortcut.animation': 'Animación',
+    'search.assetFilter.shortcut.physicalArt': 'Arte físico',
+    'search.assetFilter.shortcut.digitalArt': 'Arte digital',
+    'search.assetFilter.shortcut.includeSold': 'Incluir vendidos',
+    'search.assetFilter.shortcut.hasBTS': 'Tiene BTS',
+
+    'search.assetFilter.licenses': 'Licencias',
+    'search.assetFilter.licenses.price': 'Precio',
 
     'search.assetFilter.resetFilters': 'Restablecer filtros',
 
-    'search.drawer.stack.publishStack': 'Publicar pila',
+    'search.drawer.stack.login': 'Inicia sesión con tu correo electrónico',
+    'search.drawer.stack.sendCode': 'Enviar código',
+    'search.drawer.stack.verifyCode': 'Verificar código',
+    'search.drawer.stack.resendCode': 'Reenviar código',
+    'search.drawer.stack.changeEmail': 'Cambiar correo electrónico',
+    'search.drawer.stack.viewProfile': 'Ver perfil',
+    'search.drawer.stack.publishStack': 'Publicar Pila',
     'search.drawer.stack.noSelectedAssets': 'No hay activos seleccionados',
     'search.drawer.stack.description': 'Descripción',
-    'search.drawer.stack.slideshow': 'Presentación de diapositivas',
-    'search.drawer.stack.webGallery': 'Galería web',
-    'search.drawer.stack.videoGallery': 'Galería de video',
+    'search.drawer.stack.descriptionLimit': 'Límite de 200 caracteres',
+    'search.drawer.stack.slideshow': 'Presentación',
+    'search.drawer.stack.webGallery': 'Cuadrícula',
+    'search.drawer.stack.videoGallery': 'Video',
     'search.drawer.stack.title': 'Título',
+    'search.drawer.stack.curatorFee': 'Tarifa del Curador',
+    'search.drawer.stack.video.subtitle': 'Hagamos un video de tu increíble curación',
+    'search.drawer.stack.video.note': 'Nota: El video está limitado a los primeros 16 elementos curados.',
+    'search.drawer.stack.video.not.support': 'Tu navegador no admite la etiqueta de video.',
+    'search.drawer.stack.video.share': '¡Ahora comparte tu video con el mundo!',
+    'search.drawer.stack.grid.subtitle': 'Una cuadrícula de imágenes se ve genial en las redes sociales',
+    'search.drawer.stack.grid.note': 'Nota: La cuadrícula está limitada a los primeros 16 elementos curados.',
+    'search.drawer.stack.grid.generating': 'Generando cuadrícula de imágenes...',
+    'search.drawer.stack.grid.share': '¡Ahora comparte tu cuadrícula de imágenes con el mundo!',
+    'search.drawer.stack.slideshow.interval': 'Intervalo (segundos)',
+    'search.drawer.stack.slideshow.infobar': 'Barra de información',
+    'search.drawer.stack.slideshow.option.alternate': 'Alternar',
+    'search.drawer.stack.slideshow.option.leftUp': 'Izquierda/Arriba',
+    'search.drawer.stack.slideshow.option.RightDown': 'Derecha/Abajo',
+    'search.drawer.stack.slideshow.option.hide': 'Ocultar',
+    'search.drawer.stack.slideshow.button.publish': 'Generar Presentación',
+    'search.drawer.stack.slideshow.open': 'Abrir presentación',
     'search.drawer.stack.button.publish': 'Publicar',
     'search.drawer.stack.sound': 'Sonido',
 
@@ -32,6 +67,8 @@ const language: Translation = {
     'search.assetFilter.context.title.culture': 'Cultura',
     'search.assetFilter.context.title.mood': 'Estado de ánimo',
     'search.assetFilter.context.title.colors': 'Colores',
+    'search.assetFilter.context.title.colors.precision': 'Precisión',
+    'search.assetFilter.context.title.colors.addColor': 'Agregar color',
     'search.assetFilter.context.title.orientation': 'Orientación',
 
     'search.assetFilter.context.culture.african': 'Africana',
@@ -73,9 +110,42 @@ const language: Translation = {
     /* Asset List */
     'search.assetList.curateStack': 'Pila de curación',
     'search.assetList.curateStack.selected': 'Seleccionados',
-
+    'search.assetList.curateStack.selectAll': 'Seleccionar todo',
+    'search.assetList.curateStack.deselectAll': 'Deseleccionar todo',
     'search.assetList.visualization.description': 'Descripción',
     'search.assetList.visualization.view': 'Ver',
+    'search.assetList.resetsearch': 'Restablecer search',
+    'search.assetList.scrollToTop': 'Desplazarse hacia arriba',
+
+    // Paginations and order
+    'search.pagination': 'Paginación',
+    'search.order.sort': 'Ordenar',
+    'search.order.artists': 'Artistas',
+
+    // Tab Sliders
+    'search.tabSliders.artworkSpotlight': 'Obras de arte destacadas',
+    'search.tabSliders.artistSpotlight': 'Artistas destacados',
+    'search.tabSliders.recentlySold': 'Vendidos recientemente',
+
+    // options for select
+    'search.select.sort.option.latest': 'Último',
+    'search.select.sort.option.priceHighToLow': 'Precio – De mayor a menor',
+    'search.select.sort.option.priceLowToHigh': 'Precio – De menor a mayor',
+    'search.select.sort.option.creatorAZ': 'Creador – A a Z',
+    'search.select.sort.option.creatorZA': 'Creador – Z a A',
+    'search.select.sort.option.titleAZ': 'Título – A a Z',
+    'search.select.sort.option.titleZA': 'Título – Z a A',
+    'search.select.sort.option.curatorAZ': 'Curador – A a Z',
+    'search.select.sort.option.curatorZA': 'Curador – Z a A',
+    'search.select.sort.option.consignDateNewToOld': 'Fecha de consignación – De nuevo a viejo',
+    'search.select.sort.option.consignDateOldToNew': 'Fecha de consignación – De viejo a nuevo',
+    'search.select.grouped.option.ungrouped': 'Sin agrupar – Todos',
+    'search.select.grouped.option.grouped': 'Agrupado – Todos',
+    'search.select.grouped.option.groupedNoSales': 'Agrupado – Sin ventas',
+
+    // Stacks
+    'search.stacks.curation.label': '¡La curación es divertida y fácil. Pruébalo ahora!',
+    'search.stacks.stackItem.curatedBy': 'Curado por',
 };
 
 export default language;

@@ -32,7 +32,7 @@ export default function Creator({ data }: ProfileCreatorProps) {
             <Box display={'flex'} alignItems={'center'} gap={3} flexDirection={smUp ? 'row' : 'column'}>
                 <Avatar baseUrl={GENERAL_STORAGE_URL} path={creator.avatar} size="large" />
                 <Box display={'flex'} flexDirection={'column'} gap={1}>
-                    <Typography variant="h1">{creator.username}</Typography>
+                    <Typography variant="h1">@{creator.username}</Typography>
                     <Typography variant="body1">{creator.artsQuantity} arts</Typography>
                 </Box>
             </Box>
