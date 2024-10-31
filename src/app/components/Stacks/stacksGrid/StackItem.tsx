@@ -132,8 +132,8 @@ const StackItemMain = ({ stack }: Props) => {
                         onClick={handleModalClose}
                         sx={{
                             position: 'absolute',
-                            right: 8,
-                            top: 8,
+                            right: 80,
+                            top: 15,
                             color: theme.palette.primary.main,
                             zIndex: 1,
                         }}

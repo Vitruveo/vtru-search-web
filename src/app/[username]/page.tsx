@@ -44,5 +44,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProfilePageRoute() {
-    return <Component />;
+    return null; //<Component />;
 }
