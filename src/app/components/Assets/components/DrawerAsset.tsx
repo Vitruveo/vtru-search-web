@@ -72,13 +72,13 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                                 <Typography variant="h6" maxWidth={width - 40} sx={{ wordBreak: 'break-word' }}>
                                     {assetView?.assetMetadata?.creators?.formData[0].name || 'No creator'}
                                 </Typography>
-                                <Link
+                                {/* <Link
                                     href={`${SEARCH_BASE_URL}/${creator.username}`}
                                     target="_blank"
                                     style={{ color: theme.palette.primary.main }}
                                 >
                                     {language['search.drawer.stack.viewProfile'] as string}
-                                </Link>
+                                </Link> */}
                             </Box>
                         )}
                 </Box>
