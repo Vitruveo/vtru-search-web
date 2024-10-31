@@ -3,6 +3,7 @@ import { Box, Drawer, IconButton, List, ListItem, ListItemText, Theme, Typograph
 import { IconMenu2 } from '@tabler/icons-react';
 import { useSelector } from '@/store/hooks';
 import { SEARCH_BASE_URL, STUDIO_BASE_URL } from '@/constants/api';
+import BuyVUSDModal from '../BuyVUSD/modal';
 
 const projects = [
     { title: 'SEARCH', url: `${SEARCH_BASE_URL}` },
@@ -12,11 +13,12 @@ const projects = [
     { title: 'STUDIO', url: `${STUDIO_BASE_URL}/login` },
     { title: 'ABOUT XIBIT', url: 'https://about.xibit.app', onlyMobile: true },
     { title: 'ABOUT VITRUVEO', url: 'https://vitruveo.xyz', onlyMobile: true },
-    { title: 'BUY VUSD', url: '' },
+    { title: 'BUY VUSD', url: 'no-redirect' },
 ];
 
 const AllProjectsMenu = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
 
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const customizer = useSelector((state) => state.customizer);
@@ -45,6 +47,9 @@ const AllProjectsMenu = () => {
         },
     });
 
+    const handleOpenModal = () => setOpenModal(true);
+    const handleCloseModal = () => setOpenModal(false);
+
     if (lgDown) {
         return (
             <>
@@ -56,7 +61,9 @@ const AllProjectsMenu = () => {
                         {projects.map((v) => (
                             <ListItem
                                 key={v.title}
-                                onClick={() => v.url && window.open(v.url, '_blank')}
+                                onClick={() =>
+                                    v.title === 'BUY VUSD' ? handleOpenModal() : v.url && window.open(v.url, '_blank')
+                                }
                                 sx={getStyle(v)}
                             >
                                 <ListItemText primary={v.title} />
@@ -64,6 +71,7 @@ const AllProjectsMenu = () => {
                         ))}
                     </List>
                 </Drawer>
+                <BuyVUSDModal isOpen={openModal} onClose={handleCloseModal} />
             </>
         );
     }
@@ -74,7 +82,12 @@ const AllProjectsMenu = () => {
         <Box marginRight={7} display="flex">
             {deskMenus.map((v, index) => (
                 <Box key={v.title} display="flex">
-                    <Typography onClick={() => v.url && window.open(v.url, '_blank')} sx={getStyle(v)}>
+                    <Typography
+                        onClick={() =>
+                            v.title === 'BUY VUSD' ? handleOpenModal() : v.url && window.open(v.url, '_blank')
+                        }
+                        sx={getStyle(v)}
+                    >
                         {v.title}
                     </Typography>
                     {index !== deskMenus.length - 1 && (
@@ -84,6 +97,7 @@ const AllProjectsMenu = () => {
                     )}
                 </Box>
             ))}
+            <BuyVUSDModal isOpen={openModal} onClose={handleCloseModal} />
         </Box>
     );
 };
