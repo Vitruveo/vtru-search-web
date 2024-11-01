@@ -3,11 +3,13 @@ import { Box, Button, Typography, Drawer, useMediaQuery } from '@mui/material';
 import cookie from 'cookiejs';
 import { Theme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
-import { AWS_BASE_URL_S3, GENERAL_STORAGE_URL } from '@/constants/aws';
-import { STORE_BASE_URL } from '@/constants/api';
+import { ASSET_STORAGE_URL, GENERAL_STORAGE_URL } from '@/constants/aws';
+import { SEARCH_BASE_URL } from '@/constants/api';
 import { useSelector } from '@/store/hooks';
 import { MediaRenderer } from './MediaRenderer';
 import Avatar from './Avatar';
+import Link from 'next/link';
+import { useTheme } from '@mui/material/styles';
 
 interface Props {
     drawerOpen: boolean;
@@ -16,10 +18,11 @@ interface Props {
 }
 
 export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
+    const theme = useTheme();
     const { language } = useI18n();
 
-    const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
-    const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
+    const lgUp = useMediaQuery((mq: Theme) => mq.breakpoints.up('lg'));
+    const mdUp = useMediaQuery((mq: Theme) => mq.breakpoints.up('md'));
 
     const creator = useSelector((state) => state.assets.creator);
     const paused = useSelector((state) => state.assets.paused);
@@ -41,7 +44,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
             cookie.remove('video');
             document.cookie = 'video=; path=/; domain=' + domain + '; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         }
-        window.open(`${STORE_BASE_URL}/${creator.username}/${assetView?._id}`);
+        window.open(`${SEARCH_BASE_URL}/${creator.username}/${assetView?._id}`);
     };
 
     const width = lgUp ? 400 : mdUp ? 300 : 200;
@@ -52,7 +55,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
             <Box p={4}>
                 <Box width={width} height={width} borderRadius={'8px'}>
                     <MediaRenderer
-                        src={`${AWS_BASE_URL_S3}/${assetView?.formats?.preview?.path}`}
+                        src={`${ASSET_STORAGE_URL}/${assetView?.formats?.preview?.path}`}
                         fallbackSrc={'https://via.placeholder.com/' + width + 'x' + height}
                         autoPlay
                     />
@@ -65,9 +68,18 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                     <Avatar baseUrl={GENERAL_STORAGE_URL} path={creator.avatar} />
                     {Array.isArray(assetView?.assetMetadata?.creators?.formData) &&
                         assetView?.assetMetadata?.creators?.formData?.length > 0 && (
-                            <Typography variant="h6">
-                                {assetView?.assetMetadata?.creators?.formData[0].name || 'No creator'}
-                            </Typography>
+                            <Box display={'flex'} flexDirection={'column'} gap={1}>
+                                <Typography variant="h6" maxWidth={width - 40} sx={{ wordBreak: 'break-word' }}>
+                                    {assetView?.assetMetadata?.creators?.formData[0].name || 'No creator'}
+                                </Typography>
+                                {/* <Link
+                                    href={`${SEARCH_BASE_URL}/${creator.username}`}
+                                    target="_blank"
+                                    style={{ color: theme.palette.primary.main }}
+                                >
+                                    {language['search.drawer.stack.viewProfile'] as string}
+                                </Link> */}
+                            </Box>
                         )}
                 </Box>
                 <Box mb={3}>

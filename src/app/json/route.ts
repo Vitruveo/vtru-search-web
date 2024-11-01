@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import axios from 'axios';
 
 import { API_BASE_URL, STORE_BASE_URL } from '@/constants/api';
-import { AWS_BASE_URL_S3, GENERAL_STORAGE_URL } from '@/constants/aws';
+import { ASSET_STORAGE_URL, GENERAL_STORAGE_URL } from '@/constants/aws';
 
 function parseQueryParams(searchParams: URLSearchParams) {
     const params: any = {};
@@ -90,7 +90,7 @@ export async function GET(req: Request) {
         spotlight: spotlight.data.data.map(multiplyPriceBy100),
         config: {
             baseUrl: {
-                assets: `${AWS_BASE_URL_S3}/`,
+                assets: `${ASSET_STORAGE_URL}/`,
                 general: `${GENERAL_STORAGE_URL}/`,
                 store: `${STORE_BASE_URL}/`,
             },

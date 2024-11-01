@@ -4,9 +4,9 @@ import { Box, CardContent, Link, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 import { useSelector } from '@/store/hooks';
-import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { SpotlightAsset } from '@/features/assets/types';
-import { STORE_BASE_URL } from '@/constants/api';
+import { SEARCH_BASE_URL } from '@/constants/api';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import { formatPrice } from '@/utils/assets';
 
@@ -15,7 +15,7 @@ function SpotlightSlider() {
     const theme = useTheme();
 
     const handleClickItem = (asset: SpotlightAsset) => {
-        window.open(`${STORE_BASE_URL}/${asset?.username || 'preview'}/${asset?._id}`);
+        window.open(`${SEARCH_BASE_URL}/${asset?.username}/${asset?._id}`);
     };
 
     return (
@@ -25,7 +25,7 @@ function SpotlightSlider() {
                     const assetTitle = asset?.title || 'No Title';
                     const creatorName = asset?.username || 'No creator';
 
-                    const price = formatPrice(asset.price);
+                    const price = formatPrice({ price: asset.price });
 
                     const nextAssetExists = index + 1 < assets.length;
                     return (
@@ -47,10 +47,10 @@ function SpotlightSlider() {
                         >
                             <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
                                 <MediaRenderer
-                                    src={`${AWS_BASE_URL_S3}/${asset?.preview}`}
+                                    src={`${ASSET_STORAGE_URL}/${asset?.preview}`}
                                     fallbackSrc={'https://via.placeholder.com/250'}
                                     preSource={
-                                        nextAssetExists ? `${AWS_BASE_URL_S3}/${assets[index + 1]?.preview}` : ''
+                                        nextAssetExists ? `${ASSET_STORAGE_URL}/${assets[index + 1]?.preview}` : ''
                                     }
                                 />
                             </Box>

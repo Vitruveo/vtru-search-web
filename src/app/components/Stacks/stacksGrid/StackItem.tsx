@@ -2,22 +2,13 @@ import { ShowAnimation } from '@/animations';
 import { SEARCH_BASE_URL, SLIDESHOW_BASE_URL } from '@/constants/api';
 import { GENERAL_STORAGE_URL } from '@/constants/aws';
 import { Stack } from '@/features/stacks/types';
-import {
-    Box,
-    CardContent,
-    Grid,
-    IconButton,
-    Modal,
-    Stack as MuiStack,
-    Tooltip,
-    Typography,
-    useMediaQuery,
-} from '@mui/material';
+import { Box, CardContent, Grid, IconButton, Modal, Stack as MuiStack, Tooltip, Typography } from '@mui/material';
 import { MediaRenderer } from '../../Assets/components/MediaRenderer';
 import BlankCard from '../../Shared/BlankCard';
 import { useTheme } from '@mui/material/styles';
 import { IconInfoCircle, IconPlayerPlayFilled, IconX } from '@tabler/icons-react';
 import React, { useState } from 'react';
+import { useI18n } from '@/app/hooks/useI18n';
 
 interface Props {
     stack: Stack;
@@ -25,7 +16,7 @@ interface Props {
 
 const StackItemMain = ({ stack }: Props) => {
     const theme = useTheme();
-    const smUp = useMediaQuery(theme.breakpoints.up('sm'));
+    const { language } = useI18n();
     const [isOpenModal, setIsOpenModal] = useState(false);
 
     const handleModalOpen = (event: React.MouseEvent) => {
@@ -141,8 +132,8 @@ const StackItemMain = ({ stack }: Props) => {
                         onClick={handleModalClose}
                         sx={{
                             position: 'absolute',
-                            right: 8,
-                            top: 8,
+                            right: 80,
+                            top: 15,
                             color: theme.palette.primary.main,
                             zIndex: 1,
                         }}
@@ -152,7 +143,7 @@ const StackItemMain = ({ stack }: Props) => {
                     <Box display={'flex'} gap={1}>
                         <Typography variant="h5">
                             <span>{stack.stacks.title}</span>
-                            <span> curated by </span>
+                            <span> {language['search.stacks.stackItem.curatedBy'] as string} </span>
                             <span style={{ fontStyle: 'italic', color: theme.palette.primary.main }}>
                                 {stack.username}
                             </span>

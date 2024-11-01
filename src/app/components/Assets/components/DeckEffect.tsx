@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { useSelector } from '@/store/hooks';
 import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';

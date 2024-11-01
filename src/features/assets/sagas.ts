@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { all, call, put, takeEvery, select, debounce } from 'redux-saga/effects';
+import { all, call, put, takeEvery, select, debounce, takeLatest } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { confetti } from '@tsparticles/confetti';
 
@@ -613,6 +613,6 @@ export function* assetsSagas() {
         takeEvery(actions.generateSlideshow.type, generateSlideshow),
 
         // setup
-        setup(),
+        takeLatest('persist/REHYDRATE', setup),
     ]);
 }

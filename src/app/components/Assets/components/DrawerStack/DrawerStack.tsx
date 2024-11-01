@@ -6,7 +6,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useDispatch } from 'react-redux';
 import { Asset } from '@/features/assets/types';
-import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { useSelector } from '@/store/hooks';
 import { actions as actionsCreator } from '@/features/creator';
 import { actions as actionsAssets } from '@/features/assets';
@@ -71,7 +71,7 @@ function DrawerStack({ drawerStackOpen, onClose }: Props) {
                 <Box width={160}>
                     <Box height={160} borderRadius="8px" position="relative">
                         <MediaRenderer
-                            src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
+                            src={`${ASSET_STORAGE_URL}/${asset?.formats?.preview?.path}`}
                             fallbackSrc={`https://via.placeholder.com/${160}`}
                         />
                         <Box position="absolute" bottom={0} right={0} zIndex={1} m={1} bgcolor="#fff">
@@ -108,7 +108,9 @@ function DrawerStack({ drawerStackOpen, onClose }: Props) {
                         }}
                         disabled={statedLogin && !isLogged}
                     >
-                        {!isLogged ? 'Login with your email' : 'Publish Stack'}
+                        {!isLogged
+                            ? (language['search.drawer.stack.login'] as string)
+                            : (language['search.drawer.stack.publishStack'] as string)}
                     </Button>
 
                     {!isLogged && (
@@ -128,7 +130,7 @@ function DrawerStack({ drawerStackOpen, onClose }: Props) {
                                         sx={{ marginTop: 2 }}
                                         disabled={loading}
                                     >
-                                        Send Code
+                                        {language['search.drawer.stack.sendCode'] as string}
                                     </Button>
                                 </Box>
                             )}
@@ -148,7 +150,7 @@ function DrawerStack({ drawerStackOpen, onClose }: Props) {
                                         sx={{ marginTop: 2 }}
                                         disabled={loading}
                                     >
-                                        Verify code
+                                        {language['search.drawer.stack.verifyCode'] as string}
                                     </Button>
                                     <Box mt={1} display="flex" justifyContent="space-between">
                                         <Button
@@ -159,7 +161,7 @@ function DrawerStack({ drawerStackOpen, onClose }: Props) {
                                             }}
                                             onClick={() => dispatch(actionsCreator.resendCode())}
                                         >
-                                            Resend code
+                                            {language['search.drawer.stack.resendCode'] as string}
                                         </Button>
                                         <Button
                                             size="small"
@@ -169,7 +171,7 @@ function DrawerStack({ drawerStackOpen, onClose }: Props) {
                                             }}
                                             onClick={() => dispatch(actionsCreator.resetEmail())}
                                         >
-                                            Change email
+                                            {language['search.drawer.stack.changeEmail'] as string}
                                         </Button>
                                     </Box>
                                 </Box>

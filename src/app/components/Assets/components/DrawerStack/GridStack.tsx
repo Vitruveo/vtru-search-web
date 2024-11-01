@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useI18n } from '@/app/hooks/useI18n';
-import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { Box, Button, Grid, Typography } from '@mui/material';
 
 import { STACK_BASE_URL } from '@/constants/api';
@@ -80,7 +80,7 @@ export default function GridStack({ selectedAssets, title, description, fees }: 
         return (
             <>
                 <Box display={'flex'} justifyContent={'center'}>
-                    <Typography fontWeight={'bold'}>Now share your image grid with the world</Typography>
+                    <Typography fontWeight={'bold'}>{language['search.drawer.stack.grid.share'] as string}</Typography>
                 </Box>
                 <Box display={'flex'} flexDirection={'row'} gap={5} mt={4} mb={4} justifyContent={'center'}>
                     <Box
@@ -111,7 +111,7 @@ export default function GridStack({ selectedAssets, title, description, fees }: 
                                 >
                                     {updatedAssets[index] && (
                                         <Image
-                                            src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
+                                            src={`${ASSET_STORAGE_URL}/${updatedAssets[index]?.formats?.preview?.path}`}
                                             width={300}
                                             height={300}
                                             alt={''}
@@ -132,7 +132,7 @@ export default function GridStack({ selectedAssets, title, description, fees }: 
                             >
                                 {updatedAssets[index] && (
                                     <Image
-                                        src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
+                                        src={`${ASSET_STORAGE_URL}/${updatedAssets[index]?.formats?.preview?.path}`}
                                         width={sizes[selected] * 2}
                                         height={sizes[selected] * 2}
                                         alt={''}
@@ -142,7 +142,11 @@ export default function GridStack({ selectedAssets, title, description, fees }: 
                         ))}
                     </Box>
                 </Box>
-                {grid.loading && <Typography variant="caption">Generating image grid...</Typography>}
+                {grid.loading && (
+                    <Typography variant="caption">
+                        {language['search.drawer.stack.grid.generating'] as string}
+                    </Typography>
+                )}
                 {grid.path && (
                     <Box display={'flex'} justifyContent={'center'}>
                         <ShareButton
@@ -161,7 +165,10 @@ export default function GridStack({ selectedAssets, title, description, fees }: 
     return (
         <>
             <Box display={'flex'} justifyContent={'center'}>
-                <Typography fontWeight={'bold'}> 🖼️ An image grid looks great on social media</Typography>
+                <Typography fontWeight={'bold'}>
+                    {' '}
+                    🖼️ {language['search.drawer.stack.grid.subtitle'] as string}
+                </Typography>
             </Box>
 
             <Grid container mt={4} mb={4} gap={2} display={'flex'} flexDirection={'row'} justifyContent={'center'}>
@@ -184,7 +191,7 @@ export default function GridStack({ selectedAssets, title, description, fees }: 
                         >
                             {updatedAssets[index] && (
                                 <Image
-                                    src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
+                                    src={`${ASSET_STORAGE_URL}/${updatedAssets[index]?.formats?.preview?.path}`}
                                     width={sizes['2x2']}
                                     height={sizes['2x2']}
                                     alt={''}
@@ -212,7 +219,7 @@ export default function GridStack({ selectedAssets, title, description, fees }: 
                         >
                             {updatedAssets[index] && (
                                 <Image
-                                    src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
+                                    src={`${ASSET_STORAGE_URL}/${updatedAssets[index]?.formats?.preview?.path}`}
                                     width={sizes['3x3']}
                                     height={sizes['3x3']}
                                     alt={''}
@@ -240,7 +247,7 @@ export default function GridStack({ selectedAssets, title, description, fees }: 
                         >
                             {updatedAssets[index] && (
                                 <Image
-                                    src={`${AWS_BASE_URL_S3}/${updatedAssets[index]?.formats?.preview?.path}`}
+                                    src={`${ASSET_STORAGE_URL}/${updatedAssets[index]?.formats?.preview?.path}`}
                                     width={sizes['4x4']}
                                     height={sizes['4x4']}
                                     alt={''}
@@ -251,7 +258,7 @@ export default function GridStack({ selectedAssets, title, description, fees }: 
                 </Box>
             </Grid>
 
-            <Typography variant="caption">Note: Grid is limited to the first 16 curated items.</Typography>
+            <Typography variant="caption">{language['search.drawer.stack.grid.note'] as string}</Typography>
             <Button
                 variant="contained"
                 fullWidth

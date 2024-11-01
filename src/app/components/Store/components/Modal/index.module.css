@@ -1,0 +1,29 @@
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.imageModal {
+    object-fit: contain;
+    max-height: 80vh;
+    max-width: 80vw;
+    cursor: none;
+}
+
+.video {
+    max-height: 80vh;
+    max-width: 80vw;
+}
+
+.magnify {
+    position: absolute;
+    width: 15%;
+    padding-bottom: 15%;
+    height: 0;
+    background-size: 800%;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+}

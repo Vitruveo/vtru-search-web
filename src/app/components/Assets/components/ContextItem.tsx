@@ -25,7 +25,7 @@ export function ContextItem({ title, values, hidden, type, options, onChange, on
         <Box mb={2}>
             {!hidden && (
                 <Typography fontSize="0.85rem" fontWeight="700" mb={1}>
-                    {language[`${context}.title.${title}`] as ReactNode}
+                    {language[`${context}.title.${title}`] as string}
                 </Typography>
             )}
 

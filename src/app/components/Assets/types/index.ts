@@ -23,13 +23,13 @@ export interface Provenance {
     awards: {
         awardName: string;
         awardUrl: string;
-    };
+    }[];
     blockchain: string[];
     country: string[];
     exhibitions: {
         exhibitionName: string;
         exhibitionUrl: string;
-    };
+    }[];
     plusCode: string;
 }
 
