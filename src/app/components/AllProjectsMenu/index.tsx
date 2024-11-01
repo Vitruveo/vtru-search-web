@@ -71,7 +71,7 @@ const AllProjectsMenu = () => {
                         ))}
                     </List>
                 </Drawer>
-                <BuyVUSDModal isOpen={openModal} onClose={handleCloseModal} />
+                <BuyVUSDModal isOpen={openModal} onClose={handleCloseModal} data={{ balance: 1234 }} />
             </>
         );
     }
@@ -97,7 +97,7 @@ const AllProjectsMenu = () => {
                     )}
                 </Box>
             ))}
-            <BuyVUSDModal isOpen={openModal} onClose={handleCloseModal} />
+            <BuyVUSDModal isOpen={openModal} onClose={handleCloseModal} data={{ balance: 1234 }} />
         </Box>
     );
 };
