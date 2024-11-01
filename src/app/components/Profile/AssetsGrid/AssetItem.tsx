@@ -5,7 +5,7 @@ import React from 'react';
 import BlankCard from '../../Shared/BlankCard';
 import { MediaRenderer } from '../../Assets/components/MediaRenderer';
 import { useTheme } from '@mui/material/styles';
-import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import { ASSET_STORAGE_URL } from '@/constants/aws';
 import '../../Assets/assetsGrid/AssetScroll.css';
 import { SEARCH_BASE_URL } from '@/constants/api';
 
@@ -27,7 +27,7 @@ const AssetItemMain = ({ asset, username }: Props) => {
                 <>
                     <Box height={280} borderRadius="8px 8px 0 0" position="relative">
                         <MediaRenderer
-                            src={`${AWS_BASE_URL_S3}/${asset.formats.preview.path}`}
+                            src={`${ASSET_STORAGE_URL}/${asset.formats.preview.path}`}
                             fallbackSrc={'https://via.placeholder.com/250'}
                         />
                     </Box>

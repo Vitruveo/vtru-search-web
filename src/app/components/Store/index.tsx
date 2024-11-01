@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import LazyLoad from 'react-lazyload';
 import PanelMint from './components/PanelMint';
 import { User } from './components/User';
-import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import { ASSET_STORAGE_URL } from '@/constants/aws';
 import ActionButtons from './components/ActionButtons/ActionButtonList';
 import { EXPLORER_URL } from '@/constants/web3';
 import { SEARCH_BASE_URL } from '@/constants/api';
@@ -46,7 +46,7 @@ const Store = ({ data }: StoreProps) => {
     };
 
     const handleLoad = () => {
-        setImage(`${AWS_BASE_URL_S3}/${asset.formats?.original?.path}`);
+        setImage(`${ASSET_STORAGE_URL}/${asset.formats?.original?.path}`);
         if (asset.formats?.original?.definition === 'portrait') {
             setSize({ width: 430, height: 630 });
         }
@@ -60,7 +60,7 @@ const Store = ({ data }: StoreProps) => {
     };
 
     useEffect(() => {
-        if (asset.formats?.preview.path) setImage(`${AWS_BASE_URL_S3}/${asset.formats?.preview.path}`);
+        if (asset.formats?.preview.path) setImage(`${ASSET_STORAGE_URL}/${asset.formats?.preview.path}`);
     }, [asset?.formats]);
 
     if (loading)
@@ -199,7 +199,7 @@ const Store = ({ data }: StoreProps) => {
                     open={open}
                     handleClose={handleClose}
                     content={contents}
-                    baseUrl={AWS_BASE_URL_S3}
+                    baseUrl={ASSET_STORAGE_URL}
                     path={asset.formats?.original?.path}
                 />
             </Box>

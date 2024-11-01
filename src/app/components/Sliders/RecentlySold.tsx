@@ -4,7 +4,7 @@ import { Box, CardContent, Link, Paper, Stack, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles';
 
 import { useSelector } from '@/store/hooks';
-import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import { LastSoldAsset } from '@/features/assets/types';
 import { SEARCH_BASE_URL } from '@/constants/api';
@@ -47,10 +47,10 @@ function RecentlySoldSlider() {
                         >
                             <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
                                 <MediaRenderer
-                                    src={`${AWS_BASE_URL_S3}/${asset.preview}`}
+                                    src={`${ASSET_STORAGE_URL}/${asset.preview}`}
                                     fallbackSrc={'https://via.placeholder.com/250'}
                                     preSource={
-                                        nextAssetExists ? `${AWS_BASE_URL_S3}/${assets[index + 1]?.preview}` : ''
+                                        nextAssetExists ? `${ASSET_STORAGE_URL}/${assets[index + 1]?.preview}` : ''
                                     }
                                 />
                             </Box>

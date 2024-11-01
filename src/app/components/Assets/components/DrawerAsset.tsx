@@ -3,7 +3,7 @@ import { Box, Button, Typography, Drawer, useMediaQuery } from '@mui/material';
 import cookie from 'cookiejs';
 import { Theme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
-import { AWS_BASE_URL_S3, GENERAL_STORAGE_URL } from '@/constants/aws';
+import { ASSET_STORAGE_URL, GENERAL_STORAGE_URL } from '@/constants/aws';
 import { SEARCH_BASE_URL } from '@/constants/api';
 import { useSelector } from '@/store/hooks';
 import { MediaRenderer } from './MediaRenderer';
@@ -55,7 +55,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
             <Box p={4}>
                 <Box width={width} height={width} borderRadius={'8px'}>
                     <MediaRenderer
-                        src={`${AWS_BASE_URL_S3}/${assetView?.formats?.preview?.path}`}
+                        src={`${ASSET_STORAGE_URL}/${assetView?.formats?.preview?.path}`}
                         fallbackSrc={'https://via.placeholder.com/' + width + 'x' + height}
                         autoPlay
                     />
