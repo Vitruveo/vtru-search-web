@@ -21,7 +21,7 @@ export default function ArtistsSpotlight() {
         <Box minHeight={250}>
             <Marquee style={{ overflow: 'hidden' }}>
                 {artists.map((artist, index) => {
-                    const creatorName = artist?.name[0] || 'No creator';
+                    const creatorName = artist?.name || 'No creator';
                     const nextAssetExists = index + 1 < artists.length;
 
                     return (
@@ -43,10 +43,12 @@ export default function ArtistsSpotlight() {
                         >
                             <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
                                 <MediaRenderer
-                                    src={`${GENERAL_STORAGE_URL}/${artist.avatar}`}
+                                    src={`${GENERAL_STORAGE_URL}/${artist.profile.avatar}`}
                                     fallbackSrc={'https://via.placeholder.com/250'}
                                     preSource={
-                                        nextAssetExists ? `${GENERAL_STORAGE_URL}/${artists[index + 1]?.avatar}` : ''
+                                        nextAssetExists
+                                            ? `${GENERAL_STORAGE_URL}/${artists[index + 1]?.profile.avatar}`
+                                            : ''
                                     }
                                 />
                             </Box>
