@@ -6,7 +6,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useDispatch } from 'react-redux';
 import { Asset } from '@/features/assets/types';
-import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { useSelector } from '@/store/hooks';
 import { actions as actionsCreator } from '@/features/creator';
 import { actions as actionsAssets } from '@/features/assets';
@@ -71,7 +71,7 @@ function DrawerStack({ drawerStackOpen, onClose }: Props) {
                 <Box width={160}>
                     <Box height={160} borderRadius="8px" position="relative">
                         <MediaRenderer
-                            src={`${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`}
+                            src={`${ASSET_STORAGE_URL}/${asset?.formats?.preview?.path}`}
                             fallbackSrc={`https://via.placeholder.com/${160}`}
                         />
                         <Box position="absolute" bottom={0} right={0} zIndex={1} m={1} bgcolor="#fff">

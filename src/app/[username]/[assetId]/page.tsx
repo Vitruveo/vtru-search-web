@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 // constants
 import { API_BASE_URL } from '@/constants/api';
-import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import { ASSET_STORAGE_URL } from '@/constants/aws';
 
 // component
 import Component from './Component';
@@ -22,8 +22,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const metaOg = {
         title: asset.assetMetadata.context.formData.title,
         description: asset.assetMetadata.context.formData.description,
-        url: `${AWS_BASE_URL_S3}/${asset.formats.preview.path}`,
-        image: `${AWS_BASE_URL_S3}/${asset.formats.preview.path}`,
+        url: `${ASSET_STORAGE_URL}/${asset.formats.preview.path}`,
+        image: `${ASSET_STORAGE_URL}/${asset.formats.preview.path}`,
     };
 
     return {

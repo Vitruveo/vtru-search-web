@@ -1,7 +1,7 @@
 import { Badge, Box, CardContent, Checkbox, Grid, Link, Paper, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import BlankCard from '../../Shared/BlankCard';
-import { AWS_BASE_URL_S3 } from '@/constants/aws';
+import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { Asset } from '@/features/assets/types';
 import { MediaRenderer } from '../components/MediaRenderer';
 import { useDispatch, useSelector } from '@/store/hooks';
@@ -64,7 +64,7 @@ const AssetItemMain = ({
     };
 
     const media = useMemo(() => {
-        return `${AWS_BASE_URL_S3}/${asset?.formats?.preview?.path}`;
+        return `${ASSET_STORAGE_URL}/${asset?.formats?.preview?.path}`;
     }, [asset?.formats?.preview?.path]);
 
     return (

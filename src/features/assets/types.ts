@@ -159,8 +159,10 @@ export type ResponseAssetsLastSold = LastSoldAsset[];
 
 export interface ArtistsSpotlight {
     _id: string;
-    name: string[];
-    avatar: string;
+    name: string;
+    profile: {
+        avatar: string;
+    };
 }
 
 export type ResponseArtistsSpotlight = ArtistsSpotlight[];
