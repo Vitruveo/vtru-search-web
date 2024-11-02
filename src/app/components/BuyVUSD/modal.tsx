@@ -56,30 +56,78 @@ const BuyVUSDModal = ({ isOpen, onClose, data }: Props) => {
                 >
                     <IconX />
                 </IconButton>
+
                 <Box display={'flex'} justifyContent={'space-between'} paddingInline={14}>
-                    <Typography variant="h5">Balance: {balance}</Typography>
-                    <Typography variant="h5" fontWeight={'900'}>
+                    <Typography variant="h2">Balance: {balance}</Typography>
+                    <Typography variant="h1" fontWeight={'900'} sx={{ fontSize: '3rem' }}>
                         Buy VUSD
                     </Typography>
-                    <ConnectWallet />
+                    <ConnectWallet size="large" rounded />
                 </Box>
-                <Box display={'flex'} alignItems={'center'} gap={1} justifyContent={'center'}>
-                    <Typography variant="h5">Buy </Typography>
-                    <TextField type="number" inputProps={{ min: 1 }} onChange={handleChangeQuantity} />
-                    <Typography variant="h5">VUSD </Typography>
-                </Box>
-                <Box display={'flex'} justifyContent={'center'}>
-                    <FormControl>
-                        <RadioGroup>
-                            <FormControlLabel value="USDC" control={<Radio />} label="USDC" />
-                            <FormControlLabel value="VTRU" control={<Radio />} label="VTRU" />
-                        </RadioGroup>
-                    </FormControl>
-                </Box>
-                <Box display={'flex'} justifyContent={'center'}>
-                    <Button variant="contained" color="primary">
-                        BUY
-                    </Button>
+
+                <Box display={'flex'} flexDirection={'column'} justifyContent={'center'} height={'90%'}>
+                    <Box display={'flex'} alignItems={'center'} gap={8} justifyContent={'center'}>
+                        <Typography variant="h1" sx={{ fontSize: '8rem' }}>
+                            BUY
+                        </Typography>
+                        <TextField
+                            type="number"
+                            inputProps={{ min: 1 }}
+                            onChange={handleChangeQuantity}
+                            sx={{
+                                width: '480px',
+                                '& .MuiInputBase-input': {
+                                    fontSize: '110px',
+                                    '&::-webkit-outer-spin-button, &::-webkit-inner-spin-button': {
+                                        display: 'none',
+                                    },
+                                },
+                                '& .MuiOutlinedInput-root': {
+                                    '& fieldset': {
+                                        borderColor: 'white',
+                                    },
+                                },
+                            }}
+                        />
+                        <Typography variant="h1" sx={{ fontSize: '8rem' }}>
+                            VUSD
+                        </Typography>
+                    </Box>
+
+                    <Box display={'flex'} justifyContent={'center'} marginBlock={10}>
+                        <FormControl>
+                            <RadioGroup sx={{ gap: 5, width: '580px' }}>
+                                <Box display={'flex'}>
+                                    <FormControlLabel
+                                        value="USDC"
+                                        control={<Radio sx={{ transform: 'scale(3)', marginInline: 3 }} />}
+                                        label="USDC"
+                                        sx={{ '& .MuiFormControlLabel-label': { fontSize: '4rem' } }}
+                                    />
+                                    <Typography variant="h1" sx={{ fontSize: '4rem' }}>
+                                        20
+                                    </Typography>
+                                </Box>
+                                <Box display={'flex'}>
+                                    <FormControlLabel
+                                        value="VTRU"
+                                        control={<Radio sx={{ transform: 'scale(3)', marginInline: 3 }} />}
+                                        label="VTRU"
+                                        sx={{ '& .MuiFormControlLabel-label': { fontSize: '4rem' } }}
+                                    />
+                                    <Typography variant="h1" sx={{ fontSize: '4rem' }}>
+                                        20
+                                    </Typography>
+                                </Box>
+                            </RadioGroup>
+                        </FormControl>
+                    </Box>
+
+                    <Box display={'flex'} justifyContent={'center'} width={'95%'}>
+                        <Button variant="contained" color="primary" sx={{ fontSize: '3rem', width: '480px' }}>
+                            BUY
+                        </Button>
+                    </Box>
                 </Box>
             </Box>
         </Modal>
