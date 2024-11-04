@@ -24,7 +24,7 @@ export const User = ({ asset, creator, creatorName }: Props) => {
                     color: '#ffff',
                 }}
             >
-                @{creatorName || asset.assetMetadata.creators?.formData[0]?.name}
+                {creatorName || asset.assetMetadata.creators?.formData[0]?.name}
             </Typography>
         </Box>
     );

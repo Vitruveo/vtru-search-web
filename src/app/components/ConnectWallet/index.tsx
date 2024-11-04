@@ -64,9 +64,6 @@ export default function ConnectWallet({ size = 'regular', rounded = false }: Pro
                             </Button>
                         ) : (
                             <Box display={'flex'} gap={2} alignItems={'center'}>
-                                <Button sx={buttonStyle} onClick={handleDisconnect}>
-                                    Disconnect
-                                </Button>
                                 <Box onClick={openChainModal}>
                                     {chain?.hasIcon && chain?.iconUrl && (
                                         <Image
@@ -75,9 +72,13 @@ export default function ConnectWallet({ size = 'regular', rounded = false }: Pro
                                             width={40}
                                             height={40}
                                             layout={'fixed'}
+                                            style={{ cursor: 'pointer' }}
                                         />
                                     )}
                                 </Box>
+                                <Button sx={buttonStyle} onClick={handleDisconnect}>
+                                    Disconnect
+                                </Button>
                             </Box>
                         )}
                     </div>

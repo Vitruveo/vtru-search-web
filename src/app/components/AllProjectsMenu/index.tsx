@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAccount } from 'wagmi';
 import { Box, Drawer, IconButton, List, ListItem, ListItemText, Theme, Typography, useMediaQuery } from '@mui/material';
 import { IconMenu2 } from '@tabler/icons-react';
 import { useSelector } from '@/store/hooks';
@@ -17,6 +18,7 @@ const projects = [
 ];
 
 const AllProjectsMenu = () => {
+    const account = useAccount();
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [openModal, setOpenModal] = useState(false);
 
@@ -24,16 +26,18 @@ const AllProjectsMenu = () => {
     const customizer = useSelector((state) => state.customizer);
     const isDark = customizer.activeMode === 'dark';
 
+    const currentChain = account?.chain?.blockExplorers?.default.name;
+
+    const toggleDrawer = (open: boolean) => () => {
+        setDrawerOpen(open);
+    };
+
     const getActualProject = () => {
         const actualUrl = window.location.href;
         if (actualUrl.includes('stacks')) return projects[1];
         if (actualUrl.includes('search')) return projects[0];
         if (actualUrl.includes('studio')) return projects[4];
         return projects[0];
-    };
-
-    const toggleDrawer = (open: boolean) => () => {
-        setDrawerOpen(open);
     };
 
     const getStyle = (v: { url: string; title: string }) => ({
@@ -71,7 +75,7 @@ const AllProjectsMenu = () => {
                         ))}
                     </List>
                 </Drawer>
-                <BuyVUSDModal isOpen={openModal} onClose={handleCloseModal} data={{ balance: 1234 }} />
+                <BuyVUSDModal isOpen={openModal} onClose={handleCloseModal} data={{ balance: 1.234, currentChain }} />
             </>
         );
     }
@@ -97,7 +101,7 @@ const AllProjectsMenu = () => {
                     )}
                 </Box>
             ))}
-            <BuyVUSDModal isOpen={openModal} onClose={handleCloseModal} data={{ balance: 1234 }} />
+            <BuyVUSDModal isOpen={openModal} onClose={handleCloseModal} data={{ balance: 1.234, currentChain }} />
         </Box>
     );
 };

@@ -18,7 +18,7 @@ const vitruveoMainnet = {
     id: 1490,
     name: 'Vitruveo Mainnet',
     network: 'vitruveo',
-    iconUrl: '/v-icon.png',
+    iconUrl: '/images/icons/v-icon.png',
     iconBackground: '#000',
     nativeCurrency: {
         decimals: 18,
@@ -40,7 +40,7 @@ const vitruveoTestnet = {
     id: 14333,
     name: 'Vitruveo Testnet',
     network: 'vitruveo-testnet',
-    iconUrl: '/v-icon.png',
+    iconUrl: '/images/icons/v-icon.png',
     iconBackground: '#000',
     nativeCurrency: {
         decimals: 18,
