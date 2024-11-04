@@ -96,7 +96,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data }: Props) => {
 
                     <Box display={'flex'} justifyContent={'center'} marginBlock={10}>
                         <FormControl>
-                            <RadioGroup sx={{ gap: 5, width: '580px' }}>
+                            <RadioGroup sx={{ gap: 10, width: '580px' }}>
                                 <Box display={'flex'}>
                                     <FormControlLabel
                                         value="USDC"

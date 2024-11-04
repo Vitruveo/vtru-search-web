@@ -1,7 +1,8 @@
-import { Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useDisconnect } from 'wagmi';
 import '@rainbow-me/rainbowkit/styles.css';
+import Image from 'next/image';
 
 const sizes = {
     regular: {
@@ -53,14 +54,31 @@ export default function ConnectWallet({ size = 'regular', rounded = false }: Pro
                             },
                         })}
                     >
-                        {!chain?.unsupported ? (
-                            <Button sx={buttonStyle} onClick={connected ? handleDisconnect : openConnectModal}>
-                                {connected ? 'Disconnect' : 'Connect Wallet'}
-                            </Button>
-                        ) : (
+                        {chain?.unsupported ? (
                             <Button sx={buttonStyle} onClick={openChainModal}>
                                 Wrong Network
                             </Button>
+                        ) : !connected ? (
+                            <Button sx={buttonStyle} onClick={openConnectModal}>
+                                Connect Wallet
+                            </Button>
+                        ) : (
+                            <Box display={'flex'} gap={2} alignItems={'center'}>
+                                <Button sx={buttonStyle} onClick={handleDisconnect}>
+                                    Disconnect
+                                </Button>
+                                <Box onClick={openChainModal}>
+                                    {chain?.hasIcon && chain?.iconUrl && (
+                                        <Image
+                                            src={chain.iconUrl}
+                                            alt={chain.name || 'Chain icon'}
+                                            width={40}
+                                            height={40}
+                                            layout={'fixed'}
+                                        />
+                                    )}
+                                </Box>
+                            </Box>
                         )}
                     </div>
                 );
