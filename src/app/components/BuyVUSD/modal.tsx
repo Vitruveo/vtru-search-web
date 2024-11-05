@@ -17,17 +17,17 @@ interface Props {
     isOpen: boolean;
     onClose: () => void;
     data: {
-        balance: number;
+        balance: string;
         currentChain?: string;
+        vusdPrice?: number;
     };
 }
 
 const BuyVUSDModal = ({ isOpen, onClose, data }: Props) => {
-    const { balance, currentChain } = data;
+    const { balance, currentChain, vusdPrice } = data;
 
     const handleChangeQuantity = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        if (value && parseInt(value) < 1) {
+        if (event.target.value && parseInt(event.target.value) < 1) {
             event.target.value = '1';
         }
     };

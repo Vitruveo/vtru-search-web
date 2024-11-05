@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { useAccount } from 'wagmi';
 import { Box, Drawer, IconButton, List, ListItem, ListItemText, Theme, Typography, useMediaQuery } from '@mui/material';
 import { IconMenu2 } from '@tabler/icons-react';
 import { useSelector } from '@/store/hooks';
 import { SEARCH_BASE_URL, STUDIO_BASE_URL } from '@/constants/api';
-import BuyVUSDModal from '../BuyVUSD/modal';
+import BuyVUSDModal from '../BuyVUSD/modalHOC';
 
 const projects = [
     { title: 'SEARCH', url: `${SEARCH_BASE_URL}` },
@@ -18,15 +17,12 @@ const projects = [
 ];
 
 const AllProjectsMenu = () => {
-    const account = useAccount();
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [openModal, setOpenModal] = useState(false);
 
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const customizer = useSelector((state) => state.customizer);
     const isDark = customizer.activeMode === 'dark';
-
-    const currentChain = account?.chain?.blockExplorers?.default.name;
 
     const toggleDrawer = (open: boolean) => () => {
         setDrawerOpen(open);
@@ -75,7 +71,7 @@ const AllProjectsMenu = () => {
                         ))}
                     </List>
                 </Drawer>
-                <BuyVUSDModal isOpen={openModal} onClose={handleCloseModal} data={{ balance: 1.234, currentChain }} />
+                <BuyVUSDModal isOpen={openModal} onClose={handleCloseModal} />
             </>
         );
     }
@@ -101,7 +97,7 @@ const AllProjectsMenu = () => {
                     )}
                 </Box>
             ))}
-            <BuyVUSDModal isOpen={openModal} onClose={handleCloseModal} data={{ balance: 1.234, currentChain }} />
+            <BuyVUSDModal isOpen={openModal} onClose={handleCloseModal} />
         </Box>
     );
 };
