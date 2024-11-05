@@ -12,33 +12,38 @@ import {
 } from '@mui/material';
 import { IconX } from '@tabler/icons-react';
 import ConnectWallet from '../ConnectWallet';
-import { useEffect, useState } from 'react';
+import { defaultVusdAmount } from './modalHOC';
 
 interface Props {
     isOpen: boolean;
     onClose: () => void;
     data: {
-        balance: string;
+        balance: {
+            symbol?: string;
+            value: number;
+        };
         currentChain?: string;
-        vtruConversion?: number;
+        isConnected: boolean;
+        selectedValue: string;
+        usdcConverted: number;
+        vtruConverted: number;
+    };
+    actions: {
+        handleChangeQuantity: (event: React.ChangeEvent<HTMLInputElement>) => void;
+        handleBlurQuantity: (event: React.FocusEvent<HTMLInputElement>) => void;
+        handleRadioChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+        handleBuy: () => void;
     };
 }
 
-const BuyVUSDModal = ({ isOpen, onClose, data }: Props) => {
-    const { balance, currentChain, vtruConversion } = data;
-    const defaultVusdAmount = 50;
-    const [vtruConverted, setVtruConverted] = useState(0);
+const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
+    const { balance, currentChain, isConnected, selectedValue, usdcConverted, vtruConverted } = data;
+    const { handleChangeQuantity, handleBlurQuantity, handleRadioChange, handleBuy } = actions;
 
-    useEffect(() => {
-        if (isOpen) setVtruConverted(defaultVusdAmount * (vtruConversion || 0));
-    }, [vtruConversion, isOpen]);
-
-    const handleChangeQuantity = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.value && parseInt(event.target.value) < 1) {
-            event.target.value = '1';
-        }
-        const convertedValue = (parseInt(event.target.value) || 0) * (vtruConversion || 0);
-        setVtruConverted(convertedValue);
+    const buttonMessage = () => {
+        if (!isConnected) return 'Connect Wallet';
+        if (balance.value < (selectedValue === 'VTRU' ? vtruConverted : usdcConverted)) return 'Insufficient Balance';
+        return 'BUY';
     };
 
     return (
@@ -47,7 +52,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data }: Props) => {
                 sx={{
                     position: 'relative',
                     bgcolor: '#6C3BAF',
-                    opacity: 0.9,
+                    opacity: 1,
                     p: 4,
                     height: '100%',
                 }}
@@ -67,7 +72,9 @@ const BuyVUSDModal = ({ isOpen, onClose, data }: Props) => {
                 </IconButton>
 
                 <Box display={'flex'} justifyContent={'space-between'} paddingInline={14}>
-                    <Typography variant="h2">Balance: {balance}</Typography>
+                    <Typography variant="h2">
+                        Balance: {isConnected ? `${balance.value} ${balance.symbol}` : 'Connect Wallet'}
+                    </Typography>
                     <Typography variant="h1" fontWeight={'900'} sx={{ fontSize: '3rem' }}>
                         Buy VUSD
                     </Typography>
@@ -84,6 +91,8 @@ const BuyVUSDModal = ({ isOpen, onClose, data }: Props) => {
                             inputProps={{ min: 1 }}
                             defaultValue={defaultVusdAmount}
                             onChange={handleChangeQuantity}
+                            onBlur={handleBlurQuantity}
+                            autoComplete="off"
                             sx={{
                                 width: '24%',
                                 '& .MuiInputBase-input': {
@@ -109,7 +118,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data }: Props) => {
 
                     <Box display={'flex'} marginBlock={6} width={'100%'} justifyContent={'center'}>
                         <FormControl sx={{ width: '24%' }}>
-                            <RadioGroup sx={{ gap: 6 }}>
+                            <RadioGroup sx={{ gap: 6 }} value={selectedValue} onChange={handleRadioChange}>
                                 <Box display={'flex'} justifyContent={'space-between'}>
                                     <FormControlLabel
                                         value="USDC"
@@ -128,7 +137,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data }: Props) => {
                                     />
                                     <Box bgcolor={'#1a1a1a'} width={'100%'}>
                                         <Typography variant="h1" fontSize={'2rem'} paddingBlock={1} paddingInline={2}>
-                                            50
+                                            {usdcConverted}
                                         </Typography>
                                     </Box>
                                 </Box>
@@ -156,8 +165,14 @@ const BuyVUSDModal = ({ isOpen, onClose, data }: Props) => {
                     </Box>
 
                     <Box display={'flex'} justifyContent={'center'}>
-                        <Button variant="contained" color="primary" sx={{ fontSize: '2rem', width: '24%' }}>
-                            BUY
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{ fontSize: '2rem', width: '24%' }}
+                            disabled={balance.value < (selectedValue === 'VTRU' ? vtruConverted : usdcConverted)}
+                            onClick={handleBuy}
+                        >
+                            {buttonMessage()}
                         </Button>
                     </Box>
                 </Box>

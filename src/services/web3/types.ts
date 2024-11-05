@@ -34,3 +34,13 @@ export interface GetBuyCapabilityInCents {
     curatorFee: number;
     client: Client<Transport, Chain, Account>;
 }
+
+export interface GetVtruConversion {
+    client: Client<Transport, Chain, Account>;
+    vusdAmount: number;
+}
+
+export interface BuyVUSDWithVTRU {
+    client: Client<Transport, Chain, Account>;
+    vusdAmount: number;
+}
