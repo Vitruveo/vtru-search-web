@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { IconX } from '@tabler/icons-react';
 import ConnectWallet from '../ConnectWallet';
+import { useEffect, useState } from 'react';
 
 interface Props {
     isOpen: boolean;
@@ -19,17 +20,25 @@ interface Props {
     data: {
         balance: string;
         currentChain?: string;
-        vusdPrice?: number;
+        vtruConversion?: number;
     };
 }
 
 const BuyVUSDModal = ({ isOpen, onClose, data }: Props) => {
-    const { balance, currentChain, vusdPrice } = data;
+    const { balance, currentChain, vtruConversion } = data;
+    const defaultVusdAmount = 50;
+    const [vtruConverted, setVtruConverted] = useState(0);
+
+    useEffect(() => {
+        if (isOpen) setVtruConverted(defaultVusdAmount * (vtruConversion || 0));
+    }, [vtruConversion, isOpen]);
 
     const handleChangeQuantity = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.value && parseInt(event.target.value) < 1) {
             event.target.value = '1';
         }
+        const convertedValue = (parseInt(event.target.value) || 0) * (vtruConversion || 0);
+        setVtruConverted(convertedValue);
     };
 
     return (
@@ -73,7 +82,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data }: Props) => {
                         <TextField
                             type="number"
                             inputProps={{ min: 1 }}
-                            defaultValue={50}
+                            defaultValue={defaultVusdAmount}
                             onChange={handleChangeQuantity}
                             sx={{
                                 width: '24%',
@@ -138,7 +147,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data }: Props) => {
                                     />
                                     <Box bgcolor={'#1a1a1a'} width={'100%'}>
                                         <Typography variant="h1" fontSize={'2rem'} paddingBlock={1} paddingInline={2}>
-                                            200
+                                            {vtruConverted}
                                         </Typography>
                                     </Box>
                                 </Box>

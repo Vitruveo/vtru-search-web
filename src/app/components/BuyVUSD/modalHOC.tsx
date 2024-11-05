@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { getBuyerBalancesInCents } from '@/services/web3/mint';
 import { useEffect, useState } from 'react';
 import { formatPrice } from '@/utils/assets';
-import { getVUSDPrice } from '@/services/vusd';
+import { getVtruConversion } from '@/services/vusd';
 
 interface BuyVUSDModalHOCProps {
     isOpen: boolean;
@@ -13,7 +13,7 @@ interface BuyVUSDModalHOCProps {
 
 export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProps) {
     const [balance, setBalance] = useState('');
-    const [vusdPrice, setVUSDPrice] = useState(0);
+    const [vtruConversion, setVtruConversion] = useState(0);
     const { data: client } = useConnectorClient();
     const { address, chain } = useAccount();
     const currentChain = chain?.blockExplorers?.default.name;
@@ -37,10 +37,10 @@ export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProp
     }, [address, client]);
 
     useEffect(() => {
-        getVUSDPrice().then((price) => {
-            setVUSDPrice(price);
+        getVtruConversion().then((price) => {
+            setVtruConversion(parseInt(price.data));
         });
     }, []);
 
-    return <BuyVUSDModal isOpen={isOpen} onClose={onClose} data={{ balance, currentChain, vusdPrice }} />;
+    return <BuyVUSDModal isOpen={isOpen} onClose={onClose} data={{ balance, currentChain, vtruConversion }} />;
 }

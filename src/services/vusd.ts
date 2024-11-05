@@ -1,8 +1,5 @@
+import { APIResponse } from '@/features/common/types';
 import { batch } from './batch';
 
-export const getVUSDPrice = (): Promise<number> =>
-    new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(4);
-        }, 1000);
-    });
+export const getVtruConversion = (): Promise<APIResponse<string>> =>
+    batch.get('/VUSD/price').then((response) => response.data);
