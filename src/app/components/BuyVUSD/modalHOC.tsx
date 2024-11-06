@@ -97,15 +97,27 @@ export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProp
                         });
                     });
 
-                    new Promise((resolve) => setTimeout(resolve, 15_000)).then(() => {
+                    new Promise((resolve) => {
+                        const interval = setInterval(() => {
+                            getBalanceVUSD({ client: client! }).then((result) => {
+                                if (result > balanceVUSD.value) {
+                                    clearInterval(interval);
+                                    setBalanceVUSD({
+                                        symbol: 'VUSD',
+                                        value: result,
+                                    });
+                                    balance.refetch();
+                                    resolve(true);
+                                }
+                            });
+                        }, 1_000);
+                    }).finally(() => {
                         setLoading(false);
-                        onClose();
 
                         confetti({
-                            particleCount: 500,
-                            spread: 250,
-                            origin: { x: 0.5, y: 0.5 },
-                            zIndex: 99999,
+                            particleCount: 100,
+                            spread: 70,
+                            origin: { y: 0.6 },
                         });
                     });
                 })

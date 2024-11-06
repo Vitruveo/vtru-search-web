@@ -15,6 +15,7 @@ import {
 import { IconX } from '@tabler/icons-react';
 import ConnectWallet from '../ConnectWallet';
 import { defaultVusdAmount } from './modalHOC';
+import { formatPriceVUSD } from '@/utils/assets';
 
 interface Props {
     isOpen: boolean;
@@ -67,7 +68,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
     const buttonMessage = () => {
         if (!isConnected) return 'Connect Wallet';
         if (insufficientBalance) return 'Insufficient Balance';
-        if (loading) return 'Loading...';
+        if (loading) return 'Waiting for transaction..';
         return 'BUY';
     };
 
@@ -92,10 +93,16 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                 >
                     <Box>
                         <Typography variant="h2">
-                            Balance: {isConnected ? `${balance.value} ${balance.symbol}` : 'Connect Wallet'}
+                            VTRU Balance: {isConnected ? `${balance.value}` : 'Connect Wallet'}
                         </Typography>
                         <Typography variant="h2">
-                            Balance: {isConnected ? `${balanceVUSD.value} ${balanceVUSD.symbol}` : 'Connect Wallet'}
+                            VUSD Balance:{' '}
+                            {isConnected
+                                ? `${formatPriceVUSD({
+                                      price: balanceVUSD.value,
+                                      decimals: false,
+                                  })} `
+                                : 'Connect Wallet'}
                         </Typography>
                     </Box>
                     <Typography variant="h1" fontWeight={'900'} sx={{ fontSize: '3rem' }}>
