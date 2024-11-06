@@ -1,19 +1,39 @@
-import { Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useDisconnect } from 'wagmi';
 import '@rainbow-me/rainbowkit/styles.css';
+import Image from 'next/image';
 
-const buttonStyle = {
-    background: 'linear-gradient(to right, #FF0066, #9966FF)',
-    color: '#fff',
-    '&:hover': {
-        background: 'linear-gradient(to right, #cc0052, #7a52cc)',
+const sizes = {
+    regular: {
+        fontSize: 'unset',
+        width: 'unset',
+        height: 'unset',
     },
-    lineHeight: '1.5',
-    borderRadius: 0,
+    large: {
+        fontSize: '1.5rem',
+        width: 260,
+        height: 60,
+    },
 };
 
-export default function ConnectWallet() {
+interface Props {
+    size?: 'regular' | 'large';
+    rounded?: boolean;
+}
+
+export default function ConnectWallet({ size = 'regular', rounded = false }: Props) {
+    const buttonStyle = {
+        background: 'linear-gradient(to right, #FF0066, #9966FF)',
+        color: '#fff',
+        '&:hover': {
+            background: 'linear-gradient(to right, #cc0052, #7a52cc)',
+        },
+        lineHeight: '1.5',
+        borderRadius: rounded ? 2 : 0,
+        ...sizes[size],
+    };
+
     const { disconnect } = useDisconnect();
     const handleDisconnect = () => disconnect();
 
@@ -34,14 +54,32 @@ export default function ConnectWallet() {
                             },
                         })}
                     >
-                        {!chain?.unsupported ? (
-                            <Button sx={buttonStyle} onClick={connected ? handleDisconnect : openConnectModal}>
-                                {connected ? 'Disconnect' : 'Connect Wallet'}
-                            </Button>
-                        ) : (
+                        {chain?.unsupported ? (
                             <Button sx={buttonStyle} onClick={openChainModal}>
                                 Wrong Network
                             </Button>
+                        ) : !connected ? (
+                            <Button sx={buttonStyle} onClick={openConnectModal}>
+                                Connect Wallet
+                            </Button>
+                        ) : (
+                            <Box display={'flex'} gap={2} alignItems={'center'}>
+                                <Box onClick={openChainModal}>
+                                    {chain?.hasIcon && chain?.iconUrl && (
+                                        <Image
+                                            src={chain.iconUrl}
+                                            alt={chain.name || 'Chain icon'}
+                                            width={40}
+                                            height={40}
+                                            layout={'fixed'}
+                                            style={{ cursor: 'pointer' }}
+                                        />
+                                    )}
+                                </Box>
+                                <Button sx={buttonStyle} onClick={handleDisconnect}>
+                                    Disconnect
+                                </Button>
+                            </Box>
                         )}
                     </div>
                 );

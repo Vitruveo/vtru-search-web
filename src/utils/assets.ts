@@ -39,6 +39,20 @@ export const formatPrice = ({ price = 0, withUS = false, decimals = false }: For
     return !withUS ? formatedPrice.replace('US', '') : formatedPrice;
 };
 
+export const formatPriceVUSD = ({ price = 0, withUS = false, decimals = false }: FormatPriceProps) => {
+    let language = 'en-US';
+    if (typeof navigator !== 'undefined' && navigator.language) {
+        language = navigator.language;
+    }
+    const formatedPrice = price.toLocaleString(language, {
+        // style: 'currency',
+        // currency: 'USD',
+        minimumFractionDigits: decimals ? 2 : 0,
+        maximumFractionDigits: decimals ? 2 : 0,
+    });
+    return !withUS ? formatedPrice.replace('US', '') : formatedPrice;
+};
+
 export interface formatDateProps {
     year: number;
     month: number;

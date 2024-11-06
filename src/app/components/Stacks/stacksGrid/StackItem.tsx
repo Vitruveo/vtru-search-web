@@ -117,7 +117,7 @@ const StackItemMain = ({ stack }: Props) => {
                     </MuiStack>
                 </CardContent>
             </BlankCard>
-            <Modal open={isOpenModal} onClose={handleModalClose}>
+            <Modal open={isOpenModal} onClose={handleModalClose} sx={{ zIndex: 9999 }}>
                 <Box
                     sx={{
                         position: 'relative',
