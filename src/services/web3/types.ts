@@ -40,7 +40,12 @@ export interface GetVtruConversion {
     vusdAmount: number;
 }
 
+export interface GetBalanceVUSD {
+    client: Client<Transport, Chain, Account>;
+}
+
 export interface BuyVUSDWithVTRU {
     client: Client<Transport, Chain, Account>;
     vusdAmount: number;
+    vtruConverted: number;
 }
