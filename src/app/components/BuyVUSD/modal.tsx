@@ -8,7 +8,9 @@ import {
     Radio,
     RadioGroup,
     TextField,
+    Theme,
     Typography,
+    useMediaQuery,
 } from '@mui/material';
 import { IconX } from '@tabler/icons-react';
 import ConnectWallet from '../ConnectWallet';
@@ -40,6 +42,10 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
     const { balance, currentChain, isConnected, selectedValue, usdcConverted, vtruConverted } = data;
     const { handleChangeQuantity, handleBlurQuantity, handleRadioChange, handleBuy } = actions;
 
+    const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
+    const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
+    const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
+
     const buttonMessage = () => {
         if (!isConnected) return 'Connect Wallet';
         if (balance.value < (selectedValue === 'VTRU' ? vtruConverted : usdcConverted)) return 'Insufficient Balance';
@@ -57,33 +63,37 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                     height: '100%',
                 }}
             >
-                <IconButton
-                    aria-label="close"
-                    onClick={onClose}
-                    sx={{
-                        position: 'absolute',
-                        right: 50,
-                        top: 40,
-                        color: 'white',
-                        zIndex: 1,
-                    }}
+                <Box
+                    display={'flex'}
+                    justifyContent={'space-between'}
+                    flexDirection={smUp ? 'row' : 'column-reverse'}
+                    gap={3}
+                    alignItems={'center'}
+                    paddingInline={lgUp ? 14 : 0}
                 >
-                    <IconX size={'2rem'} />
-                </IconButton>
-
-                <Box display={'flex'} justifyContent={'space-between'} paddingInline={14}>
                     <Typography variant="h2">
                         Balance: {isConnected ? `${balance.value} ${balance.symbol}` : 'Connect Wallet'}
                     </Typography>
                     <Typography variant="h1" fontWeight={'900'} sx={{ fontSize: '3rem' }}>
                         Buy VUSD
                     </Typography>
-                    <ConnectWallet size="large" rounded />
+                    <Box display={'flex'}>
+                        <ConnectWallet size={'large'} rounded />
+                        <IconButton aria-label="close" onClick={onClose} sx={{ color: 'white' }}>
+                            <IconX size={'2rem'} />
+                        </IconButton>
+                    </Box>
                 </Box>
 
                 <Box display={'flex'} flexDirection={'column'} justifyContent={'center'} height={'90%'}>
-                    <Box display={'flex'} alignItems={'center'} justifyContent={'center'} gap={3}>
-                        <Typography variant="h1" width={'8%'} fontSize={'4rem'} textAlign={'end'}>
+                    <Box
+                        display={'flex'}
+                        flexDirection={smUp ? 'row' : 'column'}
+                        alignItems={'center'}
+                        justifyContent={'center'}
+                        gap={3}
+                    >
+                        <Typography variant="h1" width={'100%'} fontSize={'4rem'} textAlign={smUp ? 'end' : 'center'}>
                             BUY
                         </Typography>
                         <TextField
@@ -94,7 +104,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                             onBlur={handleBlurQuantity}
                             autoComplete="off"
                             sx={{
-                                width: '24%',
+                                width: lgUp ? '70%' : '100%',
                                 '& .MuiInputBase-input': {
                                     textAlign: 'end',
                                     fontSize: '3rem',
@@ -111,13 +121,13 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                                 },
                             }}
                         />
-                        <Typography variant="h1" width={'8%'} fontSize={'4rem'}>
+                        <Typography variant="h1" width={'100%'} fontSize={'4rem'} textAlign={smUp ? 'start' : 'center'}>
                             VUSD
                         </Typography>
                     </Box>
 
                     <Box display={'flex'} marginBlock={6} width={'100%'} justifyContent={'center'}>
-                        <FormControl sx={{ width: '24%' }}>
+                        <FormControl sx={{ width: lgUp ? '25.5%' : mdUp ? '52%' : '100%' }}>
                             <RadioGroup sx={{ gap: 6 }} value={selectedValue} onChange={handleRadioChange}>
                                 <Box display={'flex'} justifyContent={'space-between'}>
                                     <FormControlLabel
@@ -125,7 +135,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                                         control={<Radio sx={{ '& .MuiSvgIcon-root': { fontSize: '2rem' } }} />}
                                         label="USDC"
                                         sx={{
-                                            width: '52%',
+                                            width: smUp ? '52%' : '100%',
                                             margin: currentChain?.toLowerCase().includes('vitruveo') ? '' : 0,
                                             '& .MuiFormControlLabel-label': { fontSize: '2rem' },
                                             '& .MuiRadio-root': {
@@ -150,7 +160,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                                         control={<Radio sx={{ '& .MuiSvgIcon-root': { fontSize: '2rem' } }} />}
                                         label="VTRU"
                                         sx={{
-                                            width: '52%',
+                                            width: smUp ? '52%' : '100%',
                                             '& .MuiFormControlLabel-label': { fontSize: '2rem' },
                                         }}
                                     />
@@ -168,8 +178,11 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                         <Button
                             variant="contained"
                             color="primary"
-                            sx={{ fontSize: '2rem', width: '24%' }}
-                            disabled={balance.value < (selectedValue === 'VTRU' ? vtruConverted : usdcConverted)}
+                            sx={{ fontSize: '2rem', width: lgUp ? '25.5%' : mdUp ? '52%' : '100%' }}
+                            disabled={
+                                balance.value < (selectedValue === 'VTRU' ? vtruConverted : usdcConverted) ||
+                                !isConnected
+                            }
                             onClick={handleBuy}
                         >
                             {buttonMessage()}

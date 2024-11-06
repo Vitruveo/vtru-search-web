@@ -26,13 +26,14 @@ export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProp
     useEffect(() => {
         if (isOpen) {
             setUsdcConverted(defaultVusdAmount);
+            getVtruConversion({ client: client!, vusdAmount: defaultVusdAmount }).then((result) => {
+                setVtruConverted(result);
+            });
         }
     }, [isOpen]);
 
     const handleChangeQuantity = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.value && parseInt(event.target.value) < 1) {
-            event.target.value = '1';
-        }
+        if (event.target.value && parseInt(event.target.value) < 1) event.target.value = '1';
         setVusdRequired(Number(event.target.value));
         getVtruConversion({ client: client!, vusdAmount: Number(event.target.value) }).then((result) => {
             setVtruConverted(result);
@@ -53,9 +54,7 @@ export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProp
     const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => setSelectedValue(event.target.value);
 
     const handleBuy = () => {
-        if (selectedValue === 'VTRU') {
-            buyVUSDWithVTRU({ client: client!, vusdAmount: vusdRequired });
-        }
+        if (selectedValue === 'VTRU') buyVUSDWithVTRU({ client: client!, vusdAmount: vusdRequired });
     };
 
     return (
