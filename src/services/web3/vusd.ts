@@ -44,8 +44,8 @@ export const buyVUSDWithVTRU = ({ client, vusdAmount }: BuyVUSDWithVTRU) => {
     const signer = clientToSigner(client);
     const VUSD = new Contract(getContractAddress('VUSD'), schema.abi.VUSD, signer);
 
-    const vtruAmountInBaseUnits = vusdAmount * 10 ** 6;
-    // return VUSD.mintWithVtru(signer.address, vtruAmountInBaseUnits).catch((error) => {
-    //     console.error('error buyVUSDWithVTRU', error);
-    // });
+    const vusdAmountInBaseUnits = vusdAmount * 10 ** 6;
+    return VUSD.mintWithVtru(signer.address, vusdAmountInBaseUnits).catch((error) => {
+        console.error('error buyVUSDWithVTRU', error);
+    });
 };
