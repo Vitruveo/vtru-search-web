@@ -16,7 +16,7 @@ import { NODE_ENV } from '@/constants/api';
 
 const vitruveoMainnet = {
     id: 1490,
-    name: 'Vitruveo Mainnet',
+    name: 'Vitruveo',
     network: 'vitruveo',
     iconUrl: '/images/icons/v-icon.png',
     iconBackground: '#000',
@@ -66,11 +66,10 @@ export default function Web3WagmiProvider({ children }: Web3WagmiProviderProps) 
     const config = getDefaultConfig({
         appName: WAGMI_APP_NAME,
         projectId: WAGMI_PROJECT_ID,
-        chains: NODE_ENV == 'production' ? [vitruveoMainnet] : [vitruveoTestnet],
-
-        // NODE_ENV == 'production'
-        //     ? [vitruveoMainnet, ethereum, polygon, base, bsc]
-        //     : [vitruveoTestnet, etheriumTestnet, polygonTestnet, baseTestnet, bscTestnet],
+        chains:
+            NODE_ENV == 'production'
+                ? [vitruveoMainnet, ethereum, polygon, base, bsc]
+                : [vitruveoTestnet, etheriumTestnet, polygonTestnet, baseTestnet, bscTestnet],
     });
 
     const queryClient = new QueryClient();
