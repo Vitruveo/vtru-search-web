@@ -37,6 +37,7 @@ interface Props {
         insufficientBalance: boolean;
         disabled: boolean;
         loading: boolean;
+        loadingConversion: boolean;
     };
     actions: {
         handleChangeQuantity: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -58,6 +59,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
         insufficientBalance,
         disabled,
         loading,
+        loadingConversion,
     } = data;
     const { handleChangeQuantity, handleBlurQuantity, handleRadioChange, handleBuy } = actions;
 
@@ -68,7 +70,8 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
     const buttonMessage = () => {
         if (!isConnected) return 'Connect Wallet';
         if (insufficientBalance) return 'Insufficient Balance';
-        if (loading) return 'Waiting for transaction..';
+        if (loading) return 'Waiting for transaction...';
+        if (loadingConversion) return 'Converting...';
         return 'BUY';
     };
 
@@ -92,14 +95,32 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                     paddingInline={lgUp ? 14 : 0}
                 >
                     <Box>
-                        <Typography variant="h2">
+                        <Typography
+                            variant="h2"
+                            display={currentChain?.toLowerCase().includes('vitruveo') ? 'block' : 'none'}
+                        >
                             VTRU Balance: {isConnected ? `${balance.value}` : 'Connect Wallet'}
                         </Typography>
-                        <Typography variant="h2">
+                        <Typography
+                            variant="h2"
+                            display={currentChain?.toLowerCase().includes('vitruveo') ? 'block' : 'none'}
+                        >
                             VUSD Balance:{' '}
                             {isConnected
                                 ? `${formatPriceVUSD({
                                       price: balanceVUSD.value,
+                                      decimals: false,
+                                  })} `
+                                : 'Connect Wallet'}
+                        </Typography>
+                        <Typography
+                            variant="h2"
+                            display={currentChain?.toLowerCase().includes('vitruveo') ? 'none' : 'block'}
+                        >
+                            USDC Balance:{' '}
+                            {isConnected
+                                ? `${formatPriceVUSD({
+                                      price: Number(balance.value),
                                       decimals: false,
                                   })} `
                                 : 'Connect Wallet'}
@@ -163,12 +184,17 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                                 <Box display={'flex'} justifyContent={'space-between'}>
                                     <FormControlLabel
                                         value="USDC"
-                                        control={<Radio disabled sx={{ '& .MuiSvgIcon-root': { fontSize: '2rem' } }} />}
+                                        control={<Radio sx={{ '& .MuiSvgIcon-root': { fontSize: '2rem' } }} />}
                                         label="USDC"
                                         sx={{
                                             width: smUp ? '52%' : '100%',
                                             margin: currentChain?.toLowerCase().includes('vitruveo') ? '' : 0,
                                             '& .MuiFormControlLabel-label': { fontSize: '2rem' },
+                                            '& .MuiRadio-root': {
+                                                display: currentChain?.toLowerCase().includes('vitruveo')
+                                                    ? 'block'
+                                                    : 'none',
+                                            },
                                         }}
                                     />
                                     <Box bgcolor={'#1a1a1a'} width={'100%'}>
@@ -177,10 +203,13 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                                         </Typography>
                                     </Box>
                                 </Box>
-                                <Box display={'flex'} justifyContent={'space-between'}>
+                                <Box
+                                    display={!currentChain?.toLowerCase().includes('vitruveo') ? 'none' : 'flex'}
+                                    justifyContent={'space-between'}
+                                >
                                     <FormControlLabel
                                         value="VTRU"
-                                        control={<Radio checked sx={{ '& .MuiSvgIcon-root': { fontSize: '2rem' } }} />}
+                                        control={<Radio sx={{ '& .MuiSvgIcon-root': { fontSize: '2rem' } }} />}
                                         label="VTRU"
                                         sx={{
                                             width: smUp ? '52%' : '100%',
