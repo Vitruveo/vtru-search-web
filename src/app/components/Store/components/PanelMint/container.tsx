@@ -80,21 +80,25 @@ export const Container = ({ asset }: Props) => {
     }, [state.credits, state.feesGrid, state.feesVideo]);
 
     useEffect(() => {
-        if (client) {
-            fetchAssetLicenses();
-            fetchAvailableCredits();
-            fetchBuyerBalancesInCents();
-            if ((coockieGrid || coockieVideo) && state.feesCurator.value) {
-                fetchBuyCapabilityInCents();
-            }
-
-            if (!coockieGrid && !coockieVideo) {
-                fetchBuyCapabilityInCents();
-            }
-        } else {
+        if (!client) {
             dispatchAction({ type: TypeActions.DISCONNECT, payload: null });
+            return;
         }
-    }, [client, state.feesCurator.value]);
+
+        if (!chain || !chain.name.toLowerCase().includes('vitruveo')) return;
+
+        fetchAssetLicenses();
+        fetchAvailableCredits();
+        fetchBuyerBalancesInCents();
+
+        if ((coockieGrid || coockieVideo) && state.feesCurator.value) {
+            fetchBuyCapabilityInCents();
+        }
+
+        if (!coockieGrid && !coockieVideo) {
+            fetchBuyCapabilityInCents();
+        }
+    }, [client, chain, state.feesCurator.value]);
 
     const fetchAssetLicenses = async () => {
         dispatchAction({ type: TypeActions.SET_AVAILABLE, payload: false });
@@ -307,7 +311,7 @@ export const Container = ({ asset }: Props) => {
                 loading: state.loading,
                 link: state.link,
                 stateModalMinted: state.openModalMinted,
-                chain: !!chain,
+                chain: chain ? chain.name.toLowerCase().includes('vitruveo') : false,
                 platformFee: state.platformFee,
                 totalFee: state.totalFee,
                 feesCurator: state.feesCurator,
