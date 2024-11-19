@@ -147,6 +147,11 @@ export default function GridStack({ selectedAssets, title, description, fees }: 
                         {language['search.drawer.stack.grid.generating'] as string}
                     </Typography>
                 )}
+                {grid.error && (
+                    <Typography variant="caption" color="error">
+                        {grid.error}...
+                    </Typography>
+                )}
                 {grid.path && (
                     <Box display={'flex'} justifyContent={'center'}>
                         <ShareButton

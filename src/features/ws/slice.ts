@@ -6,6 +6,7 @@ const initialState: InitialState = {
         path: '',
         url: '',
         loading: false,
+        error: null,
     },
 };
 
@@ -27,6 +28,10 @@ export const wsSlice = createSlice({
         },
         stopLoading: (state) => {
             state.grid.loading = false;
+        },
+        setError: (state, action: PayloadAction<string>) => {
+            state.grid.loading = false;
+            state.grid.error = action.payload;
         },
         gridUpload: (_state, _action: PayloadAction<GridUploadParams>) => {},
     },

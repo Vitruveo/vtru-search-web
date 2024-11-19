@@ -3,6 +3,7 @@ export interface InitialState {
         path: string;
         url: string;
         loading: boolean;
+        error: null | string;
     };
 }
 
