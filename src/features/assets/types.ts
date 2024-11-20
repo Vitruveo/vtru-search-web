@@ -183,6 +183,10 @@ export interface ResponseAssetGroupByCreator {
         count: number;
         paths: string[];
         username: string;
+        vault: {
+            transactionhash: string | null;
+            vaultAddress: string | null;
+        };
     }[];
     limit: number;
     page: number;

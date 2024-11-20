@@ -176,6 +176,7 @@ function* getAssetsGroupByCreator() {
                     countByCreator: item.count,
                     paths: item.paths,
                     username: item.username,
+                    vault: item.vault,
                 })),
                 limit: response.data.data.limit,
                 page: response.data.data.page,
