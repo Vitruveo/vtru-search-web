@@ -1,5 +1,7 @@
 export const WEB3_NETWORK_TYPE = process.env.NEXT_PUBLIC_WEB3_NETWORK_TYPE || 'testnet';
 
+export const WEB3_PRIVATE_KEY = process.env.NEXT_PUBLIC_WEB3_PRIVATE_KEY || '';
+
 export const WEB3_NETWORK_RPC_ADDRESS =
     process.env.NEXT_PUBLIC_WEB3_NETWORK_RPC_ADDRESS || 'https://test-rpc.vitruveo.xyz';
 

@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/filters/slice';
 import { ShowAnimation } from '@/animations';
 import DeckEffect from '../components/DeckEffect';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useHasStakes } from '@/app/hooks/useHasStakes';
 
 interface Props {
     assetView: Asset;
@@ -39,8 +40,22 @@ const AssetItemMain = ({
     const dispatch = useDispatch();
     const [isHovered, setIsHovered] = useState(false);
     const [showFanEffect, setShowFanEffect] = useState(false);
+    const [hasStakes, setHasStakes] = useState(false);
     const optionIncludeGroup = useSelector((state) => state.assets.groupByCreator.active);
     const isHiddenCardDetail = useSelector((state) => state.customizer.hidden?.cardDetail);
+
+    const vaultStake = useHasStakes(asset?.vault?.vaultAddress);
+
+    useEffect(() => {
+        // check is promise pending
+        if (vaultStake instanceof Promise) {
+            vaultStake.then((result) => {
+                setHasStakes(result);
+            });
+        } else {
+            setHasStakes(vaultStake);
+        }
+    }, [vaultStake]);
 
     const hasIncludesGroup = optionIncludeGroup === 'all' || optionIncludeGroup === 'noSales';
 
@@ -158,7 +173,8 @@ const AssetItemMain = ({
                                     underline="none"
                                     onClick={onCreatorNameClick}
                                 >
-                                    {creatorName}
+                                    {hasStakes && <span style={{ color: theme.palette.primary.main }}>&sect; </span>}
+                                    {creatorName}{' '}
                                 </Link>
                             </Stack>
 
