@@ -298,7 +298,7 @@ export const getVtruConversion = async ({ client, vusdAmount }: GetVtruConversio
         const result = await VUSD.getVtruConversion(vusdAmountInBaseUnits);
 
         const resultInVtru = Number(result) / 10 ** 18;
-        return Math.ceil(resultInVtru);
+        return Math.floor(resultInVtru);
     } catch (error) {
         console.log('error getVtruConversion', error);
 
@@ -313,7 +313,7 @@ export const getBalanceVUSD = async ({ client }: GetBalanceVUSD): Promise<number
 
         const result = await VUSD.balanceOf(signer.address);
 
-        return Math.round(Number(result) / 10 ** 6);
+        return Math.floor(Number(result) / 10 ** 6);
     } catch (error) {
         console.log('error getBalanceVUSD', error);
 
