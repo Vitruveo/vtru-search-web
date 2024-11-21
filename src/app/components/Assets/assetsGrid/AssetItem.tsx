@@ -59,20 +59,18 @@ const AssetItemMain = ({
 
     const hasIncludesGroup = optionIncludeGroup === 'all' || optionIncludeGroup === 'noSales';
 
-    const hasCreator =
-        asset?.assetMetadata?.creators?.formData instanceof Array &&
-        asset?.assetMetadata?.creators?.formData?.length > 0;
+    const hasCreator = asset?.creator.username;
 
     const assetTitle = asset?.assetMetadata?.context?.formData?.title || 'No Title';
 
-    const creatorName = hasCreator ? asset!.assetMetadata!.creators!.formData![0]!.name : 'No creator';
+    const creatorName = hasCreator || 'No creator';
 
     const onCreatorNameClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         event.stopPropagation();
         if (hasCreator) {
             dispatch(
                 actions.changeName({
-                    name: asset!.assetMetadata!.creators!.formData![0].name,
+                    name: hasCreator,
                 })
             );
         }

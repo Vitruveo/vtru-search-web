@@ -124,7 +124,9 @@ export interface Asset {
     };
     countByCreator?: number;
     paths?: string[];
-    username: string;
+    creator: {
+        username: string;
+    };
     vault: {
         transactionhash: string | null;
         vaultAddress: string | null;

@@ -754,7 +754,9 @@ const AssetsList = () => {
                                         }}
                                         handleClickImage={() => {
                                             if (isInIframe) {
-                                                window.open(`${STORE_BASE_URL}/${asset.username}/${asset._id}`);
+                                                window.open(
+                                                    `${STORE_BASE_URL}/${asset.creator?.username}/${asset._id}`
+                                                );
 
                                                 return;
                                             }
@@ -823,7 +825,9 @@ const AssetsList = () => {
                                             }}
                                             handleClickImage={() => {
                                                 if (isInIframe) {
-                                                    window.open(`${STORE_BASE_URL}/${asset.username}/${asset._id}`);
+                                                    window.open(
+                                                        `${STORE_BASE_URL}/${asset.creator?.username}/${asset._id}`
+                                                    );
 
                                                     return;
                                                 }
