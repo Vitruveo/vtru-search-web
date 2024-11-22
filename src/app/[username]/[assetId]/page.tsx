@@ -19,6 +19,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     const asset = response.data;
 
+    if (!asset) {
+        return {
+            title: 'Not found',
+            description: 'Asset not found',
+        };
+    }
+
     const metaOg = {
         title: asset.assetMetadata.context.formData.title,
         description: asset.assetMetadata.context.formData.description,
