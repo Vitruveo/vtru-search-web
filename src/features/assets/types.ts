@@ -145,6 +145,10 @@ export interface SpotlightAsset {
     preview: string;
     username: string;
     nudity: string;
+    vault: {
+        transactionhash: string | null;
+        vaultAddress: string | null;
+    };
 }
 
 export type ResponseAssetsSpotlight = SpotlightAsset[];
@@ -155,6 +159,10 @@ export interface LastSoldAsset {
     preview: string;
     price: number;
     username: string;
+    vault: {
+        transactionhash: string | null;
+        vaultAddress: string | null;
+    };
 }
 
 export type ResponseAssetsLastSold = LastSoldAsset[];

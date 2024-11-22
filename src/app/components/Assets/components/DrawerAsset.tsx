@@ -10,6 +10,7 @@ import { MediaRenderer } from './MediaRenderer';
 import Avatar from './Avatar';
 import Link from 'next/link';
 import { useTheme } from '@mui/material/styles';
+import Username from '../../Username';
 
 interface Props {
     drawerOpen: boolean;
@@ -66,21 +67,11 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                 </Typography>
                 <Box mt={3} mb={3} display="flex" alignItems="center" gap={1}>
                     <Avatar baseUrl={GENERAL_STORAGE_URL} path={creator.avatar} />
-                    {Array.isArray(assetView?.assetMetadata?.creators?.formData) &&
-                        assetView?.assetMetadata?.creators?.formData?.length > 0 && (
-                            <Box display={'flex'} flexDirection={'column'} gap={1}>
-                                <Typography variant="h6" maxWidth={width - 40} sx={{ wordBreak: 'break-word' }}>
-                                    {assetView?.assetMetadata?.creators?.formData[0].name || 'No creator'}
-                                </Typography>
-                                {/* <Link
-                                    href={`${SEARCH_BASE_URL}/${creator.username}`}
-                                    target="_blank"
-                                    style={{ color: theme.palette.primary.main }}
-                                >
-                                    {language['search.drawer.stack.viewProfile'] as string}
-                                </Link> */}
-                            </Box>
-                        )}
+                    <Username
+                        username={assetView?.creator?.username}
+                        vaultAdress={assetView?.vault?.vaultAddress}
+                        size="medium"
+                    />
                 </Box>
                 <Box mb={3}>
                     <Typography variant="h6">

@@ -9,6 +9,7 @@ import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import { LastSoldAsset } from '@/features/assets/types';
 import { SEARCH_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
+import Username from '../Username';
 
 function RecentlySoldSlider() {
     const assets = useSelector((state) => state.assets.lastSold);
@@ -24,6 +25,7 @@ function RecentlySoldSlider() {
                 {assets.map((asset, index) => {
                     const assetTitle = asset?.title || 'No Title';
                     const creatorName = asset?.username || 'No creator';
+                    const vaultAddress = asset?.vault?.vaultAddress || '';
                     const price = formatPrice({ price: asset.price });
 
                     const nextAssetExists = index + 1 < assets.length;
@@ -73,21 +75,7 @@ function RecentlySoldSlider() {
                                     {assetTitle}
                                 </Typography>
                                 <Box sx={{ width: '100%' }}>
-                                    <Link
-                                        title={creatorName}
-                                        sx={{
-                                            display: 'block',
-                                            width: '100%',
-                                            overflow: 'hidden',
-                                            whiteSpace: 'nowrap',
-                                            textOverflow: 'ellipsis',
-                                        }}
-                                        underline="none"
-                                        href="#"
-                                        onClick={() => {}}
-                                    >
-                                        {creatorName}
-                                    </Link>
+                                    <Username username={creatorName} vaultAdress={vaultAddress} size="small" />
                                 </Box>
                                 <Stack direction="row" justifyContent="space-between" mt={2}>
                                     <Box>
