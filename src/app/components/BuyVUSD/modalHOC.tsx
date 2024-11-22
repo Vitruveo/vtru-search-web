@@ -258,7 +258,8 @@ export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProp
         }
     };
 
-    const value = Number(balance.data?.value || '0') / 10 ** 18;
+    const value = Math.trunc(Number(balance.data?.value || '0') / 10 ** 18);
+    const valueUSDC = Math.trunc(balanceUSDC.value);
 
     return (
         <BuyVUSDModal
@@ -267,7 +268,7 @@ export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProp
             data={{
                 balance: {
                     symbol: currentChain?.includes('vitruveo') ? balance.data?.symbol : balanceUSDC.symbol,
-                    value: currentChain?.includes('vitruveo') ? value.toFixed(4) : balanceUSDC.value.toFixed(4),
+                    value: currentChain?.includes('vitruveo') ? value.toFixed(4) : valueUSDC.toFixed(4),
                 },
                 balanceVUSD: {
                     symbol: balanceVUSD.symbol,
@@ -283,10 +284,10 @@ export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProp
                     !isConnected ||
                     loading ||
                     loadingConversion ||
-                    (currentChain?.includes('vitruveo') ? value < vtruConverted : balanceUSDC.value < usdcConverted),
+                    (currentChain?.includes('vitruveo') ? value < vtruConverted : valueUSDC < usdcConverted),
                 insufficientBalance: currentChain?.includes('vitruveo')
                     ? value < vtruConverted
-                    : balanceUSDC.value < usdcConverted,
+                    : valueUSDC < usdcConverted,
                 loadingConversion: loadingConversion,
             }}
             actions={{
