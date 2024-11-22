@@ -14,10 +14,11 @@ export async function generateHash(value: string) {
 export async function middleware(request: NextRequest) {
     const host = request.headers.get('host') || '';
     const parts = host.split('.');
+    const isLocalhost = host.includes('localhost');
 
     const headers = new Headers(request.headers);
 
-    if (parts.length > 1) {
+    if (isLocalhost ? parts.length > 1 : parts.length > 3) {
         const subdomain = parts[0];
         console.log('has subdomain', subdomain);
 
