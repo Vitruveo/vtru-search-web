@@ -39,6 +39,7 @@ export default function CustomizedSnackbar({
                 open={open}
                 autoHideDuration={autoClose ? 5000 : null}
                 onClose={handleClose}
+                sx={{ zIndex: 99999 }}
             >
                 {!type || !type.length ? (
                     <div />
