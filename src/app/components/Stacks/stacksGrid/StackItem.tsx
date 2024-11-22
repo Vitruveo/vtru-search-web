@@ -80,7 +80,7 @@ const StackItemMain = ({ stack }: Props) => {
                             Curator
                         </Typography>
                         <Box display="flex" gap={1} alignItems="center">
-                            <Username username={stack.username} vaultAdress={stack.vault?.vaultAddress} />
+                            <Username username={stack.username} vaultAdress={stack.vault?.vaultAddress} size="medium" />
                             <Typography variant="h6" sx={{ whiteSpace: 'nowrap' }}>
                                 (+{stack.stacks.quantity} stacks)
                             </Typography>

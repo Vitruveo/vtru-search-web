@@ -7,6 +7,7 @@ import { GENERAL_STORAGE_URL } from '@/constants/aws';
 import { Stack } from '@/features/stacks/types';
 import { useSelector } from '@/store/hooks';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
+import Username from '../Username';
 
 function StackSpotlightSlider() {
     const stacks = useSelector((state) => state.stacks.spotlight);
@@ -76,20 +77,11 @@ function StackSpotlightSlider() {
                                         Curator
                                     </Typography>
                                     <Box display="flex" gap={1} alignItems="center">
-                                        <Typography
-                                            variant="h6"
-                                            sx={{
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                flexShrink: 1,
-                                            }}
-                                        >
-                                            {creatorName}
-                                        </Typography>
-                                        {/* <Typography variant="h6" sx={{ whiteSpace: 'nowrap' }}>
-                                            (+{item.stack.stacks.quantity} stacks)
-                                        </Typography> */}
+                                        <Username
+                                            username={creatorName}
+                                            vaultAdress={item.stack.vault?.vaultAddress}
+                                            size="medium"
+                                        />
                                     </Box>
                                 </StackMui>
                             </CardContent>

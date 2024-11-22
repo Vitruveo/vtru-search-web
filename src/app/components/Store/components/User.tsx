@@ -22,6 +22,7 @@ export const User = ({ asset, creator, creatorName }: Props) => {
                 username={creatorName || asset.creator?.username}
                 vaultAdress={asset.vault?.vaultAddress}
                 size="medium"
+                openInNewTab
             />
         </Box>
     );

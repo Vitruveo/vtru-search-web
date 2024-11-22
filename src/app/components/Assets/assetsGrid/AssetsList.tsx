@@ -357,8 +357,8 @@ const AssetsList = () => {
                                 )}
                                 {hasIncludesGroup.name && (
                                     <Username
-                                        username={assets[0].creator.username}
-                                        vaultAdress={assets[0].vault.vaultAddress}
+                                        username={assets[0]?.creator.username}
+                                        vaultAdress={assets[0]?.vault?.vaultAddress}
                                         size="large"
                                     />
                                 )}

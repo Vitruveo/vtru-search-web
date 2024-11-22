@@ -1,7 +1,8 @@
 import { useHasStakes } from '@/app/hooks/useHasStakes';
+import { SEARCH_BASE_URL } from '@/constants/api';
 import { actions as actionsFilters } from '@/features/filters/slice';
 import { useDispatch } from '@/store/hooks';
-import { Box, Link } from '@mui/material';
+import { Link } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 
@@ -9,6 +10,7 @@ interface Props {
     username: string;
     vaultAdress: string | null;
     size: 'small' | 'medium' | 'large';
+    openInNewTab?: boolean;
 }
 
 const fontSizes = {
@@ -17,7 +19,7 @@ const fontSizes = {
     large: '1.4rem',
 };
 
-const Username = ({ username, vaultAdress, size }: Props) => {
+const Username = ({ username, vaultAdress, size, openInNewTab = false }: Props) => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const [hasStakes, setHasStakes] = useState(false);
@@ -53,10 +55,11 @@ const Username = ({ username, vaultAdress, size }: Props) => {
                 overflow="hidden"
                 whiteSpace="nowrap"
                 textOverflow="ellipsis"
-                href="#"
+                href={openInNewTab ? `${SEARCH_BASE_URL}?name=${username}` : '#'}
                 underline="none"
                 onClick={onClick}
                 fontSize={fontSizes[size]}
+                target={openInNewTab ? '_blank' : '_self'}
             >
                 {hasStakes && <span style={{ color: theme.palette.primary.main }}>&sect; </span>}
                 {username}
