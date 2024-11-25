@@ -373,6 +373,7 @@ const AssetsList = () => {
                                             background: 'none',
                                             cursor: 'pointer',
                                             padding: 0,
+                                            width: '100%',
                                         }}
                                         onClick={returnToPageOne}
                                     >
