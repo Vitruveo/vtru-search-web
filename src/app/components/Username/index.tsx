@@ -2,7 +2,7 @@ import { useHasStakes } from '@/app/hooks/useHasStakes';
 import { SEARCH_BASE_URL } from '@/constants/api';
 import { actions as actionsFilters } from '@/features/filters/slice';
 import { useDispatch } from '@/store/hooks';
-import { Link } from '@mui/material';
+import { Box, Link, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 
@@ -48,7 +48,7 @@ const Username = ({ username, vaultAdress, size, openInNewTab = false }: Props) 
     }, [vaultStake]);
 
     return (
-        <>
+        <Box width={'100%'}>
             <Link
                 title={username}
                 padding={0}
@@ -61,17 +61,21 @@ const Username = ({ username, vaultAdress, size, openInNewTab = false }: Props) 
                 fontSize={fontSizes[size]}
                 target={openInNewTab ? '_blank' : '_self'}
             >
-                {hasStakes && <span style={{ color: theme.palette.primary.main }}>&sect; </span>}
-                {username}
+                <Box display={'flex'} justifyContent={'space-between'} width={'100%'} gap={0.5}>
+                    <Typography
+                        sx={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            fontSize: fontSizes[size],
+                        }}
+                    >
+                        {username}
+                    </Typography>
+                    {hasStakes && <span style={{ color: theme.palette.primary.main }}>&sect; </span>}
+                </Box>
             </Link>
-            {/* <Link
-                href={`${SEARCH_BASE_URL}/${creator.username}`}
-                target="_blank"
-                style={{ color: theme.palette.primary.main }}
-            >
-                {language['search.drawer.stack.viewProfile'] as string}
-            </Link> */}
-        </>
+        </Box>
     );
 };
 
