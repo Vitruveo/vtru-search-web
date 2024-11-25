@@ -1,14 +1,14 @@
-import { Badge, Box, CardContent, Checkbox, Grid, Link, Paper, Stack, Typography, useMediaQuery } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import BlankCard from '../../Shared/BlankCard';
+import { ShowAnimation } from '@/animations';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { Asset } from '@/features/assets/types';
-import { MediaRenderer } from '../components/MediaRenderer';
-import { useDispatch, useSelector } from '@/store/hooks';
-import { actions } from '@/features/filters/slice';
-import { ShowAnimation } from '@/animations';
-import DeckEffect from '../components/DeckEffect';
+import { useSelector } from '@/store/hooks';
+import { Badge, Box, CardContent, Checkbox, Grid, Paper, Stack, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import React, { useMemo, useState } from 'react';
+import BlankCard from '../../Shared/BlankCard';
+import Username from '../../Username';
+import DeckEffect from '../components/DeckEffect';
+import { MediaRenderer } from '../components/MediaRenderer';
 
 interface Props {
     assetView: Asset;
@@ -36,7 +36,6 @@ const AssetItemMain = ({
     countByCreator = undefined,
 }: Props) => {
     const theme = useTheme();
-    const dispatch = useDispatch();
     const [isHovered, setIsHovered] = useState(false);
     const [showFanEffect, setShowFanEffect] = useState(false);
     const optionIncludeGroup = useSelector((state) => state.assets.groupByCreator.active);
@@ -44,24 +43,10 @@ const AssetItemMain = ({
 
     const hasIncludesGroup = optionIncludeGroup === 'all' || optionIncludeGroup === 'noSales';
 
-    const hasCreator =
-        asset?.assetMetadata?.creators?.formData instanceof Array &&
-        asset?.assetMetadata?.creators?.formData?.length > 0;
-
     const assetTitle = asset?.assetMetadata?.context?.formData?.title || 'No Title';
 
-    const creatorName = hasCreator ? asset!.assetMetadata!.creators!.formData![0]!.name : 'No creator';
-
-    const onCreatorNameClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-        event.stopPropagation();
-        if (hasCreator) {
-            dispatch(
-                actions.changeName({
-                    name: asset!.assetMetadata!.creators!.formData![0].name,
-                })
-            );
-        }
-    };
+    const hasCreator = asset?.creator?.username;
+    const creatorName = hasCreator || 'No creator';
 
     const media = useMemo(() => {
         return `${ASSET_STORAGE_URL}/${asset?.formats?.preview?.path}`;
@@ -148,18 +133,11 @@ const AssetItemMain = ({
                             </Stack>
 
                             <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
-                                <Link
-                                    title={creatorName}
-                                    padding={0}
-                                    overflow="hidden"
-                                    whiteSpace="nowrap"
-                                    textOverflow="ellipsis"
-                                    href="#"
-                                    underline="none"
-                                    onClick={onCreatorNameClick}
-                                >
-                                    {creatorName}
-                                </Link>
+                                <Username
+                                    username={creatorName}
+                                    vaultAdress={asset?.vault?.vaultAddress}
+                                    size="small"
+                                />
                             </Stack>
 
                             <Stack flexDirection="row" justifyContent="space-between" alignItems="end">

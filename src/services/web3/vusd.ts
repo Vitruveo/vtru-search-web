@@ -313,7 +313,7 @@ export const getBalanceVUSD = async ({ client }: GetBalanceVUSD): Promise<number
 
         const result = await VUSD.balanceOf(signer.address);
 
-        return Math.round(Number(result) / 10 ** 6);
+        return Math.ceil(Number(result) / 10 ** 6);
     } catch (error) {
         console.log('error getBalanceVUSD', error);
 

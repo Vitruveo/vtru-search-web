@@ -9,6 +9,7 @@ import { SpotlightAsset } from '@/features/assets/types';
 import { SEARCH_BASE_URL } from '@/constants/api';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import { formatPrice } from '@/utils/assets';
+import Username from '../Username';
 
 function SpotlightSlider() {
     const assets = useSelector((state) => state.assets.spotlight);
@@ -24,6 +25,7 @@ function SpotlightSlider() {
                 {assets.map((asset, index) => {
                     const assetTitle = asset?.title || 'No Title';
                     const creatorName = asset?.username || 'No creator';
+                    const vaultAddress = asset?.vault?.vaultAddress || '';
 
                     const price = formatPrice({ price: asset.price });
 
@@ -73,21 +75,7 @@ function SpotlightSlider() {
                                     {assetTitle}
                                 </Typography>
                                 <Box sx={{ width: '100%' }}>
-                                    <Link
-                                        title={creatorName}
-                                        sx={{
-                                            display: 'block',
-                                            width: '100%',
-                                            overflow: 'hidden',
-                                            whiteSpace: 'nowrap',
-                                            textOverflow: 'ellipsis',
-                                        }}
-                                        href="#"
-                                        onClick={() => {}}
-                                        underline="none"
-                                    >
-                                        {creatorName}
-                                    </Link>
+                                    <Username username={creatorName} vaultAdress={vaultAddress} size="small" />
                                 </Box>
                                 <Stack mt={2}>
                                     <Typography

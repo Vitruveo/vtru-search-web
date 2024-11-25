@@ -124,7 +124,9 @@ export interface Asset {
     };
     countByCreator?: number;
     paths?: string[];
-    username: string;
+    creator: {
+        username: string;
+    };
     vault: {
         transactionhash: string | null;
         vaultAddress: string | null;
@@ -143,6 +145,10 @@ export interface SpotlightAsset {
     preview: string;
     username: string;
     nudity: string;
+    vault: {
+        transactionhash: string | null;
+        vaultAddress: string | null;
+    };
 }
 
 export type ResponseAssetsSpotlight = SpotlightAsset[];
@@ -153,6 +159,10 @@ export interface LastSoldAsset {
     preview: string;
     price: number;
     username: string;
+    vault: {
+        transactionhash: string | null;
+        vaultAddress: string | null;
+    };
 }
 
 export type ResponseAssetsLastSold = LastSoldAsset[];
@@ -183,6 +193,10 @@ export interface ResponseAssetGroupByCreator {
         count: number;
         paths: string[];
         username: string;
+        vault: {
+            transactionhash: string | null;
+            vaultAddress: string | null;
+        };
     }[];
     limit: number;
     page: number;
