@@ -17,6 +17,10 @@ export interface StackSliceState {
 export interface Stack {
     _id: string;
     username: string;
+    vault: {
+        transactionhash: string | null;
+        vaultAddress: string | null;
+    };
     stacks: {
         id: string;
         path: string;

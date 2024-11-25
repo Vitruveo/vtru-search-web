@@ -60,7 +60,13 @@ export default function ArtistsSpotlight() {
                                 }}
                             >
                                 <Box sx={{ width: '100%' }}>
-                                    <Typography variant="h5">{creatorName}</Typography>
+                                    <Typography
+                                        variant="h5"
+                                        noWrap
+                                        sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                                    >
+                                        {creatorName}
+                                    </Typography>
                                 </Box>
                             </CardContent>
                         </Box>

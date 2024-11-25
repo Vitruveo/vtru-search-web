@@ -9,6 +9,7 @@ import { useTheme } from '@mui/material/styles';
 import { IconInfoCircle, IconPlayerPlayFilled, IconX } from '@tabler/icons-react';
 import React, { useState } from 'react';
 import { useI18n } from '@/app/hooks/useI18n';
+import Username from '../../Username';
 
 interface Props {
     stack: Stack;
@@ -79,17 +80,14 @@ const StackItemMain = ({ stack }: Props) => {
                             Curator
                         </Typography>
                         <Box display="flex" gap={1} alignItems="center">
-                            <Typography
-                                variant="h6"
-                                sx={{
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    flexShrink: 1,
-                                }}
-                            >
-                                {stack.username}
-                            </Typography>
+                            <Box width={'60%'}>
+                                <Username
+                                    username={stack.username}
+                                    vaultAdress={stack.vault?.vaultAddress}
+                                    size="medium"
+                                    openInNewTab
+                                />
+                            </Box>
                             <Typography variant="h6" sx={{ whiteSpace: 'nowrap' }}>
                                 (+{stack.stacks.quantity} stacks)
                             </Typography>

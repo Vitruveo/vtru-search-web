@@ -35,6 +35,7 @@ import NumberOfFilters from '../components/numberOfFilters';
 import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
 import { AssetItem } from './AssetItem';
 import './AssetScroll.css';
+import Username from '../../Username';
 
 const AssetsList = () => {
     const { language } = useI18n();
@@ -355,9 +356,11 @@ const AssetsList = () => {
                                     </Typography>
                                 )}
                                 {hasIncludesGroup.name && (
-                                    <Typography variant="h4" maxWidth={230} sx={{ wordBreak: 'break-word' }}>
-                                        {hasIncludesGroup.name}
-                                    </Typography>
+                                    <Username
+                                        username={assets[0]?.creator.username}
+                                        vaultAdress={assets[0]?.vault?.vaultAddress}
+                                        size="large"
+                                    />
                                 )}
                                 {(hasCurated ||
                                     hasIncludesGroup.name ||
@@ -370,6 +373,7 @@ const AssetsList = () => {
                                             background: 'none',
                                             cursor: 'pointer',
                                             padding: 0,
+                                            width: '100%',
                                         }}
                                         onClick={returnToPageOne}
                                     >
@@ -754,7 +758,9 @@ const AssetsList = () => {
                                         }}
                                         handleClickImage={() => {
                                             if (isInIframe) {
-                                                window.open(`${STORE_BASE_URL}/${asset.username}/${asset._id}`);
+                                                window.open(
+                                                    `${STORE_BASE_URL}/${asset.creator?.username}/${asset._id}`
+                                                );
 
                                                 return;
                                             }
@@ -823,7 +829,9 @@ const AssetsList = () => {
                                             }}
                                             handleClickImage={() => {
                                                 if (isInIframe) {
-                                                    window.open(`${STORE_BASE_URL}/${asset.username}/${asset._id}`);
+                                                    window.open(
+                                                        `${STORE_BASE_URL}/${asset.creator?.username}/${asset._id}`
+                                                    );
 
                                                     return;
                                                 }

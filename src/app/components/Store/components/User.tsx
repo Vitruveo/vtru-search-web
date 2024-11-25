@@ -1,31 +1,29 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { GENERAL_STORAGE_URL } from '@/constants/aws';
 import Avatar from '../../Assets/components/Avatar';
+import Username from '../../Username';
+import { Asset } from '@/features/assets/types';
 
 interface Props {
     creator: any;
     creatorName?: string;
-    asset: any;
+    asset: Asset;
 }
 
 export const User = ({ asset, creator, creatorName }: Props) => {
     return (
-        <Box display="flex">
+        <Box display="flex" flexDirection={'row'} gap={1} alignItems={'center'}>
             <Avatar
                 baseUrl={GENERAL_STORAGE_URL}
                 path={creator}
-                name={asset.assetMetadata?.creators?.formData[0]?.name}
+                name={asset.assetMetadata?.creators?.formData?.[0]?.name}
             />
-            <Typography
-                variant="h6"
-                style={{
-                    textIndent: 8,
-                    alignContent: 'center',
-                    color: '#ffff',
-                }}
-            >
-                {creatorName || asset.assetMetadata.creators?.formData[0]?.name}
-            </Typography>
+            <Username
+                username={creatorName || asset.creator?.username}
+                vaultAdress={asset.vault?.vaultAddress}
+                size="medium"
+                openInNewTab
+            />
         </Box>
     );
 };

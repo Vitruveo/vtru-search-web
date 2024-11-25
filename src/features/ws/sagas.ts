@@ -1,5 +1,5 @@
 import { API_BASE_URL } from '@/constants/api';
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import cookie from 'cookiejs';
 import { all, call, put, select, takeLatest } from 'redux-saga/effects';
 import { toastrActionsCreators } from '../toastr/slice';
@@ -24,7 +24,11 @@ function* gridUpload(action: PayloadAction<GridUploadParams>) {
             },
         });
     } catch (error) {
-        yield put(toastrActionsCreators.displayToastr({ message: 'An unexpected error occured', type: 'error' }));
+        if (error instanceof AxiosError) {
+            yield put(actions.setError(error.response?.data.message));
+        } else {
+            yield put(toastrActionsCreators.displayToastr({ message: 'An unexpected error occured', type: 'error' }));
+        }
     }
 }
 
@@ -34,6 +38,7 @@ function* watchEvents() {
             actions.setGrid({
                 path: data.notification.path,
                 url: data.notification.url,
+                error: null,
             })
         );
         store.dispatch(actions.stopLoading());
