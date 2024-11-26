@@ -23,6 +23,7 @@ export const User = ({ asset, creator, creatorName }: Props) => {
                 vaultAdress={asset.vault?.vaultAddress}
                 size="medium"
                 openInNewTab
+                iconSpacing="small"
             />
         </Box>
     );

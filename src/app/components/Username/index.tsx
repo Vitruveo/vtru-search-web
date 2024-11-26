@@ -11,6 +11,7 @@ interface Props {
     vaultAdress: string | null;
     size: 'small' | 'medium' | 'large';
     openInNewTab?: boolean;
+    iconSpacing?: 'small' | 'large';
 }
 
 const fontSizes = {
@@ -19,7 +20,7 @@ const fontSizes = {
     large: '1.4rem',
 };
 
-const Username = ({ username, vaultAdress, size, openInNewTab = false }: Props) => {
+const Username = ({ username, vaultAdress, size, openInNewTab = false, iconSpacing = 'large' }: Props) => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const [hasStakes, setHasStakes] = useState(false);
@@ -61,7 +62,12 @@ const Username = ({ username, vaultAdress, size, openInNewTab = false }: Props) 
                 fontSize={fontSizes[size]}
                 target={openInNewTab ? '_blank' : '_self'}
             >
-                <Box display={'flex'} justifyContent={'space-between'} width={'100%'} gap={0.5}>
+                <Box
+                    display={'flex'}
+                    justifyContent={iconSpacing === 'large' ? 'space-between' : 'inherit'}
+                    width={'100%'}
+                    gap={1}
+                >
                     <Typography
                         sx={{
                             overflow: 'hidden',
