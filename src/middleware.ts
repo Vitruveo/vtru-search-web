@@ -15,11 +15,17 @@ export async function middleware(request: NextRequest) {
     const host = request.headers.get('host') || '';
     const parts = host.split('.');
     const isLocalhost = host.includes('localhost');
-
     const headers = new Headers(request.headers);
 
+    const notVerifySubdomain = ['www'];
+    const subdomain = parts[0];
+    if (notVerifySubdomain.includes(subdomain)) {
+        return NextResponse.next({
+            headers,
+        });
+    }
+
     if (isLocalhost ? parts.length > 1 : parts.length > 3) {
-        const subdomain = parts[0];
         console.log('has subdomain', subdomain);
 
         const hash = await generateHash(subdomain);
