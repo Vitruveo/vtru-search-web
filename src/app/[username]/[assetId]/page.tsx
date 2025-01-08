@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { videoExtension } from '@/utils/videoExtensions';
 
 // constants
 import { API_BASE_URL } from '@/constants/api';
@@ -26,11 +27,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         };
     }
 
+    const assetPath = asset.formats.preview?.path;
+    const thumbnail = assetPath?.replace(/\.(\w+)$/, '_thumb.jpg');
+
+    const isVideo = videoExtension.some((ext) => assetPath?.endsWith(ext));
+
     const metaOg = {
         title: asset.assetMetadata.context.formData.title,
         description: asset.assetMetadata.context.formData.description,
-        url: `${ASSET_STORAGE_URL}/${asset.formats.preview.path}`,
-        image: `${ASSET_STORAGE_URL}/${asset.formats.preview.path}`,
+        url: `${ASSET_STORAGE_URL}/${assetPath}`,
+        image: isVideo ? `${ASSET_STORAGE_URL}/${thumbnail}` : `${ASSET_STORAGE_URL}/${assetPath}`,
     };
 
     return {
