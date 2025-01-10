@@ -1,6 +1,7 @@
-import { API_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, SEARCH_BASE_URL } from '@/constants/api';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import reservedWords from '../reservedWords.json';
 
 export async function generateHash(value: string) {
     const encoder = new TextEncoder();
@@ -16,13 +17,17 @@ export async function middleware(request: NextRequest) {
     const parts = host.split('.');
     const isLocalhost = host.includes('localhost');
     const headers = new Headers(request.headers);
+    const subdomain = parts[0];
 
     const notVerifySubdomain = ['www'];
-    const subdomain = parts[0];
     if (notVerifySubdomain.includes(subdomain)) {
         return NextResponse.next({
             headers,
         });
+    }
+
+    if (reservedWords.includes(subdomain)) {
+        return NextResponse.redirect(SEARCH_BASE_URL);
     }
 
     if (isLocalhost ? parts.length > 1 : parts.length > 3) {
