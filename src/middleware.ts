@@ -1,7 +1,8 @@
 import { API_BASE_URL, SEARCH_BASE_URL } from '@/constants/api';
+import axios from 'axios';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import reservedWords from '../reservedWords.json';
+import { GENERAL_STORAGE_URL } from './constants/aws';
 
 export async function generateHash(value: string) {
     const encoder = new TextEncoder();
@@ -26,7 +27,8 @@ export async function middleware(request: NextRequest) {
         });
     }
 
-    if (reservedWords.includes(subdomain)) {
+    const reservedWords = await axios.get(`${GENERAL_STORAGE_URL}/reservedWords.json`);
+    if (reservedWords.data.includes(subdomain)) {
         return NextResponse.redirect(SEARCH_BASE_URL);
     }
 
