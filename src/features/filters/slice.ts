@@ -5,7 +5,6 @@ import { FilterSliceState } from './types';
 import { DeepPartial } from '../common/types';
 import { clearAssetsFromURL } from '@/utils/url-assets';
 import { extractObjects } from '@/utils/extractObjects';
-import { init } from 'next/dist/compiled/webpack/webpack';
 
 export const initialState: FilterSliceState = {
     name: '',
@@ -182,7 +181,7 @@ export const filterSlice = createSlice({
 
             const payload = extractObjects(initialState);
 
-            Object.entries(action.payload).forEach(([key, value]) => {
+            Object.entries(action.payload).forEach(([key, _value]) => {
                 if (typeof payload[key] === 'string') {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
