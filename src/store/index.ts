@@ -8,6 +8,7 @@ import { PERSIST_KEY, PERSIST_VERSION } from '@/constants/store';
 // sagas
 import { assetsSagas } from '@/features/assets';
 import { creatorSagas } from '@/features/creator';
+import { storesSagas } from '@/features/stores/sagas';
 import stacksSaga from '@/features/stacks/sagas';
 import wsSagas from '@/features/ws/sagas';
 import storeSagas from '@/features/store/sagas';
@@ -26,6 +27,7 @@ import { stacksSlice } from '@/features/stacks/slice';
 import { storeSlice } from '@/features/store/slice';
 import { profileCreatorSlice } from '@/features/profile/creator/slice';
 import { profileAssetsSlice } from '@/features/profile/assets/slice';
+import { storesSlice } from '@/features/stores/slice';
 
 const sagaMiddleware = createSagaMiddleware({
     onError: (error, errorInfo) => {
@@ -69,6 +71,7 @@ const rootReducer = combineReducers({
     store: storeSlice.reducer,
     profileCreator: profileCreatorSlice.reducer,
     profileAssets: profileAssetsSlice.reducer,
+    stores: storesSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -94,6 +97,7 @@ function* rootSaga() {
         spawn(storeSagas),
         spawn(profileCreatorSaga),
         spawn(profileAssetsSaga),
+        spawn(storesSagas),
     ]);
 }
 

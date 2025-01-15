@@ -7,7 +7,7 @@ import { Box, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Theme } from '@mui/material/styles';
 
-import { useDispatch } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import AssetsSidebar from './components/Assets/assetsGrid/AssetsSidebar';
 import AssetsList from './components/Assets/assetsGrid/AssetsList';
 import PageContainer from './components/Container/PageContainer';
@@ -15,12 +15,14 @@ import AppCard from './components/Shared/AppCard';
 import Header from './components/Header';
 import { actions, initialState } from '@/features/filters/slice';
 import { actions as actionsAssets } from '@/features/assets/slice';
+import { actions as actionsStores } from '@/features/stores/slice';
 import { extractObjects } from '@/utils/extractObjects';
 import StyleElements from './components/Assets/components/StyleElements';
 import { useToastr } from './hooks/useToastr';
 
 const params = Object.keys(extractObjects(initialState));
 const initialParams: Record<string, string> = {};
+const initialFilters: Record<string, string> = {};
 
 interface Props {
     data: {
@@ -30,6 +32,17 @@ interface Props {
     };
 }
 
+const fixedShortcuts = new Map([
+    ['animation', { key: 'taxonomy_category', value: ['video'] }],
+    ['photography', { key: 'taxonomy_category', value: ['photography'] }],
+    ['digitalArt', { key: 'taxonomy_objectType', value: ['digitalart'] }],
+    ['physicalArt', { key: 'taxonomy_objectType', value: ['physicalart'] }],
+    ['hasBTS', { key: 'hasBts', value: ['yes'] }],
+    ['hideAI', { key: 'taxonomy_aiGeneration', value: ['partial', 'none'] }],
+    ['hideNudity', { key: 'taxonomy_nudity', value: ['no'] }],
+    ['includeSold', { key: 'sort_sold', value: ['yes'] }],
+]);
+
 const Search = (props: Props) => {
     const { subdomain, hasSubdomainError, hasSubdomain } = props.data;
 
@@ -38,6 +51,7 @@ const Search = (props: Props) => {
     const toast = useToastr();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
+    const { artworks: storeFilters } = useSelector((state) => state.stores.data);
 
     const searchParams = useSearchParams();
     const grid = searchParams.get('grid');
@@ -47,6 +61,11 @@ const Search = (props: Props) => {
     const sort_sold = searchParams.get('sort_sold');
     const sort_order = searchParams.get('sort_order');
     const creatorId = searchParams.get('creatorId');
+
+    useEffect(() => {
+        console.log('colocar esse trecho dentro do if');
+        dispatch(actionsStores.getStoresRequest({ subdomain: 'teste-full' }));
+    }, []);
 
     useEffect(() => {
         if (hasSubdomain && subdomain) {
@@ -93,6 +112,22 @@ const Search = (props: Props) => {
         else if (groupByCreator && groupByCreator === 'noSales') dispatch(actionsAssets.startGrouped('noSales'));
         else dispatch(actionsAssets.startGrouped('all'));
     }, [searchParams]);
+
+    useEffect(() => {
+        const hasFilter = Object.entries(storeFilters || {}).some(([_key, value]) => Object.keys(value).length !== 0);
+        if (!hasFilter) return;
+
+        Object.entries(storeFilters?.general?.shortcuts || {}).forEach(([key, _value]) => {
+            const { key: filterKey, value: filterValue } = fixedShortcuts.get(key)!;
+            if (initialFilters[filterKey])
+                initialFilters[filterKey] = `${initialFilters[filterKey]},${filterValue.join(',')}`;
+            else initialFilters[filterKey] = filterValue.join(',');
+        });
+
+        dispatch(actions.initialParams(initialFilters));
+        dispatch(actionsAssets.initialSort({ order: 'latest', sold: initialFilters.sort_sold || 'no' }));
+        dispatch(actionsAssets.startGrouped('all'));
+    }, [storeFilters]);
 
     const isInIframe = window.self !== window.top;
 
