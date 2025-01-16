@@ -5,6 +5,7 @@ import { useSelector } from '@/store/hooks';
 import { useDispatch } from 'react-redux';
 import { actions } from '@/features/assets';
 import { actions as actionsFilters } from '@/features/filters/slice';
+import { GENERAL_STORAGE_URL } from '@/constants/aws';
 
 const LogoLtrDark = () => {
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
@@ -74,9 +75,30 @@ const LogoLtrLight = () => {
     );
 };
 
+const PersonalizedLogo = () => {
+    const { organization } = useSelector((state) => state.stores.data);
+    const path = organization?.formats.logo.horizontal?.path;
+    const name = organization?.formats.logo.horizontal?.name;
+
+    return (
+        <Box display="flex" alignItems="end">
+            <Image
+                style={{ display: 'inline-block', alignSelf: 'baseline', marginRight: '5px' }}
+                src={`${GENERAL_STORAGE_URL}/${path}`}
+                alt={name || 'logo'}
+                height={40}
+                width={120}
+                priority
+            />
+        </Box>
+    );
+};
+
 const Logo = () => {
     const dispatch = useDispatch();
     const customizer = useSelector((state) => state.customizer);
+    const { organization } = useSelector((state) => state.stores.data);
+    const path = organization?.formats.logo.horizontal?.path;
     const { maxPrice } = useSelector((state) => state.assets);
 
     const returnToPageOne = () => {
@@ -101,11 +123,12 @@ const Logo = () => {
         style: { textDecoration: 'none', cursor: 'pointer', marginTop: 0 },
         light: LogoLtrLight,
         dark: LogoLtrDark,
+        personalized: PersonalizedLogo,
     };
 
     return (
         <Box style={dice.style} onClick={returnToPageOne}>
-            {customizer.activeMode === 'dark' ? <dice.dark /> : <dice.light />}
+            {path ? <dice.personalized /> : customizer.activeMode === 'dark' ? <dice.dark /> : <dice.light />}
         </Box>
     );
 };
