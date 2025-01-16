@@ -19,7 +19,6 @@ import { actions as actionsStores } from '@/features/stores/slice';
 import { extractObjects } from '@/utils/extractObjects';
 import StyleElements from './components/Assets/components/StyleElements';
 import { useToastr } from './hooks/useToastr';
-import { convertHEXtoRGB } from '@/utils/colors';
 
 const params = Object.keys(extractObjects(initialState));
 const initialParams: Record<string, string> = {};
@@ -66,7 +65,7 @@ const Search = (props: Props) => {
 
     useEffect(() => {
         console.log('colocar esse trecho dentro do if');
-        dispatch(actionsStores.getStoresRequest({ subdomain: 'teste-full' }));
+        dispatch(actionsStores.getStoresRequest({ subdomain: 'testing-id' }));
     }, []);
 
     useEffect(() => {
