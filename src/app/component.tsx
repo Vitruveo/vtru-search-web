@@ -117,7 +117,7 @@ const Search = (props: Props) => {
 
     useEffect(() => {
         if (!hasFilter) return;
-        console.log('storeFilters', storeFilters);
+
         Object.entries(storeFilters?.general?.shortcuts || {}).forEach(([key, _value]) => {
             const { key: filterKey, value: filterValue } = fixedShortcuts.get(key)!;
             if (initialFilters[filterKey])
@@ -140,7 +140,9 @@ const Search = (props: Props) => {
             if (Array.isArray(value)) initialFilters[`taxonomy_${key}`] = value.join(',');
         });
 
-        console.log('initialFilters', initialFilters);
+        Object.entries(storeFilters?.artists || {}).forEach(([key, value]) => {
+            if (Array.isArray(value)) initialFilters[`creators_${key}`] = value.join(',');
+        });
 
         dispatch(actions.initialParams(initialFilters));
         dispatch(actionsAssets.initialSort({ order: 'latest', sold: initialFilters.sort_sold || 'no' }));
