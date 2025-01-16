@@ -135,6 +135,11 @@ const Search = (props: Props) => {
             if (key === 'precision' && typeof value === 'number')
                 initialFilters.colorPrecision_value = value.toString();
         });
+
+        Object.entries(storeFilters?.taxonomy || {}).forEach(([key, value]) => {
+            if (Array.isArray(value)) initialFilters[`taxonomy_${key}`] = value.join(',');
+        });
+
         console.log('initialFilters', initialFilters);
 
         dispatch(actions.initialParams(initialFilters));
