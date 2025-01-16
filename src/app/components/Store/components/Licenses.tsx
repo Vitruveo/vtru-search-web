@@ -10,12 +10,12 @@ interface LicensesProps {
 export default function Licenses({ title, license }: LicensesProps) {
     return (
         <Grid container spacing={2} style={{ paddingTop: 0, paddingBottom: 15, justifyContent: 'space-between' }}>
-            <Grid item xs={8} sm={2} alignItems={'center'} display={'flex'}>
+            <Grid item sm={6} alignItems={'center'} display={'flex'}>
                 <Typography variant="body1" fontWeight="bold" style={{ whiteSpace: 'nowrap', wordBreak: 'break-all' }}>
                     {title}
                 </Typography>
             </Grid>
-            <Grid item xs={12} sm={8} md={8} lg={8} xl={8}>
+            <Grid item sm={6}>
                 <Box display="flex" gap={1} justifyContent={'flex-end'} maxWidth={150}>
                     <Typography
                         variant="body1"

@@ -6,6 +6,7 @@ export const initialState = {
     feesGrid: null,
     feesVideo: null,
     openModalMinted: false,
+    openModalLicense: false,
     link: '',
     available: false,
     credits: 0,
@@ -47,6 +48,7 @@ export enum TypeActions {
     SET_BUYER_BALANCES = 'SET_BUYER_BALANCES',
     SET_BUY_CAPABILITY = 'SET_BUY_CAPABILITY',
     SET_LOADING_BUY = 'SET_LOADING_BUY',
+    SET_OPEN_MODAL_LICENSE = 'SET_OPEN_MODAL_LICENSE',
 
     DISCONNECT = 'DISCONNECT',
 }
@@ -64,6 +66,7 @@ interface State {
     feesGrid: number | null;
     feesVideo: number | null;
     openModalMinted: boolean;
+    openModalLicense: boolean;
     link: string;
     available: boolean;
     credits: number;
@@ -161,6 +164,11 @@ export const reducer = (state: State, action: Action) => {
             return {
                 ...state,
                 loadingBuy: action.payload,
+            };
+        case 'SET_OPEN_MODAL_LICENSE':
+            return {
+                ...state,
+                openModalLicense: action.payload,
             };
         case 'DISCONNECT':
             return {
