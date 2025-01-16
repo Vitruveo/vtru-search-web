@@ -8,7 +8,12 @@ interface Props {
 
 export function Colors({ colors = [], onRemove }: Props) {
     return colors.map((color, index) => {
-        const bgcolor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+        let bgcolor;
+        if (Array.isArray(color)) {
+            bgcolor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+        } else {
+            bgcolor = color;
+        }
 
         return (
             <Box mt={1} key={index} display="flex" alignItems="center" justifyContent="space-between">

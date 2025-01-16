@@ -19,10 +19,11 @@ import { actions as actionsStores } from '@/features/stores/slice';
 import { extractObjects } from '@/utils/extractObjects';
 import StyleElements from './components/Assets/components/StyleElements';
 import { useToastr } from './hooks/useToastr';
+import { convertHEXtoRGB } from '@/utils/colors';
 
 const params = Object.keys(extractObjects(initialState));
 const initialParams: Record<string, string> = {};
-const initialFilters: Record<string, string> = {};
+const initialFilters: Record<string, any> = {};
 
 interface Props {
     data: {
@@ -52,6 +53,7 @@ const Search = (props: Props) => {
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
     const { artworks: storeFilters } = useSelector((state) => state.stores.data);
+    const hasFilter = Object.entries(storeFilters || {}).some(([_key, value]) => Object.keys(value).length !== 0);
 
     const searchParams = useSearchParams();
     const grid = searchParams.get('grid');
@@ -114,15 +116,26 @@ const Search = (props: Props) => {
     }, [searchParams]);
 
     useEffect(() => {
-        const hasFilter = Object.entries(storeFilters || {}).some(([_key, value]) => Object.keys(value).length !== 0);
         if (!hasFilter) return;
-
+        console.log('storeFilters', storeFilters);
         Object.entries(storeFilters?.general?.shortcuts || {}).forEach(([key, _value]) => {
             const { key: filterKey, value: filterValue } = fixedShortcuts.get(key)!;
             if (initialFilters[filterKey])
                 initialFilters[filterKey] = `${initialFilters[filterKey]},${filterValue.join(',')}`;
             else initialFilters[filterKey] = filterValue.join(',');
         });
+
+        if (storeFilters?.general?.licenses?.enabled) {
+            initialFilters.price_min = storeFilters?.general?.licenses?.minPrice.toString();
+            initialFilters.price_max = storeFilters?.general?.licenses?.maxPrice.toString();
+        }
+
+        Object.entries(storeFilters?.context || {}).forEach(([key, value]) => {
+            if (Array.isArray(value)) initialFilters[`context_${key}`] = value.join(',');
+            if (key === 'precision' && typeof value === 'number')
+                initialFilters.colorPrecision_value = value.toString();
+        });
+        console.log('initialFilters', initialFilters);
 
         dispatch(actions.initialParams(initialFilters));
         dispatch(actionsAssets.initialSort({ order: 'latest', sold: initialFilters.sort_sold || 'no' }));
