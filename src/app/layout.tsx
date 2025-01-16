@@ -42,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="en">
             <head>
+                <link rel="icon" href="/favicon.ico" />
                 <meta httpEquiv="refresh" content="3600" />
             </head>
             <body style={{ overflow: 'hidden' }} className={inter.className}>

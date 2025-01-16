@@ -19,6 +19,7 @@ import { actions as actionsStores } from '@/features/stores/slice';
 import { extractObjects } from '@/utils/extractObjects';
 import StyleElements from './components/Assets/components/StyleElements';
 import { useToastr } from './hooks/useToastr';
+import { GENERAL_STORAGE_URL } from '@/constants/aws';
 
 const params = Object.keys(extractObjects(initialState));
 const initialParams: Record<string, string> = {};
@@ -51,7 +52,7 @@ const Search = (props: Props) => {
     const toast = useToastr();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
-    const { artworks: storeFilters } = useSelector((state) => state.stores.data);
+    const { artworks: storeFilters, organization } = useSelector((state) => state.stores.data);
     const hasFilter = Object.entries(storeFilters || {}).some(([_key, value]) => Object.keys(value).length !== 0);
 
     const searchParams = useSearchParams();
@@ -147,6 +148,17 @@ const Search = (props: Props) => {
         dispatch(actionsAssets.initialSort({ order: 'latest', sold: initialFilters.sort_sold || 'no' }));
         dispatch(actionsAssets.startGrouped('all'));
     }, [storeFilters]);
+
+    useEffect(() => {
+        if (organization?.formats?.logo?.square?.path) {
+            const favicon = document.querySelector("link[rel*='icon']") as HTMLLinkElement;
+            const logoPath = organization.formats.logo.square.path;
+            favicon.rel = 'icon';
+            favicon.type = 'image/png';
+            favicon.href = `${GENERAL_STORAGE_URL}/${logoPath}`;
+            document.head.appendChild(favicon);
+        }
+    }, [organization]);
 
     const isInIframe = window.self !== window.top;
 
