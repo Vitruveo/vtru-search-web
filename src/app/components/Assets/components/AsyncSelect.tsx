@@ -1,5 +1,5 @@
 import Async from 'react-select/async';
-import { ActionMeta, GroupBase, OptionProps, StylesConfig } from 'react-select';
+import { ActionMeta, OptionProps } from 'react-select';
 import { api } from '@/services/api';
 import { CountOptionLabel } from './CountOptionLabel';
 import { Option } from '../types';
@@ -27,9 +27,16 @@ interface AsyncSelectProps {
     endpoint?: string;
     defaultValue?: Option[];
     showAdditionalAssets?: boolean;
+    fixedOptions?: string[];
 }
 
-export const AsyncSelect = ({ onChange, defaultValue, endpoint, showAdditionalAssets = false }: AsyncSelectProps) => {
+export const AsyncSelect = ({
+    onChange,
+    defaultValue,
+    endpoint,
+    showAdditionalAssets = false,
+    fixedOptions,
+}: AsyncSelectProps) => {
     const theme = useTheme();
     const fetchOptions = async (inputValue: string): Promise<Option[]> => {
         if (inputValue.length < 3 || !endpoint) {
@@ -76,7 +83,6 @@ export const AsyncSelect = ({ onChange, defaultValue, endpoint, showAdditionalAs
         <Async
             components={{ Option: AsyncSelectOption }}
             onChange={onChange}
-            // defaultValue={defaultValue}
             value={defaultValue}
             styles={{
                 control: (base, state) => ({
@@ -101,6 +107,10 @@ export const AsyncSelect = ({ onChange, defaultValue, endpoint, showAdditionalAs
                     ...base,
                     color: theme.palette.text.primary,
                 }),
+                multiValueRemove: (base, state) => ({
+                    ...base,
+                    display: fixedOptions?.includes(state.data.value) ? 'none' : 'inherit',
+                }),
                 option: (base, state) => ({
                     ...base,
                     color: theme.palette.text.primary,
@@ -115,6 +125,7 @@ export const AsyncSelect = ({ onChange, defaultValue, endpoint, showAdditionalAs
             isMulti
             defaultOptions
             loadOptions={endpoint ? debouncedLoadOptions : undefined}
+            isClearable={defaultValue?.some((item) => !fixedOptions?.includes(item.value))}
         />
     );
 };

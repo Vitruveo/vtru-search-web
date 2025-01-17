@@ -57,6 +57,7 @@ export function TaxonomyItem({
                         label: item,
                     }))}
                     onChange={(option: Option[]) => onChange(option.map((item) => item.value))}
+                    fixed={fixedOptions}
                 />
             )}
 
@@ -81,6 +82,7 @@ export function TaxonomyItem({
                         value: item.tag,
                     }))}
                     onChange={(option: Option[]) => onChange(option.map((item) => item.value))}
+                    fixed={fixedOptions}
                 />
             )}
 
@@ -105,6 +107,7 @@ export function TaxonomyItem({
                         })
                     )}
                     showAdditionalAssets={showAdditionalAssets}
+                    fixedOptions={fixedOptions}
                 />
             )}
         </Box>
