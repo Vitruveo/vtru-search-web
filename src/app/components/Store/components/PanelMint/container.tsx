@@ -1,6 +1,7 @@
 import { useEffect, useReducer } from 'react';
 import { confetti } from '@tsparticles/confetti';
 import { useAccount, useConnectorClient } from 'wagmi';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { toast } from 'react-toastify';
 
 import { PanelMint } from './component';
@@ -38,10 +39,10 @@ export const Container = ({ asset }: Props) => {
     const coockieVideo = cookie.get('video') as string;
 
     const { isConnected, address, chain } = useAccount();
+    const { data: client } = useConnectorClient();
+    const { openConnectModal } = useConnectModal(); // Hook para abrir o modal
 
     const [state, dispatchAction] = useReducer(reducer, initialState);
-
-    const { data: client } = useConnectorClient();
 
     useEffect(() => {
         if (coockieGrid) {
@@ -297,6 +298,19 @@ export const Container = ({ asset }: Props) => {
         await fetchAvailableCredits();
     };
 
+    const handleCloseModalLicense = async () => {
+        dispatchAction({ type: TypeActions.SET_OPEN_MODAL_LICENSE, payload: false });
+    };
+
+    const handleOpenModalLicense = () => {
+        // connect wallet if not connected
+        if (!isConnected && openConnectModal) {
+            openConnectModal();
+        }
+
+        dispatchAction({ type: TypeActions.SET_OPEN_MODAL_LICENSE, payload: true });
+    };
+
     return (
         <PanelMint
             data={{
@@ -311,6 +325,7 @@ export const Container = ({ asset }: Props) => {
                 loading: state.loading,
                 link: state.link,
                 stateModalMinted: state.openModalMinted,
+                stateModalLicense: state.openModalLicense,
                 chain: chain ? chain.name.toLowerCase().includes('vitruveo') : false,
                 platformFee: state.platformFee,
                 totalFee: state.totalFee,
@@ -322,6 +337,8 @@ export const Container = ({ asset }: Props) => {
             actions={{
                 handleMintNFT,
                 handleCloseModalMinted,
+                handleCloseModalLicense,
+                handleOpenModalLicense,
             }}
         />
     );
