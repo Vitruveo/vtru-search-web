@@ -13,8 +13,8 @@ interface Props {
 const Banner = ({ data }: Props) => {
     return (
         <Box display="flex" flexDirection="column" gap={4} mb={6}>
-            <Typography variant={'h4'}>{data.name}</Typography>
-            <Box width="100%" position="relative" height={500}>
+            <Typography fontSize={'3rem'}>{data.name}</Typography>
+            <Box width="98.8%" position="relative" height={500}>
                 <Image
                     src={`${STORES_STORAGE_URL}/${data.path}`}
                     alt="banner"
@@ -24,7 +24,7 @@ const Banner = ({ data }: Props) => {
                     priority
                 />
             </Box>
-            <Typography variant={'h5'}>{data.description}</Typography>
+            <Typography fontSize={'1.4rem'}>{data.description}</Typography>
         </Box>
     );
 };
