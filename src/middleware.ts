@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, LOCAL_STORES } from '@/constants/api';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
     }
 
     if (isLocalhost) {
-        headers.set('x-subdomain', 'teste-full');
+        headers.set('x-subdomain', LOCAL_STORES);
     }
 
     if (isLocalhost ? parts.length > 1 : parts.length > 3) {

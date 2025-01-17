@@ -1,4 +1,4 @@
-import { GENERAL_STORAGE_URL } from '@/constants/aws';
+import { STORES_STORAGE_URL } from '@/constants/aws';
 import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
 
@@ -12,9 +12,18 @@ interface Props {
 
 const Banner = ({ data }: Props) => {
     return (
-        <Box>
+        <Box display="flex" flexDirection="column" gap={4} mb={6}>
             <Typography variant={'h4'}>{data.name}</Typography>
-            <Image src={`${GENERAL_STORAGE_URL}/${data.path}`} alt="banner" width={600} height={400} />
+            <Box width="100%" position="relative" height={500}>
+                <Image
+                    src={`${STORES_STORAGE_URL}/${data.path}`}
+                    alt="banner"
+                    layout="fill" // Faz a imagem preencher o container pai
+                    objectFit="cover" // Ajusta o comportamento para cobrir o container pai
+                    quality={100}
+                    priority
+                />
+            </Box>
             <Typography variant={'h5'}>{data.description}</Typography>
         </Box>
     );

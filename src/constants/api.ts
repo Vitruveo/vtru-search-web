@@ -7,3 +7,5 @@ export const STORE_BASE_URL = process.env.NEXT_PUBLIC_STORE_BASE_URL || '';
 export const STUDIO_BASE_URL = process.env.NEXT_PUBLIC_STUDIO_BASE_URL || '';
 export const SLIDESHOW_BASE_URL = process.env.NEXT_PUBLIC_SLIDESHOW_BASE_URL || '';
 export const SEARCH_BASE_URL = process.env.NEXT_PUBLIC_SEARCH_BASE_URL || 'http://localhost:3000';
+
+export const LOCAL_STORES = process.env.NEXT_PUBLIC_LOCAL_STORES || '';
