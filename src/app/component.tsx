@@ -65,13 +65,9 @@ const Search = (props: Props) => {
     const creatorId = searchParams.get('creatorId');
 
     useEffect(() => {
-        console.log('colocar esse trecho dentro do if');
-        dispatch(actionsStores.getStoresRequest({ subdomain: 'testing-id' }));
-    }, []);
-
-    useEffect(() => {
         if (hasSubdomain && subdomain) {
             toast.display({ message: `Welcome to ${subdomain}!`, type: 'success' });
+            dispatch(actionsStores.getStoresRequest({ subdomain }));
         }
 
         if (hasSubdomainError) {

@@ -25,6 +25,10 @@ export async function middleware(request: NextRequest) {
         });
     }
 
+    if (isLocalhost) {
+        headers.set('x-subdomain', 'teste-full');
+    }
+
     if (isLocalhost ? parts.length > 1 : parts.length > 3) {
         console.log('has subdomain', subdomain);
 

@@ -476,7 +476,11 @@ const AssetsList = () => {
                 {organization?.formats?.banner?.path && (
                     <Grid item xs={12}>
                         <Banner
-                            data={{ path: organization.formats.banner.path, description: organization?.description }}
+                            data={{
+                                path: organization.formats.banner.path,
+                                description: organization?.description,
+                                name: organization?.name,
+                            }}
                         />
                     </Grid>
                 )}
