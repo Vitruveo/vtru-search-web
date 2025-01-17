@@ -19,7 +19,7 @@ import { actions as actionsStores } from '@/features/stores/slice';
 import { extractObjects } from '@/utils/extractObjects';
 import StyleElements from './components/Assets/components/StyleElements';
 import { useToastr } from './hooks/useToastr';
-import { GENERAL_STORAGE_URL } from '@/constants/aws';
+import { STORES_STORAGE_URL } from '@/constants/aws';
 
 const params = Object.keys(extractObjects(initialState));
 const initialParams: Record<string, string> = {};
@@ -76,6 +76,8 @@ const Search = (props: Props) => {
     }, []);
 
     useEffect(() => {
+        if (hasSubdomain && subdomain) return;
+
         params.forEach((param) => {
             if (searchParams.has(param)) initialParams[param] = searchParams.get(param)!;
         });
@@ -154,7 +156,7 @@ const Search = (props: Props) => {
             const logoPath = organization.formats.logo.square.path;
             favicon.rel = 'icon';
             favicon.type = 'image/png';
-            favicon.href = `${GENERAL_STORAGE_URL}/${logoPath}`;
+            favicon.href = `${STORES_STORAGE_URL}/${logoPath}`;
             document.head.appendChild(favicon);
         }
     }, [organization]);
@@ -173,7 +175,7 @@ const Search = (props: Props) => {
                 <AppCard>
                     <AssetsSidebar />
                     <Box flexGrow={1}>
-                        <AssetsList />
+                        <AssetsList isBlockLoader={hasSubdomain && !!subdomain} />
                     </Box>
                 </AppCard>
             </PageContainer>

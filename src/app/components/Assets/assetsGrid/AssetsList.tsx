@@ -38,7 +38,11 @@ import './AssetScroll.css';
 import Username from '../../Username';
 import Banner from '../../Banner';
 
-const AssetsList = () => {
+interface Props {
+    isBlockLoader: boolean;
+}
+
+const AssetsList = ({ isBlockLoader }: Props) => {
     const { language } = useI18n();
     const optionsForSelectSort = [
         { value: 'latest', label: language['search.select.sort.option.latest'] as string },
@@ -166,6 +170,7 @@ const AssetsList = () => {
 
     useEffect(() => {
         if (grid || video || slideshow) return;
+        if (isBlockLoader) return;
 
         if (currentPage > totalPage) dispatch(actions.setCurrentPage(totalPage));
     }, [totalPage]);
