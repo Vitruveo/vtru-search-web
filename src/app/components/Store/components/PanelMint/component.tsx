@@ -147,11 +147,12 @@ export const PanelMint = ({ data, actions }: PanelMintProps) => {
                         }}
                     >
                         <Box
-                            width="80%"
+                            minWidth={1316}
                             bgcolor={theme.palette.background.default}
                             position="relative"
                             padding={6}
                             borderRadius={0}
+                            marginLeft={-2.5}
                         >
                             <Button
                                 onClick={handleCloseModalLicense}
