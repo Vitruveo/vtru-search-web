@@ -5,12 +5,13 @@ import { useTheme } from '@mui/material/styles';
 
 interface RangeProps {
     afterChange?: (minValue: number, maxValue: number) => void;
+    disabled?: boolean;
 }
 
 export const minPrice = 0;
 export const maxPrice = 10000;
 
-export const Range = ({ afterChange }: RangeProps) => {
+export const Range = ({ afterChange, disabled = false }: RangeProps) => {
     const theme = useTheme();
     const max = useSelector((state) => state.assets.maxPrice);
     const { reseted, price } = useSelector((state) => state.filters);
@@ -29,6 +30,7 @@ export const Range = ({ afterChange }: RangeProps) => {
                 key={reseted}
                 defaultValue={[minPrice, minPrice]}
                 value={[price.min, price.max === max ? minPrice : price.max]}
+                disabled={disabled}
                 step={10}
                 onChange={onChange}
                 valueLabelDisplay="auto"

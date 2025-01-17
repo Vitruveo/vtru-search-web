@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { IconSearch, IconX } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -71,6 +71,7 @@ const Filters = () => {
     const values = useSelector((state) => state.filters);
     const { tags, maxPrice, sort } = useSelector((state) => state.assets);
     const { wallets } = useSelector((state) => state.filters.portfolio);
+    const { artworks: storesFilters } = useSelector((state) => state.stores.data);
 
     const getTotalFiltersApplied = (fieldName: keyof FilterSliceState) => {
         return Object.entries(values[fieldName]).reduce((acc, [_key, arrayfield]) => {
@@ -236,6 +237,23 @@ const Filters = () => {
         dispatch(actionsLayout.toggleSidebar());
     };
 
+    useEffect(() => {
+        console.log(storesFilters);
+    }, [storesFilters]);
+
+    const isFixedShortcutFilter = useCallback(
+        (key: string): boolean => {
+            const shortcutsFromStores = storesFilters?.general?.shortcuts;
+            if (!shortcutsFromStores) return false;
+            return Object.keys(shortcutsFromStores).some((shortcut) => {
+                if (shortcut === key) {
+                    return shortcutsFromStores[shortcut];
+                }
+            });
+        },
+        [storesFilters?.general]
+    );
+
     return (
         <Box pt={isSmallScreen ? 2.2 : 0}>
             {isSmallScreen && (
@@ -276,14 +294,26 @@ const Filters = () => {
                     <Typography variant="h4">Filters</Typography>
                     <Box display="flex">
                         <FormControlLabel
-                            control={<Checkbox onChange={handleChangeNudity} checked={isHideNuditychecked} />}
+                            control={
+                                <Checkbox
+                                    onChange={handleChangeNudity}
+                                    checked={isHideNuditychecked}
+                                    disabled={isFixedShortcutFilter('hideNudity')}
+                                />
+                            }
                             label={language['search.assetFilter.shortcut.nudity'] as string}
                             sx={{
                                 width: '50%',
                             }}
                         />
                         <FormControlLabel
-                            control={<Checkbox onChange={handleChangeAI} checked={isHideAIchecked} />}
+                            control={
+                                <Checkbox
+                                    onChange={handleChangeAI}
+                                    checked={isHideAIchecked}
+                                    disabled={isFixedShortcutFilter('hideAI')}
+                                />
+                            }
                             label={language['search.assetFilter.shortcut.ia'] as string}
                             sx={{
                                 width: '50%',
@@ -297,6 +327,7 @@ const Filters = () => {
                                 <Checkbox
                                     onChange={handleChangePhotography}
                                     checked={selectedCategories.includes('photography')}
+                                    disabled={isFixedShortcutFilter('photography')}
                                 />
                             }
                             label={language['search.assetFilter.shortcut.photography'] as string}
@@ -309,6 +340,7 @@ const Filters = () => {
                                 <Checkbox
                                     onChange={handleChangeAnimation}
                                     checked={selectedCategories.includes('video')}
+                                    disabled={isFixedShortcutFilter('animation')}
                                 />
                             }
                             label={language['search.assetFilter.shortcut.animation'] as string}
@@ -323,6 +355,7 @@ const Filters = () => {
                                 <Checkbox
                                     onChange={handleChangePhysicalArt}
                                     checked={selectedObjectTypes.includes('physicalart')}
+                                    disabled={isFixedShortcutFilter('physicalArt')}
                                 />
                             }
                             label={language['search.assetFilter.shortcut.physicalArt'] as string}
@@ -335,6 +368,7 @@ const Filters = () => {
                                 <Checkbox
                                     onChange={handleChangeDigitalArt}
                                     checked={selectedObjectTypes.includes('digitalart')}
+                                    disabled={isFixedShortcutFilter('digitalArt')}
                                 />
                             }
                             label={language['search.assetFilter.shortcut.digitalArt'] as string}
@@ -345,14 +379,26 @@ const Filters = () => {
                     </Box>
                     <Box display="flex">
                         <FormControlLabel
-                            control={<Checkbox onChange={handleChangeIsIncludeSold} checked={isIncludeSold} />}
+                            control={
+                                <Checkbox
+                                    onChange={handleChangeIsIncludeSold}
+                                    checked={isIncludeSold}
+                                    disabled={isFixedShortcutFilter('includeSold')}
+                                />
+                            }
                             label={language['search.assetFilter.shortcut.includeSold'] as string}
                             sx={{
                                 width: '50%',
                             }}
                         />
                         <FormControlLabel
-                            control={<Checkbox onChange={handleChangeHasBTS} checked={hasBts} />}
+                            control={
+                                <Checkbox
+                                    onChange={handleChangeHasBTS}
+                                    checked={hasBts}
+                                    disabled={isFixedShortcutFilter('hasBTS')}
+                                />
+                            }
                             label={language['search.assetFilter.shortcut.hasBTS'] as string}
                             sx={{
                                 width: '50%',
@@ -367,7 +413,7 @@ const Filters = () => {
                             {language['search.assetFilter.licenses.price'] as string}
                         </Typography>
                         <Box mx={1}>
-                            <Range afterChange={afterPriceChange} />
+                            <Range afterChange={afterPriceChange} disabled={storesFilters.general?.licenses.enabled} />
                         </Box>
                     </Box>
                 </AssetFilterAccordion>
