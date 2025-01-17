@@ -133,7 +133,10 @@ const Search = (props: Props) => {
         });
 
         Object.entries(storeFilters?.taxonomy || {}).forEach(([key, value]) => {
-            if (Array.isArray(value)) initialFilters[`taxonomy_${key}`] = value.join(',');
+            if (Array.isArray(value)) {
+                if (key === 'arEnabled') initialFilters[`taxonomy_arenabled`] = value.join(',');
+                initialFilters[`taxonomy_${key}`] = value.join(',');
+            }
         });
 
         Object.entries(storeFilters?.artists || {}).forEach(([key, value]) => {
