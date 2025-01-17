@@ -5,6 +5,7 @@ import { useSelector } from '@/store/hooks';
 import { useDispatch } from 'react-redux';
 import { actions } from '@/features/assets';
 import { actions as actionsFilters } from '@/features/filters/slice';
+import { actions as actionsStores } from '@/features/stores/slice';
 import { STORES_STORAGE_URL } from '@/constants/aws';
 
 const LogoLtrDark = () => {
@@ -116,7 +117,9 @@ const Logo = () => {
 
         dispatch(actionsFilters.clearTabNavigation());
         dispatch(actions.resetGroupByCreator());
-        dispatch(actionsFilters.reset({ maxPrice }));
+
+        if (path) dispatch(actionsStores.getStoresRequest({ subdomain: organization?.url || '' }));
+        else dispatch(actionsFilters.reset({ maxPrice }));
     };
 
     const dice = {
