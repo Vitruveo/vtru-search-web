@@ -17,6 +17,7 @@ export function TaxonomyItem({
     options,
     onChange,
     loadOptionsEndpoint,
+    fixedOptions,
 }: TaxonomyItem) {
     const { language } = useI18n();
     const taxonomy = 'search.assetFilter.taxonomy';
@@ -41,6 +42,7 @@ export function TaxonomyItem({
                         label: item,
                     }))}
                     onChange={(option: Option[]) => onChange(option.map((item) => item.value))}
+                    fixed={fixedOptions}
                 />
             )}
 

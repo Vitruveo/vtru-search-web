@@ -413,7 +413,7 @@ const Filters = () => {
                             {language['search.assetFilter.licenses.price'] as string}
                         </Typography>
                         <Box mx={1}>
-                            <Range afterChange={afterPriceChange} disabled={storesFilters.general?.licenses.enabled} />
+                            <Range afterChange={afterPriceChange} disabled={storesFilters?.general?.licenses.enabled} />
                         </Box>
                     </Box>
                 </AssetFilterAccordion>
@@ -426,11 +426,15 @@ const Filters = () => {
                 >
                     {Object.entries(assetsMetadata.context.schema.properties).map((item) => {
                         const [key, value] = item;
+                        const fixedOptions = storesFilters?.context[key as keyof Context];
+
                         return (
                             <ContextItem
                                 key={key}
                                 title={key as keyof Context}
                                 values={values}
+                                fixedOptions={fixedOptions}
+                                disabledPrecision={typeof storesFilters?.context.precision === 'number' || false}
                                 hidden={
                                     assetsMetadata.context.uiSchema[
                                         key as keyof AssetsMetadata['context']['schema']['properties']
@@ -499,6 +503,7 @@ const Filters = () => {
                 >
                     {Object.entries(assetsMetadata.taxonomy.schema.properties).map((item) => {
                         const [key, value] = item;
+                        const fixedOptions = storesFilters?.taxonomy[key as keyof Taxonomy];
 
                         // TODO: CORRIGIR TIPAGEM
                         return (
@@ -513,6 +518,7 @@ const Filters = () => {
                                 key={key}
                                 title={key as keyof Taxonomy}
                                 values={values}
+                                fixedOptions={fixedOptions}
                                 tags={tags || []}
                                 hidden={
                                     assetsMetadata.taxonomy.uiSchema[
@@ -569,6 +575,8 @@ const Filters = () => {
                 >
                     {Object.entries(assetsMetadata.creators.schema.items.properties).map((item) => {
                         const [key, value] = item;
+                        const fixedOptions = storesFilters?.artists[key as keyof Creators];
+
                         return (
                             <CreatorsItem
                                 loadOptionsEndpoint={
@@ -581,6 +589,7 @@ const Filters = () => {
                                 key={key}
                                 title={key as keyof Creators}
                                 values={values}
+                                fixedOptions={fixedOptions}
                                 hidden={
                                     assetsMetadata.creators.uiSchema.items[
                                         key as keyof AssetsMetadata['creators']['schema']['items']['properties']

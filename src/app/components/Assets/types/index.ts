@@ -59,6 +59,8 @@ export interface ContextItem {
     values: Values;
     hidden: boolean;
     options: string[];
+    disabledPrecision?: boolean;
+    fixedOptions?: string[];
     onChange: (value: any) => void;
     onRemove: (color: string) => void;
 }
@@ -72,6 +74,7 @@ export interface CreatorsItem {
     onChange: (value: any) => void;
     onRemove: (color: string) => void;
     loadOptionsEndpoint?: string;
+    fixedOptions?: string[];
 }
 
 export interface TaxonomyItem {
@@ -84,6 +87,7 @@ export interface TaxonomyItem {
     onChange: (value: any) => void;
     onRemove: (color: string) => void;
     loadOptionsEndpoint?: string;
+    fixedOptions?: string[];
 }
 
 interface Tag {

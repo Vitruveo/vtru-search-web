@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useI18n } from '@/app/hooks/useI18n';
 import { InputSelect } from './InputSelect';
@@ -11,7 +10,17 @@ import { useDispatch } from '@/store/hooks';
 import { actions } from '@/features/filters/slice';
 import generateQueryParam from '@/utils/generateQueryParam';
 
-export function ContextItem({ title, values, hidden, type, options, onChange, onRemove }: ContextItem) {
+export function ContextItem({
+    title,
+    values,
+    hidden,
+    type,
+    options,
+    onChange,
+    onRemove,
+    disabledPrecision = false,
+    fixedOptions,
+}: ContextItem) {
     const dispatch = useDispatch();
     const { language } = useI18n();
     const context = 'search.assetFilter.context';
@@ -40,6 +49,7 @@ export function ContextItem({ title, values, hidden, type, options, onChange, on
                         label: item,
                     }))}
                     onChange={(option: Option[]) => onChange(option.map((item) => item.value))}
+                    fixed={fixedOptions}
                 />
             )}
 
@@ -71,6 +81,7 @@ export function ContextItem({ title, values, hidden, type, options, onChange, on
                         name={title}
                         onClick={(hex) => onChange([...(values['context'][title] as string[]), convertHEXtoRGB(hex)])}
                         afterPrecisionChange={afterColorPrecisionChange}
+                        disabled={disabledPrecision}
                     />
 
                     <Colors colors={values['context'][title] as string[]} onRemove={(item) => onRemove(item)} />
