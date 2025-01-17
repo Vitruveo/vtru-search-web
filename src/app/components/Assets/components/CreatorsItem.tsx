@@ -57,6 +57,7 @@ export function CreatorsItem({
                         label: item,
                     }))}
                     onChange={(option: Option[]) => onChange(option.map((item) => item.value))}
+                    fixed={fixedOptions}
                 />
             )}
 
@@ -89,6 +90,7 @@ export function CreatorsItem({
                         })
                     )}
                     showAdditionalAssets={showAdditionalAssets}
+                    fixedOptions={fixedOptions}
                 />
             )}
         </Box>

@@ -64,6 +64,7 @@ export function ContextItem({
                         label: item,
                     }))}
                     onChange={(option: Option[]) => onChange(option.map((item) => item.value))}
+                    fixed={fixedOptions}
                 />
             )}
 

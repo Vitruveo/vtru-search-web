@@ -245,10 +245,6 @@ const Filters = () => {
         dispatch(actionsLayout.toggleSidebar());
     };
 
-    useEffect(() => {
-        console.log(storesFilters);
-    }, [storesFilters]);
-
     const isFixedShortcutFilter = useCallback(
         (key: string): boolean => {
             const shortcutsFromStores = storesFilters?.general?.shortcuts;
