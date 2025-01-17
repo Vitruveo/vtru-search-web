@@ -3,16 +3,18 @@ import { useSelector } from '@/store/hooks';
 import { Box, Button, Slider, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useRef } from 'react';
+
 interface Props {
     name: string;
     onClick: (color: string) => void;
     afterPrecisionChange?: (value: number) => void;
+    disabled?: boolean;
 }
 
 export const minPrecision = 0;
 export const maxPrecision = 100;
 
-export function InputColor({ name, onClick, afterPrecisionChange }: Props) {
+export function InputColor({ name, onClick, afterPrecisionChange, disabled = false }: Props) {
     const theme = useTheme();
     const { language } = useI18n();
     const inputRef = useRef<HTMLInputElement>(null);
@@ -37,6 +39,7 @@ export function InputColor({ name, onClick, afterPrecisionChange }: Props) {
                     <Slider
                         key={reseted}
                         defaultValue={defaultPrecisionValue * 100}
+                        disabled={disabled}
                         onChange={onChange}
                         min={minPrecision}
                         max={maxPrecision}

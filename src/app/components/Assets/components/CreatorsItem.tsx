@@ -9,7 +9,16 @@ import { AsyncSelect } from './AsyncSelect';
 import countriesMapper from '@/utils/countries/mapper';
 import { useSelector } from '@/store/hooks';
 
-export function CreatorsItem({ title, values, hidden, type, options, onChange, loadOptionsEndpoint }: CreatorsItem) {
+export function CreatorsItem({
+    title,
+    values,
+    hidden,
+    type,
+    options,
+    onChange,
+    loadOptionsEndpoint,
+    fixedOptions,
+}: CreatorsItem) {
     const { language } = useI18n();
     const showAdditionalAssets = useSelector((state) => state.filters.showAdditionalAssets.value);
     const creators = 'search.assetFilter.creators';
@@ -33,6 +42,7 @@ export function CreatorsItem({ title, values, hidden, type, options, onChange, l
                         label: countriesMapper[item as keyof typeof countriesMapper],
                     }))}
                     onChange={(option: Option[]) => onChange(option.map((item) => item.value))}
+                    fixed={fixedOptions}
                 />
             )}
 

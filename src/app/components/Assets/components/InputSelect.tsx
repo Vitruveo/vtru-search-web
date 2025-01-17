@@ -8,9 +8,10 @@ interface Props {
     }[];
     options: any[];
     onChange(option: any): void;
+    fixed?: string[];
 }
 
-export function InputSelect({ value, options, onChange }: Props) {
+export function InputSelect({ value, options, onChange, fixed }: Props) {
     const theme = useTheme();
 
     return (
@@ -39,6 +40,10 @@ export function InputSelect({ value, options, onChange }: Props) {
                     ...base,
                     color: theme.palette.text.primary,
                 }),
+                multiValueRemove: (base, state) => ({
+                    ...base,
+                    display: fixed?.includes(state.data.value) ? 'none' : 'inherit',
+                }),
                 option: (base, state) => ({
                     ...base,
                     color: theme.palette.text.primary,
@@ -53,6 +58,7 @@ export function InputSelect({ value, options, onChange }: Props) {
             value={value}
             options={options}
             onChange={onChange}
+            isClearable={value.some((item) => !fixed?.includes(item.value))}
         />
     );
 }
