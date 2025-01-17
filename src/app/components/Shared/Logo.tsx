@@ -86,8 +86,8 @@ const PersonalizedLogo = () => {
                 style={{ display: 'inline-block', alignSelf: 'baseline', marginRight: '5px' }}
                 src={`${STORES_STORAGE_URL}/${path}`}
                 alt={name || 'logo'}
-                height={40}
-                width={120}
+                height={50}
+                width={224}
                 priority
             />
         </Box>
