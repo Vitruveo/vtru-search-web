@@ -23,8 +23,8 @@ const language: Translation = {
     'search.assetFilter.shortcut.includeSold': 'شامل فروخته شده',
     'search.assetFilter.shortcut.hasBTS': 'دارای BTS',
 
-    'search.assetFilter.licenses': 'لایسنس',
-    'search.assetFilter.licenses.price': 'قیمت',
+    'search.assetFilter.licenses': 'قیمت',
+    'search.assetFilter.licenses.price': 'قیمت آثار هنری',
 
     'search.assetFilter.resetFilters': 'بازنشانی فیلترها',
 
