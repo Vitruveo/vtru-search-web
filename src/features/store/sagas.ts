@@ -5,6 +5,7 @@ import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { actions } from './slice';
 import { APIResponse } from '../common/types';
+import { LastAssets } from './types';
 
 function* getStoreAsset({ payload }: PayloadAction<{ id: string }>) {
     yield put(actions.startLoading());
@@ -34,9 +35,24 @@ function* getStoreCreator({ payload }: PayloadAction<{ id: string }>) {
     yield put(actions.finishCreatorLoading());
 }
 
+function* getStoreLastAssets({ payload }: PayloadAction<{ id: string }>) {
+    yield put(actions.startLastAssetsLoading());
+    try {
+        const URL_STORE_LAST_ASSETS = `${API_BASE_URL}/assets/store/${payload.id}/lastConsigns`;
+
+        const response: AxiosResponse<APIResponse<LastAssets[]>> = yield call(axios.get, URL_STORE_LAST_ASSETS);
+
+        yield put(actions.setLastAssets(response.data.data));
+    } catch (error) {
+        // Handle error
+    }
+    yield put(actions.finishLastAssetsLoading());
+}
+
 export default function* storeSagas() {
     yield all([
         takeEvery(actions.getAssetRequest.type, getStoreAsset),
         takeEvery(actions.getCreatorRequest.type, getStoreCreator),
+        takeEvery(actions.getLastAssetsRequest.type, getStoreLastAssets),
     ]);
 }
