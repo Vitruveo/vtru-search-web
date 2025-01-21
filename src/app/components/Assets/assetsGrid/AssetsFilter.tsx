@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { IconSearch, IconX } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -27,6 +27,7 @@ import { useSelector } from '@/store/hooks';
 import { actions } from '@/features/filters/slice';
 import { actions as actionsLayout } from '@/features/layout';
 import { actions as actionsAssets } from '@/features/assets/slice';
+import { actions as actionsStores } from '@/features/stores/slice';
 import { FilterSliceState } from '@/features/filters/types';
 
 import type {
@@ -71,7 +72,8 @@ const Filters = () => {
     const values = useSelector((state) => state.filters);
     const { tags, maxPrice, sort } = useSelector((state) => state.assets);
     const { wallets } = useSelector((state) => state.filters.portfolio);
-    const { artworks: storesFilters } = useSelector((state) => state.stores.data);
+    const { artworks: storesFilters, organization } = useSelector((state) => state.stores.data);
+    const path = organization?.formats.logo.horizontal?.path;
 
     const getTotalFiltersApplied = (fieldName: keyof FilterSliceState) => {
         return Object.entries(values[fieldName]).reduce((acc, [_key, arrayfield]) => {
@@ -156,8 +158,11 @@ const Filters = () => {
 
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
 
-        dispatch(actionsAssets.resetGroupByCreator());
-        dispatch(actions.reset({ maxPrice }));
+        if (path) dispatch(actionsStores.getStoresRequest({ subdomain: organization?.url || '' }));
+        else {
+            dispatch(actionsAssets.resetGroupByCreator());
+            dispatch(actions.reset({ maxPrice }));
+        }
     };
 
     const syncFiltersWithUrl = (changeValue: any, key: string) => {
@@ -237,19 +242,6 @@ const Filters = () => {
         dispatch(actionsLayout.toggleSidebar());
     };
 
-    const isFixedShortcutFilter = useCallback(
-        (key: string): boolean => {
-            const shortcutsFromStores = storesFilters?.general?.shortcuts;
-            if (!shortcutsFromStores) return false;
-            return Object.keys(shortcutsFromStores).some((shortcut) => {
-                if (shortcut === key) {
-                    return shortcutsFromStores[shortcut];
-                }
-            });
-        },
-        [storesFilters?.general]
-    );
-
     return (
         <Box pt={isSmallScreen ? 2.2 : 0}>
             {isSmallScreen && (
@@ -290,26 +282,14 @@ const Filters = () => {
                     <Typography variant="h4">Filters</Typography>
                     <Box display="flex">
                         <FormControlLabel
-                            control={
-                                <Checkbox
-                                    onChange={handleChangeNudity}
-                                    checked={isHideNuditychecked}
-                                    disabled={isFixedShortcutFilter('hideNudity')}
-                                />
-                            }
+                            control={<Checkbox onChange={handleChangeNudity} checked={isHideNuditychecked} />}
                             label={language['search.assetFilter.shortcut.nudity'] as string}
                             sx={{
                                 width: '50%',
                             }}
                         />
                         <FormControlLabel
-                            control={
-                                <Checkbox
-                                    onChange={handleChangeAI}
-                                    checked={isHideAIchecked}
-                                    disabled={isFixedShortcutFilter('hideAI')}
-                                />
-                            }
+                            control={<Checkbox onChange={handleChangeAI} checked={isHideAIchecked} />}
                             label={language['search.assetFilter.shortcut.ia'] as string}
                             sx={{
                                 width: '50%',
@@ -323,7 +303,6 @@ const Filters = () => {
                                 <Checkbox
                                     onChange={handleChangePhotography}
                                     checked={selectedCategories.includes('photography')}
-                                    disabled={isFixedShortcutFilter('photography')}
                                 />
                             }
                             label={language['search.assetFilter.shortcut.photography'] as string}
@@ -336,7 +315,6 @@ const Filters = () => {
                                 <Checkbox
                                     onChange={handleChangeAnimation}
                                     checked={selectedCategories.includes('video')}
-                                    disabled={isFixedShortcutFilter('animation')}
                                 />
                             }
                             label={language['search.assetFilter.shortcut.animation'] as string}
@@ -351,7 +329,6 @@ const Filters = () => {
                                 <Checkbox
                                     onChange={handleChangePhysicalArt}
                                     checked={selectedObjectTypes.includes('physicalart')}
-                                    disabled={isFixedShortcutFilter('physicalArt')}
                                 />
                             }
                             label={language['search.assetFilter.shortcut.physicalArt'] as string}
@@ -364,7 +341,6 @@ const Filters = () => {
                                 <Checkbox
                                     onChange={handleChangeDigitalArt}
                                     checked={selectedObjectTypes.includes('digitalart')}
-                                    disabled={isFixedShortcutFilter('digitalArt')}
                                 />
                             }
                             label={language['search.assetFilter.shortcut.digitalArt'] as string}
@@ -375,26 +351,14 @@ const Filters = () => {
                     </Box>
                     <Box display="flex">
                         <FormControlLabel
-                            control={
-                                <Checkbox
-                                    onChange={handleChangeIsIncludeSold}
-                                    checked={isIncludeSold}
-                                    disabled={isFixedShortcutFilter('includeSold')}
-                                />
-                            }
+                            control={<Checkbox onChange={handleChangeIsIncludeSold} checked={isIncludeSold} />}
                             label={language['search.assetFilter.shortcut.includeSold'] as string}
                             sx={{
                                 width: '50%',
                             }}
                         />
                         <FormControlLabel
-                            control={
-                                <Checkbox
-                                    onChange={handleChangeHasBTS}
-                                    checked={hasBts}
-                                    disabled={isFixedShortcutFilter('hasBTS')}
-                                />
-                            }
+                            control={<Checkbox onChange={handleChangeHasBTS} checked={hasBts} />}
                             label={language['search.assetFilter.shortcut.hasBTS'] as string}
                             sx={{
                                 width: '50%',
@@ -409,10 +373,7 @@ const Filters = () => {
                             {language['search.assetFilter.licenses.price'] as string}
                         </Typography>
                         <Box mx={1}>
-                            <Range
-                                afterChange={afterPriceChange}
-                                disabled={storesFilters?.general?.licenses?.enabled}
-                            />
+                            <Range afterChange={afterPriceChange} />
                         </Box>
                     </Box>
                 </AssetFilterAccordion>
@@ -425,23 +386,21 @@ const Filters = () => {
                 >
                     {Object.entries(assetsMetadata.context.schema.properties).map((item) => {
                         const [key, value] = item;
-                        const fixedOptions = storesFilters?.context[key as keyof Context];
 
                         return (
                             <ContextItem
                                 key={key}
                                 title={key as keyof Context}
                                 values={values}
-                                fixedOptions={fixedOptions}
                                 disabledPrecision={typeof storesFilters?.context.precision === 'number' || false}
                                 hidden={
                                     assetsMetadata.context.uiSchema[
-                                        key as keyof AssetsMetadata['context']['schema']['properties']
+                                    key as keyof AssetsMetadata['context']['schema']['properties']
                                     ]['ui:widget'] === 'hidden'
                                 }
                                 type={
                                     assetsMetadata.context.uiSchema[
-                                        key as keyof AssetsMetadata['context']['schema']['properties']
+                                    key as keyof AssetsMetadata['context']['schema']['properties']
                                     ]['ui:widget']
                                 }
                                 options={
@@ -482,7 +441,7 @@ const Filters = () => {
                                             value: {
                                                 [key]: (
                                                     values.context[
-                                                        key as keyof AssetsMetadata['context']['schema']['properties']
+                                                    key as keyof AssetsMetadata['context']['schema']['properties']
                                                     ] as string[]
                                                 ).filter((itemColor) => itemColor !== color),
                                             },
@@ -502,10 +461,6 @@ const Filters = () => {
                 >
                     {Object.entries(assetsMetadata.taxonomy.schema.properties).map((item) => {
                         const [key, value] = item;
-                        const fixedOptions =
-                            key === 'arenabled'
-                                ? storesFilters?.taxonomy['arEnabled' as keyof Taxonomy]
-                                : storesFilters?.taxonomy[key as keyof Taxonomy];
 
                         // TODO: CORRIGIR TIPAGEM
                         return (
@@ -513,23 +468,22 @@ const Filters = () => {
                                 loadOptionsEndpoint={
                                     (
                                         assetsMetadata.taxonomy.uiSchema[
-                                            key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
                                         ] as any
                                     )['ui:options']?.loadOptionsEndpoint
                                 }
                                 key={key}
                                 title={key as keyof Taxonomy}
                                 values={values}
-                                fixedOptions={fixedOptions}
                                 tags={tags || []}
                                 hidden={
                                     assetsMetadata.taxonomy.uiSchema[
-                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
                                     ]['ui:widget'] === 'hidden'
                                 }
                                 type={
                                     assetsMetadata.taxonomy.uiSchema[
-                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
                                     ]['ui:widget']
                                 }
                                 options={
@@ -557,7 +511,7 @@ const Filters = () => {
                                             value: {
                                                 [key]: (
                                                     values.taxonomy[
-                                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
                                                     ] as string[]
                                                 ).filter((itemColor) => itemColor !== color),
                                             },
@@ -577,29 +531,27 @@ const Filters = () => {
                 >
                     {Object.entries(assetsMetadata.creators.schema.items.properties).map((item) => {
                         const [key, value] = item;
-                        const fixedOptions = storesFilters?.artists[key as keyof Creators];
 
                         return (
                             <CreatorsItem
                                 loadOptionsEndpoint={
                                     (
                                         assetsMetadata.creators.uiSchema.items[
-                                            key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
                                         ] as any
                                     )['ui:options']?.loadOptionsEndpoint
                                 }
                                 key={key}
                                 title={key as keyof Creators}
                                 values={values}
-                                fixedOptions={fixedOptions}
                                 hidden={
                                     assetsMetadata.creators.uiSchema.items[
-                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                    key as keyof AssetsMetadata['creators']['schema']['items']['properties']
                                     ]['ui:widget'] === 'hidden'
                                 }
                                 type={
                                     assetsMetadata.creators.uiSchema.items[
-                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                    key as keyof AssetsMetadata['creators']['schema']['items']['properties']
                                     ]['ui:widget']
                                 }
                                 options={(value as NationalityOrResidenceOrCountry)?.enum || []}
@@ -621,7 +573,7 @@ const Filters = () => {
                                             value: {
                                                 [key]: (
                                                     values.creators[
-                                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                                    key as keyof AssetsMetadata['creators']['schema']['items']['properties']
                                                     ] as string[]
                                                 ).filter((itemColor) => itemColor !== color),
                                             },

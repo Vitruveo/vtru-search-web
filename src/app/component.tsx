@@ -145,6 +145,9 @@ const Search = (props: Props) => {
             if (Array.isArray(value)) initialFilters[`creators_${key}`] = value.join(',');
         });
 
+        initialFilters.taxonomy_aiGeneration = 'partial,none';
+        initialFilters.taxonomy_nudity = 'no';
+
         dispatch(actions.initialParams(initialFilters));
         dispatch(actionsAssets.initialSort({ order: 'latest', sold: initialFilters.sort_sold || 'no' }));
         dispatch(actionsAssets.startGrouped('all'));

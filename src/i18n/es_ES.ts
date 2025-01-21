@@ -23,8 +23,8 @@ const language: Translation = {
     'search.assetFilter.shortcut.includeSold': 'Incluir vendidos',
     'search.assetFilter.shortcut.hasBTS': 'Tiene BTS',
 
-    'search.assetFilter.licenses': 'Licencias',
-    'search.assetFilter.licenses.price': 'Precio',
+    'search.assetFilter.licenses': 'Precio',
+    'search.assetFilter.licenses.price': 'Precio de la obra de arte',
 
     'search.assetFilter.resetFilters': 'Restablecer filtros',
 
