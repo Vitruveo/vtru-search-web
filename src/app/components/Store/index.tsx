@@ -1,20 +1,21 @@
-import { Asset } from '@/features/assets/types';
-import { Box, CircularProgress, Grid, Typography, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { Box, CircularProgress, Grid, Typography, useMediaQuery } from '@mui/material';
 import LazyLoad from 'react-lazyload';
-import PanelMint from './components/PanelMint';
-import { User } from './components/User';
+import '../Assets/assetsGrid/AssetScroll.css';
+import pkgJson from '../../../../package.json';
+import { Asset } from '@/features/assets/types';
+import { LastAssets } from '@/features/store/types';
+import { Creators } from '../Assets/types';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
-import ActionButtons from './components/ActionButtons/ActionButtonList';
 import { EXPLORER_URL } from '@/constants/web3';
 import { SEARCH_BASE_URL } from '@/constants/api';
+import { User } from './components/User';
+import ActionButtons from './components/ActionButtons/ActionButtonList';
+import PanelMint from './components/PanelMint';
 import Activity from './components/Activity';
 import { About } from './components/About';
 import AboutCreator from './components/AboutCreator/AboutCreator';
-import { Creators } from '../Assets/types';
-import '../Assets/assetsGrid/AssetScroll.css';
 import MetadataList from './components/Metadata/MetadataList';
-import pkgJson from '../../../../package.json';
 import { Background } from './components/Background';
 import Modal from './components/Modal/Modal';
 import { MediaRenderStore } from './components/MediaRenderStore';
@@ -27,11 +28,13 @@ interface StoreProps {
         username: string;
         creatorAvatar: string;
         creatorLoading: boolean;
+        lastAssets: LastAssets[];
+        lastAssetsLoading: boolean;
     };
 }
 
 const Store = ({ data }: StoreProps) => {
-    const { asset, loading, creatorAvatar, username, creatorLoading } = data;
+    const { asset, loading, creatorAvatar, username, creatorLoading, lastAssets, lastAssetsLoading } = data;
     const [size, setSize] = useState({ width: 300, height: 300 });
     const [image, setImage] = useState<string>('');
     const [expandedAccordion, setExpandedAccordion] = useState<string | false>(false);
@@ -174,6 +177,12 @@ const Store = ({ data }: StoreProps) => {
                                 data={asset?.assetMetadata?.creators?.formData as unknown as Creators[]}
                                 creatorAvatar={creatorAvatar}
                                 creatorLoading={creatorLoading}
+                            />
+                            <LastAssetsList
+                                assets={lastAssets}
+                                loading={lastAssetsLoading}
+                                creatorName={username}
+                                creatorId={asset.framework?.createdBy}
                             />
                         </Grid>
                     )}

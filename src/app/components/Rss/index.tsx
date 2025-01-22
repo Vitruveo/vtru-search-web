@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Avatar, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Link from 'next/link';
@@ -8,9 +8,16 @@ interface Props {
         flagname: string;
         value: string;
     }[];
+    showIcon?: boolean;
+    onClose?: () => void;
 }
 
-export const Rss = ({ options }: Props) => {
+export interface RssRef {
+    handleClick: (event: any) => void;
+}
+
+const RssRef = (props: Props, ref: any) => {
+    const { ...rest } = props;
     const theme = useTheme();
 
     const [queryString, setQueryString] = useState('');
@@ -27,10 +34,17 @@ export const Rss = ({ options }: Props) => {
 
     const handleClose = () => {
         setAnchorEl(null);
+        if (rest.onClose) {
+            rest.onClose();
+        }
     };
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget);
     };
+
+    useImperativeHandle(ref, () => ({
+        handleClick,
+    }));
 
     return (
         <>
@@ -49,6 +63,7 @@ export const Rss = ({ options }: Props) => {
                         margin: 0,
                         padding: 0,
                         lineHeight: '1',
+                        display: rest.showIcon ? 'block' : 'none',
                     }}
                 />
             </IconButton>
@@ -63,7 +78,7 @@ export const Rss = ({ options }: Props) => {
                     },
                 }}
             >
-                {options.map((option, index) => (
+                {rest.options.map((option, index) => (
                     <MenuItem
                         key={index}
                         sx={{ py: 2, px: 3 }}
@@ -88,3 +103,4 @@ export const Rss = ({ options }: Props) => {
         </>
     );
 };
+export const Rss = forwardRef<RssRef, Props>(RssRef);

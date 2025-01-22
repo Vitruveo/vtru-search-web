@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { Avatar, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useSelector, useDispatch } from '@/store/hooks';
 import { Stack } from '@mui/system';
 import { setLanguage } from '@/features/customizer/slice';
 import { useI18n } from '@/app/hooks/useI18n';
 
-const Language = () => {
+export interface LanguageRef {
+    handleClick: (event: any) => void;
+}
+
+export interface Props {
+    onClose?: () => void;
+}
+
+const LanguageRef = (props: Props, ref: any) => {
+    const { ...rest } = props;
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
@@ -59,7 +68,14 @@ const Language = () => {
 
     const handleClose = () => {
         setAnchorEl(null);
+        if (rest.onClose) {
+            rest.onClose();
+        }
     };
+
+    useImperativeHandle(ref, () => ({
+        handleClick,
+    }));
 
     return (
         <>
@@ -103,4 +119,4 @@ const Language = () => {
     );
 };
 
-export default Language;
+export const Language = forwardRef<LanguageRef, Props>(LanguageRef);
