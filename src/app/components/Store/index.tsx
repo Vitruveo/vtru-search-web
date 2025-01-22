@@ -19,6 +19,7 @@ import MetadataList from './components/Metadata/MetadataList';
 import { Background } from './components/Background';
 import Modal from './components/Modal/Modal';
 import { MediaRenderStore } from './components/MediaRenderStore';
+import { LastAssetsList } from './components/LastAssetsList';
 
 interface StoreProps {
     data: {
@@ -171,6 +172,7 @@ const Store = ({ data }: StoreProps) => {
                                 creatorAvatar={creatorAvatar}
                                 creatorLoading={creatorLoading}
                             />
+                            <LastAssetsList assets={lastAssets} loading={lastAssetsLoading} creatorName={username} />
                         </Grid>
                     )}
                     <Grid item md={6} width="100%">
