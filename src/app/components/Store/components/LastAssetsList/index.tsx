@@ -15,14 +15,16 @@ interface Props {
 export const LastAssetsList = ({ assets, loading, creatorName, creatorId }: Props) => {
     return (
         <Box>
-            <Box sx={{ display: 'flex', marginBlock: 1, alignItems: 'center', gap: 1 }}>
-                <Typography variant="h5">Other works by this artist</Typography>
-                <Link href={`${SEARCH_BASE_URL}/?creatorId=${creatorId}`}>
-                    <Typography variant="h5" sx={{ color: 'white', textDecoration: 'underline' }}>
-                        View all
-                    </Typography>
-                </Link>
-            </Box>
+            {!loading && assets.length > 0 && (
+                <Box sx={{ display: 'flex', marginBlock: 1, alignItems: 'center', gap: 1 }}>
+                    <Typography variant="h5">Other works by this artist</Typography>
+                    <Link href={`${SEARCH_BASE_URL}/?creatorId=${creatorId}`}>
+                        <Typography variant="h5" sx={{ color: 'white', textDecoration: 'underline' }}>
+                            View all
+                        </Typography>
+                    </Link>
+                </Box>
+            )}
             <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginBlock: 2 }}>
                 {loading
                     ? Array.from({ length: 5 }).map((_, index) => <CircularProgress key={index} />)
