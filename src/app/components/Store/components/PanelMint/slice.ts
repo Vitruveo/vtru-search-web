@@ -7,6 +7,7 @@ export const initialState = {
     feesVideo: null,
     openModalMinted: false,
     openModalLicense: false,
+    expandedAccordion: false,
     link: '',
     available: false,
     credits: 0,
@@ -38,6 +39,7 @@ export enum TypeActions {
     SET_FEES_GRID = 'SET_FEES_GRID',
     SET_FEES_VIDEO = 'SET_FEES_VIDEO',
     SET_OPEN_MODAL_MINTED = 'SET_OPEN_MODAL_MINTED',
+    SET_EXPANDED_ACCORDION = 'SET_EXPANDED_ACCORDION',
     SET_LINK = 'SET_LINK',
     SET_AVAILABLE = 'SET_AVAILABLE',
     SET_CREDITS = 'SET_CREDITS',
@@ -67,6 +69,7 @@ interface State {
     feesVideo: number | null;
     openModalMinted: boolean;
     openModalLicense: boolean;
+    expandedAccordion: string | false;
     link: string;
     available: boolean;
     credits: number;
@@ -114,6 +117,11 @@ export const reducer = (state: State, action: Action) => {
             return {
                 ...state,
                 openModalMinted: action.payload,
+            };
+        case 'SET_EXPANDED_ACCORDION':
+            return {
+                ...state,
+                expandedAccordion: action.payload,
             };
         case 'SET_LINK':
             return {

@@ -18,6 +18,7 @@ import pkgJson from '../../../../package.json';
 import { Background } from './components/Background';
 import Modal from './components/Modal/Modal';
 import { MediaRenderStore } from './components/MediaRenderStore';
+import MetadataAccordion from './components/Metadata/MetadataAccordion';
 
 interface StoreProps {
     data: {
@@ -107,14 +108,20 @@ const Store = ({ data }: StoreProps) => {
                         </Grid>
                     )}
                     <Grid item md={6} width="100%">
-                        <Box display="flex" flexDirection="column" justifyContent="space-between" height="100%" gap={2}>
-                            <Box display="flex" flexDirection="column" gap={1}>
-                                <Typography variant="h1" sx={{ color: '#ffff' }}>
-                                    {asset.assetMetadata?.context.formData.title}
-                                </Typography>
-                                <User creator={creatorAvatar} creatorName={username} asset={asset} />
-                            </Box>
-                            <PanelMint asset={asset} />
+                        <Box display="flex" flexDirection="column" gap={1}>
+                            <Typography variant="h1" sx={{ color: '#ffff' }}>
+                                {asset.assetMetadata?.context.formData.title}
+                            </Typography>
+                            <User creator={creatorAvatar} creatorName={username} asset={asset} />
+                        </Box>
+                        <Box display="flex" flexDirection="column" justifyContent="center" height="70%" gap={2}>
+                            <PanelMint
+                                image={image}
+                                creatorAvatar={creatorAvatar}
+                                creatorName={username}
+                                size={size}
+                                asset={asset}
+                            />
                         </Box>
                     </Grid>
                 </Grid>

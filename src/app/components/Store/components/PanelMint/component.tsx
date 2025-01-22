@@ -1,14 +1,19 @@
-import { Box, Button, Card, Modal, Typography, useTheme } from '@mui/material';
-import PanelMintInfo from '../PanelMintInfo';
-import Licenses from '../Licenses';
-import { formatPrice } from '@/utils/assets';
-import { LoadingAvailableLincenses } from '../LoadingAvailableLicenses';
-import Fees from '../Fees';
-import TotalPrice from '../TotalPrice';
+import { Box, Button, Card, Typography } from '@mui/material';
+import { Asset } from '@/features/assets/types';
 import ModalMinted from '../ModalMinted';
+import MetadataAccordion from '../Metadata/MetadataAccordion';
+import LicenseModal from './licenseModal';
 
-interface PanelMintProps {
+export interface PanelMintProps {
+    image: string;
+    size: {
+        width: number;
+        height: number;
+    };
+    creatorAvatar: string;
+    creatorName: string;
     data: {
+        asset: Asset;
         license: string;
         credits: number;
         walletCredits: number;
@@ -25,6 +30,7 @@ interface PanelMintProps {
         blocked: boolean;
         chain: boolean;
         notListed: boolean;
+        assetTitle?: string;
         totalFee: number;
         platformFee: {
             porcent: number;
@@ -45,226 +51,110 @@ interface PanelMintProps {
             nonGrantBalance: number;
             transactionBalance: number;
         };
+        expandedAccordion: string | false;
     };
     actions: {
         handleMintNFT: () => void;
         handleCloseModalMinted: () => void;
         handleCloseModalLicense: () => void;
         handleOpenModalLicense: () => void;
+        handleAccordionChange: (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => void;
     };
 }
 
-export const PanelMint = ({ data, actions }: PanelMintProps) => {
-    const {
-        credits,
-        walletCredits,
-        loading,
-        license,
-        available,
-        isConnected,
-        link,
-        stateModalMinted,
-        address,
-        blocked,
-        chain,
-        notListed,
-        platformFee,
-        totalFee,
-        feesCurator,
-        buyCapability,
-        loadingBuy,
-        stateModalLicense,
-    } = data;
-    const { handleMintNFT, handleCloseModalMinted, handleCloseModalLicense, handleOpenModalLicense } = actions;
+export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actions }: PanelMintProps) => {
+    const { link, stateModalMinted, stateModalLicense, expandedAccordion } = data;
+    const { handleCloseModalMinted, handleOpenModalLicense, handleAccordionChange } = actions;
 
-    const theme = useTheme();
-
-    const formattedPrice = formatPrice({ price: credits, withUS: true, decimals: true });
-
-    const { state, message } = loading;
-
-    const warningMessage = () => {
-        if (!isConnected) return '(Connect wallet)';
-        if (notListed) return '(Not listed)';
-        if (!chain) return '(Change network to Vitruveo)';
-        if (blocked) return '(Not available)';
-        if (walletCredits < credits) return '(Insufficient funds)';
-    };
-
-    const contentMessage = () => {
-        if (!isConnected) return 'Not connected';
-        if (notListed) return 'Not listed';
-        if (!chain) return 'Change network to Vitruveo';
-        if (blocked) return 'Not available';
-        if (loadingBuy) return 'Loading...';
-        if (!available) return 'SOLD';
-
-        return formattedPrice;
-    };
+    // isAssetAvailableLicenses
 
     if (!stateModalLicense) {
         return (
-            <Button
-                variant="contained"
-                onClick={handleOpenModalLicense}
-                sx={{
-                    backgroundColor: '#FF0066',
-                    color: '#ffff',
-                    '&:hover': {
-                        backgroundColor: '#FF0066',
-                    },
-                    borderRadius: 0,
-                    marginTop: 1,
-                }}
-            >
-                Digital Artwork License
-            </Button>
+            <>
+                <Typography variant="h4" sx={{ color: '#ffff' }} marginBottom={2}>
+                    Available Licenses
+                </Typography>
+                <Box>
+                    <MetadataAccordion
+                        title="Digital Collectible"
+                        last={false}
+                        expanded={expandedAccordion === 'digitalCollectible'}
+                        onChange={handleAccordionChange('digitalCollectible')}
+                    >
+                        <Box
+                            display="flex"
+                            flexDirection="column"
+                            height={140}
+                            justifyContent="space-between"
+                            marginLeft={3}
+                        >
+                            <Typography marginTop={3} variant="h5" sx={{ color: '#ffff' }}>
+                                Own this artwork as a digital collectible.
+                            </Typography>
+                            <Box marginBottom={3} display="flex" alignItems="center" gap={2}>
+                                <Button
+                                    variant="contained"
+                                    onClick={handleOpenModalLicense}
+                                    sx={{
+                                        backgroundColor: '#FF0066',
+                                        color: '#ffff',
+                                        '&:hover': {
+                                            backgroundColor: '#FF0066',
+                                        },
+                                        borderRadius: 0,
+                                    }}
+                                >
+                                    Buy with VUSD
+                                </Button>
+                                <Typography variant="h6" sx={{ color: '#ffff' }}>
+                                    Requires crypto wallet.{' '}
+                                    <Typography
+                                        component="span"
+                                        onClick={() => console.log('Get VUSD clicked!')}
+                                        sx={{
+                                            textDecoration: 'underline',
+                                            cursor: 'pointer',
+                                            color: '#ffff',
+                                        }}
+                                    >
+                                        Get VUSD
+                                    </Typography>
+                                </Typography>
+                            </Box>
+                        </Box>
+                    </MetadataAccordion>
+                    <MetadataAccordion
+                        title="Print"
+                        last
+                        expanded={expandedAccordion === 'print'}
+                        onChange={handleAccordionChange('print')}
+                    >
+                        <Box display="flex" alignItems="center" height={140} marginLeft={3}>
+                            <Typography variant="h6" sx={{ color: '#ffff' }}>
+                                Coming Soon!
+                            </Typography>
+                        </Box>
+                    </MetadataAccordion>
+                </Box>
+            </>
         );
     }
 
     return (
-        <Card style={{ display: 'flex', flexDirection: 'column', borderRadius: 0 }}>
-            <Box>
-                <Modal
-                    open={stateModalLicense}
-                    onClose={handleCloseModalLicense}
-                    sx={{
-                        width: '100%',
-                        height: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}
-                >
-                    <Box
-                        sx={{
-                            width: '100%',
-                            height: '100%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <Box
-                            minWidth={1316}
-                            bgcolor={theme.palette.background.default}
-                            position="relative"
-                            padding={6}
-                            borderRadius={0}
-                            marginLeft={-2.5}
-                        >
-                            <Button
-                                onClick={handleCloseModalLicense}
-                                sx={{
-                                    position: 'absolute',
-                                    top: 0,
-                                    right: 0,
-                                    color: theme.palette.text.primary,
-                                    backgroundColor: 'transparent',
-                                    '&:hover': {
-                                        backgroundColor: 'transparent',
-                                    },
-                                }}
-                            >
-                                X
-                            </Button>
-                            <Box display="flex" justifyContent="space-between" alignItems="center" mb={8}>
-                                <Typography variant="h1">
-                                    {address ? 'License Digital Collectible' : 'Connect Wallet'}
-                                </Typography>
-                                {address && (
-                                    <Typography>{address?.slice(0, 6) + '...' + address?.slice(-4)}</Typography>
-                                )}
-                            </Box>
-                            {state ? (
-                                <Box minHeight={319}>
-                                    <LoadingAvailableLincenses message={message} />
-                                </Box>
-                            ) : (
-                                <Box flexDirection="column" display="flex" margin="0 auto 0" maxWidth={500} gap={2}>
-                                    <Box mb={2}>
-                                        <Typography variant="h4">Digital Artwork License</Typography>
-                                    </Box>
-                                    <Licenses title="License type" license={license} />
-                                    {isConnected && available && chain ? (
-                                        <Box display={'flex'} flexDirection={'column'} gap={1.5}>
-                                            <Box>
-                                                <PanelMintInfo title="Price" content={contentMessage()} />
-                                                <Fees
-                                                    title="Fees"
-                                                    value={platformFee.value + feesCurator.value}
-                                                    fees={{
-                                                        platform: platformFee,
-                                                        curator: feesCurator,
-                                                    }}
-                                                />
-                                                <TotalPrice title="Total" value={totalFee} />
-                                            </Box>
-                                            <Box display={'flex'} flexDirection={'column'} gap={0.2}>
-                                                <PanelMintInfo
-                                                    title="Usable Credits"
-                                                    content={formatPrice({
-                                                        price: buyCapability.grantBalance,
-                                                        withUS: true,
-                                                        decimals: true,
-                                                    })}
-                                                    disable
-                                                />
-                                                <PanelMintInfo
-                                                    title="Usable Balance"
-                                                    content={formatPrice({
-                                                        price: buyCapability.nonGrantBalance,
-                                                        withUS: true,
-                                                        decimals: true,
-                                                    })}
-                                                    disable
-                                                />
-                                                <PanelMintInfo
-                                                    title="Transaction Balance"
-                                                    content={formatPrice({
-                                                        price: buyCapability.transactionBalance,
-                                                        withUS: true,
-                                                        decimals: true,
-                                                    })}
-                                                    disable
-                                                />
-                                            </Box>
-                                        </Box>
-                                    ) : (
-                                        <PanelMintInfo title="Price" content={contentMessage()} />
-                                    )}
+        <>
+            <Card style={{ display: 'flex', flexDirection: 'column', borderRadius: 0 }}>
+                <LicenseModal
+                    image={image}
+                    size={size}
+                    creatorAvatar={creatorAvatar}
+                    creatorName={creatorName}
+                    data={data}
+                    actions={actions}
+                />
 
-                                    <Button
-                                        variant="contained"
-                                        disabled={
-                                            !available ||
-                                            !address ||
-                                            walletCredits < credits ||
-                                            buyCapability.transactionBalance > 0
-                                        }
-                                        onClick={handleMintNFT}
-                                        sx={{
-                                            backgroundColor: '#FF0066',
-                                            color: '#ffff',
-                                            '&:hover': {
-                                                backgroundColor: '#FF0066',
-                                            },
-                                            borderRadius: 0,
-                                            marginTop: 1,
-                                        }}
-                                    >
-                                        License artwork {warningMessage()}
-                                    </Button>
-                                </Box>
-                            )}
-                        </Box>
-                    </Box>
-                </Modal>
-            </Box>
-
-            <ModalMinted open={stateModalMinted} handleClose={handleCloseModalMinted} link={link} />
-        </Card>
+                <ModalMinted open={stateModalMinted} handleClose={handleCloseModalMinted} link={link} />
+            </Card>
+        </>
     );
 };
 

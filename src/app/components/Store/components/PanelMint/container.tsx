@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { confetti } from '@tsparticles/confetti';
 import { useAccount, useConnectorClient } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -31,16 +31,23 @@ const showConfetti = () => {
 
 interface Props {
     asset: Asset;
+    image: string;
+    creatorAvatar: string;
+    creatorName: string;
+    size: {
+        width: number;
+        height: number;
+    };
 }
 
-export const Container = ({ asset }: Props) => {
+export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Props) => {
     const dispatch = useDispatch();
     const coockieGrid = cookie.get('grid') as string;
     const coockieVideo = cookie.get('video') as string;
 
     const { isConnected, address, chain } = useAccount();
     const { data: client } = useConnectorClient();
-    const { openConnectModal } = useConnectModal(); // Hook para abrir o modal
+    const { openConnectModal } = useConnectModal();
 
     const [state, dispatchAction] = useReducer(reducer, initialState);
 
@@ -304,22 +311,35 @@ export const Container = ({ asset }: Props) => {
 
     const handleOpenModalLicense = () => {
         // connect wallet if not connected
-        if (!isConnected && openConnectModal) {
-            openConnectModal();
-        }
+        // if (!isConnected && openConnectModal) {
+        //     openConnectModal();
+        // }
 
         dispatchAction({ type: TypeActions.SET_OPEN_MODAL_LICENSE, payload: true });
     };
 
+    const handleAccordionChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
+        dispatchAction({
+            type: TypeActions.SET_EXPANDED_ACCORDION,
+            payload: isExpanded ? panel : false,
+        });
+    };
+
     return (
         <PanelMint
+            image={image}
+            size={size}
+            creatorAvatar={creatorAvatar}
+            creatorName={creatorName}
             data={{
+                asset,
                 license: asset.licenses?.nft.license,
                 credits: state.credits,
                 walletCredits: state.walletCredits,
                 blocked: asset.consignArtwork?.status === 'blocked',
                 available: asset.consignArtwork?.status === 'active' && state.available,
                 notListed: !asset?.contractExplorer?.transactionHash,
+                assetTitle: asset.assetMetadata?.context.formData.title,
                 address,
                 isConnected,
                 loading: state.loading,
@@ -333,12 +353,14 @@ export const Container = ({ asset }: Props) => {
                 buyerBalances: state.buyerBalances,
                 buyCapability: state.buyCapability,
                 loadingBuy: state.loadingBuy,
+                expandedAccordion: state.expandedAccordion,
             }}
             actions={{
                 handleMintNFT,
                 handleCloseModalMinted,
                 handleCloseModalLicense,
                 handleOpenModalLicense,
+                handleAccordionChange,
             }}
         />
     );
