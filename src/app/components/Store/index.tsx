@@ -172,7 +172,12 @@ const Store = ({ data }: StoreProps) => {
                                 creatorAvatar={creatorAvatar}
                                 creatorLoading={creatorLoading}
                             />
-                            <LastAssetsList assets={lastAssets} loading={lastAssetsLoading} creatorName={username} />
+                            <LastAssetsList
+                                assets={lastAssets}
+                                loading={lastAssetsLoading}
+                                creatorName={username}
+                                creatorId={asset.framework?.createdBy}
+                            />
                         </Grid>
                     )}
                     <Grid item md={6} width="100%">
