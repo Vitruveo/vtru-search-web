@@ -1,9 +1,10 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { LastAssets } from '@/features/store/types';
 import { SEARCH_BASE_URL } from '@/constants/api';
+import { videoExtension } from '@/utils/videoExtensions';
+import Image from 'next/image';
 
 interface Props {
     assets: LastAssets[];
@@ -25,19 +26,52 @@ export const LastAssetsList = ({ assets, loading, creatorName, creatorId }: Prop
                     </Link>
                 </Box>
             )}
-            <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginBlock: 2 }}>
-                {loading
-                    ? Array.from({ length: 5 }).map((_, index) => <CircularProgress key={index} />)
-                    : assets.map((asset) => (
-                          <Link key={asset._id} href={`${SEARCH_BASE_URL}/${creatorName}/${asset._id}`}>
-                              <Image
-                                  src={`${ASSET_STORAGE_URL}/${asset.path}`}
-                                  width={98}
-                                  height={98}
-                                  alt={'last asset'}
-                              />
-                          </Link>
-                      ))}
+            <Box sx={{ display: 'flex', width: '100%', justifyContent: 'left', marginBlock: 2, gap: 2 }}>
+                {loading ? (
+                    <Box>
+                        {Array.from({ length: 5 }).map((_, index) => (
+                            <CircularProgress key={index} />
+                        ))}
+                    </Box>
+                ) : (
+                    assets.map((asset) => {
+                        const isVideo = videoExtension.some((ext) => asset.path?.endsWith(ext));
+                        return (
+                            <Link key={asset._id} href={`${SEARCH_BASE_URL}/${creatorName}/${asset._id}`}>
+                                <Box width={100} height={100}>
+                                    {isVideo ? (
+                                        <video
+                                            autoPlay
+                                            loop
+                                            playsInline
+                                            muted
+                                            controls={false}
+                                            width={100}
+                                            height={100}
+                                            style={{
+                                                objectFit: 'cover',
+                                                borderRadius: 8,
+                                            }}
+                                        >
+                                            <source src={`${ASSET_STORAGE_URL}/${asset.path}`} type="video/mp4" />
+                                        </video>
+                                    ) : (
+                                        <Image
+                                            src={`${ASSET_STORAGE_URL}/${asset.path}`}
+                                            alt={'last consgined asset'}
+                                            style={{
+                                                objectFit: 'cover',
+                                                borderRadius: 8,
+                                            }}
+                                            width={100}
+                                            height={100}
+                                        />
+                                    )}
+                                </Box>
+                            </Link>
+                        );
+                    })
+                )}
             </Box>
         </Box>
     );

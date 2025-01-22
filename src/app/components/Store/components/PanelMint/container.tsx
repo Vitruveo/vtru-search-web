@@ -19,6 +19,7 @@ import { TypeActions, initialState, reducer } from './slice';
 import cookie from 'cookiejs';
 import { Asset } from '@/features/assets/types';
 import { EXPLORER_URL } from '@/constants/web3';
+import { useSelector } from '@/store/hooks';
 
 const showConfetti = () => {
     confetti({
@@ -48,6 +49,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     const { data: client } = useConnectorClient();
 
     const [state, dispatchAction] = useReducer(reducer, initialState);
+    const { lastAssets, lastAssetsLoading } = useSelector((reduxState) => reduxState.store);
 
     useEffect(() => {
         if (coockieGrid) {
@@ -352,6 +354,8 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
                 buyCapability: state.buyCapability,
                 loadingBuy: state.loadingBuy,
                 expandedAccordion: state.expandedAccordion,
+                lastAssets,
+                lastAssetsLoading,
             }}
             actions={{
                 handleMintNFT,
