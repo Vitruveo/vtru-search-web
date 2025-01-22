@@ -1,7 +1,6 @@
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import { confetti } from '@tsparticles/confetti';
 import { useAccount, useConnectorClient } from 'wagmi';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { toast } from 'react-toastify';
 
 import { PanelMint } from './component';
@@ -47,7 +46,6 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
 
     const { isConnected, address, chain } = useAccount();
     const { data: client } = useConnectorClient();
-    const { openConnectModal } = useConnectModal();
 
     const [state, dispatchAction] = useReducer(reducer, initialState);
 
@@ -204,7 +202,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
             });
     };
 
-    const fetchBuyerBalancesInCents = () => {
+    const fetchBuyerBalancesInCents = async () => {
         dispatchAction({ type: TypeActions.SET_AVAILABLE, payload: false });
 
         return getBuyerBalancesInCents({ wallet: address!, client: client! })
@@ -224,7 +222,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
             });
     };
 
-    const fetchAvailableCredits = () => {
+    const fetchAvailableCredits = async () => {
         dispatchAction({ type: TypeActions.SET_AVAILABLE, payload: false });
 
         return getAvailableCredits({ wallet: address!, client: client! })

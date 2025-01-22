@@ -110,7 +110,6 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                     Requires crypto wallet.{' '}
                                     <Typography
                                         component="span"
-                                        onClick={() => console.log('Get VUSD clicked!')}
                                         sx={{
                                             textDecoration: 'underline',
                                             cursor: 'pointer',

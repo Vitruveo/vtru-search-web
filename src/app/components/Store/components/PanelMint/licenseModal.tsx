@@ -13,7 +13,7 @@ import { User } from '../User';
 
 interface LicenseModalPropsType extends PanelMintProps {}
 
-const LicenseModal = ({ image, size, creatorAvatar, creatorName, data, actions }: LicenseModalPropsType) => {
+const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: LicenseModalPropsType) => {
     const {
         stateModalLicense,
         address,
@@ -36,7 +36,6 @@ const LicenseModal = ({ image, size, creatorAvatar, creatorName, data, actions }
     } = data;
 
     const isMobile = useMediaQuery('(max-width: 900px)');
-    const lgUp = useMediaQuery((them: Theme) => them.breakpoints.up('lg'));
     const smUp = useMediaQuery((them: Theme) => them.breakpoints.up('sm'));
 
     const { state, message } = loading;
@@ -65,7 +64,6 @@ const LicenseModal = ({ image, size, creatorAvatar, creatorName, data, actions }
 
     const isSquare = asset.formats?.original?.definition === 'square';
     const isPortrait = asset.formats?.original?.definition === 'portrait';
-    const isLandscape = asset.formats?.original?.definition === 'landscape';
     const mediaWidth = isMobile ? '100%' : isPortrait ? 360 : isSquare ? 400 : 500;
     const mediaHeight = isPortrait ? 500 : isSquare ? 400 : 365;
 

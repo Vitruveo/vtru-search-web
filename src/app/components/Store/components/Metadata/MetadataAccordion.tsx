@@ -1,5 +1,5 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
-import { IconCaretUp, IconCaretDown } from '@tabler/icons-react';
+import { IconCaretDown } from '@tabler/icons-react';
 
 interface MetadataAccordionProps {
     title: string;

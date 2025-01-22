@@ -29,15 +29,15 @@ export const LastAssetsList = ({ assets, loading, creatorName, creatorId }: Prop
                 {loading
                     ? Array.from({ length: 5 }).map((_, index) => <CircularProgress key={index} />)
                     : assets.map((asset) => (
-                        <Link key={asset._id} href={`${SEARCH_BASE_URL}/${creatorName}/${asset._id}`}>
-                            <Image
-                                src={`${ASSET_STORAGE_URL}/${asset.path}`}
-                                width={98}
-                                height={98}
-                                alt={'last asset'}
-                            />
-                        </Link>
-                    ))}
+                          <Link key={asset._id} href={`${SEARCH_BASE_URL}/${creatorName}/${asset._id}`}>
+                              <Image
+                                  src={`${ASSET_STORAGE_URL}/${asset.path}`}
+                                  width={98}
+                                  height={98}
+                                  alt={'last asset'}
+                              />
+                          </Link>
+                      ))}
             </Box>
         </Box>
     );

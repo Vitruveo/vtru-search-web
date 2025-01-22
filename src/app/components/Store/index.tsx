@@ -19,7 +19,7 @@ import MetadataList from './components/Metadata/MetadataList';
 import { Background } from './components/Background';
 import Modal from './components/Modal/Modal';
 import { MediaRenderStore } from './components/MediaRenderStore';
-import MetadataAccordion from './components/Metadata/MetadataAccordion';
+import { LastAssetsList } from './components/LastAssetsList';
 
 interface StoreProps {
     data: {
