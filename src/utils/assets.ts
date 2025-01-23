@@ -1,6 +1,6 @@
 import { Asset, LastSoldAsset, SpotlightAsset } from '@/features/assets/types';
 
-export const isAssetAvailable = (asset: Asset) => asset.licenses.nft.availableLicenses > 0;
+export const isAssetAvailableLicenses = (asset: Asset) => asset.licenses.nft.availableLicenses > 0;
 
 export const getAssetPrice = (asset: Asset | LastSoldAsset | SpotlightAsset) => {
     // eslint-disable-next-line

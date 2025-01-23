@@ -279,6 +279,7 @@ export interface GetCreatorParams {
 export interface BuidlQuery {
     [key: string]:
         | string
+        | boolean
         | {
               $in: string[];
           }

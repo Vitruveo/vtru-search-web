@@ -13,13 +13,22 @@ const Store = () => {
     const params = useParams();
     const { assetId, username } = params;
 
-    const { asset, loading, creatorAvatar, creatorLoading } = useSelector((state) => state.store);
+    const { asset, loading, creatorAvatar, creatorLoading, lastAssets, lastAssetsLoading } = useSelector(
+        (state) => state.store
+    );
 
     useEffect(() => {
         const getAsset = () => {
             if (assetId && typeof assetId === 'string') dispatch(actions.getAssetRequest({ id: assetId }));
         };
         getAsset();
+    }, [assetId]);
+
+    useEffect(() => {
+        const getLastAssetConsigns = () => {
+            if (assetId && typeof assetId === 'string') dispatch(actions.getLastAssetsRequest({ id: assetId }));
+        };
+        getLastAssetConsigns();
     }, [assetId]);
 
     useEffect(() => {
@@ -41,7 +50,17 @@ const Store = () => {
             />
             <Box display={'flex'} justifyContent={'center'} overflow={'auto'}>
                 <Box height={'100vh'} maxWidth={1300}>
-                    <StoreItem data={{ asset, loading, creatorAvatar, username: username as string, creatorLoading }} />
+                    <StoreItem
+                        data={{
+                            asset,
+                            loading,
+                            creatorAvatar,
+                            username: username as string,
+                            creatorLoading,
+                            lastAssets,
+                            lastAssetsLoading,
+                        }}
+                    />
                 </Box>
             </Box>
         </PageContainer>

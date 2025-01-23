@@ -25,6 +25,7 @@ export default function Fees({ title, value, fees }: FeesProps) {
                     variant="body1"
                     fontWeight="bold"
                     style={{
+                        fontSize: 22,
                         whiteSpace: 'nowrap',
                         wordBreak: 'break-all',
                     }}
@@ -33,7 +34,7 @@ export default function Fees({ title, value, fees }: FeesProps) {
                 </Typography>
             </Grid>
             <Grid item sm={6}>
-                <Box display={'flex'} alignItems={'center'} gap={1} justifyContent={'flex-end'} maxWidth={150}>
+                <Box display={'flex'} fontSize={22} alignItems={'center'} gap={1} justifyContent={'flex-end'}>
                     {formatPrice({ price: value, withUS: true, decimals: true })}
                     <Tooltip
                         placement="right"

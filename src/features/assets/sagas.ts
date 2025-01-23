@@ -96,6 +96,7 @@ function* getAssetsGroupByCreator() {
         const name: string = yield select((state: AppState) => state.filters.name);
         const hasBts: string = yield select((state: AppState) => state.filters.hasBts);
         const artists: string[] = yield select((state: AppState) => state.filters.tabNavigation.artists);
+        const selectedLicense: string = yield select((state: AppState) => state.filters.licenseChecked);
 
         const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
         const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
@@ -162,6 +163,7 @@ function* getAssetsGroupByCreator() {
                     isIncludeSold: sold === 'yes' ? true : false,
                 },
                 hasBts,
+                hasNftAutoStake: selectedLicense === 'nft auto',
             }
         );
 
@@ -190,7 +192,7 @@ function* getAssetsGroupByCreator() {
     yield put(actions.finishLoading());
 }
 
-function* getAssets(action: PayloadAction<GetAssetsParams>) {
+function* getAssets(_action: PayloadAction<GetAssetsParams>) {
     try {
         const hasIncludesGroup: string = yield select((state: AppState) => state.assets.groupByCreator.active);
         if (['noSales', 'all'].includes(hasIncludesGroup)) return;
@@ -235,6 +237,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
         const showAdditionalAssets: FilterSliceState['showAdditionalAssets'] = yield select(
             (state: AppState) => state.filters.showAdditionalAssets.value
         );
+        const selectedLicense: string = yield select((state: AppState) => state.filters.licenseChecked);
 
         const buildFilters = {
             context: filtersContext,
@@ -300,6 +303,7 @@ function* getAssets(action: PayloadAction<GetAssetsParams>) {
                 isIncludeSold: sold === 'yes' ? true : false,
             },
             hasBts,
+            hasNftAutoStake: selectedLicense === 'nft auto',
         });
 
         if (!creatorId && ids.length === 0 && (page === 1 || page === 0)) {
@@ -471,7 +475,7 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                onUploadProgress: (progressEvent: any) => {},
+                onUploadProgress: (_progressEvent: any) => {},
             }
         );
         yield put(actions.setVideoUrl(response.data.data.url));
@@ -583,6 +587,7 @@ export function* assetsSagas() {
         takeEvery(actionsFilter.changeCreatorId.type, getAssets),
         takeEvery(actionsFilter.changePortfolioWallets.type, getAssets),
         takeEvery(actionsFilter.changeHasBts.type, getAssets),
+        takeEvery(actionsFilter.changeLicenseChecked.type, getAssets),
 
         // Group by creator
         takeEvery(actions.startGrouped.type, getAssetsGroupByCreator),
@@ -595,6 +600,7 @@ export function* assetsSagas() {
         debounce(1000, actionsFilter.changeName.type, getAssetsGroupByCreator),
         takeEvery(actionsFilter.changePortfolioWallets.type, getAssetsGroupByCreator),
         takeEvery(actionsFilter.changeHasBts.type, getAssetsGroupByCreator),
+        takeEvery(actionsFilter.changeLicenseChecked.type, getAssetsGroupByCreator),
 
         // Sold
         takeEvery(actions.loadAssetsLastSold.type, getAssetsLastSold),

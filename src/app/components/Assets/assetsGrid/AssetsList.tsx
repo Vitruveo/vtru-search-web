@@ -6,7 +6,7 @@ import { Asset } from '@/features/assets/types';
 import { actions as actionsFilters } from '@/features/filters/slice';
 import { actions as layoutActions } from '@/features/layout';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { getAssetPrice, isAssetAvailable } from '@/utils/assets';
+import { getAssetPrice, isAssetAvailableLicenses } from '@/utils/assets';
 import generateQueryParam from '@/utils/generateQueryParam';
 import { hasAssetsInURL } from '@/utils/url-assets';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -766,7 +766,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                 {activeAssets.map((asset) => (
                                     <AssetItem
                                         key={asset._id}
-                                        isAvailable={isAssetAvailable(asset)}
+                                        isAvailable={isAssetAvailableLicenses(asset)}
                                         assetView={assetView}
                                         asset={asset}
                                         isCurated={curateStack.isActive}
@@ -837,7 +837,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                         <AssetItem
                                             key={asset._id}
                                             variant="blocked"
-                                            isAvailable={isAssetAvailable(asset)}
+                                            isAvailable={isAssetAvailableLicenses(asset)}
                                             assetView={assetView}
                                             asset={asset}
                                             isCurated={curateStack.isActive}

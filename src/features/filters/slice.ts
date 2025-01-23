@@ -93,6 +93,7 @@ export const initialState: FilterSliceState = {
     portfolio: {
         wallets: [],
     },
+    licenseChecked: '',
 };
 
 export const filterSlice = createSlice({
@@ -398,6 +399,9 @@ export const filterSlice = createSlice({
         },
         changePortfolioWallets: (state, action: PayloadAction<{ wallets: string[] }>) => {
             state.portfolio.wallets = action.payload.wallets;
+        },
+        changeLicenseChecked: (state, action: PayloadAction<FilterSliceState['licenseChecked']>) => {
+            state.licenseChecked = action.payload;
         },
     },
 });

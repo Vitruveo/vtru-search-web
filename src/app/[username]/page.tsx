@@ -19,10 +19,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const profile = response.data;
 
     const metaOg = {
-        title: profile.username,
+        title: profile?.username,
         description: 'Profile Xibit',
-        url: `${GENERAL_STORAGE_URL}/${profile.avatar}`,
-        image: `${GENERAL_STORAGE_URL}/${profile.avatar}`,
+        url: `${GENERAL_STORAGE_URL}/${profile?.avatar}`,
+        image: `${GENERAL_STORAGE_URL}/${profile?.avatar}`,
     };
 
     return {
