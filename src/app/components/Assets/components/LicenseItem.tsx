@@ -1,15 +1,11 @@
 import { FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';
-import { useDispatch, useSelector } from '@/store/hooks';
-import { actions } from '@/features/filters/slice';
 
-export const LicenseItem = () => {
-    const dispatch = useDispatch();
-    const { licenseChecked } = useSelector((state) => state.filters);
+interface Props {
+    licenseChecked: string;
+    handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(actions.changeLicenseChecked(event.target.value));
-    };
-
+export const LicenseItem = ({ handleChange, licenseChecked }: Props) => {
     return (
         <FormControl>
             <RadioGroup value={licenseChecked} onChange={handleChange}>
