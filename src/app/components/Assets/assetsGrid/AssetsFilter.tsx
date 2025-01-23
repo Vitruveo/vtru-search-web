@@ -44,6 +44,7 @@ import { Range } from '../components/Range';
 import { Wallets } from '../components/Wallets';
 import { AssetFilterAccordion } from './AssetFilterAccordion';
 import Version from '../../Version';
+import { LicenseItem } from '../components/LicenseItem';
 
 const Filters = () => {
     const params = new URLSearchParams(window.location.search);
@@ -370,6 +371,12 @@ const Filters = () => {
                             <Range afterChange={afterPriceChange} />
                         </Box>
                     </Box>
+                </AssetFilterAccordion>
+
+                <Divider />
+
+                <AssetFilterAccordion title={'Licenses'} numberOfFilters={wallets.length}>
+                    <LicenseItem />
                 </AssetFilterAccordion>
 
                 <Divider />

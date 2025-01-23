@@ -81,4 +81,5 @@ export interface FilterSliceState {
     portfolio: {
         wallets: string[];
     };
+    licenseChecked: string;
 }
