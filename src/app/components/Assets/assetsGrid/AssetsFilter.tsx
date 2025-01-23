@@ -362,10 +362,10 @@ const Filters = () => {
                     </Box>
                 </FormGroup>
 
-                <AssetFilterAccordion title={language['search.assetFilter.licenses'] as string}>
+                <AssetFilterAccordion title="Price">
                     <Box>
                         <Typography fontSize="0.85rem" fontWeight="700" mb={1}>
-                            {language['search.assetFilter.licenses.price'] as string}
+                            Artwork Price
                         </Typography>
                         <Box mx={1}>
                             <Range afterChange={afterPriceChange} />
