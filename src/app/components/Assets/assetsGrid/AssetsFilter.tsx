@@ -73,6 +73,8 @@ const Filters = () => {
     const { tags, maxPrice, sort } = useSelector((state) => state.assets);
     const { wallets } = useSelector((state) => state.filters.portfolio);
 
+    const { licenseChecked } = useSelector((state) => state.filters);
+
     const getTotalFiltersApplied = (fieldName: keyof FilterSliceState) => {
         return Object.entries(values[fieldName]).reduce((acc, [_key, arrayfield]) => {
             return Array.isArray(arrayfield) ? acc + arrayfield.length : acc;
@@ -233,6 +235,11 @@ const Filters = () => {
         }
     };
 
+    const handleChangeNftLicense = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(actions.changeLicenseChecked(event.target.value));
+        generateQueryParam('licenseChecked', event.target.value);
+    };
+
     const onCloseClick = () => {
         dispatch(actionsLayout.toggleSidebar());
     };
@@ -375,8 +382,8 @@ const Filters = () => {
 
                 <Divider />
 
-                <AssetFilterAccordion title={'Licenses'} numberOfFilters={wallets.length}>
-                    <LicenseItem />
+                <AssetFilterAccordion title={'Licenses'}>
+                    <LicenseItem licenseChecked={licenseChecked} handleChange={handleChangeNftLicense} />
                 </AssetFilterAccordion>
 
                 <Divider />
