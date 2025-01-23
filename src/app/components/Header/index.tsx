@@ -118,7 +118,7 @@ const Header = ({ rssOptions, hasSettings = true }: Props) => {
                         marginRight: hasSettings ? 70 : 0,
                     }}
                 >
-                    <IconButton onClick={handleOpen}>
+                    <IconButton onClick={handleOpen} sx={{ position: 'relative' }}>
                         <IconMenu2 width={29} height={29} />
                     </IconButton>
                     <Menu
@@ -127,19 +127,11 @@ const Header = ({ rssOptions, hasSettings = true }: Props) => {
                         onClose={handleClose}
                         sx={{
                             position: 'absolute',
-                            top: anchorEl ? `${anchorEl.getBoundingClientRect().bottom - 10}px` : '0',
-                            left: anchorEl ? `${anchorEl.getBoundingClientRect().left - 100}px` : '0',
+                            left: '86%',
+                            top: '4%',
                             '& .MuiMenu-paper': {
                                 width: '150px',
                             },
-                        }}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'right',
-                        }}
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
                         }}
                     >
                         <MenuItem onClick={handleClick}>About Xibit</MenuItem>
