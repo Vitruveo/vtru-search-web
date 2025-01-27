@@ -1,10 +1,12 @@
 import { Box, Button, Card, Typography } from '@mui/material';
 import { Asset } from '@/features/assets/types';
+import BuyVUSDModalHOC from '@/app/components/BuyVUSD/modalHOC';
 import ModalMinted from '../ModalMinted';
 import MetadataAccordion from '../Metadata/MetadataAccordion';
 import LicenseModal from './licenseModal';
 import { LastAssetsList } from '../LastAssetsList';
 import { LastAssets } from '@/features/store/types';
+import { LoadingAvailableLincenses } from '../LoadingAvailableLicenses';
 
 export interface PanelMintProps {
     image: string;
@@ -34,6 +36,7 @@ export interface PanelMintProps {
         notListed: boolean;
         assetTitle?: string;
         totalFee: number;
+        openModalBuyVUSD: boolean;
         platformFee: {
             porcent: number;
             value: number;
@@ -56,12 +59,18 @@ export interface PanelMintProps {
         expandedAccordion: string | false;
         lastAssets: LastAssets[];
         lastAssetsLoading: boolean;
+        assetLicenses: {
+            available: boolean;
+            credits: number;
+        } | null;
     };
     actions: {
         handleMintNFT: () => void;
         handleCloseModalMinted: () => void;
         handleCloseModalLicense: () => void;
         handleOpenModalLicense: () => void;
+        handleOpenModalBuyVUSD: () => void;
+        handleCloseModalBuyVUSD: () => void;
         handleAccordionChange: (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => void;
     };
 }
@@ -69,6 +78,7 @@ export interface PanelMintProps {
 export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actions }: PanelMintProps) => {
     const {
         link,
+        assetLicenses,
         stateModalMinted,
         stateModalLicense,
         expandedAccordion,
@@ -76,10 +86,19 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
         asset,
         lastAssets,
         lastAssetsLoading,
+        openModalBuyVUSD,
     } = data;
-    const { handleCloseModalMinted, handleOpenModalLicense, handleAccordionChange } = actions;
+    const {
+        handleCloseModalMinted,
+        handleOpenModalLicense,
+        handleAccordionChange,
+        handleOpenModalBuyVUSD,
+        handleCloseModalBuyVUSD,
+    } = actions;
 
-    if (!stateModalLicense) {
+    if (!assetLicenses) return <LoadingAvailableLincenses message="Checking Licenses..." background="#000000" />;
+
+    if (!stateModalLicense && !openModalBuyVUSD && !stateModalMinted) {
         return (
             <>
                 <Typography variant="h4" sx={{ color: '#ffff' }} marginBottom={2}>
@@ -121,6 +140,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                     <Typography variant="h6" sx={{ color: '#ffff' }}>
                                         Requires crypto wallet.{' '}
                                         <Typography
+                                            onClick={handleOpenModalBuyVUSD}
                                             component="span"
                                             sx={{
                                                 textDecoration: 'underline',
@@ -174,6 +194,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                 />
 
                 <ModalMinted open={stateModalMinted} handleClose={handleCloseModalMinted} link={link} />
+                <BuyVUSDModalHOC isOpen={openModalBuyVUSD} onClose={handleCloseModalBuyVUSD} />
             </Card>
         </>
     );

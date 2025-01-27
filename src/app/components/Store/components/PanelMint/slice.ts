@@ -7,6 +7,7 @@ export const initialState = {
     feesVideo: null,
     openModalMinted: false,
     openModalLicense: false,
+    openModalBuyVUSD: false,
     expandedAccordion: false,
     link: '',
     available: false,
@@ -51,7 +52,7 @@ export enum TypeActions {
     SET_BUY_CAPABILITY = 'SET_BUY_CAPABILITY',
     SET_LOADING_BUY = 'SET_LOADING_BUY',
     SET_OPEN_MODAL_LICENSE = 'SET_OPEN_MODAL_LICENSE',
-
+    SET_OPEN_MODAL_BUY_VUSD = 'SET_OPEN_MODAL_BUY_VUSD',
     DISCONNECT = 'DISCONNECT',
 }
 
@@ -69,6 +70,7 @@ interface State {
     feesVideo: number | null;
     openModalMinted: boolean;
     openModalLicense: boolean;
+    openModalBuyVUSD: boolean;
     expandedAccordion: string | false;
     link: string;
     available: boolean;
@@ -117,6 +119,11 @@ export const reducer = (state: State, action: Action) => {
             return {
                 ...state,
                 openModalMinted: action.payload,
+            };
+        case 'SET_OPEN_MODAL_BUY_VUSD':
+            return {
+                ...state,
+                openModalBuyVUSD: action.payload,
             };
         case 'SET_EXPANDED_ACCORDION':
             return {
@@ -181,7 +188,7 @@ export const reducer = (state: State, action: Action) => {
         case 'DISCONNECT':
             return {
                 ...state,
-                available: false,
+                available: state.available,
                 credits: 0,
                 walletCredits: 0,
                 totalFee: 0,

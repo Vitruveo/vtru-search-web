@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 
 import { PanelMint } from './component';
 import {
-    getAssetLicenses,
     getAvailableCredits,
     getBuyCapabilityInCents,
     getBuyerBalancesInCents,
@@ -20,6 +19,7 @@ import cookie from 'cookiejs';
 import { Asset } from '@/features/assets/types';
 import { EXPLORER_URL } from '@/constants/web3';
 import { useSelector } from '@/store/hooks';
+import { useAssetLicenses } from '@/app/hooks/useAssetLicenses';
 
 const showConfetti = () => {
     confetti({
@@ -50,6 +50,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
 
     const [state, dispatchAction] = useReducer(reducer, initialState);
     const { lastAssets, lastAssetsLoading } = useSelector((reduxState) => reduxState.store);
+    const assetLicenses = useAssetLicenses(asset._id);
 
     useEffect(() => {
         if (coockieGrid) {
@@ -88,6 +89,8 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     }, [state.credits, state.feesGrid, state.feesVideo]);
 
     useEffect(() => {
+        fetchAssetLicenses();
+
         if (!client) {
             dispatchAction({ type: TypeActions.DISCONNECT, payload: null });
             return;
@@ -95,7 +98,6 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
 
         if (!chain || !chain.name.toLowerCase().includes('vitruveo')) return;
 
-        fetchAssetLicenses();
         fetchAvailableCredits();
         fetchBuyerBalancesInCents();
 
@@ -106,7 +108,37 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
         if (!coockieGrid && !coockieVideo) {
             fetchBuyCapabilityInCents();
         }
-    }, [client, chain, state.feesCurator.value]);
+    }, [client, chain, state.feesCurator.value, assetLicenses]);
+
+    useEffect(() => {
+        if (assetLicenses && client) {
+            (async () => {
+                const feeBasisPoints = await getPlatformFeeBasisPoints({ client: client }); // 200
+                const platformFeeValue = (assetLicenses.credits * feeBasisPoints) / 10_000; // 300 cents
+                const totalPlatformFee = assetLicenses.credits + platformFeeValue; // 15300 cents
+                const curatorFeeValue = state.feesCurator.value * 100; // 100 cents
+
+                dispatchAction({
+                    type: TypeActions.SET_PLATFORM_FEE,
+                    payload: { porcent: feeBasisPoints / 100, value: platformFeeValue / 100 },
+                });
+                dispatchAction({
+                    type: TypeActions.SET_TOTAL_FEE,
+                    payload: (totalPlatformFee + curatorFeeValue) / 100,
+                });
+
+                dispatchAction({
+                    type: TypeActions.SET_CREDITS,
+                    payload: assetLicenses.credits / 100,
+                });
+
+                dispatchAction({
+                    type: TypeActions.SET_LOADING,
+                    payload: { state: false, message: '' },
+                });
+            })();
+        }
+    }, [assetLicenses, client]);
 
     const fetchAssetLicenses = async () => {
         dispatchAction({ type: TypeActions.SET_AVAILABLE, payload: false });
@@ -126,86 +158,58 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
             return;
         }
 
-        const feeBasisPoints = await getPlatformFeeBasisPoints({ client: client! }); // 200
-
-        return getAssetLicenses({ assetKey: asset.consignArtwork.assetKey, client: client! })
-            .then((assetLicenses) => {
-                const platformFeeValue = (assetLicenses.credits * feeBasisPoints) / 10_000; // 300 cents
-                const totalPlatformFee = assetLicenses.credits + platformFeeValue; // 15300 cents
-                const curatorFeeValue = state.feesCurator.value * 100; // 100 cents
-
-                dispatchAction({
-                    type: TypeActions.SET_PLATFORM_FEE,
-                    payload: { porcent: feeBasisPoints / 100, value: platformFeeValue / 100 },
-                });
-                dispatchAction({
-                    type: TypeActions.SET_TOTAL_FEE,
-                    payload: (totalPlatformFee + curatorFeeValue) / 100,
-                });
-
-                if (assetLicenses.available) {
-                    dispatchAction({ type: TypeActions.SET_AVAILABLE, payload: true });
-                }
-                dispatchAction({
-                    type: TypeActions.SET_CREDITS,
-                    payload: assetLicenses.credits / 100,
-                });
-
-                dispatchAction({
-                    type: TypeActions.SET_LOADING,
-                    payload: { state: false, message: '' },
-                });
-            })
-            .catch(() => {
-                dispatchAction({
-                    type: TypeActions.SET_LOADING,
-                    payload: { state: false, message: '' },
-                });
-                toast(`Error getting asset licenses (access logs for more details)`, {
-                    type: 'error',
-                });
+        if (assetLicenses) {
+            if (assetLicenses.available) {
+                dispatchAction({ type: TypeActions.SET_AVAILABLE, payload: true });
+            }
+        } else {
+            dispatchAction({
+                type: TypeActions.SET_LOADING,
+                payload: { state: false, message: '' },
             });
+            toast(`Error getting asset licenses (access logs for more details)`, {
+                type: 'error',
+            });
+        }
     };
 
     const fetchBuyCapabilityInCents = async () => {
-        dispatchAction({ type: TypeActions.SET_AVAILABLE, payload: false });
+        // dispatchAction({ type: TypeActions.SET_AVAILABLE, payload: false });
         dispatchAction({ type: TypeActions.SET_LOADING_BUY, payload: true });
 
         const feeBasisPoints = await getPlatformFeeBasisPoints({ client: client! });
-        const assetLicenses = await getAssetLicenses({
-            assetKey: asset.consignArtwork!.assetKey,
-            client: client!,
-        });
 
-        const platformFeeValue = (assetLicenses.credits * feeBasisPoints) / 10_000;
+        if (assetLicenses) {
+            const platformFeeValue = (assetLicenses.credits * feeBasisPoints) / 10_000;
 
-        return getBuyCapabilityInCents({
-            wallet: address!,
-            vault: asset.vault.vaultAddress!,
-            price: assetLicenses.credits,
-            fee: platformFeeValue,
-            client: client!,
-            curatorFee: state.feesCurator.value * 100,
-        })
-            .then((balances) => {
-                dispatchAction({ type: TypeActions.SET_BUY_CAPABILITY, payload: balances });
+            return getBuyCapabilityInCents({
+                wallet: address!,
+                vault: asset.vault.vaultAddress!,
+                price: assetLicenses.credits,
+                fee: platformFeeValue,
+                client: client!,
+                curatorFee: state.feesCurator.value * 100,
             })
-            .catch(() => {
-                toast(`Error getting buy capability (access logs for more details)`, {
-                    type: 'error',
+                .then((balances) => {
+                    dispatchAction({ type: TypeActions.SET_BUY_CAPABILITY, payload: balances });
+                })
+                .catch(() => {
+                    toast(`Error getting buy capability (access logs for more details)`, {
+                        type: 'error',
+                    });
+                })
+                .finally(() => {
+                    dispatchAction({
+                        type: TypeActions.SET_LOADING,
+                        payload: { state: false, message: '' },
+                    });
+                    dispatchAction({ type: TypeActions.SET_LOADING_BUY, payload: false });
                 });
-            })
-            .finally(() => {
-                dispatchAction({
-                    type: TypeActions.SET_LOADING,
-                    payload: { state: false, message: '' },
-                });
-                dispatchAction({ type: TypeActions.SET_LOADING_BUY, payload: false });
-            });
+        }
     };
 
     const fetchBuyerBalancesInCents = async () => {
-        dispatchAction({ type: TypeActions.SET_AVAILABLE, payload: false });
+        // dispatchAction({ type: TypeActions.SET_AVAILABLE, payload: false });
 
         return getBuyerBalancesInCents({ wallet: address!, client: client! })
             .then((balances) => {
@@ -225,7 +229,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     };
 
     const fetchAvailableCredits = async () => {
-        dispatchAction({ type: TypeActions.SET_AVAILABLE, payload: false });
+        // dispatchAction({ type: TypeActions.SET_AVAILABLE, payload: false });
 
         return getAvailableCredits({ wallet: address!, client: client! })
             .then((availableCredits) => {
@@ -275,6 +279,8 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
                     type: TypeActions.SET_LOADING,
                     payload: { state: false, message: '' },
                 });
+
+                dispatchAction({ type: TypeActions.SET_OPEN_MODAL_LICENSE, payload: false });
                 showConfetti();
 
                 dispatchAction({ type: TypeActions.SET_AVAILABLE, payload: false });
@@ -302,11 +308,21 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
         dispatch(actions.getAssetRequest({ id: asset._id }));
 
         await fetchAssetLicenses();
-        await fetchAvailableCredits();
+        if (client) {
+            await fetchAvailableCredits();
+        }
     };
 
     const handleCloseModalLicense = async () => {
         dispatchAction({ type: TypeActions.SET_OPEN_MODAL_LICENSE, payload: false });
+    };
+
+    const handleOpenModalBuyVUSD = () => {
+        dispatchAction({ type: TypeActions.SET_OPEN_MODAL_BUY_VUSD, payload: true });
+    };
+
+    const handleCloseModalBuyVUSD = () => {
+        dispatchAction({ type: TypeActions.SET_OPEN_MODAL_BUY_VUSD, payload: false });
     };
 
     const handleOpenModalLicense = () => {
@@ -356,12 +372,16 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
                 expandedAccordion: state.expandedAccordion,
                 lastAssets,
                 lastAssetsLoading,
+                assetLicenses,
+                openModalBuyVUSD: state.openModalBuyVUSD,
             }}
             actions={{
                 handleMintNFT,
                 handleCloseModalMinted,
                 handleCloseModalLicense,
                 handleOpenModalLicense,
+                handleOpenModalBuyVUSD,
+                handleCloseModalBuyVUSD,
                 handleAccordionChange,
             }}
         />

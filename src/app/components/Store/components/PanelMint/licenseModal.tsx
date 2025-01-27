@@ -39,7 +39,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
     const smUp = useMediaQuery((them: Theme) => them.breakpoints.up('sm'));
 
     const { state, message } = loading;
-    const { handleCloseModalMinted, handleMintNFT } = actions;
+    const { handleMintNFT, handleCloseModalLicense } = actions;
 
     const formattedPrice = formatPrice({ price: credits, withUS: true, decimals: true });
 
@@ -48,7 +48,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
         if (notListed) return '(Not listed)';
         if (!chain) return '(Change network to Vitruveo)';
         if (blocked) return '(Not available)';
-        if (walletCredits < credits) return '(Insufficient funds)';
+        if (walletCredits < credits || !walletCredits) return '(Insufficient funds)';
     };
 
     const contentMessage = () => {
@@ -68,7 +68,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
     const mediaHeight = isPortrait ? 500 : isSquare ? 400 : 365;
 
     return (
-        <Modal open={stateModalLicense} sx={{ zIndex: 9999 }} onClose={handleCloseModalMinted}>
+        <Modal open={stateModalLicense} sx={{ zIndex: 9999 }} onClose={handleCloseModalLicense}>
             <Box
                 sx={{
                     position: 'relative',
@@ -90,7 +90,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                     </Typography>
                     <Box display={'flex'} gap={2}>
                         <ConnectWallet size={'large'} rounded />
-                        <IconButton aria-label="close" onClick={handleCloseModalMinted} sx={{ color: 'white' }}>
+                        <IconButton aria-label="close" onClick={handleCloseModalLicense} sx={{ color: 'white' }}>
                             <IconX size={'3rem'} />
                         </IconButton>
                     </Box>
@@ -173,6 +173,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                                         size="large"
                                         variant="contained"
                                         disabled={
+                                            !walletCredits ||
                                             !available ||
                                             !address ||
                                             walletCredits < credits ||
