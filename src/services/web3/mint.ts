@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { JsonRpcProvider, Contract, BrowserProvider, JsonRpcSigner } from 'ethers';
+import { Contract, BrowserProvider, JsonRpcSigner } from 'ethers';
 import type { Account, Chain, Client, Transport } from 'viem';
 import { BigNumber } from '@ethersproject/bignumber';
 
@@ -12,18 +12,9 @@ import type {
     IssueLicenseUsingCreditsParams,
 } from './types';
 import schema from './contracts.json';
-import { WEB3_NETWORK_RPC_ADDRESS, WEB3_NETWORK_TYPE } from '@/constants/web3';
+
 import { API3_BASE_URL } from '@/constants/api';
-
-const isTestNet = WEB3_NETWORK_TYPE === 'testnet';
-const network = isTestNet ? 'testnet' : 'mainnet';
-
-const provider = new JsonRpcProvider(WEB3_NETWORK_RPC_ADDRESS);
-
-type MainnetKeys = keyof (typeof schema)['mainnet'];
-type TestnetKeys = keyof (typeof schema)['testnet'];
-
-const getContractAddress = (name: MainnetKeys | TestnetKeys) => schema[network][name];
+import { getContractAddress, network, provider } from '.';
 
 const clientToSigner = (client: Client<Transport, Chain, Account>) => {
     const { account, chain, transport } = client;
@@ -124,6 +115,8 @@ export const getAssetLicenses = ({ assetKey, client }: GetLicenseInformationPara
             if (Array.isArray(result) && result.length >= 8) {
                 const amount = BigNumber.from(result[7]).toNumber();
                 const credits = BigNumber.from(result[3]).toNumber();
+
+                console.log({ amount, credits });
 
                 return {
                     available: amount > 0,
