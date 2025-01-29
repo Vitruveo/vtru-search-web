@@ -15,6 +15,8 @@ export async function middleware(request: NextRequest) {
     const host = request.headers.get('host') || '';
     const parts = host.split('.');
     const isLocalhost = host.includes('localhost');
+    const isXibitLive = host.includes('xibit.live');
+
     const headers = new Headers(request.headers);
 
     const notVerifySubdomain = ['www'];
@@ -29,7 +31,7 @@ export async function middleware(request: NextRequest) {
         headers.set('x-subdomain', LOCAL_STORES);
     }
 
-    if (isLocalhost ? parts.length > 1 : parts.length > 3) {
+    if (isLocalhost ? parts.length > 1 : isXibitLive ? parts.length > 2 : parts.length > 3) {
         console.log('has subdomain', subdomain);
 
         const hash = await generateHash(subdomain);
