@@ -75,7 +75,7 @@ const Filters = () => {
     const { wallets } = useSelector((state) => state.filters.portfolio);
     const { licenseChecked } = useSelector((state) => state.filters);
 
-    const { artworks: storesFilters, organization } = useSelector((state) => state.stores.data);
+    const { artworks: storesFilters, organization } = useSelector((state) => state.stores.data.data[0] || {});
     const path = organization?.formats.logo.horizontal?.path;
 
     const getTotalFiltersApplied = (fieldName: keyof FilterSliceState) => {

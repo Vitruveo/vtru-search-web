@@ -77,7 +77,7 @@ const LogoLtrLight = () => {
 };
 
 const PersonalizedLogo = () => {
-    const { organization } = useSelector((state) => state.stores.data);
+    const { organization } = useSelector((state) => state.stores.data.data[0] || {});
     const path = organization?.formats.logo.horizontal?.path;
     const name = organization?.formats.logo.horizontal?.name;
 
@@ -98,7 +98,7 @@ const PersonalizedLogo = () => {
 const Logo = () => {
     const dispatch = useDispatch();
     const customizer = useSelector((state) => state.customizer);
-    const { organization } = useSelector((state) => state.stores.data);
+    const { organization } = useSelector((state) => state.stores.data.data[0] || {});
     const path = organization?.formats.logo.horizontal?.path;
     const { maxPrice } = useSelector((state) => state.assets);
 
