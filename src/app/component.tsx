@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import { Box, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -15,23 +15,14 @@ import AppCard from './components/Shared/AppCard';
 import Header from './components/Header';
 import { actions, initialState } from '@/features/filters/slice';
 import { actions as actionsAssets } from '@/features/assets/slice';
-import { actions as actionsStores } from '@/features/stores/slice';
 import { extractObjects } from '@/utils/extractObjects';
 import StyleElements from './components/Assets/components/StyleElements';
-import { useToastr } from './hooks/useToastr';
 import { STORES_STORAGE_URL } from '@/constants/aws';
+import { useDomainContext } from './context/domain';
 
 const params = Object.keys(extractObjects(initialState));
 const initialParams: Record<string, string> = {};
 const initialFilters: Record<string, any> = {};
-
-interface Props {
-    data: {
-        hasSubdomain: boolean;
-        hasSubdomainError: boolean;
-        subdomain: string;
-    };
-}
 
 const fixedShortcuts = new Map([
     ['animation', { key: 'taxonomy_category', value: ['video'] }],
@@ -44,13 +35,12 @@ const fixedShortcuts = new Map([
     ['includeSold', { key: 'sort_sold', value: ['yes'] }],
 ]);
 
-const Search = (props: Props) => {
-    const { subdomain, hasSubdomainError, hasSubdomain } = props.data;
+const Search = () => {
+    const { subdomain, isValidSubdomain } = useDomainContext();
 
     const theme = useTheme();
     const dispatch = useDispatch();
-    const toast = useToastr();
-    const route = useRouter();
+
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
     const { artworks: storeFilters, organization } = useSelector((state) => state.stores.data);
@@ -65,40 +55,8 @@ const Search = (props: Props) => {
     const sort_order = searchParams.get('sort_order');
     const creatorId = searchParams.get('creatorId');
 
-    const handleRedirect = () => {
-        const hostnameParts = window.location.hostname.split('.');
-        const isLocalhost = window.location.hostname.includes('localhost');
-        const isXibitLive = window.location.hostname.includes('xibit.live');
-
-        const minParts = isLocalhost ? 2 : isXibitLive ? 3 : 4;
-
-        if (hostnameParts.length >= minParts) {
-            const newHostname = hostnameParts.slice(1).join('.');
-            const port = window.location.port ? `:${window.location.port}` : '';
-
-            window.location.href = `${window.location.protocol}//${newHostname}${port}${window.location.pathname}${window.location.search}`;
-        }
-    };
-
-    console.log('testeeeee');
-
     useEffect(() => {
-        if (hasSubdomain && subdomain) {
-            toast.display({ message: `Welcome to ${subdomain}!`, type: 'success' });
-            dispatch(actionsStores.getStoresRequest({ subdomain }));
-        } else if (organization) {
-            dispatch(actionsStores.resetStores());
-        }
-
-        if (hasSubdomainError) {
-            toast.display({ message: 'Invalid subdomain!', type: 'error' });
-            dispatch(actionsStores.resetStores());
-            handleRedirect();
-        }
-    }, []);
-
-    useEffect(() => {
-        if (hasSubdomain && subdomain) return;
+        if (isValidSubdomain && subdomain) return;
 
         params.forEach((param) => {
             if (searchParams.has(param)) initialParams[param] = searchParams.get(param)!;
@@ -200,7 +158,7 @@ const Search = (props: Props) => {
                 <AppCard>
                     <AssetsSidebar />
                     <Box flexGrow={1}>
-                        <AssetsList isBlockLoader={hasSubdomain && !!subdomain} />
+                        <AssetsList isBlockLoader={!!isValidSubdomain && !!subdomain} />
                     </Box>
                 </AppCard>
             </PageContainer>
