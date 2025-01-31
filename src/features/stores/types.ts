@@ -37,7 +37,13 @@ export interface Stores {
         taxonomy: any;
         artists: any;
     };
-    status: 'draft' | 'active' | 'inactive';
+    status: 'draft' | 'active' | 'inactive' | 'pending';
+    username: string;
+    emails: {
+        email: string;
+        codeHash: string | null;
+        checkedAt: string | null;
+    }[];
     actions?: {
         countClone: number;
     };
@@ -46,5 +52,27 @@ export interface Stores {
 export interface StoresState {
     loading: boolean;
     error: string | null;
-    data: Stores;
+    sort: string;
+    data: {
+        data: Stores[];
+        limit: number;
+        page: number;
+        total: number;
+        totalPage: number;
+    };
+}
+
+export interface GetStoresParams {
+    limit: number;
+    page: number;
+    sort?: string;
+    search?: string;
+}
+
+export interface GetStoresResponse {
+    data: Stores[];
+    limit: number;
+    page: number;
+    total: number;
+    totalPage: number;
 }

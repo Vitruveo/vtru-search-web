@@ -77,7 +77,7 @@ const LogoLtrLight = () => {
 };
 
 const PersonalizedLogo = () => {
-    const { organization } = useSelector((state) => state.stores.data);
+    const { organization } = useSelector((state) => state.stores.data.data[0] || {});
     const path = organization?.formats.logo.horizontal?.path;
     const name = organization?.formats.logo.horizontal?.name;
 
@@ -95,12 +95,14 @@ const PersonalizedLogo = () => {
     );
 };
 
-const Logo = () => {
+interface Props {
+    isPersonalizedStore?: boolean;
+}
+const Logo = ({ isPersonalizedStore = false }: Props) => {
     const dispatch = useDispatch();
     const customizer = useSelector((state) => state.customizer);
-    const { organization } = useSelector((state) => state.stores.data);
-    const path = organization?.formats.logo.horizontal?.path;
     const { maxPrice } = useSelector((state) => state.assets);
+    const { organization } = useSelector((state) => state.stores.data.data[0] || {});
 
     const returnToPageOne = () => {
         const params = new URLSearchParams(window.location.search);
@@ -118,7 +120,7 @@ const Logo = () => {
         dispatch(actionsFilters.clearTabNavigation());
         dispatch(actions.resetGroupByCreator());
 
-        if (path) dispatch(actionsStores.getStoresRequest({ subdomain: organization?.url || '' }));
+        if (isPersonalizedStore) dispatch(actionsStores.getStoresRequest({ subdomain: organization?.url || '' }));
         else dispatch(actionsFilters.reset({ maxPrice }));
     };
 
@@ -129,9 +131,14 @@ const Logo = () => {
         personalized: PersonalizedLogo,
     };
 
+    const renderLogo = () => {
+        if (isPersonalizedStore) return <dice.personalized />;
+        return customizer.activeMode === 'dark' ? <dice.dark /> : <dice.light />;
+    };
+
     return (
         <Box style={dice.style} onClick={returnToPageOne}>
-            {path ? <dice.personalized /> : customizer.activeMode === 'dark' ? <dice.dark /> : <dice.light />}
+            {renderLogo()}
         </Box>
     );
 };

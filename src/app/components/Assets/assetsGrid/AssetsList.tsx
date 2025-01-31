@@ -24,7 +24,7 @@ import {
     useMediaQuery,
 } from '@mui/material';
 import { Theme, useTheme } from '@mui/material/styles';
-import { IconArrowBarToLeft, IconArrowBarToRight, IconCopy, IconFilter } from '@tabler/icons-react';
+import { IconCopy, IconFilter } from '@tabler/icons-react';
 import Image from 'next/image';
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
 import Select, { SingleValue } from 'react-select';
@@ -86,7 +86,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
 
     const { data: assets, totalPage, page: currentPage, limit } = useSelector((state) => state.assets.data);
-    const { organization } = useSelector((state) => state.stores.data);
+    const { organization } = useSelector((state) => state.stores.data.data[0] || {});
     const { sort, maxPrice, curateStacks } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
     const hasIncludesGroup = useSelector((state) => state.assets.groupByCreator);
@@ -97,7 +97,6 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     const slideshowTitle = useSelector((state) => state.filters.slideshow.title);
     const tabNavigation = useSelector((state) => state.filters.tabNavigation);
     const isHidden = useSelector((state) => state.customizer.hidden);
-    const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
 
     const optionsForSelect = useMemo(() => {
         const options: { value: number; label: number }[] = [];
@@ -335,17 +334,6 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     paddingInline={3}
                 >
                     <Box display="flex" alignItems={'center'} gap={1}>
-                        {lgUp && (
-                            <Box>
-                                <IconButton
-                                    sx={{ color: theme.palette.grey[300], padding: 0 }}
-                                    aria-label="menu"
-                                    onClick={onMenuClick}
-                                >
-                                    {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
-                                </IconButton>
-                            </Box>
-                        )}
                         {hasCurated ||
                         !hasIncludesGroupActive ||
                         tabNavigation.assets?.length > 0 ||
@@ -450,12 +438,16 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                 </IconButton>
                             )}
                             {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
-                            <Switch onChange={handleChangeCurateStack} checked={curateStack.isActive} />
-                            <Box display={'flex'} gap={1}>
-                                <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
-                                    {language['search.assetList.curateStack'] as string}
-                                </Typography>
-                            </Box>
+                            {!isBlockLoader && (
+                                <>
+                                    <Switch onChange={handleChangeCurateStack} checked={curateStack.isActive} />
+                                    <Box display={'flex'} gap={1}>
+                                        <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
+                                            {language['search.assetList.curateStack'] as string}
+                                        </Typography>
+                                    </Box>
+                                </>
+                            )}
                         </Box>
                     </Box>
                 </Box>
@@ -465,7 +457,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                 container
                 spacing={3}
                 padding={3}
-                pr={0}
+                pt={0}
                 sx={{
                     overflow: 'auto',
                     maxHeight:
@@ -478,11 +470,11 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                 }}
                 ref={topRef}
             >
-                {organization?.formats?.banner?.path && (
+                {isBlockLoader && (
                     <Grid item xs={12}>
                         <Banner
                             data={{
-                                path: organization.formats.banner.path,
+                                path: organization.formats?.banner?.path,
                                 description: organization?.description,
                                 name: organization?.name,
                             }}
