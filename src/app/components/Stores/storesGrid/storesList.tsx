@@ -1,4 +1,3 @@
-import { useI18n } from '@/app/hooks/useI18n';
 import { Box, Button, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useRef } from 'react';
@@ -78,7 +77,7 @@ const Stores = ({ data, actions }: StacksProps) => {
                         <Select
                             placeholder="Sort"
                             options={[
-                                { value: 'newToOld', label: 'latest' },
+                                { value: 'newToOld', label: 'Latest' },
                                 {
                                     value: 'nameAZ',
                                     label: 'Name – A to Z',
@@ -89,11 +88,11 @@ const Stores = ({ data, actions }: StacksProps) => {
                                 },
                                 {
                                     value: 'urlAZ',
-                                    label: 'Name – Z to A',
+                                    label: 'Url – Z to A',
                                 },
                                 {
                                     value: 'urlZA',
-                                    label: 'Name – Z to A',
+                                    label: 'Url – Z to A',
                                 },
                             ]}
                             value={selectValues.sort}

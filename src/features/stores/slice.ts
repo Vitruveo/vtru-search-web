@@ -18,8 +18,8 @@ export const storesSlice = createSlice({
     name: 'stores',
     initialState,
     reducers: {
-        getStoresRequest: (_state, _action: PayloadAction<{ subdomain: string }>) => { },
-        getStoresListRequest: (_state, _action: PayloadAction<GetStoresParams>) => { },
+        getStoresRequest: (_state, _action: PayloadAction<{ subdomain: string }>) => {},
+        getStoresListRequest: (_state, _action: PayloadAction<GetStoresParams>) => {},
         startLoading: (state) => {
             state.loading = true;
         },

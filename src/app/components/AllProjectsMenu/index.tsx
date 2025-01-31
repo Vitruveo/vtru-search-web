@@ -7,7 +7,7 @@ import { SEARCH_BASE_URL, STUDIO_BASE_URL } from '@/constants/api';
 const projects = [
     { title: 'SEARCH', url: `${SEARCH_BASE_URL}` },
     { title: 'STACKS', url: `${SEARCH_BASE_URL}/stacks` },
-    { title: 'STORES', url: '' },
+    { title: 'STORES', url: `${SEARCH_BASE_URL}/stores` },
     { title: 'STREAMS', url: '' },
     { title: 'STUDIO', url: `${STUDIO_BASE_URL}/login` },
     { title: 'ABOUT XIBIT', url: 'https://about.xibit.app', onlyMobile: true },
@@ -30,6 +30,7 @@ const AllProjectsMenu = () => {
         if (actualUrl.includes('stacks')) return projects[1];
         if (actualUrl.includes('search')) return projects[0];
         if (actualUrl.includes('studio')) return projects[4];
+        if (actualUrl.includes('stores')) return projects[2];
         return projects[0];
     };
 

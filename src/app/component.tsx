@@ -173,6 +173,7 @@ const Search = (props: Props) => {
                     { flagname: 'JSON', value: 'json' },
                     { flagname: 'XML', value: 'xml' },
                 ]}
+                isPersonalizedStore={hasSubdomain && !!subdomain}
             />
             <PageContainer title="Search" description="this is Search">
                 <AppCard>

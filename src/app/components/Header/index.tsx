@@ -18,9 +18,10 @@ interface Props {
         value: string;
     }[];
     hasSettings?: boolean;
+    isPersonalizedStore?: boolean;
 }
 
-const Header = ({ rssOptions, hasSettings = true }: Props) => {
+const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false }: Props) => {
     const dispatch = useDispatch();
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
@@ -94,13 +95,13 @@ const Header = ({ rssOptions, hasSettings = true }: Props) => {
                         <Box
                             sx={{ display: 'flex', width: smUp ? 'auto' : '40px', overflow: 'hidden', marginRight: 2 }}
                         >
-                            <Logo />
+                            <Logo isPersonalizedStore={isPersonalizedStore} />
                         </Box>
                         {lgDown && <AllProjectsMenu />}
                     </Box>
                 ) : (
                     <Box sx={{ width: 'auto', overflow: 'hidden' }}>
-                        <Logo />
+                        <Logo isPersonalizedStore={isPersonalizedStore} />
                     </Box>
                 )}
 
