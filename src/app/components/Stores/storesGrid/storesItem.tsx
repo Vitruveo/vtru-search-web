@@ -17,7 +17,8 @@ const StoresItemMain = ({ store }: Props) => {
     const theme = useTheme();
 
     const handleCardClick = () => {
-        window.open(`${store.organization.url}.${SEARCH_BASE_URL}`, '_blank');
+        const parts = SEARCH_BASE_URL.split('//');
+        window.open(`${parts[0]}//${store.organization?.url}.${parts[1]}`, '_blank');
     };
 
     return (
