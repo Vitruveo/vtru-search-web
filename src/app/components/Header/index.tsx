@@ -3,14 +3,16 @@ import { useDispatch } from 'react-redux';
 import { AppBar, Box, IconButton, Menu, MenuItem, Stack, Toolbar, Typography } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { IconMoon, IconSun, IconMenu2 } from '@tabler/icons-react';
+import { IconMoon, IconSun, IconMenu2, IconArrowBarToLeft, IconArrowBarToRight } from '@tabler/icons-react';
 import { customizerActionsCreators } from '@/features/customizer';
+import { actions as layoutActions } from '@/features/layout';
 import { useSelector } from '@/store/hooks';
 import AllProjectsMenu from '../AllProjectsMenu';
 import { Language } from '../Language';
 import { Rss } from '../Rss';
 import Logo from '../Shared/Logo';
 import BuyVUSDModal from '../BuyVUSD/modalHOC';
+import { useTheme } from '@mui/material/styles';
 
 interface Props {
     rssOptions: {
@@ -24,6 +26,7 @@ interface Props {
 
 const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false, showProjects = true }: Props) => {
     const dispatch = useDispatch();
+    const themeStyle = useTheme();
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
     const [modalState, setModalState] = useState(false);
@@ -34,6 +37,7 @@ const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false, s
     const customizer = useSelector((state) => state.customizer);
     const paused = useSelector((state) => state.assets.paused);
     const isHidden = useSelector((state) => state.customizer.hidden?.header);
+    const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
     if (isHidden) return null;
 
     const AppBarStyled = styled(AppBar)(({ theme }) => ({
@@ -83,6 +87,7 @@ const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false, s
             languageRef.current.handleClick(event);
         }
     };
+    const onMenuClick = () => dispatch(layoutActions.toggleSidebar());
 
     return (
         <AppBarStyled position="sticky" color="default" elevation={0}>
@@ -98,13 +103,19 @@ const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false, s
                         >
                             <Logo isPersonalizedStore={isPersonalizedStore} />
                         </Box>
-                        {lgDown && showProjects && <AllProjectsMenu />}
+                        {showProjects && <AllProjectsMenu />}
                     </Box>
                 ) : (
                     <Box sx={{ width: 'auto', overflow: 'hidden' }}>
                         <Logo isPersonalizedStore={isPersonalizedStore} />
                     </Box>
                 )}
+
+                <Box paddingInline={8}>
+                    <IconButton sx={{ color: themeStyle.palette.grey[300] }} aria-label="menu" onClick={onMenuClick}>
+                        {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
+                    </IconButton>
+                </Box>
 
                 <Box flexGrow={1} display="flex" alignItems="center" justifyContent="center">
                     {paused && <Typography variant="h3">⚠️ Store currently undergoing maintenance</Typography>}

@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 interface Props {
     data: {
-        path: string;
+        path?: string;
         description?: string;
         name?: string;
     };
@@ -14,16 +14,18 @@ const Banner = ({ data }: Props) => {
     return (
         <Box display="flex" flexDirection="column" gap={4} mb={6}>
             <Typography fontSize={'3rem'}>{data.name}</Typography>
-            <Box width="98.8%" position="relative" height={500}>
-                <Image
-                    src={`${STORES_STORAGE_URL}/${data.path}`}
-                    alt="banner"
-                    layout="fill" // Faz a imagem preencher o container pai
-                    objectFit="cover" // Ajusta o comportamento para cobrir o container pai
-                    quality={100}
-                    priority
-                />
-            </Box>
+            {data.path && (
+                <Box width="98.8%" position="relative" height={500}>
+                    <Image
+                        src={`${STORES_STORAGE_URL}/${data.path}`}
+                        alt="banner"
+                        layout="fill" // Faz a imagem preencher o container pai
+                        objectFit="cover" // Ajusta o comportamento para cobrir o container pai
+                        quality={100}
+                        priority
+                    />
+                </Box>
+            )}
             <Typography fontSize={'1.4rem'}>{data.description}</Typography>
         </Box>
     );
