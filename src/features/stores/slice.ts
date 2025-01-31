@@ -1,11 +1,12 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { GetStoresParams, StoresState } from './types';
+import { GetStoresParams, StoresState, Stores } from './types';
 
 export const initialState: StoresState = {
-    data: {
-        data: [],
-        limit: 0,
-        page: 0,
+    currentDomain: {} as Stores,
+    paginated: {
+        list: [],
+        limit: 10,
+        page: 1,
         total: 0,
         totalPage: 0,
     },
@@ -26,17 +27,20 @@ export const storesSlice = createSlice({
         finishLoading: (state) => {
             state.loading = false;
         },
-        setStores: (state, action: PayloadAction<StoresState['data']>) => {
-            state.data = action.payload;
+        setPaginatedList: (state, action: PayloadAction<StoresState['paginated']>) => {
+            state.paginated = action.payload;
+        },
+        setCurrentDomain: (state, action: PayloadAction<Stores>) => {
+            state.currentDomain = action.payload;
         },
         setError: (state, action: PayloadAction<string>) => {
             state.error = action.payload;
         },
         setLimit: (state, action: PayloadAction<number>) => {
-            state.data.limit = action.payload;
+            state.paginated.limit = action.payload;
         },
         setPage: (state, action: PayloadAction<number>) => {
-            state.data.page = action.payload;
+            state.paginated.page = action.payload;
         },
         setSort: (state, action: PayloadAction<string>) => {
             state.sort = action.payload;

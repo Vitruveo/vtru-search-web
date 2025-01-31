@@ -8,7 +8,7 @@ import { actions } from '@/features/stores';
 
 const Component = () => {
     const dispatch = useDispatch();
-    const { data } = useSelector((state) => state.stores);
+    const data = useSelector((state) => state.stores.paginated);
 
     const [selectValues, setSelectValues] = useState({
         limit: { value: '25', label: '25' },
@@ -44,7 +44,17 @@ const Component = () => {
             <>
                 <Header rssOptions={[]} showProjects={false} />
                 <Stores
-                    data={{ stores: data, selectValues, optionsForSelectPage }}
+                    data={{
+                        stores: {
+                            data: data.list,
+                            total: data.total,
+                            totalPage: data.totalPage,
+                            page: data.page,
+                            limit: data.limit,
+                        },
+                        selectValues,
+                        optionsForSelectPage,
+                    }}
                     actions={{ onChangeSort, onChangePage, onChangeLimit }}
                 />
             </>

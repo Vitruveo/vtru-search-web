@@ -53,8 +53,9 @@ export interface StoresState {
     loading: boolean;
     error: string | null;
     sort: string;
-    data: {
-        data: Stores[];
+    currentDomain: Stores;
+    paginated: {
+        list: Stores[];
         limit: number;
         page: number;
         total: number;

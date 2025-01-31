@@ -52,7 +52,7 @@ const Search = (props: Props) => {
     const toast = useToastr();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
-    const { artworks: storeFilters, organization } = useSelector((state) => state.stores.data.data[0] || {});
+    const { artworks: storeFilters, organization } = useSelector((state) => state.stores.currentDomain || {});
     const hasFilter = Object.entries(storeFilters || {}).some(([_key, value]) => Object.keys(value).length !== 0);
 
     const searchParams = useSearchParams();

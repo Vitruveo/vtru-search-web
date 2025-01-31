@@ -4,15 +4,15 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { API_BASE_URL } from '@/constants/api';
 import axios, { AxiosResponse } from 'axios';
 import { APIResponse } from '../common/types';
-import { GetStoresResponse } from './types';
+import { GetStoresResponse, Stores } from './types';
 
 function* getStores({ payload }: PayloadAction<{ subdomain: string }>) {
     yield put(actions.startLoading());
     try {
         const URL_STORES = `${API_BASE_URL}/stores/public/${payload.subdomain}`;
-        const response: AxiosResponse<APIResponse<GetStoresResponse>> = yield call(axios.get, URL_STORES);
+        const response: AxiosResponse<APIResponse<Stores>> = yield call(axios.get, URL_STORES);
 
-        yield put(actions.setStores(response.data.data));
+        yield put(actions.setCurrentDomain(response.data.data));
     } catch (error) {
         // Handle error
     }
@@ -35,7 +35,15 @@ function* getStoresList() {
             },
         });
 
-        yield put(actions.setStores(response.data.data));
+        yield put(
+            actions.setPaginatedList({
+                list: response.data.data.data,
+                limit: response.data.data.limit,
+                page: response.data.data.page,
+                total: response.data.data.total,
+                totalPage: response.data.data.totalPage,
+            })
+        );
     } catch (error) {
         // Handle error
     }

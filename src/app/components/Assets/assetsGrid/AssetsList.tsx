@@ -86,7 +86,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
 
     const { data: assets, totalPage, page: currentPage, limit } = useSelector((state) => state.assets.data);
-    const { organization } = useSelector((state) => state.stores.data.data[0] || {});
+    const { organization } = useSelector((state) => state.stores.currentDomain || {});
     const { sort, maxPrice, curateStacks } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
     const hasIncludesGroup = useSelector((state) => state.assets.groupByCreator);
@@ -474,7 +474,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     <Grid item xs={12}>
                         <Banner
                             data={{
-                                path: organization.formats?.banner?.path,
+                                path: organization?.formats?.banner?.path,
                                 description: organization?.description,
                                 name: organization?.name,
                             }}
