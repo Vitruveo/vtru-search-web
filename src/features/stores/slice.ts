@@ -24,6 +24,9 @@ export const storesSlice = createSlice({
         startLoading: (state) => {
             state.loading = true;
         },
+        resetStores: (state) => {
+            state.currentDomain = initialState.currentDomain;
+        },
         finishLoading: (state) => {
             state.loading = false;
         },

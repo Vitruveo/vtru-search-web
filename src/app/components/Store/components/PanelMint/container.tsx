@@ -51,6 +51,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     const [state, dispatchAction] = useReducer(reducer, initialState);
     const { lastAssets, lastAssetsLoading } = useSelector((reduxState) => reduxState.store);
     const assetLicenses = useAssetLicenses(asset._id);
+    const { organization } = useSelector((stateRx) => stateRx.stores.currentDomain);
 
     useEffect(() => {
         if (coockieGrid) {

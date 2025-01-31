@@ -1,4 +1,5 @@
-'use client';
+// src/app/layout.tsx
+'use client'; // Isso indica que é um componente de cliente
 import store, { persistor } from '@/store';
 import '@/utils/i18n';
 import { NextAppDirEmotionCacheProvider } from '@/utils/theme/EmotionCache';
@@ -15,6 +16,7 @@ import 'toastr/build/toastr.min.css';
 import CustomizedSnackbar from './common/toastr';
 import Web3WagmiProvider from './components/Store/providers/wagmiProvider';
 import { useToastr } from './hooks/useToastr';
+import { DomainProvider } from './context/domain';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -49,7 +51,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Provider store={store}>
                     <Web3WagmiProvider>
                         <PersistGate loading={null} persistor={persistor}>
-                            <MyApp>{children}</MyApp>
+                            <DomainProvider>
+                                <MyApp>{children}</MyApp>
+                            </DomainProvider>
                         </PersistGate>
                     </Web3WagmiProvider>
                 </Provider>

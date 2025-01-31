@@ -1,3 +1,4 @@
+import { Organization } from '@/features/stores/types';
 import type { Account, Chain, Client, Transport } from 'viem';
 
 export interface GetPlatformFeeBasisPoints {
@@ -6,6 +7,7 @@ export interface GetPlatformFeeBasisPoints {
 
 export interface GetLicenseInformationParams {
     assetKey: string;
+    organization?: Organization;
     client: Client<Transport, Chain, Account>;
 }
 
