@@ -813,7 +813,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
                                             handleAssetImageClick(asset);
                                         }}
-                                        price={getAssetPrice(asset)}
+                                        price={getAssetPrice(asset, organization)}
                                         countByCreator={asset.countByCreator}
                                     />
                                 ))}
@@ -879,7 +879,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
                                                 handleAssetImageClick(asset);
                                             }}
-                                            price={getAssetPrice(asset)}
+                                            price={getAssetPrice(asset, organization)}
                                         />
                                     ))}
                             </div>

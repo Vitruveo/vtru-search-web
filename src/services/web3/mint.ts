@@ -113,8 +113,11 @@ export const getPlatformFeeBasisPoints = ({ client }: GetPlatformFeeBasisPoints)
         .catch(() => 0);
 };
 
-export const getAssetLicenses = ({ assetKey, client }: GetLicenseInformationParams) => {
+export const getAssetLicenses = ({ assetKey, client, organization }: GetLicenseInformationParams) => {
     const signer = clientToSigner(client);
+    const priceMarkup = organization?.markup;
+
+    console.log({ priceMarkup });
 
     const licenseRegistry = new Contract(getContractAddress('LicenseRegistry'), schema.abi.LicenseRegistry, signer);
 
@@ -127,7 +130,7 @@ export const getAssetLicenses = ({ assetKey, client }: GetLicenseInformationPara
 
                 return {
                     available: amount > 0,
-                    credits: credits,
+                    credits: priceMarkup ? credits * (1 + priceMarkup / 100) : credits,
                 };
             }
 

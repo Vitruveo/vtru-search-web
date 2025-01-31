@@ -19,6 +19,7 @@ import { TypeActions, initialState, reducer } from './slice';
 import cookie from 'cookiejs';
 import { Asset } from '@/features/assets/types';
 import { EXPLORER_URL } from '@/constants/web3';
+import { useSelector } from '@/store/hooks';
 
 const showConfetti = () => {
     confetti({
@@ -40,6 +41,7 @@ export const Container = ({ asset }: Props) => {
     const { isConnected, address, chain } = useAccount();
 
     const [state, dispatchAction] = useReducer(reducer, initialState);
+    const { organization } = useSelector((stateRx) => stateRx.stores.data);
 
     const { data: client } = useConnectorClient();
 
@@ -167,6 +169,7 @@ export const Container = ({ asset }: Props) => {
         const assetLicenses = await getAssetLicenses({
             assetKey: asset.consignArtwork!.assetKey,
             client: client!,
+            organization,
         });
 
         const platformFeeValue = (assetLicenses.credits * feeBasisPoints) / 10_000;

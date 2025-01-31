@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Box, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -50,6 +50,7 @@ const Search = (props: Props) => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const toast = useToastr();
+    const route = useRouter();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
     const { artworks: storeFilters, organization } = useSelector((state) => state.stores.data);
@@ -64,14 +65,35 @@ const Search = (props: Props) => {
     const sort_order = searchParams.get('sort_order');
     const creatorId = searchParams.get('creatorId');
 
+    const handleRedirect = () => {
+        const hostnameParts = window.location.hostname.split('.');
+        const isLocalhost = window.location.hostname.includes('localhost');
+        const isXibitLive = window.location.hostname.includes('xibit.live');
+
+        const minParts = isLocalhost ? 2 : isXibitLive ? 3 : 4;
+
+        if (hostnameParts.length >= minParts) {
+            const newHostname = hostnameParts.slice(1).join('.');
+            const port = window.location.port ? `:${window.location.port}` : '';
+
+            window.location.href = `${window.location.protocol}//${newHostname}${port}${window.location.pathname}${window.location.search}`;
+        }
+    };
+
+    console.log('testeeeee');
+
     useEffect(() => {
         if (hasSubdomain && subdomain) {
             toast.display({ message: `Welcome to ${subdomain}!`, type: 'success' });
             dispatch(actionsStores.getStoresRequest({ subdomain }));
+        } else if (organization) {
+            dispatch(actionsStores.resetStores());
         }
 
         if (hasSubdomainError) {
             toast.display({ message: 'Invalid subdomain!', type: 'error' });
+            dispatch(actionsStores.resetStores());
+            handleRedirect();
         }
     }, []);
 

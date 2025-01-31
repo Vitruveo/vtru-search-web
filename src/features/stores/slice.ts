@@ -1,5 +1,5 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Stores, StoresState } from "./types";
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { Stores, StoresState } from './types';
 
 export const initialState: StoresState = {
     data: {} as Stores,
@@ -11,9 +11,12 @@ export const storesSlice = createSlice({
     name: 'stores',
     initialState,
     reducers: {
-        getStoresRequest: (_state, _action:PayloadAction<{ subdomain: string }>) => {},
+        getStoresRequest: (_state, _action: PayloadAction<{ subdomain: string }>) => {},
         startLoading: (state) => {
             state.loading = true;
+        },
+        resetStores: (state) => {
+            state.data = initialState.data;
         },
         finishLoading: (state) => {
             state.loading = false;
@@ -24,7 +27,7 @@ export const storesSlice = createSlice({
         setError: (state, action: PayloadAction<string>) => {
             state.error = action.payload;
         },
-    }
+    },
 });
 
 export const { actions } = storesSlice;
