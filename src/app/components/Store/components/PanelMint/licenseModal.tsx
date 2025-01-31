@@ -136,7 +136,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                                                             title="Usable Credits"
                                                             color="white"
                                                             content={formatPrice({
-                                                                price: buyCapability.grantBalance,
+                                                                price: buyCapability?.grantBalance,
                                                                 withUS: true,
                                                                 decimals: true,
                                                             })}
@@ -146,7 +146,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                                                             title="Usable Balance"
                                                             color="white"
                                                             content={formatPrice({
-                                                                price: buyCapability.nonGrantBalance,
+                                                                price: buyCapability?.nonGrantBalance,
                                                                 withUS: true,
                                                                 decimals: true,
                                                             })}
@@ -156,7 +156,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                                                             title="Transaction Balance"
                                                             color="white"
                                                             content={formatPrice({
-                                                                price: buyCapability.transactionBalance,
+                                                                price: buyCapability?.transactionBalance,
                                                                 withUS: true,
                                                                 decimals: true,
                                                             })}

@@ -7,7 +7,6 @@ export interface GetPlatformFeeBasisPoints {
 
 export interface GetLicenseInformationParams {
     assetKey: string;
-    organization?: Organization;
     client: Client<Transport, Chain, Account>;
 }
 
@@ -16,6 +15,7 @@ export interface IssueLicenseUsingCreditsParams {
     client: Client<Transport, Chain, Account>;
     stackId: string | null;
     curatorFee: number;
+    organization?: Organization;
 }
 
 export interface GetAvailableCreditsParams {

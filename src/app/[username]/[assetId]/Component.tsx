@@ -7,8 +7,10 @@ import { useEffect } from 'react';
 import { actions } from '@/features/store';
 import Header from '@/app/components/Header';
 import { Box } from '@mui/material';
+import { useDomainContext } from '@/app/context/domain';
 
 const Store = () => {
+    const { subdomain, isValidSubdomain } = useDomainContext();
     const dispatch = useDispatch();
     const params = useParams();
     const { assetId, username } = params;
@@ -42,6 +44,7 @@ const Store = () => {
     return (
         <PageContainer>
             <Header
+                isPersonalizedStore={!!isValidSubdomain && !!subdomain}
                 rssOptions={[
                     { flagname: 'JSON', value: 'stacks/json' },
                     { flagname: 'XML', value: 'stacks/xml' },

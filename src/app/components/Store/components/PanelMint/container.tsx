@@ -20,6 +20,7 @@ import { Asset } from '@/features/assets/types';
 import { EXPLORER_URL } from '@/constants/web3';
 import { useSelector } from '@/store/hooks';
 import { useAssetLicenses } from '@/app/hooks/useAssetLicenses';
+import { getPriceWithMarkup } from '@/utils/assets';
 
 const showConfetti = () => {
     confetti({
@@ -116,7 +117,8 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
             (async () => {
                 const feeBasisPoints = await getPlatformFeeBasisPoints({ client: client }); // 200
                 const platformFeeValue = (assetLicenses.credits * feeBasisPoints) / 10_000; // 300 cents
-                const totalPlatformFee = assetLicenses.credits + platformFeeValue; // 15300 cents
+                const totalPlatformFee =
+                    getPriceWithMarkup({ organization, assetPrice: assetLicenses.credits }) + platformFeeValue; // 15300 cents
                 const curatorFeeValue = state.feesCurator.value * 100; // 100 cents
 
                 dispatchAction({
@@ -130,7 +132,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
 
                 dispatchAction({
                     type: TypeActions.SET_CREDITS,
-                    payload: assetLicenses.credits / 100,
+                    payload: getPriceWithMarkup({ organization, assetPrice: assetLicenses.credits }) / 100,
                 });
 
                 dispatchAction({
@@ -186,7 +188,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
             return getBuyCapabilityInCents({
                 wallet: address!,
                 vault: asset.vault.vaultAddress!,
-                price: assetLicenses.credits,
+                price: getPriceWithMarkup({ assetPrice: assetLicenses.credits, organization }),
                 fee: platformFeeValue,
                 client: client!,
                 curatorFee: state.feesCurator.value * 100,
@@ -274,6 +276,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
             client: client!,
             stackId: coockieGrid || coockieVideo || '',
             curatorFee: state.feesCurator.value,
+            organization,
         })
             .then((response) => {
                 dispatchAction({

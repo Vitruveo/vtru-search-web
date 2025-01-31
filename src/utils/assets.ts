@@ -27,20 +27,19 @@ export const getAssetPrice = (asset: Asset | LastSoldAsset | SpotlightAsset, org
     // eslint-disable-next-line
     // @ts-ignore
     const license = asset?.licenses?.nft ? asset.licenses.nft : asset.licenses;
-    const priceMarkup = organization?.markup;
 
     switch (license.editionOption) {
         case 'elastic': {
             const price = license.elastic.editionPrice;
-            return formatPrice({ price: priceMarkup ? price * (1 + priceMarkup / 100) : price });
+            return formatPrice({ price: getPriceWithMarkup({ organization, assetPrice: price }) });
         }
         case 'single': {
             const price = license.single.editionPrice;
-            return formatPrice({ price: priceMarkup ? price * (1 + priceMarkup / 100) : price });
+            return formatPrice({ price: getPriceWithMarkup({ organization, assetPrice: price }) });
         }
         case 'unlimited': {
             const price = license.unlimited.editionPrice;
-            return formatPrice({ price: priceMarkup ? price * (1 + priceMarkup / 100) : price });
+            return formatPrice({ price: getPriceWithMarkup({ organization, assetPrice: price }) });
         }
         default:
             return 'N/A';
@@ -74,4 +73,8 @@ export function formatDate({ day, month, year }: formatDateProps) {
         timeZone: 'UTC',
     });
     return formattedDate;
+}
+
+export function getPriceWithMarkup({ assetPrice, organization }: { assetPrice: number; organization?: Organization }) {
+    return organization?.markup ? assetPrice * (1 + organization.markup / 100) : assetPrice;
 }

@@ -1,12 +1,14 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { CircularProgress, Grid } from '@mui/material';
 import { actions as actionsStores } from '@/features/stores/slice';
+
 import { API_BASE_URL } from '@/constants/api';
 import { useDispatch } from '@/store/hooks';
 import { useToastr } from '../hooks/useToastr';
 
 interface DomainContextType {
     subdomain: string | null;
-    subdomainValid: boolean | null;
+    isValidSubdomain: boolean | null;
     hasSubdomainError: string | null;
     redirectToRoot: () => void;
 }
@@ -19,7 +21,7 @@ interface DomainProviderProps {
 
 export const DomainProvider = ({ children }: DomainProviderProps) => {
     const [subdomain, setSubdomain] = useState<string | null>(null);
-    const [subdomainValid, setSubdomainValid] = useState<boolean | null>(null);
+    const [isValidSubdomain, setIsValidSubdomain] = useState<boolean | null>(null);
     const [hasSubdomainError, setHasSubdomainError] = useState<string | null>(null);
     const [isReady, setIsReady] = useState<boolean>(false);
 
@@ -44,30 +46,21 @@ export const DomainProvider = ({ children }: DomainProviderProps) => {
     const validateSubdomain = async (subdomainCheck: string) => {
         try {
             const hash = await generateHash(subdomainCheck);
-            // const cachedValidation = localStorage.getItem(`subdomainValid:${subdomainCheck}`);
-
-            // if (cachedValidation) {
-            //     setSubdomainValid(true);
-            //     dispatch(actionsStores.getStoresRequest({ subdomain: subdomainCheck }));
-            //     toast.display({ message: `Welcome to ${subdomainCheck}!`, type: 'success' });
-            //     return;
-            // }
 
             const response = await fetch(`${API_BASE_URL}/stores/public/validate/${hash}`);
             if (response.ok) {
-                localStorage.setItem(`subdomainValid:${subdomainCheck}`, 'true');
                 toast.display({ message: `Welcome to ${subdomainCheck}!`, type: 'success' });
                 dispatch(actionsStores.getStoresRequest({ subdomain: subdomainCheck }));
-                setSubdomainValid(true);
+                setIsValidSubdomain(true);
             } else {
                 localStorage.setItem(`subdomainValid:${subdomainCheck}`, 'false');
                 toast.display({ message: 'Invalid subdomain!', type: 'error' });
                 redirectToRoot();
                 dispatch(actionsStores.resetStores());
-                setSubdomainValid(false);
+                setIsValidSubdomain(false);
             }
         } catch (error) {
-            setSubdomainValid(false);
+            setIsValidSubdomain(false);
             redirectToRoot();
             setHasSubdomainError(error as string);
             dispatch(actionsStores.resetStores());
@@ -89,36 +82,26 @@ export const DomainProvider = ({ children }: DomainProviderProps) => {
                 validateSubdomain(subdomainX);
             } else {
                 setSubdomain(null);
-                setSubdomainValid(null);
+                setIsValidSubdomain(null);
                 setIsReady(true);
             }
         } else {
             setSubdomain(null);
-            setSubdomainValid(null);
+            setIsValidSubdomain(null);
             setIsReady(true);
         }
     }, []);
 
-    if (true) {
+    if (!isReady) {
         return (
-            <div
-                style={{
-                    position: 'absolute',
-                    zIndex: 9999999999,
-                    backgroundColor: '#171C23',
-                    width: '100vw',
-                    height: '100vh',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-            >
-                Loading...
-            </div>
+            <Grid height="90vh" justifyContent={'center'} alignItems={'center'} display={'flex'}>
+                <CircularProgress size="4rem" sx={{ color: '#FF0066' }} />
+            </Grid>
         );
     }
 
     return (
-        <DomainContext.Provider value={{ subdomain, subdomainValid, hasSubdomainError, redirectToRoot }}>
+        <DomainContext.Provider value={{ subdomain, isValidSubdomain, hasSubdomainError, redirectToRoot }}>
             {children}
         </DomainContext.Provider>
     );

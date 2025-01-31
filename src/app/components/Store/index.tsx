@@ -20,7 +20,6 @@ import { Background } from './components/Background';
 import Modal from './components/Modal/Modal';
 import { MediaRenderStore } from './components/MediaRenderStore';
 import { LastAssetsList } from './components/LastAssetsList';
-import { useDomainContext } from '@/app/context/domain';
 
 interface StoreProps {
     data: {
@@ -43,9 +42,6 @@ const Store = ({ data }: StoreProps) => {
     const [contents, setContents] = useState<string>('');
 
     const isMobile = useMediaQuery('(max-width: 900px)');
-    const { hasSubdomainError, subdomain } = useDomainContext();
-
-    console.log({ hasSubdomainError, subdomain });
 
     const handleClose = () => setOpen(false);
     const handleOpen = (content: string) => {

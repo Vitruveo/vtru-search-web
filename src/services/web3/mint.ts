@@ -12,6 +12,7 @@ import type {
     IssueLicenseUsingCreditsParams,
 } from './types';
 import schema from './contracts.json';
+import { getPriceWithMarkup } from '@/utils/assets';
 
 import { API3_BASE_URL } from '@/constants/api';
 import { getContractAddress, network, provider } from '.';
@@ -104,11 +105,8 @@ export const getPlatformFeeBasisPoints = ({ client }: GetPlatformFeeBasisPoints)
         .catch(() => 0);
 };
 
-export const getAssetLicenses = ({ assetKey, client, organization }: GetLicenseInformationParams) => {
+export const getAssetLicenses = ({ assetKey, client }: GetLicenseInformationParams) => {
     const signer = clientToSigner(client);
-    const priceMarkup = organization?.markup;
-
-    console.log({ priceMarkup });
 
     const licenseRegistry = new Contract(getContractAddress('LicenseRegistry'), schema.abi.LicenseRegistry, signer);
 
@@ -123,7 +121,7 @@ export const getAssetLicenses = ({ assetKey, client, organization }: GetLicenseI
 
                 return {
                     available: amount > 0,
-                    credits: priceMarkup ? credits * (1 + priceMarkup / 100) : credits,
+                    credits: credits,
                 };
             }
 
@@ -174,6 +172,7 @@ export const issueLicenseUsingCredits = async ({
     client,
     stackId,
     curatorFee,
+    organization,
 }: IssueLicenseUsingCreditsParams) => {
     const signer = clientToSigner(client);
 
@@ -202,13 +201,13 @@ export const issueLicenseUsingCredits = async ({
     const licenseRegistry = new Contract(getContractAddress('LicenseRegistry'), schema.abi.LicenseRegistry, signer);
 
     const result = await licenseRegistry.getAvailableLicense(assetKey, 1, 1);
-    const credits = BigNumber.from(result[3]).toNumber();
+    const licenseCost = BigNumber.from(result[3]).toNumber();
 
     const platformFeeBasisPoints = await licenseRegistry.getPlatformFeeBasisPoints();
     const platformFeeBasisPointsFormatted = BigNumber.from(platformFeeBasisPoints).toNumber();
 
-    const platformFeeValue = (credits * platformFeeBasisPointsFormatted) / 10_000;
-    const totalPlatformFee = credits + platformFeeValue;
+    const platformFeeValue = (licenseCost * platformFeeBasisPointsFormatted) / 10_000;
+    const totalPlatformFee = getPriceWithMarkup({ assetPrice: licenseCost, organization }) + platformFeeValue;
 
     const tx = {
         name: 'License Registry',
