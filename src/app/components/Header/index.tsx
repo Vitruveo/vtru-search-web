@@ -19,9 +19,10 @@ interface Props {
     }[];
     hasSettings?: boolean;
     isPersonalizedStore?: boolean;
+    showProjects?: boolean;
 }
 
-const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false }: Props) => {
+const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false, showProjects = true }: Props) => {
     const dispatch = useDispatch();
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
@@ -97,7 +98,7 @@ const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false }:
                         >
                             <Logo isPersonalizedStore={isPersonalizedStore} />
                         </Box>
-                        {lgDown && <AllProjectsMenu />}
+                        {lgDown && showProjects && <AllProjectsMenu />}
                     </Box>
                 ) : (
                     <Box sx={{ width: 'auto', overflow: 'hidden' }}>
@@ -108,7 +109,7 @@ const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false }:
                 <Box flexGrow={1} display="flex" alignItems="center" justifyContent="center">
                     {paused && <Typography variant="h3">⚠️ Store currently undergoing maintenance</Typography>}
                 </Box>
-                {!lgDown && <AllProjectsMenu />}
+                {!lgDown && showProjects && <AllProjectsMenu />}
                 <Stack
                     spacing={2}
                     height={40}
@@ -119,7 +120,10 @@ const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false }:
                         marginRight: hasSettings ? 70 : 0,
                     }}
                 >
-                    <IconButton onClick={handleOpen} sx={{ position: 'relative' }}>
+                    <IconButton
+                        onClick={handleOpen}
+                        sx={{ position: 'relative', left: !showProjects ? '30%' : 'inherit' }}
+                    >
                         <IconMenu2 width={29} height={29} />
                     </IconButton>
                     <Menu

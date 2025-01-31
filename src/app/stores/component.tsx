@@ -42,7 +42,7 @@ const Component = () => {
     return (
         <PageContainer title="Stores">
             <>
-                <Header rssOptions={[]} />
+                <Header rssOptions={[]} showProjects={false} />
                 <Stores
                     data={{ stores: data, selectValues, optionsForSelectPage }}
                     actions={{ onChangeSort, onChangePage, onChangeLimit }}
