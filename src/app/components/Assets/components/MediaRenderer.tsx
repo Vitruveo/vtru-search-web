@@ -30,8 +30,8 @@ const MediaRendererMain = ({
     const isMobile = useMediaQuery('(max-width: 900px)');
     const [loading, setLoading] = useState(true);
 
-    const isVideo = src.match(/\.(mp4|webm|ogg)$/) != null || type === 'video';
-    const isImage = src.match(/\.(jpeg|jpg|gif|png|webp)$/) != null || type === 'grid';
+    const isVideo = src.match(/\.(mp4|webm|ogg)(\?.*)?$/) != null || type === 'video';
+    const isImage = src.match(/\.(jpeg|jpg|gif|png|webp)(\?.*)?$/) != null || type === 'grid';
     const isSlideshow = type === 'slideshow';
 
     return (

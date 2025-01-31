@@ -33,7 +33,7 @@ const StoresItemMain = ({ store }: Props) => {
                 >
                     <MediaRenderer
                         key={store._id}
-                        src={`${STORES_STORAGE_URL}/${store.organization.formats?.logo?.square?.path}`}
+                        src={`${STORES_STORAGE_URL}/${store.organization?.formats?.logo?.square?.path}`}
                         fallbackSrc={'https://via.placeholder.com/250'}
                         onClick={handleCardClick}
                     />
