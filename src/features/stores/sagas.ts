@@ -22,8 +22,8 @@ function* getStores({ payload }: PayloadAction<{ subdomain: string }>) {
 function* getStoresList() {
     yield put(actions.startLoading());
     try {
-        const page: number = yield select((state) => state.stores.data.page);
-        const limit: number = yield select((state) => state.stores.data.limit);
+        const page: number = yield select((state) => state.stores.paginated.page);
+        const limit: number = yield select((state) => state.stores.paginated.limit);
         const sort: string = yield select((state) => state.stores.sort);
 
         const URL_STORES = `${API_BASE_URL}/stores/public`;
