@@ -154,6 +154,7 @@ const Search = () => {
                     { flagname: 'XML', value: 'xml' },
                 ]}
                 isPersonalizedStore={!!isValidSubdomain && !!subdomain}
+                showProjects={!isValidSubdomain && !subdomain}
             />
             <PageContainer title="Search" description="this is Search">
                 <AppCard>
