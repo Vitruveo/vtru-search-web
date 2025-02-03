@@ -172,7 +172,7 @@ export const issueLicenseUsingCredits = async ({
     client,
     stackId,
     curatorFee,
-    organization,
+    currentStore,
 }: IssueLicenseUsingCreditsParams) => {
     const signer = clientToSigner(client);
 
@@ -207,7 +207,8 @@ export const issueLicenseUsingCredits = async ({
     const platformFeeBasisPointsFormatted = BigNumber.from(platformFeeBasisPoints).toNumber();
 
     const platformFeeValue = (licenseCost * platformFeeBasisPointsFormatted) / 10_000;
-    const totalPlatformFee = getPriceWithMarkup({ assetPrice: licenseCost, organization }) + platformFeeValue;
+    const totalPlatformFee =
+        getPriceWithMarkup({ assetPrice: licenseCost, organization: currentStore?.organization }) + platformFeeValue;
 
     const tx = {
         name: 'License Registry',
@@ -228,7 +229,15 @@ export const issueLicenseUsingCredits = async ({
     const response = await fetch(`${API3_BASE_URL}/mint`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ signer: signer.address, domain, types, tx, signedMessage, stackId }),
+        body: JSON.stringify({
+            signer: signer.address,
+            domain,
+            types,
+            tx,
+            signedMessage,
+            stackId,
+            currentStore: { id: currentStore?._id, markup: currentStore?.organization.markup },
+        }),
     });
 
     const responseData = await response.json();
