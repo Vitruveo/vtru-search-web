@@ -22,7 +22,7 @@ const StoresItemMain = ({ store }: Props) => {
     };
 
     return (
-        <Box width={280} margin={'0 auto'}>
+        <Box width={280} height={445} margin={'0 auto'} sx={{ cursor: 'pointer' }}>
             <BlankCard className="hoverCard" onClick={handleCardClick}>
                 <Box
                     width={'100%'}
@@ -72,8 +72,8 @@ const StoresItemMain = ({ store }: Props) => {
                             </Box>
                         </Box>
                     </MuiStack>
-                    <MuiStack flexDirection="row" justifyContent="flex-end" alignItems="end">
-                        {store.organization?.description && (
+                    {store.organization?.description && (
+                        <MuiStack flexDirection="row" justifyContent="flex-end" alignItems="end">
                             <Tooltip
                                 title={store.organization.description}
                                 arrow
@@ -87,8 +87,8 @@ const StoresItemMain = ({ store }: Props) => {
                                     <IconInfoCircle color={theme.palette.primary.main} size={32} />
                                 </IconButton>
                             </Tooltip>
-                        )}
-                    </MuiStack>
+                        </MuiStack>
+                    )}
                 </CardContent>
             </BlankCard>
         </Box>
