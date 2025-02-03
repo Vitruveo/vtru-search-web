@@ -11,6 +11,7 @@ import Avatar from './Avatar';
 import Link from 'next/link';
 import { useTheme } from '@mui/material/styles';
 import Username from '../../Username';
+import { useDomainContext } from '@/app/context/domain';
 
 interface Props {
     drawerOpen: boolean;
@@ -27,6 +28,8 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
 
     const creator = useSelector((state) => state.assets.creator);
     const paused = useSelector((state) => state.assets.paused);
+
+    const { subdomain } = useDomainContext();
 
     const handleClickView = () => {
         const searchParams = new URLSearchParams(window.location.search);
@@ -45,7 +48,11 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
             cookie.remove('video');
             document.cookie = 'video=; path=/; domain=' + domain + '; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         }
-        window.open(`${SEARCH_BASE_URL}/${creator.username}/${assetView?._id}`);
+        const url = new URL(SEARCH_BASE_URL);
+        if (subdomain) {
+            url.hostname = `${subdomain}.${url.hostname}`;
+        }
+        window.open(`${url.toString()}/${creator.username}/${assetView?._id}`);
     };
 
     const width = lgUp ? 400 : mdUp ? 300 : 200;
