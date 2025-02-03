@@ -8,15 +8,22 @@ import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { SpotlightAsset } from '@/features/assets/types';
 import { SEARCH_BASE_URL } from '@/constants/api';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
-import { formatPrice } from '@/utils/assets';
+import { formatPrice, getPriceWithMarkup } from '@/utils/assets';
 import Username from '../Username';
+import { useDomainContext } from '@/app/context/domain';
 
 function SpotlightSlider() {
+    const { subdomain } = useDomainContext();
+    const currentDomain = useSelector((state) => state.stores.currentDomain);
     const assets = useSelector((state) => state.assets.spotlight);
     const theme = useTheme();
 
     const handleClickItem = (asset: SpotlightAsset) => {
-        window.open(`${SEARCH_BASE_URL}/${asset?.username}/${asset?._id}`);
+        const url = new URL(SEARCH_BASE_URL);
+        if (subdomain) {
+            url.hostname = `${subdomain}.${url.hostname}`;
+        }
+        window.open(`${url.toString()}/${asset?.username}/${asset?._id}`);
     };
 
     return (
@@ -27,7 +34,12 @@ function SpotlightSlider() {
                     const creatorName = asset?.username || 'No creator';
                     const vaultAddress = asset?.vault?.vaultAddress || '';
 
-                    const price = formatPrice({ price: asset.price });
+                    const price = formatPrice({
+                        price: getPriceWithMarkup({
+                            assetPrice: asset.price,
+                            organization: currentDomain?.organization,
+                        }),
+                    });
 
                     const nextAssetExists = index + 1 < assets.length;
                     return (
