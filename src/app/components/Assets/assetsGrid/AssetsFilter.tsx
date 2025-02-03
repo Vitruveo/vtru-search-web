@@ -386,9 +386,11 @@ const Filters = () => {
                     </Box>
                 </AssetFilterAccordion>
 
-                {/* <AssetFilterAccordion title={'Licenses'}>
+                <Divider />
+
+                <AssetFilterAccordion title={'Licenses'}>
                     <LicenseItem licenseChecked={licenseChecked} handleChange={handleChangeNftLicense} />
-                </AssetFilterAccordion> */}
+                </AssetFilterAccordion>
 
                 <Divider />
 
@@ -407,12 +409,12 @@ const Filters = () => {
                                 disabledPrecision={typeof storesFilters?.context.precision === 'number' || false}
                                 hidden={
                                     assetsMetadata.context.uiSchema[
-                                        key as keyof AssetsMetadata['context']['schema']['properties']
+                                    key as keyof AssetsMetadata['context']['schema']['properties']
                                     ]['ui:widget'] === 'hidden'
                                 }
                                 type={
                                     assetsMetadata.context.uiSchema[
-                                        key as keyof AssetsMetadata['context']['schema']['properties']
+                                    key as keyof AssetsMetadata['context']['schema']['properties']
                                     ]['ui:widget']
                                 }
                                 options={
@@ -453,7 +455,7 @@ const Filters = () => {
                                             value: {
                                                 [key]: (
                                                     values.context[
-                                                        key as keyof AssetsMetadata['context']['schema']['properties']
+                                                    key as keyof AssetsMetadata['context']['schema']['properties']
                                                     ] as string[]
                                                 ).filter((itemColor) => itemColor !== color),
                                             },
@@ -480,7 +482,7 @@ const Filters = () => {
                                 loadOptionsEndpoint={
                                     (
                                         assetsMetadata.taxonomy.uiSchema[
-                                            key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
                                         ] as any
                                     )['ui:options']?.loadOptionsEndpoint
                                 }
@@ -490,12 +492,12 @@ const Filters = () => {
                                 tags={tags || []}
                                 hidden={
                                     assetsMetadata.taxonomy.uiSchema[
-                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
                                     ]['ui:widget'] === 'hidden'
                                 }
                                 type={
                                     assetsMetadata.taxonomy.uiSchema[
-                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
                                     ]['ui:widget']
                                 }
                                 options={
@@ -523,7 +525,7 @@ const Filters = () => {
                                             value: {
                                                 [key]: (
                                                     values.taxonomy[
-                                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
                                                     ] as string[]
                                                 ).filter((itemColor) => itemColor !== color),
                                             },
@@ -549,7 +551,7 @@ const Filters = () => {
                                 loadOptionsEndpoint={
                                     (
                                         assetsMetadata.creators.uiSchema.items[
-                                            key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
                                         ] as any
                                     )['ui:options']?.loadOptionsEndpoint
                                 }
@@ -558,12 +560,12 @@ const Filters = () => {
                                 values={values}
                                 hidden={
                                     assetsMetadata.creators.uiSchema.items[
-                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                    key as keyof AssetsMetadata['creators']['schema']['items']['properties']
                                     ]['ui:widget'] === 'hidden'
                                 }
                                 type={
                                     assetsMetadata.creators.uiSchema.items[
-                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                    key as keyof AssetsMetadata['creators']['schema']['items']['properties']
                                     ]['ui:widget']
                                 }
                                 options={(value as NationalityOrResidenceOrCountry)?.enum || []}
@@ -585,7 +587,7 @@ const Filters = () => {
                                             value: {
                                                 [key]: (
                                                     values.creators[
-                                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                                    key as keyof AssetsMetadata['creators']['schema']['items']['properties']
                                                     ] as string[]
                                                 ).filter((itemColor) => itemColor !== color),
                                             },
