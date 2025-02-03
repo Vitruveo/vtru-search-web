@@ -52,7 +52,8 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     const [state, dispatchAction] = useReducer(reducer, initialState);
     const { lastAssets, lastAssetsLoading } = useSelector((reduxState) => reduxState.store);
     const assetLicenses = useAssetLicenses(asset._id);
-    const { organization } = useSelector((stateRx) => stateRx.stores.currentDomain);
+    const currentStore = useSelector((stateRx) => stateRx.stores.currentDomain);
+    const { organization } = currentStore;
 
     useEffect(() => {
         if (coockieGrid) {
@@ -276,7 +277,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
             client: client!,
             stackId: coockieGrid || coockieVideo || '',
             curatorFee: state.feesCurator.value,
-            organization,
+            currentStore,
         })
             .then((response) => {
                 dispatchAction({

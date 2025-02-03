@@ -386,11 +386,9 @@ const Filters = () => {
                     </Box>
                 </AssetFilterAccordion>
 
-                <Divider />
-
-                <AssetFilterAccordion title={'Licenses'}>
+                {/* <AssetFilterAccordion title={'Licenses'}>
                     <LicenseItem licenseChecked={licenseChecked} handleChange={handleChangeNftLicense} />
-                </AssetFilterAccordion>
+                </AssetFilterAccordion> */}
 
                 <Divider />
 
