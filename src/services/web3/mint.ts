@@ -117,8 +117,6 @@ export const getAssetLicenses = ({ assetKey, client }: GetLicenseInformationPara
                 const amount = BigNumber.from(result[7]).toNumber();
                 const credits = BigNumber.from(result[3]).toNumber();
 
-                console.log({ amount, credits });
-
                 return {
                     available: amount > 0,
                     credits: credits,
