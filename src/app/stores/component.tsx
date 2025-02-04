@@ -42,7 +42,7 @@ const Component = () => {
     return (
         <PageContainer title="Stores">
             <>
-                <Header rssOptions={[]} showProjects={false} />
+                <Header rssOptions={[]} />
                 <Stores
                     data={{
                         stores: {
