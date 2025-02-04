@@ -230,13 +230,13 @@ export const issueLicenseUsingCredits = async ({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            signer: signer.address,
+            buyerSignerAddress: signer.address,
             domain,
             types,
             tx,
             signedMessage,
             stackId,
-            currentStore: { id: currentStore?._id, markup: currentStore?.organization.markup },
+            customStoreId: currentStore?._id,
         }),
     });
 
