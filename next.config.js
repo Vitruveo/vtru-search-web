@@ -23,7 +23,30 @@ const nextConfig = {
                 destination: '/',
                 permanent: true,
             },
+            {
+                source: '/login',
+                destination: '/',
+                permanent: true,
+            },
         ];
+    },
+    async rewrites() {
+        return {
+            beforeFiles: [
+                {
+                    source: '/',
+                    has: [
+                        {
+                            type: 'host',
+                            value: 'xibit.live',
+                        },
+                    ],
+                    destination: '/stores',
+                },
+            ],
+            afterFiles: [],
+            fallback: [],
+        };
     },
     modularizeImports: {
         '@mui/icons-material': {
