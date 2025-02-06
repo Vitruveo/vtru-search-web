@@ -78,3 +78,37 @@ export function formatDate({ day, month, year }: formatDateProps) {
 export function getPriceWithMarkup({ assetPrice, organization }: { assetPrice: number; organization?: Organization }) {
     return organization?.markup ? assetPrice * (1 + organization.markup / 100) : assetPrice;
 }
+
+export function overwriteWithInitialFilters<T>({
+    target,
+    initialFilters,
+}: {
+    target: Record<string, any>;
+    initialFilters?: Record<string, any>;
+}): T {
+    const result = { ...target };
+    const initial = initialFilters || {};
+
+    Object.keys(initial).forEach((key) => {
+        const initialValue = initial[key];
+        const targetValue = result[key];
+
+        if (Array.isArray(initialValue)) {
+            result[key] = Array.isArray(targetValue)
+                ? Array.from(new Set([...targetValue, ...initialValue]))
+                : [...initialValue];
+        } else if (typeof initialValue === 'object' && initialValue !== null) {
+            result[key] =
+                !targetValue || typeof targetValue !== 'object' || Array.isArray(targetValue)
+                    ? {}
+                    : overwriteWithInitialFilters({
+                          target: targetValue,
+                          initialFilters: initialValue,
+                      });
+        } else if (initialValue !== undefined) {
+            result[key] = initialValue;
+        }
+    });
+
+    return result as T;
+}

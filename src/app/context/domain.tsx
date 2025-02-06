@@ -53,7 +53,6 @@ export const DomainProvider = ({ children }: DomainProviderProps) => {
                 dispatch(actionsStores.getStoresRequest({ subdomain: subdomainCheck }));
                 setIsValidSubdomain(true);
             } else {
-                localStorage.setItem(`subdomainValid:${subdomainCheck}`, 'false');
                 toast.display({ message: 'Invalid subdomain!', type: 'error' });
                 redirectToRoot();
                 dispatch(actionsStores.resetStores());
