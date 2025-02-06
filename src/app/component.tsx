@@ -43,7 +43,11 @@ const Search = () => {
 
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
-    const { artworks: storeFilters, organization } = useSelector((state) => state.stores.currentDomain || {});
+    const {
+        artworks: storeFilters,
+        organization,
+        appearanceContent,
+    } = useSelector((state) => state.stores.currentDomain || {});
     const hasFilter = Object.entries(storeFilters || {}).some(([_key, value]) => Object.keys(value).length !== 0);
 
     const searchParams = useSearchParams();
@@ -173,7 +177,10 @@ const Search = () => {
                 width={lgUp || smUp ? 85 : 77}
                 zIndex={9999}
             >
-                <StyleElements />
+                <StyleElements
+                    initialHidden={appearanceContent?.hideElements}
+                    isPersonalizedStore={!!isValidSubdomain && !!subdomain}
+                />
             </Box>
         </div>
     );

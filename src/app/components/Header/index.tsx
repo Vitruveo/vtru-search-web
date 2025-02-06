@@ -111,17 +111,11 @@ const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false, s
                     </Box>
                 )}
 
-                {showProjects && (
-                    <Box paddingInline={8}>
-                        <IconButton
-                            sx={{ color: themeStyle.palette.grey[300] }}
-                            aria-label="menu"
-                            onClick={onMenuClick}
-                        >
-                            {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
-                        </IconButton>
-                    </Box>
-                )}
+                <Box paddingInline={8}>
+                    <IconButton sx={{ color: themeStyle.palette.grey[300] }} aria-label="menu" onClick={onMenuClick}>
+                        {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
+                    </IconButton>
+                </Box>
 
                 <Box flexGrow={1} display="flex" alignItems="center" justifyContent="center">
                     {paused && <Typography variant="h3">⚠️ Store currently undergoing maintenance</Typography>}
