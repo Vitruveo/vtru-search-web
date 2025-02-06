@@ -33,17 +33,55 @@ import { overwriteWithInitialFilters } from '@/utils/assets';
 
 function* getAssetsSpotlight() {
     try {
-        const nudity: string[] = yield select((state: AppState) => state.filters.taxonomy.nudity);
-
         const URL_ASSETS_SPOTLIGHT = `${API_BASE_URL}/assets/public/spotlight`;
 
+        const filtersState: FilterSliceState = yield select((state: AppState) => state.filters);
+        const storesFilters: Record<string, any> = yield select((state: AppState) => state.filters.storesFilters);
+
+        const filters = overwriteWithInitialFilters<FilterSliceState>({
+            initialFilters: storesFilters,
+            target: filtersState,
+        });
+
+        const buildFilters = {
+            context: filters.context,
+            taxonomy: filters.taxonomy,
+            creators: filters.creators,
+        };
+
+        const buildQuery = Object.entries(buildFilters).reduce<BuidlQuery>((acc, cur) => {
+            const [key, value] = cur;
+
+            Object.entries(value).forEach((item) => {
+                const [keyFilter, valueFilter] = item as [string, string | string[]];
+                if (!valueFilter) return;
+                if (Array.isArray(valueFilter) && !valueFilter.length) return;
+
+                if (Array.isArray(valueFilter)) {
+                    acc[`assetMetadata.${key}.formData.${keyFilter}`] = {
+                        $in: valueFilter,
+                    };
+                    return;
+                }
+                acc[`assetMetadata.${key}.formData.${keyFilter}`] = valueFilter;
+            });
+
+            const assetsIds = getAssetsIdsFromURL();
+
+            if (assetsIds && assetsIds?.length > 0 && assetsIds[0] != '') {
+                acc['_id'] = {
+                    $in: assetsIds,
+                };
+            }
+
+            return acc;
+        }, {});
+
         const response: AxiosResponse<APIResponse<ResponseAssetsSpotlight>> = yield call(
-            axios.get,
+            axios.post,
             URL_ASSETS_SPOTLIGHT,
             {
-                params: {
-                    nudity: nudity[0] || 'yes',
-                },
+                query: buildQuery,
             }
         );
 
