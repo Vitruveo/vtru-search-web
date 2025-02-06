@@ -105,6 +105,7 @@ export const filterSlice = createSlice({
             state,
             action: PayloadAction<{ initialParams: Record<string, string>; persistStoresFilters?: boolean }>
         ) => {
+            state.storesFilters = {};
             state.name = '';
             state.context = {
                 title: '',
@@ -184,8 +185,6 @@ export const filterSlice = createSlice({
             state.hasBts = '';
 
             const payload = extractObjects(initialState);
-
-            if (!state.storesFilters) state.storesFilters = {};
 
             const { initialParams, persistStoresFilters } = action.payload;
 
