@@ -23,8 +23,8 @@ export function InputSelect({ value, options, onChange, fixed }: Props) {
                     minWidth: '240px',
                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                     backgroundColor: theme.palette.background.paper,
-                    boxShadow: '#FF0066',
-                    '&:hover': { borderColor: '#FF0066' },
+                    boxShadow: theme.palette.primary.main,
+                    '&:hover': { borderColor: theme.palette.primary.main },
                 }),
                 menu: (base) => ({
                     ...base,

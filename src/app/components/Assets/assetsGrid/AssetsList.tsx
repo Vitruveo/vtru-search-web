@@ -335,21 +335,21 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                 >
                     <Box display="flex" alignItems={'center'} gap={1}>
                         {hasCurated ||
-                        !hasIncludesGroupActive ||
-                        tabNavigation.assets?.length > 0 ||
-                        tabNavigation.artists?.length > 0 ? (
+                            !hasIncludesGroupActive ||
+                            tabNavigation.assets?.length > 0 ||
+                            tabNavigation.artists?.length > 0 ? (
                             <Box display="flex" alignItems="flex-end" gap={2}>
                                 {(hasCurated ||
                                     tabNavigation.assets?.length > 0 ||
                                     tabNavigation.artists?.length > 0) && (
-                                    <Typography variant="h4">
-                                        {gridTitle ||
-                                            videoTitle ||
-                                            slideshowTitle ||
-                                            tabNavigation.title ||
-                                            'Curated arts'}
-                                    </Typography>
-                                )}
+                                        <Typography variant="h4">
+                                            {gridTitle ||
+                                                videoTitle ||
+                                                slideshowTitle ||
+                                                tabNavigation.title ||
+                                                'Curated arts'}
+                                        </Typography>
+                                    )}
                                 {hasIncludesGroup.name && (
                                     <Username
                                         username={assets[0]?.creator.username}
@@ -362,29 +362,29 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                     creatorId ||
                                     tabNavigation.assets?.length > 0 ||
                                     tabNavigation.artists?.length > 0) && (
-                                    <button
-                                        style={{
-                                            border: 'none',
-                                            background: 'none',
-                                            cursor: 'pointer',
-                                            padding: 0,
-                                            width: '100%',
-                                        }}
-                                        onClick={returnToPageOne}
-                                    >
-                                        <Typography
-                                            variant="h6"
-                                            color="primary"
-                                            sx={{
-                                                textDecoration: 'underline',
+                                        <button
+                                            style={{
+                                                border: 'none',
+                                                background: 'none',
                                                 cursor: 'pointer',
-                                                fontSize: 14,
+                                                padding: 0,
+                                                width: '100%',
                                             }}
+                                            onClick={returnToPageOne}
                                         >
-                                            {language['search.assetList.resetsearch'] as string}
-                                        </Typography>
-                                    </button>
-                                )}
+                                            <Typography
+                                                variant="h6"
+                                                color="primary"
+                                                sx={{
+                                                    textDecoration: 'underline',
+                                                    cursor: 'pointer',
+                                                    fontSize: 14,
+                                                }}
+                                            >
+                                                {language['search.assetList.resetsearch'] as string}
+                                            </Typography>
+                                        </button>
+                                    )}
                             </Box>
                         ) : (
                             <Box />
@@ -464,8 +464,8 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                         isHidden?.order && isHidden?.header
                             ? '105vh'
                             : isHidden?.order || isHidden?.header
-                              ? '95vh'
-                              : '85vh',
+                                ? '95vh'
+                                : '85vh',
                     justifyContent: 'flex-end',
                 }}
                 ref={topRef}
@@ -530,14 +530,21 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                                         ? theme.palette.primary.main
                                                         : theme.palette.grey[200],
                                                     backgroundColor: theme.palette.background.paper,
-                                                    boxShadow: '#FF0066',
-                                                    '&:hover': { borderColor: '#FF0066' },
+                                                    boxShadow: theme.palette.primary.main,
+                                                    '&:hover': { borderColor: theme.palette.primary.main },
                                                 }),
                                                 menu: (base) => ({
                                                     ...base,
                                                     zIndex: 1000,
                                                     color: theme.palette.text.primary,
                                                     backgroundColor: theme.palette.background.paper,
+                                                }),
+                                                menuList: (base) => ({
+                                                    ...base,
+                                                    '::-webkit-scrollbar-thumb': {
+                                                        backgroundColor: theme.palette.primary.main,
+                                                        borderRadius: '4px',
+                                                    },
                                                 }),
                                                 singleValue: (base) => ({
                                                     ...base,
@@ -577,14 +584,21 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                                         ? theme.palette.primary.main
                                                         : theme.palette.grey[200],
                                                     backgroundColor: theme.palette.background.paper,
-                                                    boxShadow: '#FF0066',
-                                                    '&:hover': { borderColor: '#FF0066' },
+                                                    boxShadow: theme.palette.primary.main,
+                                                    '&:hover': { borderColor: theme.palette.primary.main },
                                                 }),
                                                 menu: (base) => ({
                                                     ...base,
                                                     zIndex: 1000,
                                                     color: theme.palette.text.primary,
                                                     backgroundColor: theme.palette.background.paper,
+                                                }),
+                                                menuList: (base) => ({
+                                                    ...base,
+                                                    '::-webkit-scrollbar-thumb': {
+                                                        backgroundColor: theme.palette.primary.main,
+                                                        borderRadius: '4px',
+                                                    },
                                                 }),
                                                 singleValue: (base) => ({
                                                     ...base,
@@ -636,14 +650,21 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                                 ? theme.palette.primary.main
                                                 : theme.palette.grey[200],
                                             backgroundColor: theme.palette.background.paper,
-                                            boxShadow: '#FF0066',
-                                            '&:hover': { borderColor: '#FF0066' },
+                                            boxShadow: theme.palette.primary.main,
+                                            '&:hover': { borderColor: theme.palette.primary.main },
                                         }),
                                         menu: (base) => ({
                                             ...base,
                                             zIndex: 1000,
                                             color: theme.palette.text.primary,
                                             backgroundColor: theme.palette.background.paper,
+                                        }),
+                                        menuList: (base) => ({
+                                            ...base,
+                                            '::-webkit-scrollbar-thumb': {
+                                                backgroundColor: theme.palette.primary.main,
+                                                borderRadius: '4px',
+                                            },
                                         }),
                                         singleValue: (base) => ({
                                             ...base,
@@ -676,14 +697,21 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                                 ? theme.palette.primary.main
                                                 : theme.palette.grey[200],
                                             backgroundColor: theme.palette.background.paper,
-                                            boxShadow: '#FF0066',
-                                            '&:hover': { borderColor: '#FF0066' },
+                                            boxShadow: theme.palette.primary.main,
+                                            '&:hover': { borderColor: theme.palette.primary.main },
                                         }),
                                         menu: (base) => ({
                                             ...base,
                                             zIndex: 1000,
                                             color: theme.palette.text.primary,
                                             backgroundColor: theme.palette.background.paper,
+                                        }),
+                                        menuList: (base) => ({
+                                            ...base,
+                                            '::-webkit-scrollbar-thumb': {
+                                                backgroundColor: theme.palette.primary.main,
+                                                borderRadius: '4px',
+                                            },
                                         }),
                                         singleValue: (base) => ({
                                             ...base,
@@ -917,6 +945,16 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                     page={currentPage}
                                     onChange={(_event, value) => dispatch(actions.setCurrentPage(value))}
                                     color="primary"
+                                    sx={{
+                                        '& .MuiPaginationItem-root': {
+                                            '&.Mui-selected': {
+                                                backgroundColor: theme.palette.primary.main,
+                                            },
+                                            '&:focus': {
+                                                backgroundColor: theme.palette.primary.main,
+                                            },
+                                        },
+                                    }}
                                     size={lgUp ? 'large' : 'medium'}
                                 />
                             )}
@@ -928,7 +966,16 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                             mr={4}
                             mb={lgUp ? 4 : 12}
                         >
-                            <Button variant="contained" onClick={handleScrollToTop}>
+                            <Button
+                                variant="contained"
+                                onClick={handleScrollToTop}
+                                sx={{
+                                    background: theme.palette.primary.main,
+                                    '&:hover': {
+                                        background: theme.palette.primary.main,
+                                    },
+                                }}
+                            >
                                 {language['search.assetList.scrollToTop'] as string}
                             </Button>
                         </Box>

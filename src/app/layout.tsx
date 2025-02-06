@@ -47,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <link rel="icon" href="/favicon.ico" />
                 <meta httpEquiv="refresh" content="3600" />
             </head>
-            <body style={{ overflow: 'hidden', backgroundColor: '#171C23' }} className={inter.className}>
+            <body style={{ overflow: 'hidden' }} className={inter.className}>
                 <Provider store={store}>
                     <Web3WagmiProvider>
                         <PersistGate loading={null} persistor={persistor}>

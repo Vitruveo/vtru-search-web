@@ -2,6 +2,7 @@ import { reset, setHidden, StateKeys } from '@/features/customizer/slice';
 import { useDispatch, useSelector } from '@/store/hooks';
 import generateQueryParam from '@/utils/generateQueryParam';
 import { Box, Button, Divider, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { IconCode, IconCopy, IconSettingsFilled } from '@tabler/icons-react';
 import { MouseEvent, useEffect, useReducer, useState } from 'react';
 import { initialState, reducer, TypeAction } from './slice';
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export default function StyleElements({ initialHidden, isPersonalizedStore = false }: Props) {
+    const theme = useTheme();
     const initialHiddenSerialized = initialHidden ? serialization(initialHidden) : initialState;
 
     const params = new URLSearchParams(window.location.search);
@@ -177,6 +179,12 @@ export default function StyleElements({ initialHidden, isPersonalizedStore = fal
                 <Divider />
                 <MenuItem>
                     <Button
+                        sx={{
+                            background: theme.palette.primary.main,
+                            '&:hover': {
+                                background: theme.palette.primary.main,
+                            },
+                        }}
                         startIcon={<IconCopy size={18} />}
                         fullWidth
                         variant="contained"
@@ -190,6 +198,12 @@ export default function StyleElements({ initialHidden, isPersonalizedStore = fal
                 </MenuItem>
                 <MenuItem>
                     <Button
+                        sx={{
+                            background: theme.palette.primary.main,
+                            '&:hover': {
+                                background: theme.palette.primary.main,
+                            },
+                        }}
                         startIcon={<IconCode size={18} />}
                         fullWidth
                         variant="contained"
@@ -200,7 +214,18 @@ export default function StyleElements({ initialHidden, isPersonalizedStore = fal
                 </MenuItem>
                 <Divider />
                 <MenuItem>
-                    <Button startIcon={<IconRestore size={18} />} fullWidth variant="contained" onClick={handleReset}>
+                    <Button
+                        startIcon={<IconRestore size={18} />}
+                        fullWidth
+                        variant="contained"
+                        onClick={handleReset}
+                        sx={{
+                            background: theme.palette.primary.main,
+                            '&:hover': {
+                                background: theme.palette.primary.main,
+                            },
+                        }}
+                    >
                         <Typography variant="caption">Reset</Typography>
                     </Button>
                 </MenuItem>
