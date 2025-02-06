@@ -163,7 +163,7 @@ function* getAssetsGroupByCreator() {
                     isIncludeSold: sold === 'yes' ? true : false,
                 },
                 hasBts,
-                hasNftAutoStake: selectedLicense === 'nft auto',
+                // hasNftAutoStake: selectedLicense === 'nft auto',
             }
         );
 
@@ -303,7 +303,7 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
                 isIncludeSold: sold === 'yes' ? true : false,
             },
             hasBts,
-            hasNftAutoStake: selectedLicense === 'nft auto',
+            // hasNftAutoStake: selectedLicense === 'nft auto',
         });
 
         if (!creatorId && ids.length === 0 && (page === 1 || page === 0)) {
