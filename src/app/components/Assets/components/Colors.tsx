@@ -18,9 +18,7 @@ export function Colors({ colors = [], onRemove }: Props) {
         return (
             <Box mt={1} key={index} display="flex" alignItems="center" justifyContent="space-between">
                 <Box width="1rem" height="1rem" borderRadius="50%" bgcolor={bgcolor}></Box>
-                {Array.isArray(color) && (
-                    <IconTrash cursor="pointer" color="red" width={20} onClick={() => onRemove(color)} />
-                )}
+                <IconTrash cursor="pointer" color="red" width={20} onClick={() => onRemove(color)} />
             </Box>
         );
     });

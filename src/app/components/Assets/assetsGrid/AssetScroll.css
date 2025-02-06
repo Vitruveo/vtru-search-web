@@ -1,4 +1,7 @@
 /* custom style scroll bar */
+:root {
+    --scrollbar-thumb-color: #ff0066;
+}
 
 ::-webkit-scrollbar {
     width: 5px;
@@ -6,6 +9,6 @@
     border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: #ff0066;
+    background-color: var(--scrollbar-thumb-color);
     border-radius: 10px;
 }
