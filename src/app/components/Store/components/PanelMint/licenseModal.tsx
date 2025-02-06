@@ -129,7 +129,15 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                                                                 curator: feesCurator,
                                                             }}
                                                         />
-                                                        <TotalPrice title="Total" value={totalFee} />
+
+                                                        <PanelMintInfo
+                                                            title="Total"
+                                                            content={formatPrice({
+                                                                price: totalFee,
+                                                                withUS: true,
+                                                                decimals: true,
+                                                            })}
+                                                        />
                                                     </Box>
                                                     <Box display={'flex'} flexDirection={'column'} gap={2}>
                                                         <PanelMintInfo
@@ -177,7 +185,8 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                                             !available ||
                                             !address ||
                                             walletCredits < credits ||
-                                            buyCapability.transactionBalance > 0
+                                            buyCapability.transactionBalance > 0 ||
+                                            loading.state
                                         }
                                         onClick={handleMintNFT}
                                         sx={{
