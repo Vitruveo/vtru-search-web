@@ -1,4 +1,4 @@
-export interface FilterSliceState {
+interface FiltersInitialState {
     name: string;
     reseted: number;
     context: {
@@ -82,4 +82,8 @@ export interface FilterSliceState {
         wallets: string[];
     };
     licenseChecked: string;
+}
+
+export interface FilterSliceState extends FiltersInitialState {
+    storesFilters: Partial<FiltersInitialState>;
 }

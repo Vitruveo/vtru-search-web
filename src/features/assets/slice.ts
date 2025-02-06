@@ -37,6 +37,7 @@ export const initialState: AssetsSliceState = {
         order: '',
         sold: '',
     },
+    storesSort: undefined,
     groupByCreator: {
         active: 'all',
         name: '',
@@ -149,8 +150,12 @@ export const assetsSlice = createSlice({
             state.groupByCreator.active = action.payload;
             state.groupByCreator.name = '';
         },
-        initialSort: (state, action: PayloadAction<AssetsSliceState['sort']>) => {
-            state.sort = action.payload;
+        initialSort: (
+            state,
+            action: PayloadAction<{ sort: AssetsSliceState['sort']; persistStoresSort?: boolean }>
+        ) => {
+            state.sort = action.payload.sort;
+            if (action.payload.persistStoresSort) state.storesSort = action.payload.sort;
         },
         generateSlideshow: (state, action: PayloadAction<GenerateSlideshowParams>) => {},
         setSlideshow: (state, action: PayloadAction<string>) => {

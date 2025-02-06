@@ -86,8 +86,8 @@ const Search = () => {
             initialParams.taxonomy_nudity = 'no';
         }
 
-        dispatch(actions.initialParams(initialParams));
-        dispatch(actionsAssets.initialSort({ order: sort_order || 'latest', sold: sort_sold || 'no' }));
+        dispatch(actions.initialParams({ initialParams }));
+        dispatch(actionsAssets.initialSort({ sort: { order: sort_order || 'latest', sold: sort_sold || 'no' } }));
 
         if (creatorId) {
             dispatch(actionsAssets.startNormal());
@@ -102,8 +102,7 @@ const Search = () => {
 
         Object.entries(storeFilters?.general?.shortcuts || {}).forEach(([key, _value]) => {
             const { key: filterKey, value: filterValue } = fixedShortcuts.get(key)!;
-            if (initialFilters[filterKey])
-                initialFilters[filterKey] = `${initialFilters[filterKey]},${filterValue.join(',')}`;
+            if (initialFilters[filterKey]) initialFilters[filterKey] = `${filterValue.join(',')}`;
             else initialFilters[filterKey] = filterValue.join(',');
         });
 
@@ -132,8 +131,13 @@ const Search = () => {
         initialFilters.taxonomy_aiGeneration = 'partial,none';
         initialFilters.taxonomy_nudity = 'no';
 
-        dispatch(actions.initialParams(initialFilters));
-        dispatch(actionsAssets.initialSort({ order: 'latest', sold: initialFilters.sort_sold || 'no' }));
+        dispatch(actions.initialParams({ initialParams: initialFilters, persistStoresFilters: true }));
+        dispatch(
+            actionsAssets.initialSort({
+                sort: { order: 'latest', sold: initialFilters.sort_sold || 'no' },
+                persistStoresSort: true,
+            })
+        );
         dispatch(actionsAssets.startGrouped('all'));
     }, [storeFilters]);
 

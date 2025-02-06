@@ -6,6 +6,7 @@ import { confetti } from '@tsparticles/confetti';
 import { API_BASE_URL, API3_BASE_URL } from '@/constants/api';
 import type { FilterSliceState } from '../filters/types';
 import type {
+    AssetsSliceState,
     BuidlQuery,
     GenerateSlideshowParams,
     GetAssetsParams,
@@ -28,6 +29,7 @@ import { APIResponse } from '../common/types';
 import { AppState } from '@/store';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
 import validateCryptoAddress from '@/utils/adressValidate';
+import { overwriteWithInitialFilters } from '@/utils/assets';
 
 function* getAssetsSpotlight() {
     try {
@@ -88,24 +90,35 @@ function* getAssetsGroupByCreator() {
 
         yield put(actions.startLoading());
 
-        const wallets: string[] = yield select((state: AppState) => state.filters.portfolio.wallets);
+        const filtersState: FilterSliceState = yield select((state: AppState) => state.filters);
+        const storesFilters: Record<string, any> = yield select((state: AppState) => state.filters.storesFilters);
+
+        const filters = overwriteWithInitialFilters<FilterSliceState>({
+            initialFilters: storesFilters,
+            target: filtersState,
+        });
+
+        const wallets = filters.portfolio.wallets;
         const page: number = yield select((state: AppState) => state.assets.data.page);
         const limit: number = yield select((state: AppState) => state.assets.data.limit);
-        const order: string = yield select((state: AppState) => state.assets.sort.order);
-        const sold: string = yield select((state: AppState) => state.assets.sort.sold);
-        const name: string = yield select((state: AppState) => state.filters.name);
-        const hasBts: string = yield select((state: AppState) => state.filters.hasBts);
-        const artists: string[] = yield select((state: AppState) => state.filters.tabNavigation.artists);
-        const selectedLicense: string = yield select((state: AppState) => state.filters.licenseChecked);
 
-        const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
-        const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
-        const filtersCreators: FilterSliceState['creators'] = yield select((state: AppState) => state.filters.creators);
+        const sortState: AssetsSliceState['sort'] = yield select((state: AppState) => state.assets.sort);
+        const storesSort: Record<string, any> = yield select((state: AppState) => state.assets.storesSort);
+
+        const sort = overwriteWithInitialFilters<AssetsSliceState['sort']>({
+            initialFilters: storesSort,
+            target: sortState,
+        });
+
+        const name = filters.name;
+        const hasBts = filters.hasBts;
+        const artists = filters.tabNavigation.artists;
+        const selectedLicense = filters.licenseChecked;
 
         const buildFilters = {
-            context: filtersContext,
-            taxonomy: filtersTaxonomy,
-            creators: filtersCreators,
+            context: filters.context,
+            taxonomy: filters.taxonomy,
+            creators: filters.creators,
         };
 
         const buildQuery = Object.entries(buildFilters).reduce<BuidlQuery>((acc, cur) => {
@@ -159,8 +172,8 @@ function* getAssetsGroupByCreator() {
                 page: page || 1,
                 name: name.trim() || null,
                 sort: {
-                    order,
-                    isIncludeSold: sold === 'yes' ? true : false,
+                    order: sort.order,
+                    isIncludeSold: sort.sold === 'yes' ? true : false,
                 },
                 hasBts,
                 hasNftAutoStake: selectedLicense === 'nft auto',
@@ -201,12 +214,18 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
 
         let ids: string[] = [];
 
-        const video: FilterSliceState['video'] = yield select((state: AppState) => state.filters.video);
-        const slideshow: FilterSliceState['slideshow'] = yield select((state: AppState) => state.filters.slideshow);
-        const grid: FilterSliceState['grid'] = yield select((state: AppState) => state.filters.grid);
-        const tabNavigation: FilterSliceState['tabNavigation'] = yield select(
-            (state: AppState) => state.filters.tabNavigation
-        );
+        const filtersState: FilterSliceState = yield select((state: AppState) => state.filters);
+        const storesFilters: Record<string, any> = yield select((state: AppState) => state.filters.storesFilters);
+
+        const filters = overwriteWithInitialFilters<FilterSliceState>({
+            initialFilters: storesFilters,
+            target: filtersState,
+        });
+
+        const video = filters.video;
+        const slideshow = filters.slideshow;
+        const grid = filters.grid;
+        const tabNavigation = filters.tabNavigation;
 
         if (video.assets.length > 0) {
             ids = video.assets;
@@ -218,31 +237,32 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
             ids = tabNavigation.assets;
         }
 
-        const wallets: string[] = yield select((state: AppState) => state.filters.portfolio.wallets);
-        const creatorId: string = yield select((state: AppState) => state.filters.creatorId);
-        const name: string = yield select((state: AppState) => state.filters.name);
+        const wallets = filters.portfolio.wallets;
+        const creatorId = filters.creatorId;
+        const name = filters.name;
         const page: number = yield select((state: AppState) => state.assets.data.page);
         const limit: number = yield select((state: AppState) => state.assets.data.limit);
-        const order: string = yield select((state: AppState) => state.assets.sort.order);
-        const sold: string = yield select((state: AppState) => state.assets.sort.sold);
-        const filtersContext: FilterSliceState['context'] = yield select((state: AppState) => state.filters.context);
-        const filtersTaxonomy: FilterSliceState['taxonomy'] = yield select((state: AppState) => state.filters.taxonomy);
-        const filtersCreators: FilterSliceState['creators'] = yield select((state: AppState) => state.filters.creators);
-        const hasBts: FilterSliceState['hasBts'] = yield select((state: AppState) => state.filters.hasBts);
-        const price: FilterSliceState['price'] = yield select((state: AppState) => state.filters.price);
+
+        const sortState: AssetsSliceState['sort'] = yield select((state: AppState) => state.assets.sort);
+        const storesSort: Record<string, any> = yield select((state: AppState) => state.assets.storesSort);
+
+        const sort = overwriteWithInitialFilters<AssetsSliceState['sort']>({
+            initialFilters: storesSort,
+            target: sortState,
+        });
+
+        const hasBts = filters.hasBts;
+        const price = filters.price;
         const creatorName: string = yield select((state: AppState) => state.assets.groupByCreator.name);
-        const colorPrecision: FilterSliceState['colorPrecision'] = yield select(
-            (state: AppState) => state.filters.colorPrecision
-        );
-        const showAdditionalAssets: FilterSliceState['showAdditionalAssets'] = yield select(
-            (state: AppState) => state.filters.showAdditionalAssets.value
-        );
-        const selectedLicense: string = yield select((state: AppState) => state.filters.licenseChecked);
+        const colorPrecision = filters.colorPrecision;
+
+        const showAdditionalAssets = filters.showAdditionalAssets.value;
+        const selectedLicense = filters.licenseChecked;
 
         const buildFilters = {
-            context: filtersContext,
-            taxonomy: filtersTaxonomy,
-            creators: filtersCreators,
+            context: filters.context,
+            taxonomy: filters.taxonomy,
+            creators: filters.creators,
         };
 
         const buildQuery = Object.entries(buildFilters).reduce<BuidlQuery>((acc, cur) => {
@@ -299,8 +319,8 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
             precision: colorPrecision.value,
             showAdditionalAssets,
             sort: {
-                order,
-                isIncludeSold: sold === 'yes' ? true : false,
+                order: sort.order,
+                isIncludeSold: sort.sold === 'yes' ? true : false,
             },
             hasBts,
             hasNftAutoStake: selectedLicense === 'nft auto',
