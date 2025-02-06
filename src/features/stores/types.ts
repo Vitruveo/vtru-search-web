@@ -44,8 +44,19 @@ export interface Stores {
         codeHash: string | null;
         checkedAt: string | null;
     }[];
-    actions?: {
-        countClone: number;
+    appearanceContent: {
+        highlightColor: string;
+        hideElements: {
+            filters: boolean;
+            order: boolean;
+            header: boolean;
+            recentlySold: boolean;
+            artworkSpotlight: boolean;
+            artistSpotlight: boolean;
+            pageNavigation: boolean;
+            cardDetails: boolean;
+            assets: boolean;
+        };
     };
 }
 
