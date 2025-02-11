@@ -37,16 +37,18 @@ function* getAssetsSpotlight() {
 
         const filtersState: FilterSliceState = yield select((state: AppState) => state.filters);
         const storesFilters: Record<string, any> = yield select((state: AppState) => state.filters.storesFilters);
+        let filters = storesFilters;
 
-        const filters = overwriteWithInitialFilters<FilterSliceState>({
-            initialFilters: storesFilters,
-            target: filtersState,
-        });
+        if (!Object.keys(storesFilters || {}).length) {
+            const nudity = [];
+            nudity[0] = filtersState.taxonomy.nudity[0] || 'yes';
+            filters = { ...filters, taxonomy: { nudity } };
+        }
 
         const buildFilters = {
-            context: filters.context,
-            taxonomy: filters.taxonomy,
-            creators: filters.creators,
+            context: filters.context || {},
+            taxonomy: filters.taxonomy || {},
+            creators: filters.creators || {},
         };
 
         const buildQuery = Object.entries(buildFilters).reduce<BuidlQuery>((acc, cur) => {
@@ -87,6 +89,7 @@ function* getAssetsSpotlight() {
 
         yield put(actions.setSpotlight(response.data.data));
     } catch (error) {
+        console.error(error);
         // Handle error
     }
 }
@@ -95,9 +98,56 @@ function* getAssetsLastSold() {
     try {
         const URL_ASSETS_LAST_SOLD = `${API_BASE_URL}/assets/public/lastSold`;
 
+        const filtersState: FilterSliceState = yield select((state: AppState) => state.filters);
+        const storesFilters: Record<string, any> = yield select((state: AppState) => state.filters.storesFilters);
+        let filters = storesFilters;
+
+        if (!Object.keys(storesFilters || {}).length) {
+            const nudity = [];
+            nudity[0] = filtersState.taxonomy.nudity[0] || 'yes';
+            filters = { ...filters, taxonomy: { nudity } };
+        }
+
+        const buildFilters = {
+            context: filters.context || {},
+            taxonomy: filters.taxonomy || {},
+            creators: filters.creators || {},
+        };
+
+        const buildQuery = Object.entries(buildFilters).reduce<BuidlQuery>((acc, cur) => {
+            const [key, value] = cur;
+
+            Object.entries(value).forEach((item) => {
+                const [keyFilter, valueFilter] = item as [string, string | string[]];
+                if (!valueFilter) return;
+                if (Array.isArray(valueFilter) && !valueFilter.length) return;
+
+                if (Array.isArray(valueFilter)) {
+                    acc[`assetMetadata.${key}.formData.${keyFilter}`] = {
+                        $in: valueFilter,
+                    };
+                    return;
+                }
+                acc[`assetMetadata.${key}.formData.${keyFilter}`] = valueFilter;
+            });
+
+            const assetsIds = getAssetsIdsFromURL();
+
+            if (assetsIds && assetsIds?.length > 0 && assetsIds[0] != '') {
+                acc['_id'] = {
+                    $in: assetsIds,
+                };
+            }
+
+            return acc;
+        }, {});
+
         const response: AxiosResponse<APIResponse<ResponseAssetsLastSold>> = yield call(
-            axios.get,
-            URL_ASSETS_LAST_SOLD
+            axios.post,
+            URL_ASSETS_LAST_SOLD,
+            {
+                query: buildQuery,
+            }
         );
 
         yield put(actions.setLastSold(response.data.data));
@@ -108,7 +158,9 @@ function* getAssetsLastSold() {
 
 function* getArtistsSpotlight() {
     try {
-        const URL_ARTISTS_SPOTLIGHT = `${API_BASE_URL}/assets/public/artistSpotlight`;
+        const storesFilters: Record<string, any> = yield select((state: AppState) => state.filters.storesFilters);
+
+        const URL_ARTISTS_SPOTLIGHT = `${API_BASE_URL}/assets/public/artistSpotlight/${storesFilters?.creators?.name || ''}`;
 
         const response: AxiosResponse<APIResponse<ResponseArtistsSpotlight>> = yield call(
             axios.get,

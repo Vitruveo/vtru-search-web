@@ -8,25 +8,32 @@ import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import { LastSoldAsset } from '@/features/assets/types';
 import { SEARCH_BASE_URL } from '@/constants/api';
-import { formatPrice } from '@/utils/assets';
+import { formatPrice, getPriceWithMarkup } from '@/utils/assets';
 import Username from '../Username';
+import { useDomainContext } from '@/app/context/domain';
 
 function RecentlySoldSlider() {
+    const { subdomain } = useDomainContext();
+    const organization = useSelector((state) => state.stores.currentDomain.organization);
     const assets = useSelector((state) => state.assets.lastSold);
     const theme = useTheme();
 
     const handleClickItem = (asset: LastSoldAsset) => {
-        window.open(`${SEARCH_BASE_URL}/${asset?.username}/${asset?._id}`);
+        const url = new URL(SEARCH_BASE_URL);
+        if (subdomain) {
+            url.hostname = `${subdomain}.${url.hostname}`;
+        }
+        window.open(`${url.toString()}/${asset?.username}/${asset?._id}`);
     };
 
     return (
         <Box minHeight={250}>
-            <Marquee style={{ overflow: 'hidden' }}>
+            <Marquee autoFill style={{ overflow: 'hidden' }}>
                 {assets.map((asset, index) => {
                     const assetTitle = asset?.title || 'No Title';
                     const creatorName = asset?.username || 'No creator';
                     const vaultAddress = asset?.vault?.vaultAddress || '';
-                    const price = formatPrice({ price: asset.price });
+                    const price = formatPrice({ price: getPriceWithMarkup({ assetPrice: asset.price, organization }) });
 
                     const nextAssetExists = index + 1 < assets.length;
 

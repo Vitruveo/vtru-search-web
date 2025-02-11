@@ -49,7 +49,6 @@ export const DomainProvider = ({ children }: DomainProviderProps) => {
 
             const response = await fetch(`${API_BASE_URL}/stores/public/validate/${hash}`);
             if (response.ok) {
-                toast.display({ message: `Welcome to ${subdomainCheck}!`, type: 'success' });
                 dispatch(actionsStores.getStoresRequest({ subdomain: subdomainCheck }));
                 setIsValidSubdomain(true);
             } else {
