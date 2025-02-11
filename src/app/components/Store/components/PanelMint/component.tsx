@@ -1,4 +1,5 @@
 import { Box, Button, Card, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
 import BuyVUSDModalHOC from '@/app/components/BuyVUSD/modalHOC';
 import ModalMinted from '../ModalMinted';
@@ -76,6 +77,7 @@ export interface PanelMintProps {
 }
 
 export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actions }: PanelMintProps) => {
+    const theme = useTheme();
     const {
         link,
         assetLicenses,
@@ -127,10 +129,10 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                         variant="contained"
                                         onClick={handleOpenModalLicense}
                                         sx={{
-                                            backgroundColor: '#FF0066',
+                                            backgroundColor: theme.palette.primary.main,
                                             color: '#ffff',
                                             '&:hover': {
-                                                backgroundColor: '#FF0066',
+                                                backgroundColor: theme.palette.primary.main,
                                             },
                                             borderRadius: 0,
                                         }}

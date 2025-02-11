@@ -1,3 +1,4 @@
+import { useParams } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppBar, Box, IconButton, Menu, MenuItem, Stack, Toolbar, Typography } from '@mui/material';
@@ -26,6 +27,7 @@ interface Props {
 
 const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false, showProjects = true }: Props) => {
     const dispatch = useDispatch();
+    const params = useParams();
     const themeStyle = useTheme();
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
@@ -111,11 +113,17 @@ const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false, s
                     </Box>
                 )}
 
-                <Box paddingInline={8}>
-                    <IconButton sx={{ color: themeStyle.palette.grey[300] }} aria-label="menu" onClick={onMenuClick}>
-                        {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
-                    </IconButton>
-                </Box>
+                {!params.assetId && (
+                    <Box paddingInline={8}>
+                        <IconButton
+                            sx={{ color: themeStyle.palette.grey[300] }}
+                            aria-label="menu"
+                            onClick={onMenuClick}
+                        >
+                            {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
+                        </IconButton>
+                    </Box>
+                )}
 
                 <Box flexGrow={1} display="flex" alignItems="center" justifyContent="center">
                     {paused && <Typography variant="h3">⚠️ Store currently undergoing maintenance</Typography>}

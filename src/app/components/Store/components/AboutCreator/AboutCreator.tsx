@@ -1,4 +1,5 @@
 import { Box, Button, Card, Grid, Skeleton, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import Avatar from '../../../Assets/components/Avatar';
 import { GENERAL_STORAGE_URL } from '@/constants/aws';
 import { Creators } from '../../../Assets/types';
@@ -11,6 +12,7 @@ interface AboutCreatorProps {
 }
 
 export default function AboutCreator({ data, creatorAvatar, creatorLoading }: AboutCreatorProps) {
+    const theme = useTheme();
     if (!data?.length) return null;
 
     return (
@@ -56,7 +58,7 @@ export default function AboutCreator({ data, creatorAvatar, creatorLoading }: Ab
                                         <Button
                                             sx={{
                                                 '&:hover': {
-                                                    backgroundColor: '#FF0066',
+                                                    backgroundColor: theme.palette.primary.main,
                                                 },
                                             }}
                                             fullWidth
