@@ -1,4 +1,4 @@
-import { Organization, Stores } from '@/features/stores/types';
+import { Stores } from '@/features/stores/types';
 import type { Account, Chain, Client, Transport } from 'viem';
 
 export interface GetPlatformFeeBasisPoints {

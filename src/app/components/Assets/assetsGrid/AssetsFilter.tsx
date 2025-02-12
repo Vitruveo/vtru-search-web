@@ -45,7 +45,6 @@ import { Range } from '../components/Range';
 import { Wallets } from '../components/Wallets';
 import { AssetFilterAccordion } from './AssetFilterAccordion';
 import Version from '../../Version';
-import { LicenseItem } from '../components/LicenseItem';
 
 const Filters = () => {
     const params = new URLSearchParams(window.location.search);
@@ -73,7 +72,6 @@ const Filters = () => {
     const values = useSelector((state) => state.filters);
     const { tags, maxPrice, sort } = useSelector((state) => state.assets);
     const { wallets } = useSelector((state) => state.filters.portfolio);
-    const { licenseChecked } = useSelector((state) => state.filters);
 
     const { artworks: storesFilters, organization } = useSelector((state) => state.stores.currentDomain || {});
     const path = organization?.formats.logo.horizontal?.path;
@@ -387,10 +385,10 @@ const Filters = () => {
                     </Box>
                 </FormGroup>
 
-                <AssetFilterAccordion title={language['search.assetFilter.licenses'] as string}>
+                <AssetFilterAccordion title="Price">
                     <Box>
                         <Typography fontSize="0.85rem" fontWeight="700" mb={1}>
-                            {language['search.assetFilter.licenses.price'] as string}
+                            Artwork Price
                         </Typography>
                         <Box mx={1}>
                             <Range afterChange={afterPriceChange} />
@@ -419,12 +417,12 @@ const Filters = () => {
                                 disabledPrecision={typeof storesFilters?.context.precision === 'number' || false}
                                 hidden={
                                     assetsMetadata.context.uiSchema[
-                                    key as keyof AssetsMetadata['context']['schema']['properties']
+                                        key as keyof AssetsMetadata['context']['schema']['properties']
                                     ]['ui:widget'] === 'hidden'
                                 }
                                 type={
                                     assetsMetadata.context.uiSchema[
-                                    key as keyof AssetsMetadata['context']['schema']['properties']
+                                        key as keyof AssetsMetadata['context']['schema']['properties']
                                     ]['ui:widget']
                                 }
                                 options={
@@ -465,7 +463,7 @@ const Filters = () => {
                                             value: {
                                                 [key]: (
                                                     values.context[
-                                                    key as keyof AssetsMetadata['context']['schema']['properties']
+                                                        key as keyof AssetsMetadata['context']['schema']['properties']
                                                     ] as string[]
                                                 ).filter((itemColor) => itemColor !== color),
                                             },
@@ -492,7 +490,7 @@ const Filters = () => {
                                 loadOptionsEndpoint={
                                     (
                                         assetsMetadata.taxonomy.uiSchema[
-                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                            key as keyof AssetsMetadata['taxonomy']['schema']['properties']
                                         ] as any
                                     )['ui:options']?.loadOptionsEndpoint
                                 }
@@ -502,12 +500,12 @@ const Filters = () => {
                                 tags={tags || []}
                                 hidden={
                                     assetsMetadata.taxonomy.uiSchema[
-                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
                                     ]['ui:widget'] === 'hidden'
                                 }
                                 type={
                                     assetsMetadata.taxonomy.uiSchema[
-                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
                                     ]['ui:widget']
                                 }
                                 options={
@@ -535,7 +533,7 @@ const Filters = () => {
                                             value: {
                                                 [key]: (
                                                     values.taxonomy[
-                                                    key as keyof AssetsMetadata['taxonomy']['schema']['properties']
+                                                        key as keyof AssetsMetadata['taxonomy']['schema']['properties']
                                                     ] as string[]
                                                 ).filter((itemColor) => itemColor !== color),
                                             },
@@ -561,7 +559,7 @@ const Filters = () => {
                                 loadOptionsEndpoint={
                                     (
                                         assetsMetadata.creators.uiSchema.items[
-                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                            key as keyof AssetsMetadata['creators']['schema']['items']['properties']
                                         ] as any
                                     )['ui:options']?.loadOptionsEndpoint
                                 }
@@ -570,12 +568,12 @@ const Filters = () => {
                                 values={values}
                                 hidden={
                                     assetsMetadata.creators.uiSchema.items[
-                                    key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
                                     ]['ui:widget'] === 'hidden'
                                 }
                                 type={
                                     assetsMetadata.creators.uiSchema.items[
-                                    key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
                                     ]['ui:widget']
                                 }
                                 options={(value as NationalityOrResidenceOrCountry)?.enum || []}
@@ -597,7 +595,7 @@ const Filters = () => {
                                             value: {
                                                 [key]: (
                                                     values.creators[
-                                                    key as keyof AssetsMetadata['creators']['schema']['items']['properties']
+                                                        key as keyof AssetsMetadata['creators']['schema']['items']['properties']
                                                     ] as string[]
                                                 ).filter((itemColor) => itemColor !== color),
                                             },
