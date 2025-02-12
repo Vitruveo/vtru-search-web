@@ -44,6 +44,7 @@ const Store = () => {
     return (
         <PageContainer>
             <Header
+                isStore
                 isPersonalizedStore={!!isValidSubdomain && !!subdomain}
                 rssOptions={[
                     { flagname: 'JSON', value: 'stacks/json' },

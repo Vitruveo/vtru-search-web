@@ -24,7 +24,7 @@ import {
     useMediaQuery,
 } from '@mui/material';
 import { Theme, useTheme } from '@mui/material/styles';
-import { IconCopy, IconFilter } from '@tabler/icons-react';
+import { IconArrowBarToLeft, IconArrowBarToRight, IconCopy, IconFilter } from '@tabler/icons-react';
 import Image from 'next/image';
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
 import Select, { SingleValue } from 'react-select';
@@ -97,6 +97,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     const slideshowTitle = useSelector((state) => state.filters.slideshow.title);
     const tabNavigation = useSelector((state) => state.filters.tabNavigation);
     const isHidden = useSelector((state) => state.customizer.hidden);
+    const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
 
     const optionsForSelect = useMemo(() => {
         const options: { value: number; label: number }[] = [];
@@ -319,6 +320,15 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
     return (
         <Box>
+            <Box>
+                <IconButton
+                    sx={{ padding: 0, color: theme.palette.grey[300], paddingLeft: '18px' }}
+                    aria-label="menu"
+                    onClick={onMenuClick}
+                >
+                    {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
+                </IconButton>
+            </Box>
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
 
             <DrawerStack drawerStackOpen={drawerStack.isActive} onClose={drawerStack.deactivate} />
@@ -330,8 +340,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     alignItems={smUp ? 'center' : 'flex-end'}
                     justifyContent={'space-between'}
                     mb={4}
-                    mt={2}
-                    paddingInline={3}
+                    paddingInline={2}
                 >
                     <Box display="flex" alignItems={'center'} gap={1}>
                         {hasCurated ||

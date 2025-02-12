@@ -6,10 +6,15 @@ import AssetsFilter from './AssetsFilter';
 import { useSelector } from '@/store/hooks';
 import { useDispatch } from 'react-redux';
 import { actions } from '@/features/layout';
+import { Box, IconButton } from '@mui/material';
+import { actions as layoutActions } from '@/features/layout';
+import { IconArrowBarToLeft, IconArrowBarToRight } from '@tabler/icons-react';
+import { useTheme } from '@mui/material/styles';
 
 const drawerWidth = 300;
 
 const AssetsSidebar = () => {
+    const themeStyle = useTheme();
     const dispatch = useDispatch();
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
@@ -24,6 +29,8 @@ const AssetsSidebar = () => {
     }, [lgUp]);
 
     if (isHiddenFilter) return null;
+
+    const onMenuClick = () => dispatch(layoutActions.toggleSidebar());
 
     return (
         <Drawer

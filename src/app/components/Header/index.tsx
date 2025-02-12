@@ -19,12 +19,19 @@ interface Props {
         flagname: string;
         value: string;
     }[];
+    isStore?: boolean;
     hasSettings?: boolean;
     isPersonalizedStore?: boolean;
     showProjects?: boolean;
 }
 
-const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false, showProjects = true }: Props) => {
+const Header = ({
+    rssOptions,
+    isStore,
+    hasSettings = true,
+    isPersonalizedStore = false,
+    showProjects = true,
+}: Props) => {
     const dispatch = useDispatch();
     const themeStyle = useTheme();
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
@@ -38,6 +45,7 @@ const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false, s
     const paused = useSelector((state) => state.assets.paused);
     const isHidden = useSelector((state) => state.customizer.hidden?.header);
     const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
+    const storesName = useSelector((state) => state.stores.currentDomain?.organization?.name);
     if (isHidden) return null;
 
     const AppBarStyled = styled(AppBar)(({ theme }) => ({
@@ -103,6 +111,7 @@ const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false, s
                         >
                             <Logo isPersonalizedStore={isPersonalizedStore} />
                         </Box>
+
                         {showProjects && <AllProjectsMenu />}
                     </Box>
                 ) : (
@@ -111,11 +120,16 @@ const Header = ({ rssOptions, hasSettings = true, isPersonalizedStore = false, s
                     </Box>
                 )}
 
-                <Box paddingInline={8}>
-                    <IconButton sx={{ color: themeStyle.palette.grey[300] }} aria-label="menu" onClick={onMenuClick}>
-                        {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
-                    </IconButton>
-                </Box>
+                <Typography
+                    sx={{
+                        paddingInline: isStore ? 4.5 : 8,
+                        color: themeStyle.palette.text.primary,
+                        fontSize: 50,
+                        display: 'block',
+                    }}
+                >
+                    {storesName}
+                </Typography>
 
                 <Box flexGrow={1} display="flex" alignItems="center" justifyContent="center">
                     {paused && <Typography variant="h3">⚠️ Store currently undergoing maintenance</Typography>}

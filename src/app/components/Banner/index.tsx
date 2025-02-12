@@ -13,7 +13,6 @@ interface Props {
 const Banner = ({ data }: Props) => {
     return (
         <Box display="flex" flexDirection="column" gap={4} mb={6}>
-            <Typography fontSize={'3rem'}>{data.name}</Typography>
             {data.path && (
                 <Box width="98.8%" position="relative" height={500}>
                     <Image
