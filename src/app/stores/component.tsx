@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import PageContainer from '../components/Container/PageContainer';
 import Header from '../components/Header';
 import Stores from '../components/Stores/storesGrid/storesList';
-import { useCallback, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { SingleValue } from 'react-select';
 import { actions } from '@/features/stores';
 
@@ -11,6 +11,7 @@ const Component = () => {
     const data = useSelector((state) => state.stores.paginated);
 
     const [selectValues, setSelectValues] = useState({
+        search: '',
         limit: { value: '25', label: '25' },
         page: { value: '1', label: '1' },
         sort: { value: 'newToOld', label: 'latest' },
@@ -39,6 +40,11 @@ const Component = () => {
         setSelectValues((prev) => ({ ...prev, sort: { value: e!.value, label: e!.label } }));
     }, []);
 
+    const onChangeSearch = useCallback((e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        dispatch(actions.setSearch(e!.target.value));
+        setSelectValues((prev) => ({ ...prev, search: e!.target.value }));
+    }, []);
+
     return (
         <PageContainer title="Stores">
             <>
@@ -55,7 +61,7 @@ const Component = () => {
                         selectValues,
                         optionsForSelectPage,
                     }}
-                    actions={{ onChangeSort, onChangePage, onChangeLimit }}
+                    actions={{ onChangeSort, onChangeSearch, onChangePage, onChangeLimit }}
                 />
             </>
         </PageContainer>

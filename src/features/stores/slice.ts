@@ -10,6 +10,7 @@ export const initialState: StoresState = {
         total: 0,
         totalPage: 0,
     },
+    search: '',
     sort: 'newToOld',
     loading: false,
     error: null,
@@ -47,6 +48,9 @@ export const storesSlice = createSlice({
         },
         setSort: (state, action: PayloadAction<string>) => {
             state.sort = action.payload;
+        },
+        setSearch: (state, action: PayloadAction<string>) => {
+            state.search = action.payload;
         },
     },
 });

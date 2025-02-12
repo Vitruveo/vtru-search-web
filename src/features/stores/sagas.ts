@@ -22,6 +22,7 @@ function* getStores({ payload }: PayloadAction<{ subdomain: string }>) {
 function* getStoresList() {
     yield put(actions.startLoading());
     try {
+        const search: string = yield select((state) => state.stores.search);
         const page: number = yield select((state) => state.stores.paginated.page);
         const limit: number = yield select((state) => state.stores.paginated.limit);
         const sort: string = yield select((state) => state.stores.sort);
@@ -29,6 +30,7 @@ function* getStoresList() {
         const URL_STORES = `${API_BASE_URL}/stores/public`;
         const response: AxiosResponse<APIResponse<GetStoresResponse>> = yield call(axios.get, URL_STORES, {
             params: {
+                search,
                 page,
                 limit,
                 sort,
@@ -58,5 +60,6 @@ export function* storesSagas() {
         takeEvery(actions.setPage.type, getStoresList),
         takeEvery(actions.setSort.type, getStoresList),
         takeEvery(actions.setLimit.type, getStoresList),
+        takeEvery(actions.setSearch.type, getStoresList),
     ]);
 }

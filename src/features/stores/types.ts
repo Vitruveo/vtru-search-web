@@ -64,6 +64,7 @@ export interface StoresState {
     loading: boolean;
     error: string | null;
     sort: string;
+    search: string;
     currentDomain: Stores;
     paginated: {
         list: Stores[];

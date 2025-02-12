@@ -1,10 +1,20 @@
-import { Box, Button, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
+import {
+    Box,
+    Button,
+    InputAdornment,
+    OutlinedInput,
+    Pagination,
+    Theme,
+    Typography,
+    useMediaQuery,
+} from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useEffect, useRef } from 'react';
+import { ChangeEventHandler, useEffect, useRef, useState } from 'react';
 import Select, { SingleValue } from 'react-select';
 import '../../Assets/assetsGrid/AssetScroll.css';
 import { GetStoresResponse, Stores as StoresType } from '@/features/stores/types';
 import { StoresCardContainer, StoresItem } from './storesItem';
+import { IconSearch } from '@tabler/icons-react';
 
 interface StacksProps {
     data: {
@@ -13,6 +23,7 @@ interface StacksProps {
             limit: { value: string; label: string };
             page: { value: string; label: string };
             sort: { value: string; label: string };
+            search: string;
         };
         optionsForSelectPage: { value: string; label: string }[];
     };
@@ -35,10 +46,15 @@ interface StacksProps {
                 label: string;
             }>
         ) => void;
+        onChangeSearch: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
     };
 }
 
 const Stores = ({ data, actions }: StacksProps) => {
+    const [searchText, setSearchText] = useState(data.selectValues.search);
+
+    const searchTimeout = useRef<NodeJS.Timeout | null>(null);
+
     const theme = useTheme();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const mdUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('md'));
@@ -57,6 +73,19 @@ const Stores = ({ data, actions }: StacksProps) => {
         }
     };
 
+    const handleSearchChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (event) => {
+        const newValue = event.target.value;
+        setSearchText(newValue);
+
+        if (searchTimeout.current) {
+            clearTimeout(searchTimeout.current);
+        }
+
+        searchTimeout.current = setTimeout(() => {
+            actions.onChangeSearch(event);
+        }, 500);
+    };
+
     useEffect(() => {
         handleScrollToTop();
     }, [stores.page]);
@@ -73,7 +102,25 @@ const Stores = ({ data, actions }: StacksProps) => {
             >
                 <Box display={mdUp ? 'flex' : 'none'} justifyContent="space-between" width="100%" my={2} mb={4}>
                     <Box display={'flex'} gap={1} alignItems={'center'} paddingInline={'24px'}>
-                        <Typography variant="h5">Sort:</Typography>
+                        <OutlinedInput
+                            id="outlined-search"
+                            placeholder="Search Store"
+                            size="small"
+                            type="search"
+                            color="primary"
+                            notched
+                            startAdornment={
+                                <InputAdornment position="start">
+                                    <IconSearch size="14" />
+                                </InputAdornment>
+                            }
+                            fullWidth
+                            value={searchText}
+                            onChange={handleSearchChange}
+                        />
+                        <Typography marginLeft={2.9} variant="h5">
+                            Sort:
+                        </Typography>
                         <Select
                             placeholder="Sort"
                             options={[
