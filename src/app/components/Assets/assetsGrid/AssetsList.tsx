@@ -98,6 +98,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     const tabNavigation = useSelector((state) => state.filters.tabNavigation);
     const isHidden = useSelector((state) => state.customizer.hidden);
     const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
+    const isHiddenFilter = useSelector((state) => state.customizer.hidden?.filter);
 
     const optionsForSelect = useMemo(() => {
         const options: { value: number; label: number }[] = [];
@@ -320,15 +321,19 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
     return (
         <Box>
-            <Box>
-                <IconButton
-                    sx={{ padding: 0, color: theme.palette.grey[300], paddingLeft: '18px' }}
-                    aria-label="menu"
-                    onClick={onMenuClick}
-                >
-                    {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
-                </IconButton>
-            </Box>
+            {!isHiddenFilter && (
+                <Box>
+                    <IconButton
+                        size="small"
+                        sx={{ padding: 0, color: theme.palette.grey[300], paddingLeft: '18.5px' }}
+                        aria-label="menu"
+                        onClick={onMenuClick}
+                    >
+                        {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
+                    </IconButton>
+                </Box>
+            )}
+
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
 
             <DrawerStack drawerStackOpen={drawerStack.isActive} onClose={drawerStack.deactivate} />
@@ -424,8 +429,8 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                         isHidden?.order && isHidden?.header
                             ? '105vh'
                             : isHidden?.order || isHidden?.header
-                                ? '95vh'
-                                : '85vh',
+                              ? '95vh'
+                              : '85vh',
                     justifyContent: 'flex-end',
                 }}
             >
