@@ -16,6 +16,7 @@ import { IconX } from '@tabler/icons-react';
 import ConnectWallet from '../ConnectWallet';
 import { defaultVusdAmount } from './modalHOC';
 import { formatPriceVUSD } from '@/utils/assets';
+import { useTheme } from '@mui/material/styles';
 
 interface Props {
     isOpen: boolean;
@@ -48,6 +49,7 @@ interface Props {
 }
 
 const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
+    const theme = useTheme();
     const {
         balance,
         balanceVUSD,
@@ -63,9 +65,9 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
     } = data;
     const { handleChangeQuantity, handleBlurQuantity, handleRadioChange, handleBuy } = actions;
 
-    const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
-    const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
-    const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
+    const lgUp = useMediaQuery((mq: Theme) => mq.breakpoints.up('lg'));
+    const mdUp = useMediaQuery((mq: Theme) => mq.breakpoints.up('md'));
+    const smUp = useMediaQuery((mq: Theme) => mq.breakpoints.up('sm'));
 
     const buttonMessage = () => {
         if (!isConnected) return 'Connect Wallet';
@@ -229,8 +231,14 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                     <Box display={'flex'} justifyContent={'center'}>
                         <Button
                             variant="contained"
-                            color="primary"
-                            sx={{ fontSize: '2rem', width: lgUp ? '25.5%' : mdUp ? '52%' : '100%' }}
+                            sx={{
+                                fontSize: '2rem',
+                                width: lgUp ? '25.5%' : mdUp ? '52%' : '100%',
+                                background: theme.palette.primary.main,
+                                '&:hover': {
+                                    background: theme.palette.primary.main,
+                                },
+                            }}
                             disabled={disabled}
                             onClick={handleBuy}
                         >
