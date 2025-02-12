@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import { Button, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import styles from './index.module.css';
 
 type ActionButtonProps = {
@@ -20,6 +21,7 @@ export default function ActionButton({
     media,
     selected,
 }: ActionButtonProps): React.JSX.Element {
+    const theme = useTheme();
     const isVideo = media.match(/\.(mp4|webm|ogg)$/) != null;
     const isMobile = useMediaQuery('(max-width: 900px)');
 
@@ -42,7 +44,7 @@ export default function ActionButton({
                     style={{
                         minWidth: isMobile ? '80px' : '100px',
                         height: isMobile ? '80px' : 100,
-                        border: selected ? '4px solid #FF0066' : 'none',
+                        border: selected ? `4px solid ${theme.palette.primary.main}` : 'none',
                         objectFit: 'cover',
                         borderRadius: 8,
                     }}
@@ -83,7 +85,7 @@ export default function ActionButton({
                     height: isMobile ? '80px' : 100,
                     borderRadius: 8,
                     objectFit: 'cover',
-                    border: selected ? '4px solid #FF0066' : 'none',
+                    border: selected ? `4px solid ${theme.palette.primary.main}` : 'none',
                 }}
             />
             <div className={styles.highlight}>{title}</div>

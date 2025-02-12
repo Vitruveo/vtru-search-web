@@ -1,3 +1,4 @@
+import { useParams } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppBar, Box, IconButton, Menu, MenuItem, Stack, Toolbar, Typography } from '@mui/material';
@@ -33,6 +34,7 @@ const Header = ({
     showProjects = true,
 }: Props) => {
     const dispatch = useDispatch();
+    const params = useParams();
     const themeStyle = useTheme();
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));

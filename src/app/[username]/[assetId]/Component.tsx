@@ -51,6 +51,7 @@ const Store = () => {
                     { flagname: 'XML', value: 'stacks/xml' },
                 ]}
                 hasSettings={false}
+                showProjects={false}
             />
             <Box display={'flex'} justifyContent={'center'} overflow={'auto'}>
                 <Box height={'100vh'} maxWidth={1300}>

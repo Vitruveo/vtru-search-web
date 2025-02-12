@@ -88,7 +88,18 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                         {assetView?.assetMetadata?.context?.formData?.description}
                     </Typography>
                 </Box>
-                <Button disabled={paused || !creator.username} fullWidth variant="contained" onClick={handleClickView}>
+                <Button
+                    disabled={paused || !creator.username}
+                    fullWidth
+                    variant="contained"
+                    onClick={handleClickView}
+                    sx={{
+                        background: theme.palette.primary.main,
+                        '&:hover': {
+                            background: theme.palette.primary.main,
+                        },
+                    }}
+                >
                     {language['search.assetList.visualization.view'] as string}
                 </Button>
             </Box>
