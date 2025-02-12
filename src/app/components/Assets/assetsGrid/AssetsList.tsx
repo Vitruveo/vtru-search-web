@@ -35,8 +35,8 @@ import NumberOfFilters from '../components/numberOfFilters';
 import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
 import { AssetItem } from './AssetItem';
 import './AssetScroll.css';
-import Username from '../../Username';
 import Banner from '../../Banner';
+import CreatorSection from '../components/CreatorSection';
 
 interface Props {
     isBlockLoader: boolean;
@@ -329,67 +329,17 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     flexDirection={smUp ? 'row' : 'column'}
                     alignItems={smUp ? 'center' : 'flex-end'}
                     justifyContent={'space-between'}
-                    mb={4}
+                    mb={3}
                     mt={2}
                     paddingInline={3}
                 >
-                    <Box display="flex" alignItems={'center'} gap={1}>
-                        {hasCurated ||
-                            !hasIncludesGroupActive ||
-                            tabNavigation.assets?.length > 0 ||
-                            tabNavigation.artists?.length > 0 ? (
-                            <Box display="flex" alignItems="flex-end" gap={2}>
-                                {(hasCurated ||
-                                    tabNavigation.assets?.length > 0 ||
-                                    tabNavigation.artists?.length > 0) && (
-                                        <Typography variant="h4">
-                                            {gridTitle ||
-                                                videoTitle ||
-                                                slideshowTitle ||
-                                                tabNavigation.title ||
-                                                'Curated arts'}
-                                        </Typography>
-                                    )}
-                                {hasIncludesGroup.name && (
-                                    <Username
-                                        username={assets[0]?.creator.username}
-                                        vaultAdress={assets[0]?.vault?.vaultAddress}
-                                        size="large"
-                                    />
-                                )}
-                                {(hasCurated ||
-                                    hasIncludesGroup.name ||
-                                    creatorId ||
-                                    tabNavigation.assets?.length > 0 ||
-                                    tabNavigation.artists?.length > 0) && (
-                                        <button
-                                            style={{
-                                                border: 'none',
-                                                background: 'none',
-                                                cursor: 'pointer',
-                                                padding: 0,
-                                                width: '100%',
-                                            }}
-                                            onClick={returnToPageOne}
-                                        >
-                                            <Typography
-                                                variant="h6"
-                                                color="primary"
-                                                sx={{
-                                                    textDecoration: 'underline',
-                                                    cursor: 'pointer',
-                                                    fontSize: 14,
-                                                }}
-                                            >
-                                                {language['search.assetList.resetsearch'] as string}
-                                            </Typography>
-                                        </button>
-                                    )}
-                            </Box>
-                        ) : (
-                            <Box />
-                        )}
-                    </Box>
+                    {!isBlockLoader && (
+                        <CreatorSection
+                            hasCurated={hasCurated}
+                            creatorId={creatorId}
+                            returnToPageOne={returnToPageOne}
+                        />
+                    )}
                     <Box
                         display={'flex'}
                         alignItems={smUp ? 'center' : 'flex-end'}
@@ -457,7 +407,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                 container
                 spacing={3}
                 padding={3}
-                pt={0}
+                pt={2}
                 sx={{
                     overflow: 'auto',
                     maxHeight:
@@ -622,6 +572,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                             ) : (
                                 <Box />
                             )}
+
                             <Box
                                 display={smUp ? 'flex' : 'none'}
                                 alignItems={'center'}
@@ -735,7 +686,17 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     )}
                 </Grid>
 
-                <Grid item xs={12} mr={4} mb={4}></Grid>
+                {isBlockLoader && (
+                    <Box display={'flex'} width={'100%'} justifyContent={'start'} paddingInline={3} paddingBlock={2}>
+                        <CreatorSection
+                            hasCurated={hasCurated}
+                            creatorId={creatorId}
+                            returnToPageOne={returnToPageOne}
+                        />
+                    </Box>
+                )}
+
+                {!isBlockLoader && <Grid item xs={12} mr={4} mb={4}></Grid>}
 
                 {!isHidden?.assets && (
                     <Grid
