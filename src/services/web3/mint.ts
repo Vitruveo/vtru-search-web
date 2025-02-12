@@ -13,7 +13,7 @@ import type {
 } from './types';
 import schema from './contracts.json';
 import { WEB3_NETWORK_RPC_ADDRESS, WEB3_NETWORK_TYPE } from '@/constants/web3';
-import { BATCH_BASE_URL } from '@/constants/api';
+import { API3_BASE_URL } from '@/constants/api';
 import { getPriceWithMarkup } from '@/utils/assets';
 
 const isTestNet = WEB3_NETWORK_TYPE === 'testnet';
@@ -232,10 +232,18 @@ export const issueLicenseUsingCredits = async ({
     const signedMessage = await signer.signTypedData(domain, types, tx);
 
     // Send the signed message to backend
-    const response = await fetch(`${BATCH_BASE_URL}/issueLicense`, {
+    const response = await fetch(`${API3_BASE_URL}/mint`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ signer: signer.address, domain, types, tx, signedMessage, stackId }),
+        body: JSON.stringify({
+            buyerSignerAddress: signer.address,
+            domain,
+            types,
+            tx,
+            signedMessage,
+            stackId,
+            customStoreId: null,
+        }),
     });
 
     const responseData = await response.json();

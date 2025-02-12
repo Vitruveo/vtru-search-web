@@ -3,7 +3,7 @@ import { all, call, put, takeEvery, select, debounce, takeLatest } from 'redux-s
 import { PayloadAction } from '@reduxjs/toolkit';
 import { confetti } from '@tsparticles/confetti';
 
-import { API_BASE_URL, BATCH_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, API3_BASE_URL } from '@/constants/api';
 import type { FilterSliceState } from '../filters/types';
 import type {
     BuidlQuery,
@@ -563,10 +563,7 @@ function* getTabNavigation(action: PayloadAction<string>) {
 
 function* setup() {
     try {
-        const response: AxiosResponse<APIResponse<boolean>> = yield call(
-            axios.get,
-            `${BATCH_BASE_URL}/issueLicense/status`
-        );
+        const response: AxiosResponse<APIResponse<boolean>> = yield call(axios.get, `${API3_BASE_URL}/mint/status`);
 
         yield put(actions.setPaused(response.data.data));
     } catch (error) {
