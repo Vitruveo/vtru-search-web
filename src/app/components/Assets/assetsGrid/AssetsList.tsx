@@ -925,6 +925,9 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                         '& .MuiPaginationItem-root': {
                                             '&.Mui-selected': {
                                                 backgroundColor: theme.palette.primary.main,
+                                                '&:hover': {
+                                                    backgroundColor: theme.palette.primary.main,
+                                                },
                                             },
                                             '&:focus': {
                                                 backgroundColor: theme.palette.primary.main,
