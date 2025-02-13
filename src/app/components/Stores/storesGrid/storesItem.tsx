@@ -1,6 +1,6 @@
 import React from 'react';
 import { ShowAnimation } from '@/animations';
-import { SEARCH_BASE_URL } from '@/constants/api';
+import { NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
 import { STORES_STORAGE_URL } from '@/constants/aws';
 import { Box, CardContent, Grid, IconButton, Stack as MuiStack, Tooltip, Typography } from '@mui/material';
 import { MediaRenderer } from '../../Assets/components/MediaRenderer';
@@ -17,6 +17,11 @@ const StoresItemMain = ({ store }: Props) => {
     const theme = useTheme();
 
     const handleCardClick = () => {
+        if (NODE_ENV === 'production') {
+            window.open(`https://${store.organization?.url}.xibit.live`, '_blank');
+            return;
+        }
+
         const parts = SEARCH_BASE_URL.split('//');
         window.open(`${parts[0]}//${store.organization?.url}.${parts[1]}`, '_blank');
     };
