@@ -11,7 +11,7 @@ import { IconX } from '@tabler/icons-react';
 import { MediaRenderStore } from '../MediaRenderStore';
 import { User } from '../User';
 
-interface LicenseModalPropsType extends PanelMintProps { }
+interface LicenseModalPropsType extends PanelMintProps {}
 
 const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: LicenseModalPropsType) => {
     const {
@@ -98,7 +98,13 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                 {isConnected ? (
                     <Box>
                         <Box display="flex" alignItems="center" gap={4} marginTop={5}>
-                            <MediaRenderStore media={image} width={mediaWidth} height={mediaHeight} alt="original" />
+                            <MediaRenderStore
+                                removeMargin
+                                media={image}
+                                width={mediaWidth}
+                                height={mediaHeight}
+                                alt="original"
+                            />
                             <Box>
                                 <Box
                                     position="relative"
