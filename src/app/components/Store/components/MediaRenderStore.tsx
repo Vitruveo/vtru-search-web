@@ -6,7 +6,7 @@ interface MediaPreviewProps {
     alt: string;
     width: number | string;
     height: number;
-    removeMargin: boolean;
+    removeMargin?: boolean;
     onClick?: () => void;
 }
 
