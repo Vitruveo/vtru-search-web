@@ -52,8 +52,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     const [state, dispatchAction] = useReducer(reducer, initialState);
     const { lastAssets, lastAssetsLoading } = useSelector((reduxState) => reduxState.store);
     const assetLicenses = useAssetLicenses(asset._id);
-    const currentStore = useSelector((stateRx) => stateRx.stores.currentDomain);
-    const { organization } = currentStore;
+    const stores = useSelector((stateRx) => stateRx.stores.currentDomain);
 
     useEffect(() => {
         if (coockieGrid) {
@@ -119,7 +118,11 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
                 const feeBasisPoints = await getPlatformFeeBasisPoints({ client: client }); // 200
                 const platformFeeValue = (assetLicenses.credits * feeBasisPoints) / 10_000; // 300 cents
                 const totalPlatformFee =
-                    getPriceWithMarkup({ organization, assetPrice: assetLicenses.credits }) + platformFeeValue; // 15300 cents
+                    getPriceWithMarkup({
+                        stores,
+                        assetPrice: assetLicenses.credits,
+                        assetCreatedBy: asset?.framework?.createdBy,
+                    }) + platformFeeValue; // 15300 cents
                 const curatorFeeValue = state.feesCurator.value * 100; // 100 cents
 
                 dispatchAction({
@@ -133,7 +136,12 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
 
                 dispatchAction({
                     type: TypeActions.SET_CREDITS,
-                    payload: getPriceWithMarkup({ organization, assetPrice: assetLicenses.credits }) / 100,
+                    payload:
+                        getPriceWithMarkup({
+                            stores,
+                            assetPrice: assetLicenses.credits,
+                            assetCreatedBy: asset?.framework?.createdBy,
+                        }) / 100,
                 });
 
                 dispatchAction({
@@ -189,7 +197,11 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
             return getBuyCapabilityInCents({
                 wallet: address!,
                 vault: asset.vault.vaultAddress!,
-                price: getPriceWithMarkup({ assetPrice: assetLicenses.credits, organization }),
+                price: getPriceWithMarkup({
+                    assetPrice: assetLicenses.credits,
+                    stores,
+                    assetCreatedBy: asset?.framework?.createdBy,
+                }),
                 fee: platformFeeValue,
                 client: client!,
                 curatorFee: state.feesCurator.value * 100,
@@ -277,7 +289,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
             client: client!,
             stackId: coockieGrid || coockieVideo || '',
             curatorFee: state.feesCurator.value,
-            currentStore,
+            currentStore: stores,
         })
             .then((response) => {
                 dispatchAction({

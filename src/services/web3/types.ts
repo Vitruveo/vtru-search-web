@@ -16,6 +16,7 @@ export interface IssueLicenseUsingCreditsParams {
     stackId: string | null;
     curatorFee: number;
     currentStore?: Stores;
+    assetCreatedBy: string | null;
 }
 
 export interface GetAvailableCreditsParams {

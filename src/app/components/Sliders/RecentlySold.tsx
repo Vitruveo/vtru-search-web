@@ -14,7 +14,7 @@ import { useDomainContext } from '@/app/context/domain';
 
 function RecentlySoldSlider() {
     const { subdomain } = useDomainContext();
-    const organization = useSelector((state) => state.stores.currentDomain.organization);
+    const stores = useSelector((state) => state.stores.currentDomain);
     const assets = useSelector((state) => state.assets.lastSold);
     const theme = useTheme();
 
@@ -33,7 +33,13 @@ function RecentlySoldSlider() {
                     const assetTitle = asset?.title || 'No Title';
                     const creatorName = asset?.username || 'No creator';
                     const vaultAddress = asset?.vault?.vaultAddress || '';
-                    const price = formatPrice({ price: getPriceWithMarkup({ assetPrice: asset.price, organization }) });
+                    const price = formatPrice({
+                        price: getPriceWithMarkup({
+                            assetPrice: asset.price,
+                            stores,
+                            assetCreatedBy: asset?.framework?.createdBy,
+                        }),
+                    });
 
                     const nextAssetExists = index + 1 < assets.length;
 

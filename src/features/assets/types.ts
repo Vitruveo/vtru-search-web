@@ -152,6 +152,12 @@ export interface SpotlightAsset {
         transactionhash: string | null;
         vaultAddress: string | null;
     };
+    framework: {
+        createdAt: Date | null;
+        updatedAt: Date | null;
+        createdBy: string | null;
+        updatedBy: string | null;
+    };
 }
 
 export type ResponseAssetsSpotlight = SpotlightAsset[];
@@ -165,6 +171,12 @@ export interface LastSoldAsset {
     vault: {
         transactionhash: string | null;
         vaultAddress: string | null;
+    };
+    framework: {
+        createdAt: Date | null;
+        updatedAt: Date | null;
+        createdBy: string | null;
+        updatedBy: string | null;
     };
 }
 

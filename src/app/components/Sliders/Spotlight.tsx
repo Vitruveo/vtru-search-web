@@ -14,7 +14,7 @@ import { useDomainContext } from '@/app/context/domain';
 
 function SpotlightSlider() {
     const { subdomain } = useDomainContext();
-    const currentDomain = useSelector((state) => state.stores.currentDomain);
+    const stores = useSelector((state) => state.stores.currentDomain);
     const assets = useSelector((state) => state.assets.spotlight);
     const theme = useTheme();
 
@@ -37,7 +37,8 @@ function SpotlightSlider() {
                     const price = formatPrice({
                         price: getPriceWithMarkup({
                             assetPrice: asset.price,
-                            organization: currentDomain?.organization,
+                            stores,
+                            assetCreatedBy: asset?.framework?.createdBy,
                         }),
                     });
 

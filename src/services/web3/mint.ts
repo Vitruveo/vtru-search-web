@@ -171,6 +171,7 @@ export const issueLicenseUsingCredits = async ({
     stackId,
     curatorFee,
     currentStore,
+    assetCreatedBy,
 }: IssueLicenseUsingCreditsParams) => {
     const signer = clientToSigner(client);
 
@@ -206,7 +207,7 @@ export const issueLicenseUsingCredits = async ({
 
     const platformFeeValue = (licenseCost * platformFeeBasisPointsFormatted) / 10_000;
     const totalPlatformFee =
-        getPriceWithMarkup({ assetPrice: licenseCost, organization: currentStore?.organization }) + platformFeeValue;
+        getPriceWithMarkup({ assetPrice: licenseCost, stores: currentStore, assetCreatedBy }) + platformFeeValue;
 
     const tx = {
         name: 'License Registry',
