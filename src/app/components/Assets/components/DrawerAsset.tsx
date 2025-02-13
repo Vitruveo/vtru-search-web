@@ -4,11 +4,10 @@ import cookie from 'cookiejs';
 import { Theme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
 import { ASSET_STORAGE_URL, GENERAL_STORAGE_URL } from '@/constants/aws';
-import { SEARCH_BASE_URL } from '@/constants/api';
+import { NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
 import { useSelector } from '@/store/hooks';
 import { MediaRenderer } from './MediaRenderer';
 import Avatar from './Avatar';
-import Link from 'next/link';
 import { useTheme } from '@mui/material/styles';
 import Username from '../../Username';
 import { useDomainContext } from '@/app/context/domain';
@@ -48,7 +47,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
             cookie.remove('video');
             document.cookie = 'video=; path=/; domain=' + domain + '; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         }
-        const url = new URL(SEARCH_BASE_URL);
+        const url = new URL(subdomain && NODE_ENV === 'production' ? 'https://xibit.live' : SEARCH_BASE_URL);
         if (subdomain) {
             url.hostname = `${subdomain}.${url.hostname}`;
         }
