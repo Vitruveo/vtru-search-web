@@ -1,12 +1,10 @@
-import { useParams } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppBar, Box, IconButton, Menu, MenuItem, Stack, Toolbar, Typography } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { IconMoon, IconSun, IconMenu2, IconArrowBarToLeft, IconArrowBarToRight } from '@tabler/icons-react';
+import { IconMoon, IconSun, IconMenu2 } from '@tabler/icons-react';
 import { customizerActionsCreators } from '@/features/customizer';
-import { actions as layoutActions } from '@/features/layout';
 import { useSelector } from '@/store/hooks';
 import AllProjectsMenu from '../AllProjectsMenu';
 import { Language } from '../Language';
@@ -34,7 +32,6 @@ const Header = ({
     showProjects = true,
 }: Props) => {
     const dispatch = useDispatch();
-    const params = useParams();
     const themeStyle = useTheme();
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
@@ -46,7 +43,6 @@ const Header = ({
     const customizer = useSelector((state) => state.customizer);
     const paused = useSelector((state) => state.assets.paused);
     const isHidden = useSelector((state) => state.customizer.hidden?.header);
-    const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
     const storesName = useSelector((state) => state.stores.currentDomain?.organization?.name);
     if (isHidden) return null;
 
@@ -97,7 +93,6 @@ const Header = ({
             languageRef.current.handleClick(event);
         }
     };
-    const onMenuClick = () => dispatch(layoutActions.toggleSidebar());
 
     return (
         <AppBarStyled position="sticky" color="default" elevation={0}>
