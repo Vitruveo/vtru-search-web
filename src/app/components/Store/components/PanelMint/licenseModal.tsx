@@ -4,14 +4,13 @@ import { LoadingAvailableLincenses } from '../LoadingAvailableLicenses';
 import Licenses from '../Licenses';
 import PanelMintInfo from '../PanelMintInfo';
 import Fees from '../Fees';
-import TotalPrice from '../TotalPrice';
 import { PanelMintProps } from './component';
 import ConnectWallet from '@/app/components/ConnectWallet';
 import { IconX } from '@tabler/icons-react';
 import { MediaRenderStore } from '../MediaRenderStore';
 import { User } from '../User';
 
-interface LicenseModalPropsType extends PanelMintProps { }
+interface LicenseModalPropsType extends PanelMintProps {}
 
 const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: LicenseModalPropsType) => {
     const {
@@ -68,7 +67,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
     const mediaHeight = isPortrait ? 500 : isSquare ? 400 : 365;
 
     return (
-        <Modal open={stateModalLicense} sx={{ zIndex: 9999 }} onClose={handleCloseModalLicense}>
+        <Modal open={stateModalLicense} onClose={handleCloseModalLicense}>
             <Box
                 sx={{
                     position: 'relative',
