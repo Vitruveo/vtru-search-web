@@ -13,7 +13,7 @@ interface Props {
 const Banner = ({ data }: Props) => {
     return (
         <Box display="flex" flexDirection="column" gap={4} mb={6}>
-            {data.path && (
+            {data?.path && (
                 <Box width="98.8%" position="relative" height={500}>
                     <Image
                         src={`${STORES_STORAGE_URL}/${data.path}`}
@@ -25,7 +25,7 @@ const Banner = ({ data }: Props) => {
                     />
                 </Box>
             )}
-            <Typography fontSize={'1.4rem'}>{data.description}</Typography>
+            <Typography fontSize={'1.4rem'}>{data?.description}</Typography>
         </Box>
     );
 };

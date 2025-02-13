@@ -266,7 +266,7 @@ function* getAssetsGroupByCreator() {
                     isIncludeSold: sort.sold === 'yes' ? true : false,
                 },
                 hasBts,
-                hasNftAutoStake: selectedLicense === 'nft auto',
+                // hasNftAutoStake: selectedLicense === 'nft auto',
             }
         );
 
@@ -345,7 +345,6 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
         const price = filters.price;
         const creatorName: string = yield select((state: AppState) => state.assets.groupByCreator.name);
         const colorPrecision = filters.colorPrecision;
-
         const showAdditionalAssets = filters.showAdditionalAssets.value;
         const selectedLicense = filters.licenseChecked;
 
@@ -413,7 +412,7 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
                 isIncludeSold: sort.sold === 'yes' ? true : false,
             },
             hasBts,
-            hasNftAutoStake: selectedLicense === 'nft auto',
+            // hasNftAutoStake: selectedLicense === 'nft auto',
         });
 
         if (!creatorId && ids.length === 0 && (page === 1 || page === 0)) {

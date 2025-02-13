@@ -121,7 +121,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                 justifyContent="space-between"
                                 marginLeft={3}
                             >
-                                <Typography marginTop={3} variant="h5" sx={{ color: '#ffff' }}>
+                                <Typography marginTop={3} variant="h5" sx={{ color: theme.palette.text.primary }}>
                                     Own this artwork as a digital collectible.
                                 </Typography>
                                 <Box marginBottom={3} display="flex" alignItems="center" gap={2}>
@@ -139,7 +139,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                     >
                                         Buy with VUSD
                                     </Button>
-                                    <Typography variant="h6" sx={{ color: '#ffff' }}>
+                                    <Typography variant="h6" sx={{ color: theme.palette.text.primary }}>
                                         Requires crypto wallet.{' '}
                                         <Typography
                                             onClick={handleOpenModalBuyVUSD}
@@ -147,7 +147,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                             sx={{
                                                 textDecoration: 'underline',
                                                 cursor: 'pointer',
-                                                color: '#ffff',
+                                                color: theme.palette.text.primary,
                                             }}
                                         >
                                             Get VUSD
@@ -163,7 +163,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                             onChange={handleAccordionChange('print')}
                         >
                             <Box display="flex" alignItems="center" height={140} marginLeft={3}>
-                                <Typography variant="h6" sx={{ color: '#ffff' }}>
+                                <Typography variant="h6" sx={{ color: theme.palette.text.primary }}>
                                     Coming Soon!
                                 </Typography>
                             </Box>
