@@ -11,7 +11,7 @@ import { IconX } from '@tabler/icons-react';
 import { MediaRenderStore } from '../MediaRenderStore';
 import { User } from '../User';
 
-interface LicenseModalPropsType extends PanelMintProps {}
+interface LicenseModalPropsType extends PanelMintProps { }
 
 const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: LicenseModalPropsType) => {
     const {
@@ -106,7 +106,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                                     marginTop={0.3}
                                     height={365}
                                     width={isMobile ? '100%' : 700}
-                                    bgcolor="#9BA2A9"
+                                    bgcolor="rgba(0,0,0,0.6)"
                                     padding={3}
                                     borderRadius={0}
                                 >
