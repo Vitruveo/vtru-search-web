@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Box, Drawer, IconButton, List, ListItem, ListItemText, Theme, Typography, useMediaQuery } from '@mui/material';
 import { IconMenu2 } from '@tabler/icons-react';
 import { useSelector } from '@/store/hooks';
-import { SEARCH_BASE_URL, STUDIO_BASE_URL } from '@/constants/api';
+import { NODE_ENV, SEARCH_BASE_URL, STUDIO_BASE_URL } from '@/constants/api';
 
 const projects = [
     { title: 'SEARCH', url: `${SEARCH_BASE_URL}` },
     { title: 'STACKS', url: `${SEARCH_BASE_URL}/stacks` },
-    { title: 'STORES', url: `${SEARCH_BASE_URL}/stores` },
+    { title: 'STORES', url: `${NODE_ENV === 'production' ? 'https://xibit.live' : SEARCH_BASE_URL}/stores` },
     { title: 'STREAMS', url: '' },
     { title: 'STUDIO', url: `${STUDIO_BASE_URL}/login` },
     { title: 'ABOUT XIBIT', url: 'https://about.xibit.app', onlyMobile: true },
