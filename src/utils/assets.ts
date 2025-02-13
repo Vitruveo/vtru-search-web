@@ -90,11 +90,6 @@ export function getPriceWithMarkup({
     assetPrice: number;
     stores?: Stores;
 }) {
-    console.log({
-        assetCreatedBy,
-        storeCreatedBy: stores?.framework?.createdBy,
-        valid: assetCreatedBy === stores?.framework?.createdBy,
-    });
     return stores?.organization?.markup && assetCreatedBy !== stores.framework.createdBy
         ? assetPrice * (1 + stores.organization.markup / 100)
         : assetPrice;

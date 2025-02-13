@@ -286,6 +286,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
 
         return issueLicenseUsingCredits({
             assetKey: asset.consignArtwork.assetKey,
+            assetCreatedBy: asset?.framework?.createdBy,
             client: client!,
             stackId: coockieGrid || coockieVideo || '',
             curatorFee: state.feesCurator.value,
