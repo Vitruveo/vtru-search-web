@@ -697,6 +697,7 @@ export function* assetsSagas() {
         takeEvery(actionsFilter.changePortfolioWallets.type, getAssets),
         takeEvery(actionsFilter.changeHasBts.type, getAssets),
         takeEvery(actionsFilter.changeLicenseChecked.type, getAssets),
+        takeEvery(actions.startGrouped.type, getAssets),
 
         // Group by creator
         takeEvery(actions.startGrouped.type, getAssetsGroupByCreator),
