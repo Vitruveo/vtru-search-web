@@ -9,18 +9,23 @@ interface TotalPriceProps {
 export default function TotalPrice({ title, value }: TotalPriceProps) {
     return (
         <Grid container spacing={2} style={{ justifyContent: 'space-between' }}>
-            <Grid item xs={8} sm={2}>
-                <Typography variant="body1" fontWeight="bold" style={{ whiteSpace: 'nowrap', wordBreak: 'break-all' }}>
+            <Grid item sm={6}>
+                <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    style={{ whiteSpace: 'nowrap', wordBreak: 'break-all', fontSize: 22 }}
+                >
                     {title}
                 </Typography>
             </Grid>
-            <Grid item xs={12} sm={8} md={8} lg={8} xl={8}>
+            <Grid item sm={6}>
                 <Box
                     display={'flex'}
                     alignItems={'center'}
                     fontWeight={'bold'}
                     justifyContent={'flex-end'}
-                    maxWidth={120}
+                    maxWidth="89.8%"
+                    fontSize={22}
                 >
                     {formatPrice({ price: value, withUS: true, decimals: true })}
                 </Box>

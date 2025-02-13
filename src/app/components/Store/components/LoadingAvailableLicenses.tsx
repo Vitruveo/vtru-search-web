@@ -3,9 +3,10 @@ import { useTheme } from '@mui/material/styles';
 
 interface Props {
     message: string;
+    background?: string;
 }
 
-export const LoadingAvailableLincenses = ({ message }: Props) => {
+export const LoadingAvailableLincenses = ({ message, background }: Props) => {
     const theme = useTheme();
     return (
         <Box
@@ -15,7 +16,7 @@ export const LoadingAvailableLincenses = ({ message }: Props) => {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: theme.palette.background.paper,
+                backgroundColor: background || theme.palette.background.paper,
                 padding: '1rem',
                 borderRadius: '1rem',
                 gap: '1rem',

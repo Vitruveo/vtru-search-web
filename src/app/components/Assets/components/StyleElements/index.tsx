@@ -2,12 +2,22 @@ import { reset, setHidden, StateKeys } from '@/features/customizer/slice';
 import { useDispatch, useSelector } from '@/store/hooks';
 import generateQueryParam from '@/utils/generateQueryParam';
 import { Box, Button, Divider, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { IconCode, IconCopy, IconSettingsFilled } from '@tabler/icons-react';
 import { MouseEvent, useEffect, useReducer, useState } from 'react';
 import { initialState, reducer, TypeAction } from './slice';
 import { IconRestore } from '@tabler/icons-react';
+import { Stores } from '@/features/stores/types';
 
-export default function StyleElements() {
+interface Props {
+    initialHidden?: Stores['appearanceContent']['hideElements'];
+    isPersonalizedStore?: boolean;
+}
+
+export default function StyleElements({ initialHidden, isPersonalizedStore = false }: Props) {
+    const theme = useTheme();
+    const initialHiddenSerialized = initialHidden ? serialization(initialHidden) : initialState;
+
     const params = new URLSearchParams(window.location.search);
     const paramsHidden: { [key: string]: string } = {};
     params.forEach((value, key) => {
@@ -27,7 +37,7 @@ export default function StyleElements() {
     };
 
     const hiddenElement = useSelector((state) => state.customizer.hidden);
-    const [state, dispatchAction] = useReducer(reducer, initialState);
+    const [state, dispatchAction] = useReducer(reducer, initialHiddenSerialized);
     const [copyUrl, setCopyUrl] = useState('Copy URL');
     const [copyEmbed, setCopyEmbed] = useState('Copy Embed');
 
@@ -40,14 +50,25 @@ export default function StyleElements() {
 
     const handleChange = (key: StateKeys, action: TypeAction) => {
         dispatchAction({ type: action });
+        if (isPersonalizedStore) return;
         generateQueryParam(`${key}_hidden`, !state[key] ? 'yes' : 'no');
         dispatch(setHidden({ key, hidden: !state[key] }));
     };
 
     const handleReset = () => {
+        if (isPersonalizedStore) return;
         dispatch(reset());
         Object.keys(paramsHidden).forEach((key) => generateQueryParam(key, ''));
     };
+
+    useEffect(() => {
+        if (initialHiddenSerialized) {
+            Object.entries(initialHiddenSerialized).forEach((item) => {
+                const [key, _value] = item as [StateKeys, boolean];
+                dispatch(setHidden({ key, hidden: initialHiddenSerialized[key] }));
+            });
+        }
+    }, [initialHidden]);
 
     useEffect(() => {
         if (hiddenElement) {
@@ -158,6 +179,12 @@ export default function StyleElements() {
                 <Divider />
                 <MenuItem>
                     <Button
+                        sx={{
+                            background: theme.palette.primary.main,
+                            '&:hover': {
+                                background: theme.palette.primary.main,
+                            },
+                        }}
                         startIcon={<IconCopy size={18} />}
                         fullWidth
                         variant="contained"
@@ -171,6 +198,12 @@ export default function StyleElements() {
                 </MenuItem>
                 <MenuItem>
                     <Button
+                        sx={{
+                            background: theme.palette.primary.main,
+                            '&:hover': {
+                                background: theme.palette.primary.main,
+                            },
+                        }}
                         startIcon={<IconCode size={18} />}
                         fullWidth
                         variant="contained"
@@ -181,7 +214,18 @@ export default function StyleElements() {
                 </MenuItem>
                 <Divider />
                 <MenuItem>
-                    <Button startIcon={<IconRestore size={18} />} fullWidth variant="contained" onClick={handleReset}>
+                    <Button
+                        startIcon={<IconRestore size={18} />}
+                        fullWidth
+                        variant="contained"
+                        onClick={handleReset}
+                        sx={{
+                            background: theme.palette.primary.main,
+                            '&:hover': {
+                                background: theme.palette.primary.main,
+                            },
+                        }}
+                    >
                         <Typography variant="caption">Reset</Typography>
                     </Button>
                 </MenuItem>
@@ -189,3 +233,29 @@ export default function StyleElements() {
         </Box>
     );
 }
+
+const serialization = (
+    initialHidden: Stores['appearanceContent']['hideElements']
+): {
+    assets: boolean;
+    spotlight: boolean;
+    artistSpotlight: boolean;
+    filter: boolean;
+    order: boolean;
+    header: boolean;
+    recentlySold: boolean;
+    pageNavigation: boolean;
+    cardDetail: boolean;
+} => {
+    return {
+        assets: initialHidden.assets || false,
+        spotlight: initialHidden.artworkSpotlight || false,
+        artistSpotlight: initialHidden.artistSpotlight || false,
+        filter: initialHidden.filters || false,
+        order: initialHidden.order || false,
+        header: initialHidden.header || false,
+        recentlySold: initialHidden.recentlySold || false,
+        pageNavigation: initialHidden.pageNavigation || false,
+        cardDetail: initialHidden.cardDetails || false,
+    };
+};

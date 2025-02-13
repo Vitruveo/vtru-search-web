@@ -6,6 +6,9 @@ export const initialState = {
     feesGrid: null,
     feesVideo: null,
     openModalMinted: false,
+    openModalLicense: false,
+    openModalBuyVUSD: false,
+    expandedAccordion: false,
     link: '',
     available: false,
     credits: 0,
@@ -37,6 +40,7 @@ export enum TypeActions {
     SET_FEES_GRID = 'SET_FEES_GRID',
     SET_FEES_VIDEO = 'SET_FEES_VIDEO',
     SET_OPEN_MODAL_MINTED = 'SET_OPEN_MODAL_MINTED',
+    SET_EXPANDED_ACCORDION = 'SET_EXPANDED_ACCORDION',
     SET_LINK = 'SET_LINK',
     SET_AVAILABLE = 'SET_AVAILABLE',
     SET_CREDITS = 'SET_CREDITS',
@@ -47,7 +51,8 @@ export enum TypeActions {
     SET_BUYER_BALANCES = 'SET_BUYER_BALANCES',
     SET_BUY_CAPABILITY = 'SET_BUY_CAPABILITY',
     SET_LOADING_BUY = 'SET_LOADING_BUY',
-
+    SET_OPEN_MODAL_LICENSE = 'SET_OPEN_MODAL_LICENSE',
+    SET_OPEN_MODAL_BUY_VUSD = 'SET_OPEN_MODAL_BUY_VUSD',
     DISCONNECT = 'DISCONNECT',
 }
 
@@ -64,6 +69,9 @@ interface State {
     feesGrid: number | null;
     feesVideo: number | null;
     openModalMinted: boolean;
+    openModalLicense: boolean;
+    openModalBuyVUSD: boolean;
+    expandedAccordion: string | false;
     link: string;
     available: boolean;
     credits: number;
@@ -111,6 +119,16 @@ export const reducer = (state: State, action: Action) => {
             return {
                 ...state,
                 openModalMinted: action.payload,
+            };
+        case 'SET_OPEN_MODAL_BUY_VUSD':
+            return {
+                ...state,
+                openModalBuyVUSD: action.payload,
+            };
+        case 'SET_EXPANDED_ACCORDION':
+            return {
+                ...state,
+                expandedAccordion: action.payload,
             };
         case 'SET_LINK':
             return {
@@ -162,10 +180,15 @@ export const reducer = (state: State, action: Action) => {
                 ...state,
                 loadingBuy: action.payload,
             };
+        case 'SET_OPEN_MODAL_LICENSE':
+            return {
+                ...state,
+                openModalLicense: action.payload,
+            };
         case 'DISCONNECT':
             return {
                 ...state,
-                available: false,
+                available: state.available,
                 credits: 0,
                 walletCredits: 0,
                 totalFee: 0,

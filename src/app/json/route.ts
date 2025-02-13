@@ -82,7 +82,9 @@ export async function GET(req: Request) {
             params: buildedQueryParams,
         }),
         axios.get(`${API_BASE_URL}/assets/public/lastSold`),
-        axios.get(`${API_BASE_URL}/assets/public/spotlight?nudity=no`),
+        axios.post(`${API_BASE_URL}/assets/public/spotlight`, {
+            query: { 'assetMetadata.taxonomy.formData.nudity': { $in: ['no'] } },
+        }),
     ]);
 
     const data = {

@@ -7,19 +7,30 @@ import { useEffect } from 'react';
 import { actions } from '@/features/store';
 import Header from '@/app/components/Header';
 import { Box } from '@mui/material';
+import { useDomainContext } from '@/app/context/domain';
 
 const Store = () => {
+    const { subdomain, isValidSubdomain } = useDomainContext();
     const dispatch = useDispatch();
     const params = useParams();
     const { assetId, username } = params;
 
-    const { asset, loading, creatorAvatar, creatorLoading } = useSelector((state) => state.store);
+    const { asset, loading, creatorAvatar, creatorLoading, lastAssets, lastAssetsLoading } = useSelector(
+        (state) => state.store
+    );
 
     useEffect(() => {
         const getAsset = () => {
             if (assetId && typeof assetId === 'string') dispatch(actions.getAssetRequest({ id: assetId }));
         };
         getAsset();
+    }, [assetId]);
+
+    useEffect(() => {
+        const getLastAssetConsigns = () => {
+            if (assetId && typeof assetId === 'string') dispatch(actions.getLastAssetsRequest({ id: assetId }));
+        };
+        getLastAssetConsigns();
     }, [assetId]);
 
     useEffect(() => {
@@ -33,15 +44,28 @@ const Store = () => {
     return (
         <PageContainer>
             <Header
+                isStore
+                isPersonalizedStore={!!isValidSubdomain && !!subdomain}
                 rssOptions={[
                     { flagname: 'JSON', value: 'stacks/json' },
                     { flagname: 'XML', value: 'stacks/xml' },
                 ]}
                 hasSettings={false}
+                showProjects={false}
             />
             <Box display={'flex'} justifyContent={'center'} overflow={'auto'}>
                 <Box height={'100vh'} maxWidth={1300}>
-                    <StoreItem data={{ asset, loading, creatorAvatar, username: username as string, creatorLoading }} />
+                    <StoreItem
+                        data={{
+                            asset,
+                            loading,
+                            creatorAvatar,
+                            username: username as string,
+                            creatorLoading,
+                            lastAssets,
+                            lastAssetsLoading,
+                        }}
+                    />
                 </Box>
             </Box>
         </PageContainer>

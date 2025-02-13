@@ -43,7 +43,11 @@ const Search = () => {
 
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
-    const { artworks: storeFilters, organization } = useSelector((state) => state.stores.data);
+    const {
+        artworks: storeFilters,
+        organization,
+        appearanceContent,
+    } = useSelector((state) => state.stores.currentDomain || {});
     const hasFilter = Object.entries(storeFilters || {}).some(([_key, value]) => Object.keys(value).length !== 0);
 
     const searchParams = useSearchParams();
@@ -82,8 +86,8 @@ const Search = () => {
             initialParams.taxonomy_nudity = 'no';
         }
 
-        dispatch(actions.initialParams(initialParams));
-        dispatch(actionsAssets.initialSort({ order: sort_order || 'latest', sold: sort_sold || 'no' }));
+        dispatch(actions.initialParams({ initialParams }));
+        dispatch(actionsAssets.initialSort({ sort: { order: sort_order || 'latest', sold: sort_sold || 'no' } }));
 
         if (creatorId) {
             dispatch(actionsAssets.startNormal());
@@ -98,8 +102,7 @@ const Search = () => {
 
         Object.entries(storeFilters?.general?.shortcuts || {}).forEach(([key, _value]) => {
             const { key: filterKey, value: filterValue } = fixedShortcuts.get(key)!;
-            if (initialFilters[filterKey])
-                initialFilters[filterKey] = `${initialFilters[filterKey]},${filterValue.join(',')}`;
+            if (initialFilters[filterKey]) initialFilters[filterKey] = `${filterValue.join(',')}`;
             else initialFilters[filterKey] = filterValue.join(',');
         });
 
@@ -128,8 +131,13 @@ const Search = () => {
         initialFilters.taxonomy_aiGeneration = 'partial,none';
         initialFilters.taxonomy_nudity = 'no';
 
-        dispatch(actions.initialParams(initialFilters));
-        dispatch(actionsAssets.initialSort({ order: 'latest', sold: initialFilters.sort_sold || 'no' }));
+        dispatch(actions.initialParams({ initialParams: initialFilters, persistStoresFilters: true }));
+        dispatch(
+            actionsAssets.initialSort({
+                sort: { order: 'latest', sold: initialFilters.sort_sold || 'no' },
+                persistStoresSort: true,
+            })
+        );
         dispatch(actionsAssets.startGrouped('all'));
     }, [storeFilters]);
 
@@ -153,6 +161,8 @@ const Search = () => {
                     { flagname: 'JSON', value: 'json' },
                     { flagname: 'XML', value: 'xml' },
                 ]}
+                isPersonalizedStore={!!isValidSubdomain && !!subdomain}
+                showProjects={!isValidSubdomain && !subdomain}
             />
             <PageContainer title="Search" description="this is Search">
                 <AppCard>
@@ -171,7 +181,10 @@ const Search = () => {
                 width={lgUp || smUp ? 85 : 77}
                 zIndex={9999}
             >
-                <StyleElements />
+                <StyleElements
+                    initialHidden={appearanceContent?.hideElements}
+                    isPersonalizedStore={!!isValidSubdomain && !!subdomain}
+                />
             </Box>
         </div>
     );

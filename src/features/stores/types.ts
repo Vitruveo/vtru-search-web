@@ -37,14 +37,55 @@ export interface Stores {
         taxonomy: any;
         artists: any;
     };
-    status: 'draft' | 'active' | 'inactive';
-    actions?: {
-        countClone: number;
+    status: 'draft' | 'active' | 'inactive' | 'pending';
+    username: string;
+    emails: {
+        email: string;
+        codeHash: string | null;
+        checkedAt: string | null;
+    }[];
+    appearanceContent: {
+        highlightColor: string;
+        hideElements: {
+            filters: boolean;
+            order: boolean;
+            header: boolean;
+            recentlySold: boolean;
+            artworkSpotlight: boolean;
+            artistSpotlight: boolean;
+            pageNavigation: boolean;
+            cardDetails: boolean;
+            assets: boolean;
+        };
     };
 }
 
 export interface StoresState {
     loading: boolean;
     error: string | null;
-    data: Stores;
+    sort: string;
+    search: string;
+    currentDomain: Stores;
+    paginated: {
+        list: Stores[];
+        limit: number;
+        page: number;
+        total: number;
+        totalPage: number;
+    };
+}
+
+export interface GetStoresParams {
+    limit: number;
+    page: number;
+    sort?: string;
+    search?: string;
+}
+
+export interface GetStoresResponse {
+    data: Stores[];
+    limit: number;
+    page: number;
+    total: number;
+    totalPage: number;
 }

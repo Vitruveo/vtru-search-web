@@ -1,4 +1,4 @@
-import { Organization } from '@/features/stores/types';
+import { Stores } from '@/features/stores/types';
 import type { Account, Chain, Client, Transport } from 'viem';
 
 export interface GetPlatformFeeBasisPoints {
@@ -15,7 +15,8 @@ export interface IssueLicenseUsingCreditsParams {
     client: Client<Transport, Chain, Account>;
     stackId: string | null;
     curatorFee: number;
-    organization?: Organization;
+    currentStore?: Stores;
+    assetCreatedBy: string | null;
 }
 
 export interface GetAvailableCreditsParams {

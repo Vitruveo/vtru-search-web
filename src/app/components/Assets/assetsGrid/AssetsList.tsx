@@ -6,7 +6,7 @@ import { Asset } from '@/features/assets/types';
 import { actions as actionsFilters } from '@/features/filters/slice';
 import { actions as layoutActions } from '@/features/layout';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { getAssetPrice, isAssetAvailable } from '@/utils/assets';
+import { getAssetPrice, isAssetAvailableLicenses } from '@/utils/assets';
 import generateQueryParam from '@/utils/generateQueryParam';
 import { hasAssetsInURL } from '@/utils/url-assets';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -35,8 +35,8 @@ import NumberOfFilters from '../components/numberOfFilters';
 import { AdditionalAssetsFilterCard } from './AdditionalAssetsFilterCard';
 import { AssetItem } from './AssetItem';
 import './AssetScroll.css';
-import Username from '../../Username';
 import Banner from '../../Banner';
+import CreatorSection from '../components/CreatorSection';
 
 interface Props {
     isBlockLoader: boolean;
@@ -86,7 +86,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
 
     const { data: assets, totalPage, page: currentPage, limit } = useSelector((state) => state.assets.data);
-    const { organization } = useSelector((state) => state.stores.data);
+    const stores = useSelector((state) => state.stores.currentDomain || {});
     const { sort, maxPrice, curateStacks } = useSelector((state) => state.assets);
     const isLoading = useSelector((state) => state.assets.loading);
     const hasIncludesGroup = useSelector((state) => state.assets.groupByCreator);
@@ -98,6 +98,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     const tabNavigation = useSelector((state) => state.filters.tabNavigation);
     const isHidden = useSelector((state) => state.customizer.hidden);
     const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
+    const isHiddenFilter = useSelector((state) => state.customizer.hidden?.filter);
 
     const optionsForSelect = useMemo(() => {
         const options: { value: number; label: number }[] = [];
@@ -320,6 +321,19 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
     return (
         <Box>
+            {!isHiddenFilter && (
+                <Box>
+                    <IconButton
+                        size="small"
+                        sx={{ padding: 0, color: theme.palette.grey[300], paddingLeft: '18.5px' }}
+                        aria-label="menu"
+                        onClick={onMenuClick}
+                    >
+                        {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
+                    </IconButton>
+                </Box>
+            )}
+
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
 
             <DrawerStack drawerStackOpen={drawerStack.isActive} onClose={drawerStack.deactivate} />
@@ -330,78 +344,17 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     flexDirection={smUp ? 'row' : 'column'}
                     alignItems={smUp ? 'center' : 'flex-end'}
                     justifyContent={'space-between'}
-                    mb={4}
+                    mb={3}
                     mt={2}
                     paddingInline={3}
                 >
-                    <Box display="flex" alignItems={'center'} gap={1}>
-                        {lgUp && (
-                            <Box>
-                                <IconButton
-                                    sx={{ color: theme.palette.grey[300], padding: 0 }}
-                                    aria-label="menu"
-                                    onClick={onMenuClick}
-                                >
-                                    {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
-                                </IconButton>
-                            </Box>
-                        )}
-                        {hasCurated ||
-                        !hasIncludesGroupActive ||
-                        tabNavigation.assets?.length > 0 ||
-                        tabNavigation.artists?.length > 0 ? (
-                            <Box display="flex" alignItems="flex-end" gap={2}>
-                                {(hasCurated ||
-                                    tabNavigation.assets?.length > 0 ||
-                                    tabNavigation.artists?.length > 0) && (
-                                    <Typography variant="h4">
-                                        {gridTitle ||
-                                            videoTitle ||
-                                            slideshowTitle ||
-                                            tabNavigation.title ||
-                                            'Curated arts'}
-                                    </Typography>
-                                )}
-                                {hasIncludesGroup.name && (
-                                    <Username
-                                        username={assets[0]?.creator.username}
-                                        vaultAdress={assets[0]?.vault?.vaultAddress}
-                                        size="large"
-                                    />
-                                )}
-                                {(hasCurated ||
-                                    hasIncludesGroup.name ||
-                                    creatorId ||
-                                    tabNavigation.assets?.length > 0 ||
-                                    tabNavigation.artists?.length > 0) && (
-                                    <button
-                                        style={{
-                                            border: 'none',
-                                            background: 'none',
-                                            cursor: 'pointer',
-                                            padding: 0,
-                                            width: '100%',
-                                        }}
-                                        onClick={returnToPageOne}
-                                    >
-                                        <Typography
-                                            variant="h6"
-                                            color="primary"
-                                            sx={{
-                                                textDecoration: 'underline',
-                                                cursor: 'pointer',
-                                                fontSize: 14,
-                                            }}
-                                        >
-                                            {language['search.assetList.resetsearch'] as string}
-                                        </Typography>
-                                    </button>
-                                )}
-                            </Box>
-                        ) : (
-                            <Box />
-                        )}
-                    </Box>
+                    {!isBlockLoader && (
+                        <CreatorSection
+                            hasCurated={hasCurated}
+                            creatorId={creatorId}
+                            returnToPageOne={returnToPageOne}
+                        />
+                    )}
                     <Box
                         display={'flex'}
                         alignItems={smUp ? 'center' : 'flex-end'}
@@ -450,12 +403,16 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                 </IconButton>
                             )}
                             {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
-                            <Switch onChange={handleChangeCurateStack} checked={curateStack.isActive} />
-                            <Box display={'flex'} gap={1}>
-                                <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
-                                    {language['search.assetList.curateStack'] as string}
-                                </Typography>
-                            </Box>
+                            {!isBlockLoader && (
+                                <>
+                                    <Switch onChange={handleChangeCurateStack} checked={curateStack.isActive} />
+                                    <Box display={'flex'} gap={1}>
+                                        <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
+                                            {language['search.assetList.curateStack'] as string}
+                                        </Typography>
+                                    </Box>
+                                </>
+                            )}
                         </Box>
                     </Box>
                 </Box>
@@ -465,7 +422,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                 container
                 spacing={3}
                 padding={3}
-                pr={0}
+                pt={2}
                 sx={{
                     overflow: 'auto',
                     maxHeight:
@@ -476,15 +433,14 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                               : '85vh',
                     justifyContent: 'flex-end',
                 }}
-                ref={topRef}
             >
-                {organization?.formats?.banner?.path && (
+                {isBlockLoader && (
                     <Grid item xs={12}>
                         <Banner
                             data={{
-                                path: organization.formats.banner.path,
-                                description: organization?.description,
-                                name: organization?.name,
+                                path: stores?.organization?.formats?.banner?.path,
+                                description: stores?.organization?.description,
+                                name: stores?.organization?.name,
                             }}
                         />
                     </Grid>
@@ -538,14 +494,21 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                                         ? theme.palette.primary.main
                                                         : theme.palette.grey[200],
                                                     backgroundColor: theme.palette.background.paper,
-                                                    boxShadow: '#FF0066',
-                                                    '&:hover': { borderColor: '#FF0066' },
+                                                    boxShadow: theme.palette.primary.main,
+                                                    '&:hover': { borderColor: theme.palette.primary.main },
                                                 }),
                                                 menu: (base) => ({
                                                     ...base,
                                                     zIndex: 1000,
                                                     color: theme.palette.text.primary,
                                                     backgroundColor: theme.palette.background.paper,
+                                                }),
+                                                menuList: (base) => ({
+                                                    ...base,
+                                                    '::-webkit-scrollbar-thumb': {
+                                                        backgroundColor: theme.palette.primary.main,
+                                                        borderRadius: '4px',
+                                                    },
                                                 }),
                                                 singleValue: (base) => ({
                                                     ...base,
@@ -585,14 +548,21 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                                         ? theme.palette.primary.main
                                                         : theme.palette.grey[200],
                                                     backgroundColor: theme.palette.background.paper,
-                                                    boxShadow: '#FF0066',
-                                                    '&:hover': { borderColor: '#FF0066' },
+                                                    boxShadow: theme.palette.primary.main,
+                                                    '&:hover': { borderColor: theme.palette.primary.main },
                                                 }),
                                                 menu: (base) => ({
                                                     ...base,
                                                     zIndex: 1000,
                                                     color: theme.palette.text.primary,
                                                     backgroundColor: theme.palette.background.paper,
+                                                }),
+                                                menuList: (base) => ({
+                                                    ...base,
+                                                    '::-webkit-scrollbar-thumb': {
+                                                        backgroundColor: theme.palette.primary.main,
+                                                        borderRadius: '4px',
+                                                    },
                                                 }),
                                                 singleValue: (base) => ({
                                                     ...base,
@@ -617,6 +587,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                             ) : (
                                 <Box />
                             )}
+
                             <Box
                                 display={smUp ? 'flex' : 'none'}
                                 alignItems={'center'}
@@ -644,14 +615,21 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                                 ? theme.palette.primary.main
                                                 : theme.palette.grey[200],
                                             backgroundColor: theme.palette.background.paper,
-                                            boxShadow: '#FF0066',
-                                            '&:hover': { borderColor: '#FF0066' },
+                                            boxShadow: theme.palette.primary.main,
+                                            '&:hover': { borderColor: theme.palette.primary.main },
                                         }),
                                         menu: (base) => ({
                                             ...base,
                                             zIndex: 1000,
                                             color: theme.palette.text.primary,
                                             backgroundColor: theme.palette.background.paper,
+                                        }),
+                                        menuList: (base) => ({
+                                            ...base,
+                                            '::-webkit-scrollbar-thumb': {
+                                                backgroundColor: theme.palette.primary.main,
+                                                borderRadius: '4px',
+                                            },
                                         }),
                                         singleValue: (base) => ({
                                             ...base,
@@ -684,14 +662,21 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                                 ? theme.palette.primary.main
                                                 : theme.palette.grey[200],
                                             backgroundColor: theme.palette.background.paper,
-                                            boxShadow: '#FF0066',
-                                            '&:hover': { borderColor: '#FF0066' },
+                                            boxShadow: theme.palette.primary.main,
+                                            '&:hover': { borderColor: theme.palette.primary.main },
                                         }),
                                         menu: (base) => ({
                                             ...base,
                                             zIndex: 1000,
                                             color: theme.palette.text.primary,
                                             backgroundColor: theme.palette.background.paper,
+                                        }),
+                                        menuList: (base) => ({
+                                            ...base,
+                                            '::-webkit-scrollbar-thumb': {
+                                                backgroundColor: theme.palette.primary.main,
+                                                borderRadius: '4px',
+                                            },
                                         }),
                                         singleValue: (base) => ({
                                             ...base,
@@ -716,7 +701,17 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     )}
                 </Grid>
 
-                <Grid item xs={12} mr={4} mb={4}></Grid>
+                {isBlockLoader && (
+                    <Box display={'flex'} width={'100%'} justifyContent={'start'} paddingInline={3} paddingBlock={2}>
+                        <CreatorSection
+                            hasCurated={hasCurated}
+                            creatorId={creatorId}
+                            returnToPageOne={returnToPageOne}
+                        />
+                    </Box>
+                )}
+
+                {!isBlockLoader && <Grid item xs={12} mr={4} mb={4}></Grid>}
 
                 {!isHidden?.assets && (
                     <Grid
@@ -752,6 +747,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                             </div>
                         ) : assets.length > 0 ? (
                             <div
+                                ref={topRef}
                                 style={{
                                     width: 'auto',
                                     minWidth: smUp ? '79%' : 'unset',
@@ -766,7 +762,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                 {activeAssets.map((asset) => (
                                     <AssetItem
                                         key={asset._id}
-                                        isAvailable={isAssetAvailable(asset)}
+                                        isAvailable={isAssetAvailableLicenses(asset)}
                                         assetView={assetView}
                                         asset={asset}
                                         isCurated={curateStack.isActive}
@@ -813,7 +809,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
                                             handleAssetImageClick(asset);
                                         }}
-                                        price={getAssetPrice(asset, organization)}
+                                        price={getAssetPrice(asset, stores)}
                                         countByCreator={asset.countByCreator}
                                     />
                                 ))}
@@ -837,7 +833,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                         <AssetItem
                                             key={asset._id}
                                             variant="blocked"
-                                            isAvailable={isAssetAvailable(asset)}
+                                            isAvailable={isAssetAvailableLicenses(asset)}
                                             assetView={assetView}
                                             asset={asset}
                                             isCurated={curateStack.isActive}
@@ -879,7 +875,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
                                                 handleAssetImageClick(asset);
                                             }}
-                                            price={getAssetPrice(asset, organization)}
+                                            price={getAssetPrice(asset, stores)}
                                         />
                                     ))}
                             </div>
@@ -925,6 +921,22 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                     page={currentPage}
                                     onChange={(_event, value) => dispatch(actions.setCurrentPage(value))}
                                     color="primary"
+                                    sx={{
+                                        '& .MuiPaginationItem-root': {
+                                            '&.Mui-selected': {
+                                                backgroundColor: theme.palette.primary.main,
+                                                '&:hover': {
+                                                    backgroundColor: theme.palette.primary.main,
+                                                },
+                                            },
+                                            '&:focus': {
+                                                backgroundColor: theme.palette.primary.main,
+                                            },
+                                            '&:hover': {
+                                                backgroundColor: theme.palette.primary.main,
+                                            },
+                                        },
+                                    }}
                                     size={lgUp ? 'large' : 'medium'}
                                 />
                             )}
@@ -936,7 +948,16 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                             mr={4}
                             mb={lgUp ? 4 : 12}
                         >
-                            <Button variant="contained" onClick={handleScrollToTop}>
+                            <Button
+                                variant="contained"
+                                onClick={handleScrollToTop}
+                                sx={{
+                                    background: theme.palette.primary.main,
+                                    '&:hover': {
+                                        background: theme.palette.primary.main,
+                                    },
+                                }}
+                            >
                                 {language['search.assetList.scrollToTop'] as string}
                             </Button>
                         </Box>

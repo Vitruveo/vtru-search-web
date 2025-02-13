@@ -4,6 +4,11 @@ export interface Creator {
     username: string;
     avatar: string;
 }
+
+interface Sort {
+    order: string;
+    sold: string;
+}
 export interface AssetsSliceState {
     loading: boolean;
     error: string | null;
@@ -17,10 +22,8 @@ export interface AssetsSliceState {
     video: string;
     loadingVideo: boolean;
     maxPrice: number;
-    sort: {
-        order: string;
-        sold: string;
-    };
+    sort: Sort;
+    storesSort?: Sort;
     groupByCreator: {
         active: string;
         name: string;
@@ -149,6 +152,12 @@ export interface SpotlightAsset {
         transactionhash: string | null;
         vaultAddress: string | null;
     };
+    framework: {
+        createdAt: Date | null;
+        updatedAt: Date | null;
+        createdBy: string | null;
+        updatedBy: string | null;
+    };
 }
 
 export type ResponseAssetsSpotlight = SpotlightAsset[];
@@ -162,6 +171,12 @@ export interface LastSoldAsset {
     vault: {
         transactionhash: string | null;
         vaultAddress: string | null;
+    };
+    framework: {
+        createdAt: Date | null;
+        updatedAt: Date | null;
+        createdBy: string | null;
+        updatedBy: string | null;
     };
 }
 

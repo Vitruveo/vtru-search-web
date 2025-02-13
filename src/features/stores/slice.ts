@@ -1,8 +1,17 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { Stores, StoresState } from './types';
+import { GetStoresParams, StoresState, Stores } from './types';
 
 export const initialState: StoresState = {
-    data: {} as Stores,
+    currentDomain: {} as Stores,
+    paginated: {
+        list: [],
+        limit: 10,
+        page: 1,
+        total: 0,
+        totalPage: 0,
+    },
+    search: '',
+    sort: 'newToOld',
     loading: false,
     error: null,
 };
@@ -12,20 +21,36 @@ export const storesSlice = createSlice({
     initialState,
     reducers: {
         getStoresRequest: (_state, _action: PayloadAction<{ subdomain: string }>) => {},
+        getStoresListRequest: (_state, _action: PayloadAction<GetStoresParams>) => {},
         startLoading: (state) => {
             state.loading = true;
         },
         resetStores: (state) => {
-            state.data = initialState.data;
+            state.currentDomain = initialState.currentDomain;
         },
         finishLoading: (state) => {
             state.loading = false;
         },
-        setStores: (state, action: PayloadAction<StoresState['data']>) => {
-            state.data = action.payload;
+        setPaginatedList: (state, action: PayloadAction<StoresState['paginated']>) => {
+            state.paginated = action.payload;
+        },
+        setCurrentDomain: (state, action: PayloadAction<Stores>) => {
+            state.currentDomain = action.payload;
         },
         setError: (state, action: PayloadAction<string>) => {
             state.error = action.payload;
+        },
+        setLimit: (state, action: PayloadAction<number>) => {
+            state.paginated.limit = action.payload;
+        },
+        setPage: (state, action: PayloadAction<number>) => {
+            state.paginated.page = action.payload;
+        },
+        setSort: (state, action: PayloadAction<string>) => {
+            state.sort = action.payload;
+        },
+        setSearch: (state, action: PayloadAction<string>) => {
+            state.search = action.payload;
         },
     },
 });

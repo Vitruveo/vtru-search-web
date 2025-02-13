@@ -45,7 +45,6 @@ import { Range } from '../components/Range';
 import { Wallets } from '../components/Wallets';
 import { AssetFilterAccordion } from './AssetFilterAccordion';
 import Version from '../../Version';
-import { LicenseItem } from '../components/LicenseItem';
 
 const Filters = () => {
     const params = new URLSearchParams(window.location.search);
@@ -73,10 +72,9 @@ const Filters = () => {
     const values = useSelector((state) => state.filters);
     const { tags, maxPrice, sort } = useSelector((state) => state.assets);
     const { wallets } = useSelector((state) => state.filters.portfolio);
-    const { artworks: storesFilters, organization } = useSelector((state) => state.stores.data);
-    const path = organization?.formats.logo.horizontal?.path;
 
-    const { licenseChecked } = useSelector((state) => state.filters);
+    const { artworks: storesFilters, organization } = useSelector((state) => state.stores.currentDomain || {});
+    const path = organization?.formats.logo.horizontal?.path;
 
     const getTotalFiltersApplied = (fieldName: keyof FilterSliceState) => {
         return Object.entries(values[fieldName]).reduce((acc, [_key, arrayfield]) => {
@@ -265,7 +263,19 @@ const Filters = () => {
                 </Box>
             )}
 
-            <Stack gap={2} p={1} pb={2} mt={1} height="81vh" overflow="auto">
+            <Stack
+                gap={2}
+                p={1}
+                pb={2}
+                mt={1}
+                height="81vh"
+                overflow="auto"
+                sx={{
+                    '::-webkit-scrollbar-thumb': {
+                        backgroundColor: theme.palette.primary.main,
+                    },
+                }}
+            >
                 <OutlinedInput
                     id="outlined-search"
                     placeholder={language['search.assetFilter.search.placeholder'] as string}
@@ -386,9 +396,7 @@ const Filters = () => {
                     </Box>
                 </AssetFilterAccordion>
 
-                {/* <Divider />
-
-                <AssetFilterAccordion title={'Licenses'}>
+                {/* <AssetFilterAccordion title={'Licenses'}>
                     <LicenseItem licenseChecked={licenseChecked} handleChange={handleChangeNftLicense} />
                 </AssetFilterAccordion> */}
 
@@ -631,10 +639,9 @@ const Filters = () => {
                 <Box>
                     <Button
                         sx={{
-                            background: 'linear-gradient(to right, #FF0066, #9966FF)',
-                            color: '#fff',
+                            background: theme.palette.primary.main,
                             '&:hover': {
-                                background: 'linear-gradient(to right, #cc0052, #7a52cc)',
+                                background: theme.palette.primary.main,
                             },
                         }}
                         variant="contained"

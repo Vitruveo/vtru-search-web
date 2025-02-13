@@ -20,11 +20,12 @@ interface FeesProps {
 export default function Fees({ title, value, fees }: FeesProps) {
     return (
         <Grid container spacing={2} style={{ justifyContent: 'space-between' }}>
-            <Grid item xs={8} sm={2} alignItems={'center'} display={'flex'}>
+            <Grid item sm={6} alignItems={'center'} display={'flex'}>
                 <Typography
                     variant="body1"
                     fontWeight="bold"
                     style={{
+                        fontSize: 22,
                         whiteSpace: 'nowrap',
                         wordBreak: 'break-all',
                     }}
@@ -32,9 +33,19 @@ export default function Fees({ title, value, fees }: FeesProps) {
                     {title}
                 </Typography>
             </Grid>
-            <Grid item xs={12} sm={8} md={8} lg={8} xl={8}>
-                <Box display={'flex'} alignItems={'center'} gap={1} justifyContent={'flex-end'} maxWidth={150}>
-                    {formatPrice({ price: value, withUS: true, decimals: true })}
+            <Grid item sm={6}>
+                <Box display={'flex'} fontSize={22} alignItems={'center'} gap={1.1} justifyContent={'flex-end'}>
+                    <Typography
+                        variant="body1"
+                        style={{
+                            fontSize: 22,
+                            wordBreak: 'keep-all',
+                            overflowWrap: 'normal',
+                        }}
+                    >
+                        {formatPrice({ price: value, withUS: true, decimals: true })}
+                    </Typography>
+
                     <Tooltip
                         placement="right"
                         title={

@@ -1,36 +1,53 @@
-import { customizerActionsCreators } from '@/features/customizer';
-import { useSelector } from '@/store/hooks';
-import { AppBar, Avatar, Box, IconButton, Stack, Toolbar, Typography } from '@mui/material';
+import { useParams } from 'next/navigation';
+import React, { useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { AppBar, Box, IconButton, Menu, MenuItem, Stack, Toolbar, Typography } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { IconMoon, IconSun } from '@tabler/icons-react';
-import { useDispatch } from 'react-redux';
+import { IconMoon, IconSun, IconMenu2, IconArrowBarToLeft, IconArrowBarToRight } from '@tabler/icons-react';
+import { customizerActionsCreators } from '@/features/customizer';
+import { actions as layoutActions } from '@/features/layout';
+import { useSelector } from '@/store/hooks';
 import AllProjectsMenu from '../AllProjectsMenu';
-import { AvatarProfile } from '../AvatarProfile';
-import Language from '../Language';
+import { Language } from '../Language';
 import { Rss } from '../Rss';
 import Logo from '../Shared/Logo';
-import ConnectWallet from '../ConnectWallet';
-import { useParams } from 'next/navigation';
+import BuyVUSDModal from '../BuyVUSD/modalHOC';
+import { useTheme } from '@mui/material/styles';
 
 interface Props {
     rssOptions: {
         flagname: string;
         value: string;
     }[];
+    isStore?: boolean;
     hasSettings?: boolean;
+    isPersonalizedStore?: boolean;
+    showProjects?: boolean;
 }
 
-const Header = ({ rssOptions, hasSettings = true }: Props) => {
-    const params = useParams();
+const Header = ({
+    rssOptions,
+    isStore,
+    hasSettings = true,
+    isPersonalizedStore = false,
+    showProjects = true,
+}: Props) => {
     const dispatch = useDispatch();
+    const params = useParams();
+    const themeStyle = useTheme();
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
+    const [modalState, setModalState] = useState(false);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const rssRef = useRef<any>(null);
+    const languageRef = useRef<any>(null);
 
     const customizer = useSelector((state) => state.customizer);
     const paused = useSelector((state) => state.assets.paused);
-    const isLogged = useSelector((state) => state.creator.token !== '');
     const isHidden = useSelector((state) => state.customizer.hidden?.header);
+    const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
+    const storesName = useSelector((state) => state.stores.currentDomain?.organization?.name);
     if (isHidden) return null;
 
     const AppBarStyled = styled(AppBar)(({ theme }) => ({
@@ -52,13 +69,35 @@ const Header = ({ rssOptions, hasSettings = true }: Props) => {
         justifyContent: 'space-between',
     }));
 
+    const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
     const handleToggleTheme = () => {
         dispatch(customizerActionsCreators.setTheme(customizer.activeMode === 'light'));
     };
-
     const handleClick = () => {
         window.open('https://about.xibit.app', '_blank');
     };
+    const handleOpenModal = () => {
+        setModalState(true);
+    };
+    const handleCloseModal = () => {
+        setModalState(false);
+    };
+    const handleOpenRSS = (event: any) => {
+        if (rssRef.current) {
+            rssRef.current.handleClick(event);
+        }
+    };
+    const handleOpenLanguage = (event: any) => {
+        if (languageRef.current) {
+            languageRef.current.handleClick(event);
+        }
+    };
+    const onMenuClick = () => dispatch(layoutActions.toggleSidebar());
 
     return (
         <AppBarStyled position="sticky" color="default" elevation={0}>
@@ -72,20 +111,32 @@ const Header = ({ rssOptions, hasSettings = true }: Props) => {
                         <Box
                             sx={{ display: 'flex', width: smUp ? 'auto' : '40px', overflow: 'hidden', marginRight: 2 }}
                         >
-                            <Logo />
+                            <Logo isPersonalizedStore={isPersonalizedStore} />
                         </Box>
-                        {lgDown && <AllProjectsMenu />}
+
+                        {showProjects && <AllProjectsMenu />}
                     </Box>
                 ) : (
                     <Box sx={{ width: 'auto', overflow: 'hidden' }}>
-                        <Logo />
+                        <Logo isPersonalizedStore={isPersonalizedStore} />
                     </Box>
                 )}
+
+                <Typography
+                    sx={{
+                        paddingInline: isStore ? 4.5 : 8,
+                        color: themeStyle.palette.text.primary,
+                        fontSize: 50,
+                        display: 'block',
+                    }}
+                >
+                    {storesName}
+                </Typography>
 
                 <Box flexGrow={1} display="flex" alignItems="center" justifyContent="center">
                     {paused && <Typography variant="h3">⚠️ Store currently undergoing maintenance</Typography>}
                 </Box>
-                {!lgDown && <AllProjectsMenu />}
+                {!lgDown && showProjects && <AllProjectsMenu />}
                 <Stack
                     spacing={2}
                     height={40}
@@ -96,39 +147,49 @@ const Header = ({ rssOptions, hasSettings = true }: Props) => {
                         marginRight: hasSettings ? 70 : 0,
                     }}
                 >
-                    {!lgDown && (
-                        <IconButton
-                            sx={{ padding: 0 }}
-                            aria-label="more"
-                            id="long-button"
-                            aria-haspopup="true"
-                            onClick={handleClick}
-                        >
-                            <Avatar
-                                src={`/images/icons/xibit-icon-redondo-${customizer.activeMode !== 'dark' ? 'darkmode' : 'litemode'}.png`}
-                                sx={{
-                                    width: 29,
-                                    height: 29,
-                                    margin: 0,
-                                    padding: 0,
-                                    lineHeight: '1',
-                                }}
-                            />
-                        </IconButton>
-                    )}
-                    <Rss options={rssOptions} />
-                    <Language />
-                    {isLogged && <AvatarProfile />}
-                    <IconButton size="small" sx={{ padding: 0 }} onClick={handleToggleTheme}>
-                        {customizer.activeMode === 'dark' ? (
-                            <IconSun width={29} height={29} />
-                        ) : (
-                            <IconMoon width={29} height={29} />
-                        )}
+                    <IconButton
+                        onClick={handleOpen}
+                        sx={{ position: 'relative', left: !showProjects ? '30%' : 'inherit' }}
+                    >
+                        <IconMenu2 width={29} height={29} />
                     </IconButton>
-                    {params?.username && params?.assetId && <ConnectWallet />}
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                        sx={{
+                            position: 'absolute',
+                            left: '86%',
+                            top: '4%',
+                            '& .MuiMenu-paper': {
+                                width: '150px',
+                            },
+                        }}
+                    >
+                        <MenuItem onClick={handleClick}>About Xibit</MenuItem>
+                        <MenuItem onClick={handleOpenModal}>Buy VUSD</MenuItem>
+                        <MenuItem onClick={handleOpenRSS}>
+                            RSS Feed
+                            <Rss options={rssOptions} showIcon={false} ref={rssRef} onClose={handleClose} />
+                        </MenuItem>
+                        <Box display={'flex'} justifyContent={'space-around'}>
+                            <MenuItem onClick={handleOpenLanguage}>
+                                <Language ref={languageRef} onClose={handleClose} />
+                            </MenuItem>
+                            <MenuItem onClick={handleToggleTheme}>
+                                <IconButton size="small" sx={{ padding: 0 }} onClick={handleToggleTheme}>
+                                    {customizer.activeMode === 'dark' ? (
+                                        <IconSun width={29} height={29} />
+                                    ) : (
+                                        <IconMoon width={29} height={29} />
+                                    )}
+                                </IconButton>
+                            </MenuItem>
+                        </Box>
+                    </Menu>
                 </Stack>
             </ToolbarStyled>
+            <BuyVUSDModal isOpen={modalState} onClose={handleCloseModal} />
         </AppBarStyled>
     );
 };

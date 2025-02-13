@@ -1,8 +1,9 @@
-import { Box, Button, Typography } from '@mui/material';
+import Image from 'next/image';
+import { Box, Button } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useDisconnect } from 'wagmi';
 import '@rainbow-me/rainbowkit/styles.css';
-import Image from 'next/image';
 
 const sizes = {
     regular: {
@@ -23,11 +24,13 @@ interface Props {
 }
 
 export default function ConnectWallet({ size = 'regular', rounded = false }: Props) {
+    const theme = useTheme();
+
     const buttonStyle = {
-        background: 'linear-gradient(to right, #FF0066, #9966FF)',
+        background: theme.palette.primary.main,
         color: '#fff',
         '&:hover': {
-            background: 'linear-gradient(to right, #cc0052, #7a52cc)',
+            background: theme.palette.primary.main,
         },
         lineHeight: '1.5',
         borderRadius: rounded ? 2 : 0,

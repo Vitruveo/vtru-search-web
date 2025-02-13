@@ -55,7 +55,7 @@ const AssetItemMain = ({
     return (
         <div
             style={{
-                border: assetView === asset ? '1px solid #FF0066' : '',
+                border: assetView === asset ? `1px solid ${theme.palette.primary.main}` : '',
                 width: 250,
                 margin: '0 auto',
                 cursor: 'pointer',

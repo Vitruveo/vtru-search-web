@@ -21,7 +21,7 @@ const language: Translation = {
     'search.assetFilter.shortcut.physicalArt': 'Physical Art',
     'search.assetFilter.shortcut.digitalArt': 'Digital Art',
     'search.assetFilter.shortcut.includeSold': 'Include Sold',
-    'search.assetFilter.shortcut.hasBTS': 'has BTS',
+    'search.assetFilter.shortcut.hasBTS': 'Has BTS',
 
     'search.assetFilter.licenses': 'Price',
     'search.assetFilter.licenses.price': 'Artwork Price',

@@ -1,7 +1,7 @@
 import { Asset, LastSoldAsset, SpotlightAsset } from '@/features/assets/types';
-import { Organization } from '@/features/stores/types';
+import { Organization, Stores } from '@/features/stores/types';
 
-export const isAssetAvailable = (asset: Asset) => asset.licenses.nft.availableLicenses > 0;
+export const isAssetAvailableLicenses = (asset: Asset) => asset.licenses.nft.availableLicenses > 0;
 
 interface FormatPriceProps {
     price: number;
@@ -23,7 +23,7 @@ export const formatPrice = ({ price = 0, withUS = false, decimals = false }: For
     return !withUS ? formatedPrice.replace('US', '') : formatedPrice;
 };
 
-export const getAssetPrice = (asset: Asset | LastSoldAsset | SpotlightAsset, organization?: Organization) => {
+export const getAssetPrice = (asset: Asset | LastSoldAsset | SpotlightAsset, stores?: Stores) => {
     // eslint-disable-next-line
     // @ts-ignore
     const license = asset?.licenses?.nft ? asset.licenses.nft : asset.licenses;
@@ -31,15 +31,21 @@ export const getAssetPrice = (asset: Asset | LastSoldAsset | SpotlightAsset, org
     switch (license.editionOption) {
         case 'elastic': {
             const price = license.elastic.editionPrice;
-            return formatPrice({ price: getPriceWithMarkup({ organization, assetPrice: price }) });
+            return formatPrice({
+                price: getPriceWithMarkup({ stores, assetPrice: price, assetCreatedBy: asset?.framework?.createdBy }),
+            });
         }
         case 'single': {
             const price = license.single.editionPrice;
-            return formatPrice({ price: getPriceWithMarkup({ organization, assetPrice: price }) });
+            return formatPrice({
+                price: getPriceWithMarkup({ stores, assetPrice: price, assetCreatedBy: asset?.framework?.createdBy }),
+            });
         }
         case 'unlimited': {
             const price = license.unlimited.editionPrice;
-            return formatPrice({ price: getPriceWithMarkup({ organization, assetPrice: price }) });
+            return formatPrice({
+                price: getPriceWithMarkup({ stores, assetPrice: price, assetCreatedBy: asset?.framework?.createdBy }),
+            });
         }
         default:
             return 'N/A';
@@ -75,6 +81,50 @@ export function formatDate({ day, month, year }: formatDateProps) {
     return formattedDate;
 }
 
-export function getPriceWithMarkup({ assetPrice, organization }: { assetPrice: number; organization?: Organization }) {
-    return organization?.markup ? assetPrice * (1 + organization.markup / 100) : assetPrice;
+export function getPriceWithMarkup({
+    assetCreatedBy,
+    assetPrice,
+    stores,
+}: {
+    assetCreatedBy: string | null;
+    assetPrice: number;
+    stores?: Stores;
+}) {
+    return stores?.organization?.markup && assetCreatedBy !== stores.framework.createdBy
+        ? assetPrice * (1 + stores.organization.markup / 100)
+        : assetPrice;
+}
+
+export function overwriteWithInitialFilters<T>({
+    target,
+    initialFilters,
+}: {
+    target: Record<string, any>;
+    initialFilters?: Record<string, any>;
+}): T {
+    const result = { ...target };
+    const initial = initialFilters || {};
+
+    Object.keys(initial).forEach((key) => {
+        const initialValue = initial[key];
+        const targetValue = result[key];
+
+        if (Array.isArray(initialValue)) {
+            result[key] = Array.isArray(targetValue)
+                ? Array.from(new Set([...targetValue, ...initialValue]))
+                : [...initialValue];
+        } else if (typeof initialValue === 'object' && initialValue !== null) {
+            result[key] =
+                !targetValue || typeof targetValue !== 'object' || Array.isArray(targetValue)
+                    ? {}
+                    : overwriteWithInitialFilters({
+                          target: targetValue,
+                          initialFilters: initialValue,
+                      });
+        } else if (initialValue !== undefined) {
+            result[key] = initialValue;
+        }
+    });
+
+    return result as T;
 }

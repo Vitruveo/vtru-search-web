@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { JsonRpcProvider, Contract, BrowserProvider, JsonRpcSigner } from 'ethers';
+import { Contract, BrowserProvider, JsonRpcSigner } from 'ethers';
 import type { Account, Chain, Client, Transport } from 'viem';
 import { BigNumber } from '@ethersproject/bignumber';
 
@@ -12,19 +12,10 @@ import type {
     IssueLicenseUsingCreditsParams,
 } from './types';
 import schema from './contracts.json';
-import { WEB3_NETWORK_RPC_ADDRESS, WEB3_NETWORK_TYPE } from '@/constants/web3';
-import { API3_BASE_URL } from '@/constants/api';
 import { getPriceWithMarkup } from '@/utils/assets';
 
-const isTestNet = WEB3_NETWORK_TYPE === 'testnet';
-const network = isTestNet ? 'testnet' : 'mainnet';
-
-const provider = new JsonRpcProvider(WEB3_NETWORK_RPC_ADDRESS);
-
-type MainnetKeys = keyof (typeof schema)['mainnet'];
-type TestnetKeys = keyof (typeof schema)['testnet'];
-
-const getContractAddress = (name: MainnetKeys | TestnetKeys) => schema[network][name];
+import { API3_BASE_URL } from '@/constants/api';
+import { getContractAddress, network, provider } from '.';
 
 const clientToSigner = (client: Client<Transport, Chain, Account>) => {
     const { account, chain, transport } = client;
@@ -179,7 +170,8 @@ export const issueLicenseUsingCredits = async ({
     client,
     stackId,
     curatorFee,
-    organization,
+    currentStore,
+    assetCreatedBy,
 }: IssueLicenseUsingCreditsParams) => {
     const signer = clientToSigner(client);
 
@@ -214,7 +206,8 @@ export const issueLicenseUsingCredits = async ({
     const platformFeeBasisPointsFormatted = BigNumber.from(platformFeeBasisPoints).toNumber();
 
     const platformFeeValue = (licenseCost * platformFeeBasisPointsFormatted) / 10_000;
-    const totalPlatformFee = getPriceWithMarkup({ assetPrice: licenseCost, organization }) + platformFeeValue;
+    const totalPlatformFee =
+        getPriceWithMarkup({ assetPrice: licenseCost, stores: currentStore, assetCreatedBy }) + platformFeeValue;
 
     const tx = {
         name: 'License Registry',
@@ -242,7 +235,7 @@ export const issueLicenseUsingCredits = async ({
             tx,
             signedMessage,
             stackId,
-            customStoreId: null,
+            customStoreId: currentStore?._id,
         }),
     });
 

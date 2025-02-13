@@ -7,6 +7,7 @@ import { clearAssetsFromURL } from '@/utils/url-assets';
 import { extractObjects } from '@/utils/extractObjects';
 
 export const initialState: FilterSliceState = {
+    storesFilters: {},
     name: '',
     reseted: 0,
     context: {
@@ -100,7 +101,11 @@ export const filterSlice = createSlice({
     name: 'filters',
     initialState,
     reducers: {
-        initialParams: (state, action: PayloadAction<Record<string, string>>) => {
+        initialParams: (
+            state,
+            action: PayloadAction<{ initialParams: Record<string, string>; persistStoresFilters?: boolean }>
+        ) => {
+            state.storesFilters = {};
             state.name = '';
             state.context = {
                 title: '',
@@ -181,17 +186,33 @@ export const filterSlice = createSlice({
 
             const payload = extractObjects(initialState);
 
-            Object.entries(action.payload).forEach(([key, _value]) => {
+            const { initialParams, persistStoresFilters } = action.payload;
+
+            Object.entries(initialParams).forEach(([key, _value]) => {
                 if (typeof payload[key] === 'string') {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
-                    state[key] = action.payload[key];
+                    state[key] = initialParams[key];
+                    if (persistStoresFilters) {
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        state.storesFilters[key as keyof typeof state.storesFilters] = initialParams[key];
+                    }
                 } else if (Array.isArray(payload[key]) || typeof payload[key] === 'number') {
                     const [parent, item] = key.split('_');
 
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
-                    state[parent][item] = action.payload[key].split(',');
+                    state[parent][item] = initialParams[key].split(',');
+
+                    if (persistStoresFilters) {
+                        if (!state.storesFilters?.[parent as keyof typeof state.storesFilters])
+                            state.storesFilters[parent as keyof typeof state.storesFilters] = {} as any;
+
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        state.storesFilters[parent][item] = initialParams[key].split(',');
+                    }
                 }
             });
         },
