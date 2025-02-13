@@ -18,14 +18,16 @@ const Banner = ({ data }: Props) => {
                     <Image
                         src={`${STORES_STORAGE_URL}/${data.path}`}
                         alt="banner"
-                        layout="fill" // Faz a imagem preencher o container pai
-                        objectFit="cover" // Ajusta o comportamento para cobrir o container pai
+                        layout="fill"
+                        objectFit="cover"
                         quality={100}
                         priority
                     />
                 </Box>
             )}
-            <Typography fontSize={'1.4rem'}>{data?.description}</Typography>
+            <Typography fontSize={'1.4rem'} lineHeight={'24px'}>
+                {data?.description}
+            </Typography>
         </Box>
     );
 };
