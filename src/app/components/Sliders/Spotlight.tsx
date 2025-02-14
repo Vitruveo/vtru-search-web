@@ -6,7 +6,7 @@ import { useTheme } from '@mui/material/styles';
 import { useSelector } from '@/store/hooks';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { SpotlightAsset } from '@/features/assets/types';
-import { SEARCH_BASE_URL } from '@/constants/api';
+import { NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import { formatPrice, getPriceWithMarkup } from '@/utils/assets';
 import Username from '../Username';
@@ -19,7 +19,7 @@ function SpotlightSlider() {
     const theme = useTheme();
 
     const handleClickItem = (asset: SpotlightAsset) => {
-        const url = new URL(SEARCH_BASE_URL);
+        const url = new URL(subdomain && NODE_ENV === 'production' ? 'https://xibit.live' : SEARCH_BASE_URL);
         if (subdomain) {
             url.hostname = `${subdomain}.${url.hostname}`;
         }
