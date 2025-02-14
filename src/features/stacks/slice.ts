@@ -14,6 +14,7 @@ export const initialState: StackSliceState = {
     },
     spotlight: [],
     sort: 'latest',
+    search: '',
 };
 
 export const stacksSlice = createSlice({
@@ -42,6 +43,9 @@ export const stacksSlice = createSlice({
         },
         setSpotlight: (state, action: PayloadAction<StackSliceState['spotlight']>) => {
             state.spotlight = action.payload;
+        },
+        setSearch: (state, action: PayloadAction<string>) => {
+            state.search = action.payload;
         },
     },
 });

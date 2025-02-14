@@ -1,7 +1,7 @@
 'use client';
 import { SingleValue } from 'react-select';
 import StackList from '../components/Stacks/stacksGrid/StacksList';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/stacks';
 import { SEARCH_BASE_URL } from '@/constants/api';
@@ -23,6 +23,7 @@ const Stacks = () => {
     const hiddenElement = useSelector((state) => state.customizer.hiddenStack);
 
     const [selectValues, setSelectValues] = useState({
+        search: '',
         limit: { value: '25', label: '25' },
         page: { value: '1', label: '1' },
         sort: { value: 'latest', label: language['search.select.sort.option.latest'] as string },
@@ -56,6 +57,11 @@ const Stacks = () => {
         setSelectValues((prev) => ({ ...prev, sort: { value: e!.value, label: e!.label } }));
     }, []);
 
+    const onChangeSearch = useCallback((e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        dispatch(actions.setSearch(e!.target.value));
+        setSelectValues((prev) => ({ ...prev, search: e!.target.value }));
+    }, []);
+
     const handleCurateStack = () => window.open(`${SEARCH_BASE_URL}?groupByCreator=no&assets`, '_blank');
 
     const isInIframe = window.self !== window.top;
@@ -73,7 +79,7 @@ const Stacks = () => {
                 )}
                 <StackList
                     data={{ stacks, selectValues, optionsForSelectPage, hiddenElement }}
-                    actions={{ onChangeSort, onChangePage, onChangeLimit, handleCurateStack }}
+                    actions={{ onChangeSort, onChangePage, onChangeLimit, handleCurateStack, onChangeSearch }}
                 />
 
                 <Box
