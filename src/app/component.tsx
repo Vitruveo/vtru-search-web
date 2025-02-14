@@ -138,7 +138,8 @@ const Search = () => {
                 persistStoresSort: true,
             })
         );
-        dispatch(actionsAssets.startGrouped('all'));
+        if (subdomain && isValidSubdomain) dispatch(actionsAssets.startGrouped('no'));
+        else dispatch(actionsAssets.startGrouped('all'));
     }, [storeFilters]);
 
     useEffect(() => {

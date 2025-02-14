@@ -6,10 +6,18 @@ interface MediaPreviewProps {
     alt: string;
     width: number | string;
     height: number;
+    removeMargin?: boolean;
     onClick?: () => void;
 }
 
-const MediaRenderStoreMain = ({ media, alt, height, width, onClick }: MediaPreviewProps): React.JSX.Element => {
+const MediaRenderStoreMain = ({
+    media,
+    removeMargin,
+    alt,
+    height,
+    width,
+    onClick,
+}: MediaPreviewProps): React.JSX.Element => {
     const isVideo = media.match(/\.(mp4|webm|ogg)$/) != null;
     const [key, setKey] = useState(0);
 
@@ -29,7 +37,7 @@ const MediaRenderStoreMain = ({ media, alt, height, width, onClick }: MediaPrevi
                 controls={false}
                 onClick={onClick}
                 key={key}
-                style={{ display: 'block', margin: '0 auto', borderRadius: 10, cursor: 'pointer' }}
+                style={{ display: 'block', margin: removeMargin ? '0' : '0 auto', borderRadius: 10, cursor: 'pointer' }}
             >
                 <source src={media} type="video/mp4" />
             </video>

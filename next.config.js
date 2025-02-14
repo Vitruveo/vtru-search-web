@@ -28,6 +28,17 @@ const nextConfig = {
                 destination: '/',
                 permanent: true,
             },
+            {
+                source: '/:path*',
+                has: [
+                    {
+                        type: 'host',
+                        value: 'search.vitruveo.xyz',
+                    },
+                ],
+                destination: 'https://xibit.app/:path*',
+                permanent: true,
+            },
         ];
     },
     async rewrites() {

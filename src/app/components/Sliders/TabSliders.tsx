@@ -53,7 +53,15 @@ export default function TabSliders() {
                 dispatch(changeActiveSlider('3'));
             }
         }
-    }, [activeSlider, hidden?.recentlySold, hidden?.spotlight, hidden?.artistSpotlight]);
+    }, [
+        activeSlider,
+        hidden?.recentlySold,
+        hidden?.spotlight,
+        hidden?.artistSpotlight,
+        checkSpotlight,
+        checkArtistSpotlight,
+        checkLastSold,
+    ]);
 
     if (
         (hidden?.spotlight && hidden?.recentlySold && hidden?.artistSpotlight) ||
