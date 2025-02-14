@@ -25,7 +25,7 @@ const Banner = ({ data }: Props) => {
                     />
                 </Box>
             )}
-            <Typography fontSize={'1.4rem'} lineHeight={'24px'}>
+            <Typography fontSize={'1.4rem'} lineHeight={1.5}>
                 {data?.description}
             </Typography>
         </Box>
