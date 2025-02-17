@@ -1,13 +1,24 @@
 import { useI18n } from '@/app/hooks/useI18n';
 import { StateKeysStack } from '@/features/customizer/slice';
 import { Stack, StackData } from '@/features/stacks/types';
-import { Box, Button, Grid, Pagination, Theme, Typography, useMediaQuery } from '@mui/material';
+import {
+    Box,
+    Button,
+    Grid,
+    InputAdornment,
+    OutlinedInput,
+    Pagination,
+    Theme,
+    Typography,
+    useMediaQuery,
+} from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useEffect, useRef } from 'react';
+import { ChangeEventHandler, useEffect, useRef, useState } from 'react';
 import Select, { SingleValue } from 'react-select';
 import '../../Assets/assetsGrid/AssetScroll.css';
 import StackSpotlightSlider from '../../Sliders/StackSpotlight';
 import { StackCardContainer, StackItem } from './StackItem';
+import { IconSearch } from '@tabler/icons-react';
 
 interface StacksProps {
     data: {
@@ -16,6 +27,7 @@ interface StacksProps {
             limit: { value: string; label: string };
             page: { value: string; label: string };
             sort: { value: string; label: string };
+            search: string;
         };
         optionsForSelectPage: { value: string; label: string }[];
         hiddenElement?: { [key in StateKeysStack]: boolean };
@@ -40,10 +52,12 @@ interface StacksProps {
             }>
         ) => void;
         handleCurateStack: () => void;
+        onChangeSearch: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
     };
 }
 
 const Stacks = ({ data, actions }: StacksProps) => {
+    const [searchText, setSearchText] = useState(data.selectValues.search);
     const theme = useTheme();
     const { language } = useI18n();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
@@ -51,6 +65,7 @@ const Stacks = ({ data, actions }: StacksProps) => {
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
 
     const topRef = useRef<HTMLDivElement>(null);
+    const searchTimeout = useRef<NodeJS.Timeout | null>(null);
 
     const { onChangePage, onChangeSort, onChangeLimit, handleCurateStack } = actions;
     const { stacks, selectValues, optionsForSelectPage, hiddenElement } = data;
@@ -62,6 +77,19 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 behavior: 'smooth',
             });
         }
+    };
+
+    const handleSearchChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (event) => {
+        const newValue = event.target.value;
+        setSearchText(newValue);
+
+        if (searchTimeout.current) {
+            clearTimeout(searchTimeout.current);
+        }
+
+        searchTimeout.current = setTimeout(() => {
+            actions.onChangeSearch(event);
+        }, 500);
     };
 
     useEffect(() => {
@@ -114,6 +142,25 @@ const Stacks = ({ data, actions }: StacksProps) => {
                 {!hiddenElement?.navigation && (
                     <Box display={mdUp ? 'flex' : 'none'} justifyContent="space-between" width="100%" my={2} mb={4}>
                         <Box display={'flex'} gap={1} alignItems={'center'} paddingInline={'24px'}>
+                            <OutlinedInput
+                                id="outlined-search"
+                                placeholder="Search Stack"
+                                size="small"
+                                type="search"
+                                color="primary"
+                                notched
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <IconSearch size="14" />
+                                    </InputAdornment>
+                                }
+                                fullWidth
+                                value={searchText}
+                                onChange={handleSearchChange}
+                            />
+                        </Box>
+
+                        <Box display={'flex'} gap={1} alignItems={'center'} paddingInline={'90px'}>
                             <Typography variant="h5">{language['search.order.sort'] as string}:</Typography>
                             <Select
                                 placeholder="Sort"
@@ -171,8 +218,6 @@ const Stacks = ({ data, actions }: StacksProps) => {
                                     }),
                                 }}
                             />
-                        </Box>
-                        <Box display={'flex'} gap={1} alignItems={'center'} paddingInline={'90px'}>
                             <Typography variant="h5">{language['search.pagination'] as string}:</Typography>
                             <Select
                                 placeholder="Page Items"

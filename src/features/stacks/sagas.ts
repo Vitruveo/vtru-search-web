@@ -9,6 +9,7 @@ import { AppState } from '@/store';
 function* getStacks() {
     yield put(actions.startLoading());
     try {
+        const search: number = yield select((state: AppState) => state.stacks.search);
         const page: number = yield select((state: AppState) => state.stacks.data.page);
         const limit: number = yield select((state: AppState) => state.stacks.data.limit);
         const sort: string = yield select((state: AppState) => state.stacks.sort);
@@ -16,6 +17,7 @@ function* getStacks() {
         const URL_STACKS = `${API_BASE_URL}/creators/public/stacks`;
         const response: AxiosResponse<APIResponse<StackData>> = yield call(axios.get, URL_STACKS, {
             params: {
+                search,
                 page,
                 limit,
                 sort,
@@ -48,6 +50,7 @@ function* getStacksSpotlight() {
 
 export default function* stacksSaga() {
     yield all([
+        takeEvery(actions.setSearch.type, getStacks),
         takeEvery(actions.loadStacks.type, getStacks),
         takeEvery(actions.setPage.type, getStacks),
         takeEvery(actions.setLimit.type, getStacks),

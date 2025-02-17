@@ -118,6 +118,8 @@ const Stores = ({ data, actions }: StacksProps) => {
                             value={searchText}
                             onChange={handleSearchChange}
                         />
+                    </Box>
+                    <Box display={'flex'} gap={1} alignItems={'center'} paddingInline={'90px'}>
                         <Typography marginLeft={2.9} variant="h5">
                             Sort:
                         </Typography>
@@ -175,8 +177,6 @@ const Stores = ({ data, actions }: StacksProps) => {
                                 }),
                             }}
                         />
-                    </Box>
-                    <Box display={'flex'} gap={1} alignItems={'center'} paddingInline={'90px'}>
                         <Typography variant="h5">Pagination:</Typography>
                         <Select
                             placeholder="Page Items"

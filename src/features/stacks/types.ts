@@ -12,6 +12,7 @@ export interface StackSliceState {
         stack: Stack;
     }[];
     sort: string;
+    search: string;
 }
 
 export interface Stack {
