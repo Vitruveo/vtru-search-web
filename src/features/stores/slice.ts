@@ -5,7 +5,7 @@ export const initialState: StoresState = {
     currentDomain: {} as Stores,
     paginated: {
         list: [],
-        limit: 10,
+        limit: 25,
         page: 1,
         total: 0,
         totalPage: 0,
