@@ -19,6 +19,7 @@ import { extractObjects } from '@/utils/extractObjects';
 import StyleElements from './components/Assets/components/StyleElements';
 import { STORES_STORAGE_URL } from '@/constants/aws';
 import { useDomainContext } from './context/domain';
+import { WatherMark } from './components/WatherMark';
 
 const params = Object.keys(extractObjects(initialState));
 const initialParams: Record<string, string> = {};
@@ -47,6 +48,7 @@ const Search = () => {
         artworks: storeFilters,
         organization,
         appearanceContent,
+        status,
     } = useSelector((state) => state.stores.currentDomain || {});
     const hasFilter = Object.entries(storeFilters || {}).some(([_key, value]) => Object.keys(value).length !== 0);
 
@@ -187,6 +189,8 @@ const Search = () => {
                     isPersonalizedStore={!!isValidSubdomain && !!subdomain}
                 />
             </Box>
+
+            {isValidSubdomain && subdomain && status === 'pending' && <WatherMark />}
         </div>
     );
 };
