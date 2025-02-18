@@ -3,7 +3,7 @@ import { CircularProgress, Grid } from '@mui/material';
 import { actions as actionsStores } from '@/features/stores/slice';
 
 import { API_BASE_URL } from '@/constants/api';
-import { useDispatch } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { useToastr } from '../hooks/useToastr';
 
 interface DomainContextType {
@@ -27,6 +27,7 @@ export const DomainProvider = ({ children }: DomainProviderProps) => {
 
     const toast = useToastr();
     const dispatch = useDispatch();
+    const currentDomain = useSelector((state) => state.stores.currentDomain || {});
 
     const generateHash = async (value: string) => {
         const encoder = new TextEncoder();
@@ -55,10 +56,10 @@ export const DomainProvider = ({ children }: DomainProviderProps) => {
                 toast.display({ message: 'Invalid subdomain!', type: 'error' });
                 redirectToRoot();
                 dispatch(actionsStores.resetStores());
-                setIsValidSubdomain(false);
+                setIsValidSubdomain(null);
             }
         } catch (error) {
-            setIsValidSubdomain(false);
+            setIsValidSubdomain(null);
             redirectToRoot();
             setHasSubdomainError(error as string);
             dispatch(actionsStores.resetStores());
@@ -90,7 +91,7 @@ export const DomainProvider = ({ children }: DomainProviderProps) => {
         }
     }, []);
 
-    if (!isReady) {
+    if (!isReady || (!currentDomain?._id && isValidSubdomain)) {
         return (
             <Grid height="90vh" justifyContent={'center'} alignItems={'center'} display={'flex'}>
                 <CircularProgress size="4rem" sx={{ color: '#FF0066' }} />
