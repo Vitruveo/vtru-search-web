@@ -56,6 +56,8 @@ const MediaRenderStoreMain = ({
                 }}
                 fill
                 draggable={false}
+                layout="intrinsic"
+                unoptimized
             />
         </div>
     );
