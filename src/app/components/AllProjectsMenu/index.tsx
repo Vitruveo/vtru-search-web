@@ -27,10 +27,11 @@ const AllProjectsMenu = () => {
 
     const getActualProject = () => {
         const actualUrl = window.location.href;
+        if (actualUrl.includes('stores') || actualUrl.includes('xibit.live')) return projects[2];
         if (actualUrl.includes('stacks')) return projects[1];
         if (actualUrl.includes('search')) return projects[0];
         if (actualUrl.includes('studio')) return projects[4];
-        if (actualUrl.includes('stores')) return projects[2];
+
         return projects[0];
     };
 

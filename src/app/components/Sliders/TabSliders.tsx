@@ -25,49 +25,32 @@ export default function TabSliders() {
     const lastSold = useSelector((state) => state.assets.lastSold);
     const artistSpotlight = useSelector((state) => state.assets.artistSpotlight);
 
-    const checkSpotlight = spotlight.length >= spotlightMinLength;
-    const checkArtistSpotlight = artistSpotlight.length >= spotlightMinLength;
-    const checkLastSold = lastSold.length >= spotlightMinLength;
+    const showSpotlight = spotlight.length >= spotlightMinLength && !hidden?.spotlight;
+    const showArtistSpotlight = artistSpotlight.length >= spotlightMinLength && !hidden?.artistSpotlight;
+    const showLastSold = lastSold.length >= spotlightMinLength && !hidden?.recentlySold;
 
     const [tabValue, setTabValue] = useState(activeSlider);
 
     useEffect(() => {
-        if (
-            (hidden?.spotlight && hidden?.recentlySold && hidden?.artistSpotlight) ||
-            (!checkSpotlight && !checkArtistSpotlight && !checkLastSold)
-        )
-            return;
-        if (
-            ((hidden?.spotlight || !checkSpotlight) && activeSlider === '1') ||
-            ((hidden?.artistSpotlight || !checkArtistSpotlight) && activeSlider === '2') ||
-            ((hidden?.recentlySold || !checkLastSold) && activeSlider === '3')
-        ) {
-            if (!hidden?.spotlight && checkSpotlight) {
-                setTabValue('1');
-                dispatch(changeActiveSlider('1'));
-            } else if (!hidden?.artistSpotlight && checkArtistSpotlight) {
-                setTabValue('2');
-                dispatch(changeActiveSlider('2'));
-            } else if (!hidden?.recentlySold && checkLastSold) {
-                setTabValue('3');
-                dispatch(changeActiveSlider('3'));
+        if (!showSpotlight && !showArtistSpotlight && !showLastSold) return;
+
+        const activeIsHidden =
+            (activeSlider === '1' && !showSpotlight) ||
+            (activeSlider === '2' && !showArtistSpotlight) ||
+            (activeSlider === '3' && !showLastSold);
+
+        if (activeIsHidden) {
+            const newTabValue = showSpotlight ? '1' : showArtistSpotlight ? '2' : '3';
+
+            if (newTabValue !== tabValue) {
+                setTabValue(newTabValue);
+                dispatch(changeActiveSlider(newTabValue));
             }
         }
-    }, [
-        activeSlider,
-        hidden?.recentlySold,
-        hidden?.spotlight,
-        hidden?.artistSpotlight,
-        checkSpotlight,
-        checkArtistSpotlight,
-        checkLastSold,
-    ]);
+    }, [activeSlider, showSpotlight, showArtistSpotlight, showLastSold]);
 
-    if (
-        (hidden?.spotlight && hidden?.recentlySold && hidden?.artistSpotlight) ||
-        (!checkSpotlight && !checkArtistSpotlight && !checkLastSold)
-    )
-        return null;
+    if (!showSpotlight && !showArtistSpotlight && !showLastSold) return null;
+
     return (
         <Box
             sx={{ width: lgUp && !isFilterHidden && isSidebarOpen ? 'calc(100vw - 350px)' : 'calc(100vw - 40px)' }}
@@ -83,19 +66,19 @@ export default function TabSliders() {
                         variant="scrollable"
                         scrollButtons="auto"
                     >
-                        {!hidden?.spotlight && checkSpotlight && (
+                        {showSpotlight && (
                             <Tab
                                 label={<Label label={language['search.tabSliders.artworkSpotlight'] as string} />}
                                 value="1"
                             />
                         )}
-                        {!hidden?.artistSpotlight && checkArtistSpotlight && (
+                        {showArtistSpotlight && (
                             <Tab
                                 label={<Label label={language['search.tabSliders.artistSpotlight'] as string} />}
                                 value="2"
                             />
                         )}
-                        {!hidden?.recentlySold && checkLastSold && (
+                        {showLastSold && (
                             <Tab
                                 label={<Label label={language['search.tabSliders.recentlySold'] as string} />}
                                 value="3"
@@ -103,17 +86,17 @@ export default function TabSliders() {
                         )}
                     </TabList>
                 </Box>
-                {!hidden?.spotlight && checkSpotlight && (
+                {showSpotlight && (
                     <TabPanel value="1">
                         <SpotlightSlider />
                     </TabPanel>
                 )}
-                {!hidden?.artistSpotlight && checkArtistSpotlight && (
+                {showArtistSpotlight && (
                     <TabPanel value="2">
                         <ArtistsSpotlight />
                     </TabPanel>
                 )}
-                {!hidden?.recentlySold && checkLastSold && (
+                {showLastSold && (
                     <TabPanel value="3">
                         <RecentlySoldSlider />
                     </TabPanel>
