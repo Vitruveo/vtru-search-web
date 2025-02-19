@@ -5,7 +5,7 @@ import { CountOptionLabel } from './CountOptionLabel';
 import { Option } from '../types';
 import { MultiValue } from 'react-select';
 import { debounce } from 'lodash';
-import { CSSProperties } from 'react';
+import { CSSProperties, useEffect, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 
 interface CollectionItem {
@@ -38,6 +38,8 @@ export const AsyncSelect = ({
     fixedOptions,
 }: AsyncSelectProps) => {
     const theme = useTheme();
+    const [orderedValues, setOrderedValues] = useState(defaultValue);
+
     const fetchOptions = async (inputValue: string): Promise<Option[]> => {
         if (inputValue.length < 3 || !endpoint) {
             return [];
@@ -79,15 +81,30 @@ export const AsyncSelect = ({
 
     const debouncedLoadOptions = debounce(loadOptions, 500);
 
+    useEffect(() => {
+        if (defaultValue) {
+            setOrderedValues(
+                [...defaultValue].sort((a, b) => {
+                    if (typeof a.label === 'string' && typeof b.label === 'string') {
+                        return a.label.localeCompare(b.label);
+                    }
+                    return 0;
+                })
+            );
+        }
+    }, [defaultValue]);
+
     return (
         <Async
             components={{ Option: AsyncSelectOption }}
             onChange={onChange}
-            value={defaultValue}
+            value={orderedValues}
             styles={{
                 control: (base, state) => ({
                     ...base,
                     minWidth: '240px',
+                    maxHeight: '200px',
+                    overflow: 'auto',
                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                     backgroundColor: theme.palette.background.paper,
                     boxShadow: theme.palette.primary.main,
