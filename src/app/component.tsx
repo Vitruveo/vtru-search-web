@@ -100,7 +100,20 @@ const Search = () => {
     }, [searchParams]);
 
     useEffect(() => {
-        if (!hasFilter) return;
+        if (!hasFilter) {
+            initialFilters.taxonomy_aiGeneration = 'partial,none';
+            initialFilters.taxonomy_nudity = 'no';
+            dispatch(actions.initialParams({ initialParams: initialFilters }));
+            dispatch(
+                actionsAssets.initialSort({
+                    sort: { order: 'latest', sold: initialFilters.sort_sold || 'no' },
+                    persistStoresSort: true,
+                })
+            );
+            if (subdomain && isValidSubdomain) dispatch(actionsAssets.startGrouped('no'));
+            else dispatch(actionsAssets.startGrouped('all'));
+            return;
+        }
 
         Object.entries(storeFilters?.general?.shortcuts || {}).forEach(([key, _value]) => {
             const { key: filterKey, value: filterValue } = fixedShortcuts.get(key)!;
@@ -144,16 +157,16 @@ const Search = () => {
         else dispatch(actionsAssets.startGrouped('all'));
     }, [storeFilters]);
 
-    useEffect(() => {
-        if (organization?.formats?.logo?.square?.path) {
-            const favicon = document.querySelector("link[rel*='icon']") as HTMLLinkElement;
-            const logoPath = organization.formats.logo.square.path;
-            favicon.rel = 'icon';
-            favicon.type = 'image/png';
-            favicon.href = `${STORES_STORAGE_URL}/${logoPath}`;
-            document.head.appendChild(favicon);
-        }
-    }, [organization]);
+    // useEffect(() => {
+    //     if (organization?.formats?.logo?.square?.path) {
+    //         const favicon = document.querySelector("link[rel*='icon']") as HTMLLinkElement;
+    //         const logoPath = organization.formats.logo.square.path;
+    //         favicon.rel = 'icon';
+    //         favicon.type = 'image/png';
+    //         favicon.href = `${STORES_STORAGE_URL}/${logoPath}`;
+    //         document.head.appendChild(favicon);
+    //     }
+    // }, [organization]);
 
     const isInIframe = window.self !== window.top;
 
@@ -167,7 +180,15 @@ const Search = () => {
                 isPersonalizedStore={!!isValidSubdomain && !!subdomain}
                 showProjects={!isValidSubdomain && !subdomain}
             />
-            <PageContainer title="Search" description="this is Search">
+            <PageContainer
+                title={isValidSubdomain && subdomain ? organization.name : 'Search'}
+                description={isValidSubdomain && subdomain ? organization.description : ''}
+                icon={
+                    isValidSubdomain && subdomain
+                        ? `${STORES_STORAGE_URL}/${organization.formats.logo.square?.path}`
+                        : ''
+                }
+            >
                 <AppCard>
                     <AssetsSidebar />
                     <Box flexGrow={1}>

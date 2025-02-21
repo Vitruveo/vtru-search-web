@@ -62,7 +62,7 @@ export default function StyleElements({ initialHidden, isPersonalizedStore = fal
     };
 
     useEffect(() => {
-        if (initialHiddenSerialized) {
+        if (initialHiddenSerialized && isPersonalizedStore) {
             Object.entries(initialHiddenSerialized).forEach((item) => {
                 const [key, _value] = item as [StateKeys, boolean];
                 dispatch(setHidden({ key, hidden: initialHiddenSerialized[key] }));
@@ -71,6 +71,7 @@ export default function StyleElements({ initialHidden, isPersonalizedStore = fal
     }, [initialHidden]);
 
     useEffect(() => {
+        if (isPersonalizedStore) return;
         if (hiddenElement) {
             Object.entries(hiddenElement).forEach((item) => {
                 const [key, _value] = item as [StateKeys, boolean];
@@ -81,6 +82,7 @@ export default function StyleElements({ initialHidden, isPersonalizedStore = fal
     }, [hiddenElement]);
 
     useEffect(() => {
+        if (isPersonalizedStore) return;
         if (Object.keys(paramsHidden).length === 0) dispatch(reset());
         else
             Object.entries(paramsHidden).forEach(([key, value]) => {
