@@ -35,6 +35,7 @@ function* getAssetsSpotlight() {
     try {
         const URL_ASSETS_SPOTLIGHT = `${API_BASE_URL}/assets/public/spotlight`;
 
+        const storesId: string = yield select((state: AppState) => state.stores.currentDomain?._id);
         const filtersState: FilterSliceState = yield select((state: AppState) => state.filters);
         const storesFilters: Record<string, any> = yield select((state: AppState) => state.filters.storesFilters);
         let filters = storesFilters;
@@ -84,6 +85,7 @@ function* getAssetsSpotlight() {
             URL_ASSETS_SPOTLIGHT,
             {
                 query: buildQuery,
+                storesId,
             }
         );
 
@@ -98,6 +100,7 @@ function* getAssetsLastSold() {
     try {
         const URL_ASSETS_LAST_SOLD = `${API_BASE_URL}/assets/public/lastSold`;
 
+        const storesId: string = yield select((state: AppState) => state.stores.currentDomain?._id);
         const filtersState: FilterSliceState = yield select((state: AppState) => state.filters);
         const storesFilters: Record<string, any> = yield select((state: AppState) => state.filters.storesFilters);
         let filters = storesFilters;
@@ -147,6 +150,7 @@ function* getAssetsLastSold() {
             URL_ASSETS_LAST_SOLD,
             {
                 query: buildQuery,
+                storesId,
             }
         );
 
@@ -182,6 +186,7 @@ function* getAssetsGroupByCreator() {
 
         const filtersState: FilterSliceState = yield select((state: AppState) => state.filters);
         const storesFilters: Record<string, any> = yield select((state: AppState) => state.filters.storesFilters);
+        const storesId: string = yield select((state: AppState) => state.stores.currentDomain?._id);
 
         const filters = overwriteWithInitialFilters<FilterSliceState>({
             initialFilters: storesFilters,
@@ -266,6 +271,7 @@ function* getAssetsGroupByCreator() {
                     isIncludeSold: sort.sold === 'yes' ? true : false,
                 },
                 hasBts,
+                storesId,
                 // hasNftAutoStake: selectedLicense === 'nft auto',
             }
         );
@@ -304,6 +310,7 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
 
         let ids: string[] = [];
 
+        const storesId: string = yield select((state: AppState) => state.stores.currentDomain?._id);
         const filtersState: FilterSliceState = yield select((state: AppState) => state.filters);
         const storesFilters: Record<string, any> = yield select((state: AppState) => state.filters.storesFilters);
 
@@ -412,6 +419,7 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
                 isIncludeSold: sort.sold === 'yes' ? true : false,
             },
             hasBts,
+            storesId,
             // hasNftAutoStake: selectedLicense === 'nft auto',
         });
 
