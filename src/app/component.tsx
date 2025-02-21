@@ -19,7 +19,7 @@ import { extractObjects } from '@/utils/extractObjects';
 import StyleElements from './components/Assets/components/StyleElements';
 import { STORES_STORAGE_URL } from '@/constants/aws';
 import { useDomainContext } from './context/domain';
-import { WatherMark } from './components/WatherMark';
+import { WaterMark } from './components/WaterMark';
 
 const params = Object.keys(extractObjects(initialState));
 const initialParams: Record<string, string> = {};
@@ -197,7 +197,7 @@ const Search = () => {
                 />
             </Box>
 
-            {isValidSubdomain && subdomain && status === 'pending' && <WatherMark />}
+            {isValidSubdomain && subdomain && status === 'pending' && <WaterMark />}
         </div>
     );
 };
