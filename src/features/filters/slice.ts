@@ -190,20 +190,20 @@ export const filterSlice = createSlice({
 
             Object.entries(initialParams).forEach(([key, _value]) => {
                 if (typeof payload[key] === 'string') {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    state[key] = initialParams[key];
                     if (persistStoresFilters) {
                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
                         state.storesFilters[key as keyof typeof state.storesFilters] = initialParams[key];
+
+                        state.taxonomy.aiGeneration = ['partial', 'none'];
+                        state.taxonomy.nudity = ['no'];
+                    } else {
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        state[key] = initialParams[key];
                     }
                 } else if (Array.isArray(payload[key]) || typeof payload[key] === 'number') {
                     const [parent, item] = key.split('_');
-
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    state[parent][item] = initialParams[key].split(',');
 
                     if (persistStoresFilters) {
                         if (!state.storesFilters?.[parent as keyof typeof state.storesFilters])
@@ -212,6 +212,13 @@ export const filterSlice = createSlice({
                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
                         state.storesFilters[parent][item] = initialParams[key].split(',');
+
+                        state.taxonomy.aiGeneration = ['partial', 'none'];
+                        state.taxonomy.nudity = ['no'];
+                    } else {
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        state[parent][item] = initialParams[key].split(',');
                     }
                 }
             });
