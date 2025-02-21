@@ -5,10 +5,12 @@ import Stores from '../components/Stores/storesGrid/storesList';
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { SingleValue } from 'react-select';
 import { actions } from '@/features/stores';
+import { STORES_STORAGE_URL } from '@/constants/aws';
 
 const Component = () => {
     const dispatch = useDispatch();
     const data = useSelector((state) => state.stores.paginated);
+    const logo = useSelector((state) => state.stores.currentDomain?.organization?.formats?.logo?.square);
 
     const [selectValues, setSelectValues] = useState({
         search: '',
@@ -46,7 +48,7 @@ const Component = () => {
     }, []);
 
     return (
-        <PageContainer title="Stores">
+        <PageContainer title="Stores" icon={logo ? `${STORES_STORAGE_URL}/${logo}` : undefined}>
             <>
                 <Header rssOptions={[]} />
                 <Stores

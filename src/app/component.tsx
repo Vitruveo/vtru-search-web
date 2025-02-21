@@ -143,9 +143,6 @@ const Search = () => {
             if (Array.isArray(value)) initialFilters[`creators_${key}`] = value.join(',');
         });
 
-        initialFilters.taxonomy_aiGeneration = 'partial,none';
-        initialFilters.taxonomy_nudity = 'no';
-
         dispatch(actions.initialParams({ initialParams: initialFilters, persistStoresFilters: true }));
         dispatch(
             actionsAssets.initialSort({
@@ -156,17 +153,6 @@ const Search = () => {
         if (subdomain && isValidSubdomain) dispatch(actionsAssets.startGrouped('no'));
         else dispatch(actionsAssets.startGrouped('all'));
     }, [storeFilters]);
-
-    // useEffect(() => {
-    //     if (organization?.formats?.logo?.square?.path) {
-    //         const favicon = document.querySelector("link[rel*='icon']") as HTMLLinkElement;
-    //         const logoPath = organization.formats.logo.square.path;
-    //         favicon.rel = 'icon';
-    //         favicon.type = 'image/png';
-    //         favicon.href = `${STORES_STORAGE_URL}/${logoPath}`;
-    //         document.head.appendChild(favicon);
-    //     }
-    // }, [organization]);
 
     const isInIframe = window.self !== window.top;
 
