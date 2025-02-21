@@ -103,7 +103,7 @@ const Search = () => {
         if (!hasFilter) {
             initialFilters.taxonomy_aiGeneration = 'partial,none';
             initialFilters.taxonomy_nudity = 'no';
-            dispatch(actions.initialParams({ initialParams: initialFilters, persistStoresFilters: true }));
+            dispatch(actions.initialParams({ initialParams: initialFilters }));
             dispatch(
                 actionsAssets.initialSort({
                     sort: { order: 'latest', sold: initialFilters.sort_sold || 'no' },
