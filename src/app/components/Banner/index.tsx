@@ -1,6 +1,5 @@
 import { STORES_STORAGE_URL } from '@/constants/aws';
 import { Box, Typography } from '@mui/material';
-import Image from 'next/image';
 
 interface Props {
     data: {
@@ -15,14 +14,7 @@ const Banner = ({ data }: Props) => {
         <Box display="flex" flexDirection="column" gap={4} mb={6}>
             {data?.path && (
                 <Box width="98.8%" position="relative" height={500}>
-                    <Image
-                        src={`${STORES_STORAGE_URL}/${data.path}`}
-                        alt="banner"
-                        layout="fill"
-                        objectFit="cover"
-                        quality={100}
-                        priority
-                    />
+                    <img src={`${STORES_STORAGE_URL}/${data.path}`} alt="banner" width="100%" height="100%" />
                 </Box>
             )}
             <Typography fontSize={'1.4rem'} lineHeight={1.5}>
