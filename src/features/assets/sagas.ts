@@ -267,7 +267,7 @@ function* getAssetsGroupByCreator() {
                 page: page || 1,
                 name: name.trim() || null,
                 sort: {
-                    order: sort.order,
+                    order: sortState.order,
                     isIncludeSold: sort.sold === 'yes' ? true : false,
                 },
                 hasBts,
@@ -415,7 +415,7 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
             precision: colorPrecision.value,
             showAdditionalAssets,
             sort: {
-                order: sort.order,
+                order: sortState.order,
                 isIncludeSold: sort.sold === 'yes' ? true : false,
             },
             hasBts,
