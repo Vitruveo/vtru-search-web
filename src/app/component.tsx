@@ -100,7 +100,20 @@ const Search = () => {
     }, [searchParams]);
 
     useEffect(() => {
-        if (!hasFilter) return;
+        if (!hasFilter) {
+            initialFilters.taxonomy_aiGeneration = 'partial,none';
+            initialFilters.taxonomy_nudity = 'no';
+            dispatch(actions.initialParams({ initialParams: initialFilters, persistStoresFilters: true }));
+            dispatch(
+                actionsAssets.initialSort({
+                    sort: { order: 'latest', sold: initialFilters.sort_sold || 'no' },
+                    persistStoresSort: true,
+                })
+            );
+            if (subdomain && isValidSubdomain) dispatch(actionsAssets.startGrouped('no'));
+            else dispatch(actionsAssets.startGrouped('all'));
+            return;
+        }
 
         Object.entries(storeFilters?.general?.shortcuts || {}).forEach(([key, _value]) => {
             const { key: filterKey, value: filterValue } = fixedShortcuts.get(key)!;
