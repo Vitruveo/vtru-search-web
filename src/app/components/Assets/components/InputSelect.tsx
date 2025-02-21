@@ -1,4 +1,5 @@
 import { useTheme } from '@mui/material/styles';
+import { useEffect, useState } from 'react';
 import Select from 'react-select';
 
 interface Props {
@@ -13,6 +14,11 @@ interface Props {
 
 export function InputSelect({ value, options, onChange, fixed }: Props) {
     const theme = useTheme();
+    const [orderedValues, setOrderedValues] = useState(value);
+
+    useEffect(() => {
+        setOrderedValues([...value].sort((a, b) => a.label.localeCompare(b.label)));
+    }, [value]);
 
     return (
         <Select
@@ -21,6 +27,8 @@ export function InputSelect({ value, options, onChange, fixed }: Props) {
                 control: (base, state) => ({
                     ...base,
                     minWidth: '240px',
+                    maxHeight: '200px',
+                    overflow: 'auto',
                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                     backgroundColor: theme.palette.background.paper,
                     boxShadow: theme.palette.primary.main,
@@ -55,7 +63,7 @@ export function InputSelect({ value, options, onChange, fixed }: Props) {
                     color: theme.palette.text.primary,
                 }),
             }}
-            value={value}
+            value={orderedValues}
             options={options}
             onChange={onChange}
             isClearable={value.some((item) => !fixed?.includes(item.value))}
