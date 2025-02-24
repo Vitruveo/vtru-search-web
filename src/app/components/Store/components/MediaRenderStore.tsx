@@ -45,20 +45,8 @@ const MediaRenderStoreMain = ({
     }
 
     return (
-        <div style={{ width, height, position: 'relative' }}>
-            <Image
-                src={media}
-                alt={alt}
-                onClick={onClick}
-                style={{
-                    cursor: 'pointer',
-                    objectFit: 'contain',
-                }}
-                fill
-                draggable={false}
-                layout="intrinsic"
-                unoptimized
-            />
+        <div style={{ width, height, position: 'relative', cursor: 'pointer' }}>
+            <Image src={media} alt={alt} onClick={onClick} draggable={false} unoptimized fill />
         </div>
     );
 };

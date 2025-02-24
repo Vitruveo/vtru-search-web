@@ -8,6 +8,7 @@ import { actions } from '@/features/store';
 import Header from '@/app/components/Header';
 import { Box } from '@mui/material';
 import { useDomainContext } from '@/app/context/domain';
+import { STORES_STORAGE_URL } from '@/constants/aws';
 
 const Store = () => {
     const { subdomain, isValidSubdomain } = useDomainContext();
@@ -18,6 +19,7 @@ const Store = () => {
     const { asset, loading, creatorAvatar, creatorLoading, lastAssets, lastAssetsLoading } = useSelector(
         (state) => state.store
     );
+    const logo = useSelector((state) => state.stores.currentDomain?.organization?.formats?.logo?.square?.path);
 
     useEffect(() => {
         const getAsset = () => {
@@ -42,7 +44,10 @@ const Store = () => {
     }, [asset]);
 
     return (
-        <PageContainer>
+        <PageContainer
+            title={asset.assetMetadata?.context?.formData?.title}
+            icon={logo ? `${STORES_STORAGE_URL}/${logo}` : null}
+        >
             <Header
                 isStore
                 isPersonalizedStore={!!isValidSubdomain && !!subdomain}

@@ -58,7 +58,7 @@ export default function Profile() {
     }, []);
 
     return (
-        <PageContainer>
+        <PageContainer icon={null}>
             <Header
                 rssOptions={[
                     { flagname: 'JSON', value: 'stacks/json' },

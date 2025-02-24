@@ -13,8 +13,16 @@ const Banner = ({ data }: Props) => {
     return (
         <Box display="flex" flexDirection="column" gap={4} mb={6}>
             {data?.path && (
-                <Box width="98.8%" position="relative" height={500}>
-                    <img src={`${STORES_STORAGE_URL}/${data.path}`} alt="banner" width="100%" height="100%" />
+                <Box width="97.8%" position="relative">
+                    <img
+                        src={`${STORES_STORAGE_URL}/${data.path}`}
+                        alt="banner"
+                        width="100%"
+                        height="100%"
+                        style={{
+                            maxHeight: 500,
+                        }}
+                    />
                 </Box>
             )}
             <Typography fontSize={'1.4rem'} lineHeight={1.5}>

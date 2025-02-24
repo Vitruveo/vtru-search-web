@@ -32,6 +32,8 @@ const Header = ({
     showProjects = true,
 }: Props) => {
     const dispatch = useDispatch();
+    const isMobile = useMediaQuery('(max-width: 900px)');
+
     const themeStyle = useTheme();
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
@@ -119,10 +121,11 @@ const Header = ({
 
                 <Typography
                     sx={{
-                        paddingInline: isStore ? 4.5 : 8,
+                        paddingInline: isMobile ? 0 : isStore ? 4.5 : 8,
                         color: themeStyle.palette.text.primary,
-                        fontSize: 50,
+                        fontSize: isMobile ? 20 : 50,
                         display: 'block',
+                        lineHeight: 1,
                     }}
                 >
                     {storesName}
