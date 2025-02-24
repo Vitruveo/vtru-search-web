@@ -127,6 +127,7 @@ const Stores = ({ data, actions }: StacksProps) => {
                             placeholder="Sort"
                             options={[
                                 { value: 'newToOld', label: 'Latest' },
+                                { value: 'oldToNew', label: 'Oldest' },
                                 {
                                     value: 'nameAZ',
                                     label: 'Name – A to Z',

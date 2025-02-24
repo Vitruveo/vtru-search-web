@@ -174,7 +174,7 @@ const Search = () => {
                 icon={
                     isValidSubdomain && subdomain
                         ? `${STORES_STORAGE_URL}/${organization.formats.logo.square?.path}`
-                        : ''
+                        : null
                 }
             >
                 <AppCard>

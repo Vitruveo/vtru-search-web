@@ -19,7 +19,7 @@ const Store = () => {
     const { asset, loading, creatorAvatar, creatorLoading, lastAssets, lastAssetsLoading } = useSelector(
         (state) => state.store
     );
-    const logo = useSelector((state) => state.stores.currentDomain?.organization?.formats?.logo?.square);
+    const logo = useSelector((state) => state.stores.currentDomain?.organization?.formats?.logo?.square?.path);
 
     useEffect(() => {
         const getAsset = () => {
@@ -46,7 +46,7 @@ const Store = () => {
     return (
         <PageContainer
             title={asset.assetMetadata?.context?.formData?.title}
-            icon={logo ? `${STORES_STORAGE_URL}/${logo}` : undefined}
+            icon={logo ? `${STORES_STORAGE_URL}/${logo}` : null}
         >
             <Header
                 isStore

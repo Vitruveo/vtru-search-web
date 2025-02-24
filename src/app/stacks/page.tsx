@@ -11,6 +11,7 @@ import StyleElements from '../components/Stacks/components/StyleElements';
 import { Box, Theme, useMediaQuery } from '@mui/material';
 import Header from '../components/Header';
 import { useTheme } from '@mui/material/styles';
+import { STORES_STORAGE_URL } from '@/constants/aws';
 
 const Stacks = () => {
     const { language } = useI18n();
@@ -18,6 +19,7 @@ const Stacks = () => {
     const theme = useTheme();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
+    const logo = useSelector((state) => state.stores.currentDomain?.organization?.formats?.logo?.square?.path);
 
     const stacks = useSelector((state) => state.stacks.data);
     const hiddenElement = useSelector((state) => state.customizer.hiddenStack);
@@ -67,7 +69,7 @@ const Stacks = () => {
     const isInIframe = window.self !== window.top;
 
     return (
-        <PageContainer title="Stacks">
+        <PageContainer title="Stacks" icon={logo ? `${STORES_STORAGE_URL}/${logo}` : null}>
             <>
                 {!hiddenElement?.header && (
                     <Header
