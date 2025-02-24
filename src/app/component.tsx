@@ -126,6 +126,12 @@ const Search = () => {
             initialFilters.price_max = storeFilters?.general?.licenses?.maxPrice.toString();
         }
 
+        Object.entries(storeFilters?.portfolio || {}).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+                initialFilters[`portfolio_${key}`] = value.join(',');
+            }
+        });
+
         Object.entries(storeFilters?.context || {}).forEach(([key, value]) => {
             if (Array.isArray(value)) initialFilters[`context_${key}`] = value.join(',');
             if (key === 'precision' && typeof value === 'number')

@@ -36,6 +36,7 @@ export interface Stores {
         context: any;
         taxonomy: any;
         artists: any;
+        portfolio: any;
     };
     status: 'draft' | 'active' | 'inactive' | 'pending';
     username: string;
