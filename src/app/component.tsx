@@ -100,6 +100,8 @@ const Search = () => {
     }, [searchParams]);
 
     useEffect(() => {
+        if (!isValidSubdomain || !subdomain) return;
+
         if (!hasFilter) {
             initialFilters.taxonomy_aiGeneration = 'partial,none';
             initialFilters.taxonomy_nudity = 'no';
