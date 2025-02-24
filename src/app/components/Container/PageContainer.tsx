@@ -5,17 +5,17 @@ type Props = {
     description?: string;
     children: JSX.Element | JSX.Element[];
     title?: string;
-    icon?: string;
+    icon: string | null;
 };
 
-const PageContainer = ({ title, description, icon, children }: Props) => {
+const PageContainer = ({ title, description, icon = null, children }: Props) => {
     return (
         <HelmetProvider>
             <div>
                 <Helmet>
                     <title>{title}</title>
                     <meta name="description" content={description} />
-                    <link rel="icon" href={icon} />
+                    <link rel="icon" href={icon || '../../../../public/images/logos/favicon.ico'} />
                 </Helmet>
                 {children}
             </div>

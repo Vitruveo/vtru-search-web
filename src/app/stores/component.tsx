@@ -10,7 +10,7 @@ import { STORES_STORAGE_URL } from '@/constants/aws';
 const Component = () => {
     const dispatch = useDispatch();
     const data = useSelector((state) => state.stores.paginated);
-    const logo = useSelector((state) => state.stores.currentDomain?.organization?.formats?.logo?.square);
+    const logo = useSelector((state) => state.stores.currentDomain?.organization?.formats?.logo?.square?.path);
 
     const [selectValues, setSelectValues] = useState({
         search: '',
@@ -48,7 +48,7 @@ const Component = () => {
     }, []);
 
     return (
-        <PageContainer title="Stores" icon={logo ? `${STORES_STORAGE_URL}/${logo}` : undefined}>
+        <PageContainer title="Stores" icon={logo ? `${STORES_STORAGE_URL}/${logo}` : null}>
             <>
                 <Header rssOptions={[]} />
                 <Stores
