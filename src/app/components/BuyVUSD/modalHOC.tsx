@@ -27,7 +27,7 @@ export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProp
     const currentChain = chain?.name.toLowerCase();
     const { data: client } = useConnectorClient();
 
-    const [selectedValue, setSelectedValue] = useState('VTRU');
+    const [selectedValue, setSelectedValue] = useState('USDC');
 
     const [vusdRequired, setVusdRequired] = useState(defaultVusdAmount);
     const [usdcConverted, setUsdcConverted] = useState(defaultVusdAmount);
@@ -56,7 +56,6 @@ export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProp
         if (!isOpen || !client || !chain) return;
 
         if (chain.name.toLowerCase().includes('vitruveo')) {
-            setSelectedValue('VTRU');
             setBalanceUSDC({
                 symbol: 'USDC',
                 value: 0,
@@ -80,7 +79,6 @@ export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProp
 
             setUsdcConverted(vusdRequired);
         } else {
-            setSelectedValue('USDC');
             setBalanceVUSD({
                 symbol: 'VUSD',
                 value: 0,
