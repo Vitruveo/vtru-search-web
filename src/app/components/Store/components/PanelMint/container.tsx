@@ -91,7 +91,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     }, [state.credits, state.feesGrid, state.feesVideo]);
 
     useEffect(() => {
-        fetchAssetLicenses();
+        // fetchAssetLicenses();
 
         if (!client) {
             dispatchAction({ type: TypeActions.DISCONNECT, payload: null });
@@ -325,7 +325,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
         dispatchAction({ type: TypeActions.SET_OPEN_MODAL_MINTED, payload: false });
         dispatch(actions.getAssetRequest({ id: asset._id }));
 
-        await fetchAssetLicenses();
+        // await fetchAssetLicenses();
         if (client) {
             await fetchAvailableCredits();
         }

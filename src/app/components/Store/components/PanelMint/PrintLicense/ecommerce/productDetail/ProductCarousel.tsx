@@ -49,7 +49,11 @@ const ProductCarousel = () => {
         });
     }, []);
 
-    const sliderData = SliderData.filter((v) => v.id !== product?.id);
+    const sliderData =
+        product?.images?.map((item, index) => ({
+            id: index + 1,
+            imgPath: item,
+        })) || [];
 
     const { nav1, nav2 } = state;
     const settings = {
@@ -97,15 +101,6 @@ const ProductCarousel = () => {
     return (
         <Box sx={smUp ? { width: 600, margin: '0 auto' } : { width: '100%', margin: '0 auto' }}>
             <Slider asNavFor={nav2} ref={(slider: any) => (slider1.current = slider)}>
-                <Box sx={slider1ContainerStyle}>
-                    <Image
-                        src={getProductImage}
-                        alt={getProductImage}
-                        width={smUp ? 600 : 300}
-                        height={smUp ? 600 : 300}
-                        style={imgStyle}
-                    />
-                </Box>
                 {sliderData.map((step) => (
                     <Box key={step.id} sx={slider1ContainerStyle}>
                         <Image
@@ -120,15 +115,6 @@ const ProductCarousel = () => {
             </Slider>
             <Box sx={smUp ? { width: 600, marginTop: 2 } : {}}>
                 <Slider asNavFor={nav1} ref={(slider: any) => (slider2.current = slider)} {...settings}>
-                    <Box sx={slider2ContainerStyle}>
-                        <Image
-                            src={getProductImage}
-                            alt={getProductImage}
-                            width={smUp ? 92 : 72}
-                            height={smUp ? 92 : 72}
-                            style={imgStyle}
-                        />
-                    </Box>
                     {sliderData.map((step) => (
                         <Box key={step.id} sx={slider2ContainerStyle}>
                             <Image

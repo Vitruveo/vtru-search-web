@@ -11,7 +11,7 @@ export const initialState = {
     openModalBuyVUSD: false,
     expandedAccordion: false,
     link: '',
-    available: false,
+    available: true,
     credits: 0,
     walletCredits: 0,
     platformFee: {

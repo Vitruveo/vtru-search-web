@@ -90,7 +90,7 @@ const ProductDetail = () => {
                         {product?.title}
                     </Typography>
                     <Typography variant="subtitle2" mt={1} color={theme.palette.text.secondary}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ex arcu, tincidunt bibendum felis.
+                        {product.description}{' '}
                     </Typography>
                     {/* ------------------------------------------- */}
                     {/* Price */}

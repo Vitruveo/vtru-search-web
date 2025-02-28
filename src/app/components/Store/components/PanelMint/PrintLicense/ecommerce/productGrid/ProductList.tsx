@@ -243,7 +243,7 @@ const ProductList = ({ onClick, actions, data }: Props) => {
                                                         color="primary"
                                                         onClick={() => dispatch(addToCart(product)) && handleClick()}
                                                         sx={{
-                                                            bottom: '75px',
+                                                            bottom: '98px',
                                                             right: '15px',
                                                             position: 'absolute',
                                                         }}
@@ -252,7 +252,9 @@ const ProductList = ({ onClick, actions, data }: Props) => {
                                                     </Fab>
                                                 </Tooltip>
                                                 <CardContent sx={{ width: 250, p: 3, pt: 2 }}>
-                                                    <Typography variant="h6">{product.title}</Typography>
+                                                    <Typography variant="h6" minHeight={40}>
+                                                        {product.title}
+                                                    </Typography>
                                                     <Stack
                                                         direction="row"
                                                         alignItems="center"

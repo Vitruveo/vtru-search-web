@@ -12,7 +12,7 @@ interface Props {
 
 export const User = ({ asset, creator, creatorName }: Props) => {
     return (
-        <Box display="flex" flexDirection={'row'} gap={1} alignItems={'center'}>
+        <Box mb={2} display="flex" flexDirection={'row'} gap={1} alignItems={'center'}>
             <Avatar
                 baseUrl={GENERAL_STORAGE_URL}
                 path={creator}
