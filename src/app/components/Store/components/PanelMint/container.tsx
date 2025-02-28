@@ -335,12 +335,25 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
         dispatchAction({ type: TypeActions.SET_OPEN_MODAL_LICENSE, payload: false });
     };
 
+    const handleCloseModalPrintLicense = async () => {
+        dispatchAction({ type: TypeActions.SET_OPEN_MODAL_PRINT_LICENSE, payload: false });
+    };
+
     const handleOpenModalBuyVUSD = () => {
         dispatchAction({ type: TypeActions.SET_OPEN_MODAL_BUY_VUSD, payload: true });
     };
 
     const handleCloseModalBuyVUSD = () => {
         dispatchAction({ type: TypeActions.SET_OPEN_MODAL_BUY_VUSD, payload: false });
+    };
+
+    const handleOpenModalPrintLicense = () => {
+        // connect wallet if not connected
+        // if (!isConnected && openConnectModal) {
+        //     openConnectModal();
+        // }
+
+        dispatchAction({ type: TypeActions.SET_OPEN_MODAL_PRINT_LICENSE, payload: true });
     };
 
     const handleOpenModalLicense = () => {
@@ -380,6 +393,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
                 link: state.link,
                 stateModalMinted: state.openModalMinted,
                 stateModalLicense: state.openModalLicense,
+                stateModalPrintLicense: state.openModalPrintLicense,
                 chain: chain ? chain.name.toLowerCase().includes('vitruveo') : false,
                 platformFee: state.platformFee,
                 totalFee: state.totalFee,
@@ -396,11 +410,13 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
             actions={{
                 handleMintNFT,
                 handleCloseModalMinted,
+                handleCloseModalPrintLicense,
                 handleCloseModalLicense,
                 handleOpenModalLicense,
                 handleOpenModalBuyVUSD,
                 handleCloseModalBuyVUSD,
                 handleAccordionChange,
+                handleOpenModalPrintLicense,
             }}
         />
     );

@@ -5,6 +5,7 @@ import BuyVUSDModalHOC from '@/app/components/BuyVUSD/modalHOC';
 import ModalMinted from '../ModalMinted';
 import MetadataAccordion from '../Metadata/MetadataAccordion';
 import LicenseModal from './licenseModal';
+import PrintLicenseModal from './PrintLicense/index';
 import { LastAssetsList } from '../LastAssetsList';
 import { LastAssets } from '@/features/store/types';
 import { LoadingAvailableLincenses } from '../LoadingAvailableLicenses';
@@ -27,6 +28,7 @@ export interface PanelMintProps {
         isConnected: boolean;
         stateModalMinted: boolean;
         stateModalLicense: boolean;
+        stateModalPrintLicense: boolean;
         link: string;
         loading: {
             state: boolean;
@@ -70,6 +72,8 @@ export interface PanelMintProps {
         handleCloseModalMinted: () => void;
         handleCloseModalLicense: () => void;
         handleOpenModalLicense: () => void;
+        handleCloseModalPrintLicense: () => void;
+        handleOpenModalPrintLicense: () => void;
         handleOpenModalBuyVUSD: () => void;
         handleCloseModalBuyVUSD: () => void;
         handleAccordionChange: (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => void;
@@ -83,6 +87,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
         assetLicenses,
         stateModalMinted,
         stateModalLicense,
+        stateModalPrintLicense,
         expandedAccordion,
         available,
         asset,
@@ -93,6 +98,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
     const {
         handleCloseModalMinted,
         handleOpenModalLicense,
+        handleOpenModalPrintLicense,
         handleAccordionChange,
         handleOpenModalBuyVUSD,
         handleCloseModalBuyVUSD,
@@ -100,7 +106,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
 
     if (!assetLicenses) return <LoadingAvailableLincenses message="Checking Licenses..." background="#000000" />;
 
-    if (!stateModalLicense && !openModalBuyVUSD && !stateModalMinted) {
+    if (!stateModalPrintLicense && !stateModalLicense && !openModalBuyVUSD && !stateModalMinted) {
         return (
             <>
                 <Typography variant="h4" sx={{ color: '#ffff' }} marginBottom={2}>
@@ -163,9 +169,20 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                             onChange={handleAccordionChange('print')}
                         >
                             <Box display="flex" alignItems="center" height={140} marginLeft={3}>
-                                <Typography variant="h6" sx={{ color: theme.palette.text.primary }}>
-                                    Coming Soon!
-                                </Typography>
+                                <Button
+                                    variant="contained"
+                                    onClick={handleOpenModalPrintLicense}
+                                    sx={{
+                                        backgroundColor: theme.palette.primary.main,
+                                        color: '#ffff',
+                                        '&:hover': {
+                                            backgroundColor: theme.palette.primary.main,
+                                        },
+                                        borderRadius: 0,
+                                    }}
+                                >
+                                    Buy
+                                </Button>
                             </Box>
                         </MetadataAccordion>
                     </Box>
@@ -187,6 +204,15 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
         <>
             <Card style={{ display: 'flex', flexDirection: 'column', borderRadius: 0 }}>
                 <LicenseModal
+                    image={image}
+                    size={size}
+                    creatorAvatar={creatorAvatar}
+                    creatorName={creatorName}
+                    data={data}
+                    actions={actions}
+                />
+
+                <PrintLicenseModal
                     image={image}
                     size={size}
                     creatorAvatar={creatorAvatar}
