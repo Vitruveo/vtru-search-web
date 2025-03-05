@@ -74,8 +74,14 @@ const Store = ({ data }: StoreProps) => {
             </Grid>
         );
 
+    const previewPath = `${ASSET_STORAGE_URL}/${asset.formats?.preview.path}`;
+
+    const width =
+        image === previewPath && isMobile ? 300 : isMobile ? '100%' : image === previewPath ? 500 : size.width;
+    const height = image === previewPath && isMobile ? 300 : image === previewPath ? 500 : size.height;
+
     return (
-        <LazyLoad once style={{ minWidth: 1300 }}>
+        <LazyLoad once style={{ minWidth: !isMobile ? 1300 : 0 }}>
             <Box display="flex" flexDirection="column" gap={3}>
                 <Grid
                     container
@@ -99,8 +105,8 @@ const Store = ({ data }: StoreProps) => {
                     >
                         <MediaRenderStore
                             media={image}
-                            width={isMobile ? '100%' : size.width}
-                            height={size.height}
+                            width={width}
+                            height={height}
                             alt="original"
                             onClick={() => handleOpen(image)}
                         />
