@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -35,8 +35,23 @@ import {
     sortByProducts,
 } from '@/features/ecommerce/slice';
 import ProductSearch from './ProductSearch';
+import { CustomSelect } from '@/app/components/Assets/components/CustomSelect';
+import axios from 'axios';
+
+const defaultRegion = { label: 'All regions', value: 'allRegions' };
+
+const regions = [
+    defaultRegion,
+    { label: 'Asia', value: 'AS' },
+    { label: 'Europe', value: 'EU' },
+    { label: 'North America', value: 'NA' },
+    { label: 'Oceania', value: 'OC' },
+    { label: 'South America', value: 'SA' },
+    { label: 'Rest of the world', value: 'restOfWorld' },
+];
 
 const ProductFilter = () => {
+    const [selectedRegion, setSelectedRegion] = useState(defaultRegion);
     const dispatch = useDispatch();
     const products = useSelector((state) => state.ecommerce.products);
     const active = useSelector((state) => state.ecommerce.filters);
@@ -137,11 +152,23 @@ const ProductFilter = () => {
             dispatch(sortByGender({ gender: value.target.value }));
         }
     };
+
     const handlerPriceFilter = (value: React.ChangeEvent<HTMLInputElement>) => {
         if (value.target.checked) {
             dispatch(sortByPrice({ price: value.target.value }));
         }
     };
+
+    const getRegionFromApi = async () => {
+        const response = await axios.get('https://geolocation.onetrust.com/cookieconsentpub/v1/geo/location');
+        const regionKey = response.data.continent;
+        const region = regions.find((reg) => reg.value === regionKey) || defaultRegion;
+        setSelectedRegion(region);
+    };
+
+    useEffect(() => {
+        getRegionFromApi();
+    }, []);
 
     return (
         <>
@@ -149,10 +176,25 @@ const ProductFilter = () => {
                 <ProductSearch />
             </Box>
 
-            <List>
+            <List sx={{ maxHeight: '100vh', overflow: 'auto', paddingBottom: 8 }}>
                 {/* ------------------------------------------- */}
                 {/* Category filter */}
                 {/* ------------------------------------------- */}
+
+                <Box px={3} mt={2} pb={2}>
+                    <Typography mt={2} pb={2} variant="subtitle2" fontWeight={600}>
+                        Shipping region
+                    </Typography>
+                    <CustomSelect
+                        placeholder="Shipping region"
+                        onChange={() => {}}
+                        value={[selectedRegion]}
+                        options={regions}
+                    />
+                </Box>
+
+                <Divider />
+
                 {filterCategory.map((filter) => {
                     if (filter.filterbyTitle) {
                         return (
