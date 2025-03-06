@@ -26,7 +26,16 @@ export const LastAssetsList = ({ assets, loading, creatorName, creatorId }: Prop
                     </Link>
                 </Box>
             )}
-            <Box sx={{ display: 'flex', width: '100%', justifyContent: 'left', marginBlock: 2, gap: 2 }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    width: '100%',
+                    justifyContent: 'left',
+                    marginBlock: 2,
+                    gap: 2,
+                    flexWrap: 'wrap',
+                }}
+            >
                 {loading ? (
                     <Box>
                         {Array.from({ length: 5 }).map((_, index) => (
