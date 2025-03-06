@@ -1,8 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppBar, Box, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { Theme } from '@mui/material/styles';
+import { useTheme, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { IconMoon, IconSun, IconMenu2 } from '@tabler/icons-react';
 import { customizerActionsCreators } from '@/features/customizer';
@@ -33,9 +32,9 @@ const Header = ({
 }: Props) => {
     const dispatch = useDispatch();
     const isMobile = useMediaQuery('(max-width: 900px)');
-    const theme = useTheme();
+
     const themeStyle = useTheme();
-    const lgDown = useMediaQuery((them: Theme) => them.breakpoints.down('lg'));
+    const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
     const [modalState, setModalState] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -91,10 +90,10 @@ const Header = ({
             color="default"
             elevation={0}
             sx={{
-                background: theme.palette.background.paper,
+                background: themeStyle.palette.background.paper,
                 justifyContent: 'center',
                 backdropFilter: 'blur(4px)',
-                [theme.breakpoints.up('lg')]: {
+                [themeStyle.breakpoints.up('lg')]: {
                     minHeight: customizer.TopbarHeight,
                 },
             }}
@@ -103,7 +102,7 @@ const Header = ({
                 sx={{
                     margin: '0 auto',
                     width: '100%',
-                    color: `${theme.palette.text.secondary} !important`,
+                    color: `${themeStyle.palette.text.secondary} !important`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
