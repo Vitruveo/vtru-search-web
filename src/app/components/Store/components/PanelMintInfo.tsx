@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Theme, Typography, useMediaQuery } from '@mui/material';
 
 interface PanelMintInfoProps {
     title: string;
@@ -12,6 +12,8 @@ const colors = {
 };
 
 export default function PanelMintInfo({ title, content, color, disable = false }: PanelMintInfoProps) {
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.down('sm'));
+
     return (
         <Grid container spacing={2} style={{ justifyContent: 'space-between' }}>
             <Grid item sm={6}>
@@ -19,7 +21,7 @@ export default function PanelMintInfo({ title, content, color, disable = false }
                     variant="body1"
                     fontWeight="bold"
                     style={{
-                        fontSize: 22,
+                        fontSize: smUp ? 15 : 22,
                         whiteSpace: 'nowrap',
                         wordBreak: 'break-all',
                         color: disable ? '#DEDEDE' : color || 'unset',
@@ -29,11 +31,11 @@ export default function PanelMintInfo({ title, content, color, disable = false }
                 </Typography>
             </Grid>
             <Grid item sm={6}>
-                <Box display="flex" gap={1} justifyContent={'flex-end'} maxWidth="89.8%">
+                <Box display="flex" gap={1} justifyContent={'flex-end'} marginRight={smUp ? 3.2 : 4.2}>
                     <Typography
                         variant="body1"
                         style={{
-                            fontSize: 22,
+                            fontSize: smUp ? 15 : 22,
                             wordBreak: 'keep-all',
                             overflowWrap: 'normal',
                             color: disable ? '#DEDEDE' : color || 'unset',
