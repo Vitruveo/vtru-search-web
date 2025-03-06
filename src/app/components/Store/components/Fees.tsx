@@ -1,5 +1,5 @@
 import { formatPrice } from '@/utils/assets';
-import { Box, Grid, Tooltip, Typography } from '@mui/material';
+import { Box, Grid, Theme, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import { IconInfoCircle } from '@tabler/icons-react';
 
 interface FeesProps {
@@ -18,6 +18,8 @@ interface FeesProps {
 }
 
 export default function Fees({ title, value, fees }: FeesProps) {
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.down('sm'));
+
     return (
         <Grid container spacing={2} style={{ justifyContent: 'space-between' }}>
             <Grid item sm={6} alignItems={'center'} display={'flex'}>
@@ -25,7 +27,7 @@ export default function Fees({ title, value, fees }: FeesProps) {
                     variant="body1"
                     fontWeight="bold"
                     style={{
-                        fontSize: 22,
+                        fontSize: smUp ? 15 : 22,
                         whiteSpace: 'nowrap',
                         wordBreak: 'break-all',
                     }}
@@ -34,11 +36,11 @@ export default function Fees({ title, value, fees }: FeesProps) {
                 </Typography>
             </Grid>
             <Grid item sm={6}>
-                <Box display={'flex'} fontSize={22} alignItems={'center'} gap={1.1} justifyContent={'flex-end'}>
+                <Box display={'flex'} alignItems={'center'} gap={1.1} justifyContent={'flex-end'}>
                     <Typography
                         variant="body1"
                         style={{
-                            fontSize: 22,
+                            fontSize: smUp ? 15 : 22,
                             wordBreak: 'keep-all',
                             overflowWrap: 'normal',
                         }}
@@ -62,7 +64,10 @@ export default function Fees({ title, value, fees }: FeesProps) {
                             </>
                         }
                     >
-                        <IconInfoCircle style={{ transform: 'translateY(0%)', cursor: 'pointer' }} />
+                        <IconInfoCircle
+                            size={smUp ? 17 : 25}
+                            style={{ transform: 'translateY(0%)', cursor: 'pointer' }}
+                        />
                     </Tooltip>
                 </Box>
             </Grid>
