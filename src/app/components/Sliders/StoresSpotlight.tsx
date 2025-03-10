@@ -15,8 +15,6 @@ function StoresSpotlightSlider() {
     const theme = useTheme();
 
     const handleClickItem = (store: StoresSpotlight) => {
-        console.log('store', store);
-
         if (NODE_ENV === 'production') {
             window.open(`https://${store.url}.xibit.live`, '_blank');
             return;
