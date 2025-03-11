@@ -95,7 +95,7 @@ function StoresSpotlightSlider({ stores }: Props) {
 
 function StoresSpotlightSliderHOC() {
     const stores = useSelector((state) => state.stores.spotlight);
-    if (!stores) return null;
+    if (!stores.length) return null;
 
     return <StoresSpotlightSlider stores={stores} />;
 }
