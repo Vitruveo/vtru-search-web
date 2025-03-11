@@ -9,9 +9,11 @@ import { STORES_STORAGE_URL } from '@/constants/aws';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
 
-function StoresSpotlightSlider() {
-    const stores = useSelector((state) => state.stores.spotlight);
+interface Props {
+    stores: StoresSpotlight[];
+}
 
+function StoresSpotlightSlider({ stores }: Props) {
     const theme = useTheme();
 
     const handleClickItem = (store: StoresSpotlight) => {
@@ -26,8 +28,8 @@ function StoresSpotlightSlider() {
 
     return (
         <Box minHeight={250}>
-            <Marquee>
-                {stores.map((item, index) => {
+            <Marquee autoFill style={{ overflow: 'hidden' }}>
+                {stores.map((item) => {
                     return (
                         <Box
                             display="flex"
@@ -43,11 +45,10 @@ function StoresSpotlightSlider() {
                                     boxShadow: '0 0 10px 0px #000',
                                 },
                             }}
-                            key={index}
+                            key={item._id}
                         >
                             <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
                                 <MediaRenderer
-                                    key={item._id}
                                     src={`${STORES_STORAGE_URL}/${item.logo}`}
                                     fallbackSrc={'https://via.placeholder.com/250'}
                                     onClick={() => handleClickItem(item)}
@@ -92,4 +93,11 @@ function StoresSpotlightSlider() {
     );
 }
 
-export default StoresSpotlightSlider;
+function StoresSpotlightSliderHOC() {
+    const stores = useSelector((state) => state.stores.spotlight);
+    if (!stores) return null;
+
+    return <StoresSpotlightSlider stores={stores} />;
+}
+
+export default StoresSpotlightSliderHOC;
