@@ -73,11 +73,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
                 </Typography>
                 <Box mt={3} mb={3} display="flex" alignItems="center" gap={1}>
                     <Avatar baseUrl={GENERAL_STORAGE_URL} path={creator.avatar} />
-                    <Username
-                        username={assetView?.creator?.username}
-                        vaultAdress={assetView?.vault?.vaultAddress}
-                        size="medium"
-                    />
+                    <Username username={assetView?.creator?.username} size="medium" />
                 </Box>
                 <Box mb={3}>
                     <Typography variant="h6">

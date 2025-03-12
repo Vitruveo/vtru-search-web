@@ -88,7 +88,7 @@ function SpotlightSlider() {
                                     {assetTitle}
                                 </Typography>
                                 <Box sx={{ width: '100%' }}>
-                                    <Username username={creatorName} vaultAdress={vaultAddress} size="small" />
+                                    <Username username={creatorName} size="small" />
                                 </Box>
                                 <Stack mt={2}>
                                     <Typography

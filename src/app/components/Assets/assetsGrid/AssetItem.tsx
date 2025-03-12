@@ -133,11 +133,7 @@ const AssetItemMain = ({
                             </Stack>
 
                             <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
-                                <Username
-                                    username={creatorName}
-                                    vaultAdress={asset?.vault?.vaultAddress}
-                                    size="small"
-                                />
+                                <Username username={creatorName} size="small" />
                             </Stack>
 
                             <Stack flexDirection="row" justifyContent="space-between" alignItems="end">

@@ -1,14 +1,10 @@
-import { useHasStakes } from '@/app/hooks/useHasStakes';
 import { SEARCH_BASE_URL } from '@/constants/api';
 import { actions as actionsFilters } from '@/features/filters/slice';
 import { useDispatch } from '@/store/hooks';
 import { Box, Link, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { useEffect, useState } from 'react';
 
 interface Props {
     username: string;
-    vaultAdress: string | null;
     size: 'small' | 'medium' | 'large';
     openInNewTab?: boolean;
     iconSpacing?: 'small' | 'large';
@@ -20,11 +16,8 @@ const fontSizes = {
     large: '1.4rem',
 };
 
-const Username = ({ username, vaultAdress, size, openInNewTab = false, iconSpacing = 'large' }: Props) => {
-    const theme = useTheme();
+const Username = ({ username, size, openInNewTab = false, iconSpacing = 'large' }: Props) => {
     const dispatch = useDispatch();
-    const [hasStakes, setHasStakes] = useState(false);
-    const vaultStake = useHasStakes(vaultAdress);
 
     const onClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         event.stopPropagation();
@@ -36,17 +29,6 @@ const Username = ({ username, vaultAdress, size, openInNewTab = false, iconSpaci
             );
         }
     };
-
-    useEffect(() => {
-        // check is promise pending
-        if (vaultStake instanceof Promise) {
-            vaultStake.then((result) => {
-                setHasStakes(result);
-            });
-        } else {
-            setHasStakes(vaultStake);
-        }
-    }, [vaultStake]);
 
     return (
         <Box width={'100%'}>
@@ -78,7 +60,6 @@ const Username = ({ username, vaultAdress, size, openInNewTab = false, iconSpaci
                     >
                         {username}
                     </Typography>
-                    {hasStakes && <span style={{ color: theme.palette.primary.main }}>&sect; </span>}
                 </Box>
             </Link>
         </Box>

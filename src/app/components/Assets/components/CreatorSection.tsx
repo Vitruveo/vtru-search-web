@@ -23,50 +23,44 @@ const CreatorSection = ({ hasCurated, creatorId, returnToPageOne }: Props) => {
     return (
         <Box display="flex" alignItems={'center'} gap={1}>
             {hasCurated ||
-                !hasIncludesGroupActive ||
-                tabNavigation.assets?.length > 0 ||
-                tabNavigation.artists?.length > 0 ? (
+            !hasIncludesGroupActive ||
+            tabNavigation.assets?.length > 0 ||
+            tabNavigation.artists?.length > 0 ? (
                 <Box display="flex" alignItems="flex-end" gap={2} paddingBlock={2}>
                     {(hasCurated || tabNavigation.assets?.length > 0 || tabNavigation.artists?.length > 0) && (
                         <Typography variant="h4">
                             {gridTitle || videoTitle || slideshowTitle || tabNavigation.title || 'Curated arts'}
                         </Typography>
                     )}
-                    {hasIncludesGroup.name && (
-                        <Username
-                            username={assets[0]?.creator.username}
-                            vaultAdress={assets[0]?.vault?.vaultAddress}
-                            size="large"
-                        />
-                    )}
+                    {hasIncludesGroup.name && <Username username={assets[0]?.creator.username} size="large" />}
                     {(hasCurated ||
                         hasIncludesGroup.name ||
                         creatorId ||
                         tabNavigation.assets?.length > 0 ||
                         tabNavigation.artists?.length > 0) && (
-                            <button
-                                style={{
-                                    border: 'none',
-                                    background: 'none',
+                        <button
+                            style={{
+                                border: 'none',
+                                background: 'none',
+                                cursor: 'pointer',
+                                padding: 0,
+                                width: '100%',
+                            }}
+                            onClick={returnToPageOne}
+                        >
+                            <Typography
+                                variant="h6"
+                                color="primary"
+                                sx={{
+                                    textDecoration: 'underline',
                                     cursor: 'pointer',
-                                    padding: 0,
-                                    width: '100%',
+                                    fontSize: 14,
                                 }}
-                                onClick={returnToPageOne}
                             >
-                                <Typography
-                                    variant="h6"
-                                    color="primary"
-                                    sx={{
-                                        textDecoration: 'underline',
-                                        cursor: 'pointer',
-                                        fontSize: 14,
-                                    }}
-                                >
-                                    {language['search.assetList.resetsearch'] as string}
-                                </Typography>
-                            </button>
-                        )}
+                                {language['search.assetList.resetsearch'] as string}
+                            </Typography>
+                        </button>
+                    )}
                 </Box>
             ) : (
                 <Box />

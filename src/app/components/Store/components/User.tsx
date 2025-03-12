@@ -20,7 +20,6 @@ export const User = ({ asset, creator, creatorName }: Props) => {
             />
             <Username
                 username={creatorName || asset.creator?.username}
-                vaultAdress={asset.vault?.vaultAddress}
                 size="medium"
                 openInNewTab
                 iconSpacing="small"

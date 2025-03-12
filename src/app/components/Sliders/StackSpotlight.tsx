@@ -77,11 +77,7 @@ function StackSpotlightSlider() {
                                         Curator
                                     </Typography>
                                     <Box display="flex" gap={1} alignItems="center">
-                                        <Username
-                                            username={creatorName}
-                                            vaultAdress={item.stack.vault?.vaultAddress}
-                                            size="medium"
-                                        />
+                                        <Username username={creatorName} size="medium" />
                                     </Box>
                                 </StackMui>
                             </CardContent>

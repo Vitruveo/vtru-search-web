@@ -88,7 +88,7 @@ function RecentlySoldSlider() {
                                     {assetTitle}
                                 </Typography>
                                 <Box sx={{ width: '100%' }}>
-                                    <Username username={creatorName} vaultAdress={vaultAddress} size="small" />
+                                    <Username username={creatorName} size="small" />
                                 </Box>
                                 <Stack direction="row" justifyContent="space-between" mt={2}>
                                     <Box>
