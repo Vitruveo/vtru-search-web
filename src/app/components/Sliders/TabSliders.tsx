@@ -10,8 +10,6 @@ import { IconEye } from '@tabler/icons-react';
 import ArtistsSpotlight from './ArtistsSpotlight';
 import { useI18n } from '@/app/hooks/useI18n';
 
-const spotlightMinLength = 5;
-
 export default function TabSliders() {
     const { language } = useI18n();
     const dispatch = useDispatch();
@@ -21,13 +19,9 @@ export default function TabSliders() {
     const hidden = useSelector((state) => state.customizer.hidden);
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
 
-    const spotlight = useSelector((state) => state.assets.spotlight);
-    const lastSold = useSelector((state) => state.assets.lastSold);
-    const artistSpotlight = useSelector((state) => state.assets.artistSpotlight);
-
-    const showSpotlight = spotlight.length >= spotlightMinLength && !hidden?.spotlight;
-    const showArtistSpotlight = artistSpotlight.length >= spotlightMinLength && !hidden?.artistSpotlight;
-    const showLastSold = lastSold.length >= spotlightMinLength && !hidden?.recentlySold;
+    const showSpotlight = !hidden?.spotlight;
+    const showArtistSpotlight = !hidden?.artistSpotlight;
+    const showLastSold = !hidden?.recentlySold;
 
     const [tabValue, setTabValue] = useState(activeSlider);
 
