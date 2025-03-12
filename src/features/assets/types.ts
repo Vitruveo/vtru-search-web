@@ -15,8 +15,11 @@ export interface AssetsSliceState {
     data: AssetData;
     tags: Tags[];
     spotlight: SpotlightAsset[];
+    spotlightLoading: boolean;
     lastSold: LastSoldAsset[];
+    lastSoldLoading: boolean;
     artistSpotlight: ArtistsSpotlight[];
+    artistSpotlightLoading: boolean;
     creator: Creator;
     slideshow: string;
     video: string;
@@ -293,17 +296,17 @@ export interface GetCreatorParams {
 
 export interface BuidlQuery {
     [key: string]:
-        | string
-        | boolean
-        | {
-              $in: string[];
-          }
-        | {
-              [key: string]: {
-                  $regex: string;
-                  $options: string;
-              };
-          }[];
+    | string
+    | boolean
+    | {
+        $in: string[];
+    }
+    | {
+        [key: string]: {
+            $regex: string;
+            $options: string;
+        };
+    }[];
 }
 
 export interface MakeVideoResponse {
