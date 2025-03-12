@@ -4,7 +4,7 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { API_BASE_URL } from '@/constants/api';
 import axios, { AxiosResponse } from 'axios';
 import { APIResponse } from '../common/types';
-import { GetStoresResponse, Stores } from './types';
+import { GetStoresResponse, Stores, StoresSpotlight } from './types';
 
 function* getStores({ payload }: PayloadAction<{ subdomain: string }>) {
     yield put(actions.startLoading());
@@ -52,10 +52,21 @@ function* getStoresList() {
     yield put(actions.finishLoading());
 }
 
+function* getStoresSpotlight() {
+    try {
+        const URL_STORES_SPOTLIGHT = `${API_BASE_URL}/stores/public/spotlight`;
+        const response: AxiosResponse<APIResponse<StoresSpotlight[]>> = yield call(axios.get, URL_STORES_SPOTLIGHT);
+        yield put(actions.setSpotlight(response.data.data));
+    } catch (error) {
+        // Handle error
+    }
+}
+
 export function* storesSagas() {
     yield all([
         takeEvery(actions.getStoresRequest.type, getStores),
         takeEvery(actions.getStoresListRequest.type, getStoresList),
+        takeEvery(actions.getStoresListRequest.type, getStoresSpotlight),
 
         takeEvery(actions.setPage.type, getStoresList),
         takeEvery(actions.setSort.type, getStoresList),
