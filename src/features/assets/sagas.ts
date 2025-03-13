@@ -32,6 +32,7 @@ import validateCryptoAddress from '@/utils/adressValidate';
 import { overwriteWithInitialFilters } from '@/utils/assets';
 
 function* getAssetsSpotlight() {
+    yield put(actions.setSpotlightLoading(true));
     try {
         const URL_ASSETS_SPOTLIGHT = `${API_BASE_URL}/assets/public/spotlight`;
 
@@ -93,10 +94,13 @@ function* getAssetsSpotlight() {
     } catch (error) {
         console.error(error);
         // Handle error
+    } finally {
+        yield put(actions.setSpotlightLoading(false));
     }
 }
 
 function* getAssetsLastSold() {
+    yield put(actions.setLastSoldLoading(true));
     try {
         const URL_ASSETS_LAST_SOLD = `${API_BASE_URL}/assets/public/lastSold`;
 
@@ -157,10 +161,13 @@ function* getAssetsLastSold() {
         yield put(actions.setLastSold(response.data.data));
     } catch (error) {
         // Handle error
+    } finally {
+        yield put(actions.setLastSoldLoading(false));
     }
 }
 
 function* getArtistsSpotlight() {
+    yield put(actions.setArtistSpotlightLoading(true));
     try {
         const storesFilters: Record<string, any> = yield select((state: AppState) => state.filters.storesFilters);
 
@@ -174,6 +181,8 @@ function* getArtistsSpotlight() {
         yield put(actions.setArtistSpotlight(response.data.data));
     } catch (error) {
         // handle error
+    } finally {
+        yield put(actions.setArtistSpotlightLoading(false));
     }
 }
 
@@ -595,7 +604,7 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                onUploadProgress: (_progressEvent: any) => {},
+                onUploadProgress: (_progressEvent: any) => { },
             }
         );
         yield put(actions.setVideoUrl(response.data.data.url));
