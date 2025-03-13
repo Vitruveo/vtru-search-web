@@ -205,6 +205,7 @@ function* getAssetsGroupByCreator() {
             target: sortState,
         });
 
+        const price = filters.price;
         const name = filters.name;
         const hasBts = filters.hasBts;
         const artists = filters.tabNavigation.artists;
@@ -263,6 +264,8 @@ function* getAssetsGroupByCreator() {
             `${API_BASE_URL}/assets/public/groupByCreator`,
             {
                 query: buildQuery,
+                minPrice: price.min,
+                maxPrice: price.max,
                 limit: limit || 25,
                 page: page || 1,
                 name: name.trim() || null,
@@ -719,6 +722,7 @@ export function* assetsSagas() {
         takeEvery(actionsFilter.changePortfolioWallets.type, getAssetsGroupByCreator),
         takeEvery(actionsFilter.changeHasBts.type, getAssetsGroupByCreator),
         takeEvery(actionsFilter.changeLicenseChecked.type, getAssetsGroupByCreator),
+        takeEvery(actionsFilter.changePrice.type, getAssetsGroupByCreator),
 
         // Sold
         takeEvery(actions.loadAssetsLastSold.type, getAssetsLastSold),
