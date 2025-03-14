@@ -21,9 +21,8 @@ export default function TabSliders() {
     const hidden = useSelector((state) => state.customizer.hidden);
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
 
-    const spotlight = useSelector((state) => state.assets.spotlight);
-    const lastSold = useSelector((state) => state.assets.lastSold);
-    const artistSpotlight = useSelector((state) => state.assets.artistSpotlight);
+    const { spotlight, spotlightLoading, lastSold, lastSoldLoading, artistSpotlight, artistSpotlightLoading } =
+        useSelector((state) => state.assets);
 
     const showSpotlight = spotlight.length >= spotlightMinLength && !hidden?.spotlight;
     const showArtistSpotlight = artistSpotlight.length >= spotlightMinLength && !hidden?.artistSpotlight;
@@ -32,6 +31,9 @@ export default function TabSliders() {
     const [tabValue, setTabValue] = useState(activeSlider);
 
     useEffect(() => {
+        const isLoading = spotlightLoading || lastSoldLoading || artistSpotlightLoading;
+        if (isLoading) return;
+
         if (!showSpotlight && !showArtistSpotlight && !showLastSold) return;
 
         const activeIsHidden =
@@ -47,7 +49,15 @@ export default function TabSliders() {
                 dispatch(changeActiveSlider(newTabValue));
             }
         }
-    }, [activeSlider, showSpotlight, showArtistSpotlight, showLastSold]);
+    }, [
+        activeSlider,
+        showSpotlight,
+        showArtistSpotlight,
+        showLastSold,
+        spotlightLoading,
+        lastSoldLoading,
+        artistSpotlightLoading,
+    ]);
 
     if (!showSpotlight && !showArtistSpotlight && !showLastSold) return null;
 

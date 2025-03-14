@@ -41,10 +41,11 @@ import PortfolioItem from '../components/PortfolioItem';
 import { ContextItem } from '../components/ContextItem';
 import { TaxonomyItem } from '../components/TaxonomyItem';
 import { CreatorsItem } from '../components/CreatorsItem';
-import { Range } from '../components/Range';
+import Range from '../components/Range';
 import { Wallets } from '../components/Wallets';
 import { AssetFilterAccordion } from './AssetFilterAccordion';
 import Version from '../../Version';
+import { useDebounce } from '@/app/hooks/useDebounce';
 
 const Filters = () => {
     const params = new URLSearchParams(window.location.search);
@@ -53,6 +54,7 @@ const Filters = () => {
     const slideshow = params.get('slideshow');
     const video = params.get('video');
 
+    const [priceValue, setPriceValue] = useState<{ min: number; max: number }>();
     const [isHideNuditychecked, setIsHideNudityChecked] = useState(false);
     const [isHideAIchecked, setIsHideAIChecked] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -68,6 +70,7 @@ const Filters = () => {
     const dispatch = useDispatch();
     const { language } = useI18n();
     const isSmallScreen = useMediaQuery((them: Theme) => them.breakpoints.down('lg'));
+    const debouncePriceValue = useDebounce({ value: priceValue, delay: 500 });
 
     const values = useSelector((state) => state.filters);
     const { tags, maxPrice, sort } = useSelector((state) => state.assets);
@@ -122,7 +125,9 @@ const Filters = () => {
         );
     }, [values.context, values.taxonomy, values.creators, values.shortCuts]);
 
-    const afterPriceChange = (min: number, max: number) => {
+    useEffect(() => {
+        if (!debouncePriceValue) return;
+        const { min, max } = debouncePriceValue;
         generateQueryParam('price_min', min.toString());
         generateQueryParam('price_max', max.toString());
         dispatch(
@@ -131,6 +136,10 @@ const Filters = () => {
                 max,
             })
         );
+    }, [debouncePriceValue]);
+
+    const afterPriceChange = (min: number, max: number) => {
+        setPriceValue({ min, max });
     };
 
     const handleResetFilters = () => {
