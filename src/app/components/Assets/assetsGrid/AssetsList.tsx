@@ -1,6 +1,6 @@
 import { useI18n } from '@/app/hooks/useI18n';
 import { useToggle } from '@/app/hooks/useToggle';
-import { STORE_BASE_URL } from '@/constants/api';
+import { SEARCH_BASE_URL, STORE_BASE_URL } from '@/constants/api';
 import { actions } from '@/features/assets';
 import { Asset } from '@/features/assets/types';
 import { actions as actionsFilters } from '@/features/filters/slice';
@@ -406,9 +406,20 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                             {!isBlockLoader && (
                                 <>
                                     <Switch onChange={handleChangeCurateStack} checked={curateStack.isActive} />
-                                    <Box display={'flex'} gap={1}>
+                                    <Box display={'flex'} gap={3}>
                                         <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
                                             {language['search.assetList.curateStack'] as string}
+                                        </Typography>
+                                        <Typography
+                                            variant={lgUp ? 'h5' : 'inherit'}
+                                            noWrap
+                                            color={theme.palette.primary.main}
+                                            sx={{ cursor: 'pointer' }}
+                                            onClick={() => {
+                                                window.open(`${SEARCH_BASE_URL}/stacks`, '_blank');
+                                            }}
+                                        >
+                                            View Stacks
                                         </Typography>
                                     </Box>
                                 </>
@@ -429,8 +440,8 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                         isHidden?.order && isHidden?.header
                             ? '105vh'
                             : isHidden?.order || isHidden?.header
-                              ? '95vh'
-                              : '85vh',
+                                ? '95vh'
+                                : '85vh',
                     justifyContent: 'flex-end',
                 }}
             >
