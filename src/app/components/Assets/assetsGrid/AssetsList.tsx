@@ -832,6 +832,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                     !slideshow &&
                                     !creatorId &&
                                     !portfolioWallets &&
+                                    !isBlockLoader &&
                                     tabNavigation.assets?.length <= 0 &&
                                     tabNavigation.artists?.length <= 0 && (
                                         <Box display={'flex'} justifyContent={'center'}>
