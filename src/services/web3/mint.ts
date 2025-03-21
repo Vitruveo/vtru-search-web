@@ -5,8 +5,6 @@ import { BigNumber } from '@ethersproject/bignumber';
 
 import type {
     GetAvailableCreditsParams,
-    GetBuyCapabilityInCents,
-    GetBuyerBalancesInCentsParams,
     GetLicenseInformationParams,
     GetPlatformFeeBasisPoints,
     IssueLicenseUsingCreditsParams,
@@ -27,71 +25,6 @@ const clientToSigner = (client: Client<Transport, Chain, Account>) => {
     const providerClient = new BrowserProvider(transport, networkClient);
     const signer = new JsonRpcSigner(providerClient, account.address);
     return signer;
-};
-
-export const getBuyCapabilityInCents = ({ wallet, vault, price, fee, client, curatorFee }: GetBuyCapabilityInCents) => {
-    const signer = clientToSigner(client);
-
-    const licenseRegistry = new Contract(getContractAddress('LicenseRegistry'), schema.abi.LicenseRegistry, signer);
-
-    return licenseRegistry
-        .getBuyCapabilityInCents(
-            wallet,
-            [
-                vault,
-                getContractAddress('VIBE'),
-                '0x0000000000000000000000000000000000000001',
-                '0x0000000000000000000000000000000000000000',
-                '0x0000000000000000000000000000000000000000',
-            ],
-            [price, fee, curatorFee, 0, 0]
-        )
-        .then((proxyResult) => {
-            const result = proxyResult.map((value: any) => BigNumber.from(value).toNumber());
-            // console.log('result getBuyCapabilityInCents', result);
-
-            const [totalAmount, grantBalance, nonGrantBalance, transactionBalance] = result;
-            return {
-                totalAmount: totalAmount / 100,
-                grantBalance: grantBalance / 100,
-                nonGrantBalance: nonGrantBalance / 100,
-                transactionBalance: transactionBalance / 100,
-            };
-        })
-        .catch((error) => {
-            console.log('error getBuyCapabilityInCents', error);
-            return {
-                totalAmount: 0,
-                grantBalance: 0,
-                nonGrantBalance: 0,
-                transactionBalance: 0,
-            };
-        });
-};
-
-export const getBuyerBalancesInCents = ({ wallet, client }: GetBuyerBalancesInCentsParams) => {
-    const signer = clientToSigner(client);
-
-    const licenseRegistry = new Contract(getContractAddress('LicenseRegistry'), schema.abi.LicenseRegistry, signer);
-
-    return licenseRegistry
-        .getBuyerBalancesInCents(wallet)
-        .then((proxyResult) => {
-            const result = proxyResult.map((value: any) => BigNumber.from(value).toNumber());
-
-            const [grantBalance, nonGrantBalance] = result;
-            return {
-                grantBalance: grantBalance / 100,
-                nonGrantBalance: nonGrantBalance / 100,
-            };
-        })
-        .catch((error) => {
-            console.log('error getBuyerBalancesInCents', error);
-            return {
-                grantBalance: 0,
-                nonGrantBalance: 0,
-            };
-        });
 };
 
 export const getPlatformFeeBasisPoints = ({ client }: GetPlatformFeeBasisPoints) => {
@@ -139,26 +72,18 @@ export const getAssetLicenses = ({ assetKey, client }: GetLicenseInformationPara
 export const getAvailableCredits = ({ wallet, client }: GetAvailableCreditsParams) => {
     const signer = clientToSigner(client);
 
-    const licenseRegistry = new Contract(getContractAddress('LicenseRegistry'), schema.abi.LicenseRegistry, signer);
+    const VUSD = new Contract(getContractAddress('VUSD'), schema.abi.VUSD, signer);
 
-    return licenseRegistry
-        .getAvailableCredits(wallet)
-        .then((result) => {
-            if (Array.isArray(result) && result.length >= 2) {
-                const [_, creditsCents] = result;
-
-                const creditsCentsConverted = BigNumber.from(creditsCents).toNumber();
-
-                return {
-                    usdCredits: creditsCentsConverted / 100,
-                };
-            }
+    return VUSD.balanceOfInCents(wallet)
+        .then((balanceOfInCents) => {
+            console.log('getAvailableCredits balanceOfInCents', BigNumber.from(balanceOfInCents).toNumber());
 
             return {
-                usdCredits: 0,
+                usdCredits: BigNumber.from(balanceOfInCents).toNumber() / 100,
             };
         })
-        .catch(() => {
+        .catch((error) => {
+            console.log('error getAvailableCredits', error);
             return {
                 usdCredits: 0,
             };

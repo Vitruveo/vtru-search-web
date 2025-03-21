@@ -47,15 +47,8 @@ export interface PanelMintProps {
             value: number;
         };
         loadingBuy: boolean;
-        buyerBalances: {
-            grantBalance: number;
-            nonGrantBalance: number;
-        };
         buyCapability: {
             totalAmount: number;
-            grantBalance: number;
-            nonGrantBalance: number;
-            transactionBalance: number;
         };
         expandedAccordion: string | false;
         lastAssets: LastAssets[];

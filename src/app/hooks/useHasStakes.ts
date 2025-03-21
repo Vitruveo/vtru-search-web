@@ -19,13 +19,15 @@ export const useHasStakes = (vaultAddress: string | null) => {
 
     const creatorVault = getCreatorVaultByAddress(vaultAddress);
 
-    return creatorVault
-        .hasStakes()
-        .then((result) => {
-            mapper.set(vaultAddress, result);
-            return result;
-        })
-        .catch((error) => {
-            return false;
-        });
+    return false;
+
+    // return creatorVault
+    //     .hasStakes()
+    //     .then((result) => {
+    //         mapper.set(vaultAddress, result);
+    //         return result;
+    //     })
+    //     .catch((error) => {
+    //         return false;
+    //     });
 };

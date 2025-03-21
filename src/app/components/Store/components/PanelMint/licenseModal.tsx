@@ -162,34 +162,15 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                                                         </Box>
                                                         <Box display={'flex'} flexDirection={'column'} gap={2}>
                                                             <PanelMintInfo
-                                                                title="Usable Credits"
+                                                                title="Available Balance"
                                                                 color="white"
                                                                 content={formatPrice({
-                                                                    price: buyCapability?.grantBalance,
+                                                                    price: walletCredits,
                                                                     withUS: true,
                                                                     decimals: true,
                                                                 })}
                                                                 disable
-                                                            />
-                                                            <PanelMintInfo
-                                                                title="Usable Balance"
-                                                                color="white"
-                                                                content={formatPrice({
-                                                                    price: buyCapability?.nonGrantBalance,
-                                                                    withUS: true,
-                                                                    decimals: true,
-                                                                })}
-                                                                disable
-                                                            />
-                                                            <PanelMintInfo
-                                                                title="Transaction Balance"
-                                                                color="white"
-                                                                content={formatPrice({
-                                                                    price: buyCapability?.transactionBalance,
-                                                                    withUS: true,
-                                                                    decimals: true,
-                                                                })}
-                                                                disable
+                                                                hasHidden
                                                             />
                                                         </Box>
                                                     </Box>
@@ -206,7 +187,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                                                 !available ||
                                                 !address ||
                                                 walletCredits < credits ||
-                                                buyCapability.transactionBalance > 0 ||
+                                                walletCredits < buyCapability.totalAmount ||
                                                 loading.state
                                             }
                                             onClick={handleMintNFT}
