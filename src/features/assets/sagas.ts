@@ -415,6 +415,19 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
             };
         }
 
+        if (filters.exclude.arts.length > 0) {
+            buildQuery['_id'] = {
+                // @ts-expect-error $nin dont exist in type of BuidlQuery
+                $nin: filters.exclude.arts,
+            };
+        }
+        if (filters.exclude.artists.length > 0) {
+            buildQuery['framework.createdBy'] = {
+                // @ts-expect-error $nin dont exist in type of BuidlQuery
+                $nin: filters.exclude.artists,
+            };
+        }
+
         const URL_ASSETS_SEARCH = `${API_BASE_URL}/assets/public/search`;
 
         const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.post, URL_ASSETS_SEARCH, {
