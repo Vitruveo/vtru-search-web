@@ -23,15 +23,9 @@ export const initialState = {
         value: 0,
     },
     loadingBuy: false,
-    buyerBalances: {
-        grantBalance: 0,
-        nonGrantBalance: 0,
-    },
     buyCapability: {
         totalAmount: 0,
-        grantBalance: 0,
-        nonGrantBalance: 0,
-        transactionBalance: 0,
+        balance: 0,
     },
 };
 
@@ -86,15 +80,8 @@ interface State {
         porcent: number;
         value: number;
     };
-    buyerBalances: {
-        grantBalance: number;
-        nonGrantBalance: number;
-    };
     buyCapability: {
         totalAmount: number;
-        grantBalance: number;
-        nonGrantBalance: number;
-        transactionBalance: number;
     };
 }
 
@@ -165,11 +152,6 @@ export const reducer = (state: State, action: Action) => {
                 ...state,
                 feesCurator: action.payload,
             };
-        case 'SET_BUYER_BALANCES':
-            return {
-                ...state,
-                buyerBalances: action.payload,
-            };
         case 'SET_BUY_CAPABILITY':
             return {
                 ...state,
@@ -196,15 +178,8 @@ export const reducer = (state: State, action: Action) => {
                     porcent: 0,
                     value: 0,
                 },
-                buyerBalances: {
-                    grantBalance: 0,
-                    nonGrantBalance: 0,
-                },
                 buyCapability: {
                     totalAmount: 0,
-                    grantBalance: 0,
-                    nonGrantBalance: 0,
-                    transactionBalance: 0,
                 },
             };
     }

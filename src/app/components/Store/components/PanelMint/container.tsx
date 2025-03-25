@@ -4,13 +4,7 @@ import { useAccount, useConnectorClient } from 'wagmi';
 import { toast } from 'react-toastify';
 
 import { PanelMint } from './component';
-import {
-    getAvailableCredits,
-    getBuyCapabilityInCents,
-    getBuyerBalancesInCents,
-    getPlatformFeeBasisPoints,
-    issueLicenseUsingCredits,
-} from '@/services/web3/mint';
+import { getAvailableCredits, getPlatformFeeBasisPoints, issueLicenseUsingCredits } from '@/services/web3/mint';
 import { useDispatch } from 'react-redux';
 import { actions } from '@/features/store/slice';
 import { getFeesFromGrid, getFeesFromVideo } from '@/services/assets';
@@ -101,14 +95,27 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
         if (!chain || !chain.name.toLowerCase().includes('vitruveo')) return;
 
         fetchAvailableCredits();
-        fetchBuyerBalancesInCents();
 
         if ((coockieGrid || coockieVideo) && state.feesCurator.value) {
-            fetchBuyCapabilityInCents();
-        }
+            if (!assetLicenses) return;
 
-        if (!coockieGrid && !coockieVideo) {
-            fetchBuyCapabilityInCents();
+            getPlatformFeeBasisPoints({ client: client }).then((feeBasisPoints) => {
+                const platformFeeValue = (assetLicenses.credits * feeBasisPoints) / 10_000;
+
+                dispatchAction({
+                    type: TypeActions.SET_BUY_CAPABILITY,
+                    payload: {
+                        totalAmount:
+                            state.feesCurator.value +
+                            getPriceWithMarkup({
+                                assetPrice: assetLicenses.credits,
+                                stores,
+                                assetCreatedBy: asset?.framework?.createdBy,
+                            }) +
+                            platformFeeValue,
+                    },
+                });
+            });
         }
     }, [client, chain, state.feesCurator.value, assetLicenses]);
 
@@ -183,65 +190,6 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
                 type: 'error',
             });
         }
-    };
-
-    const fetchBuyCapabilityInCents = async () => {
-        // dispatchAction({ type: TypeActions.SET_AVAILABLE, payload: false });
-        dispatchAction({ type: TypeActions.SET_LOADING_BUY, payload: true });
-
-        const feeBasisPoints = await getPlatformFeeBasisPoints({ client: client! });
-
-        if (assetLicenses) {
-            const platformFeeValue = (assetLicenses.credits * feeBasisPoints) / 10_000;
-
-            return getBuyCapabilityInCents({
-                wallet: address!,
-                vault: asset.vault.vaultAddress!,
-                price: getPriceWithMarkup({
-                    assetPrice: assetLicenses.credits,
-                    stores,
-                    assetCreatedBy: asset?.framework?.createdBy,
-                }),
-                fee: platformFeeValue,
-                client: client!,
-                curatorFee: state.feesCurator.value * 100,
-            })
-                .then((balances) => {
-                    dispatchAction({ type: TypeActions.SET_BUY_CAPABILITY, payload: balances });
-                })
-                .catch(() => {
-                    toast(`Error getting buy capability (access logs for more details)`, {
-                        type: 'error',
-                    });
-                })
-                .finally(() => {
-                    dispatchAction({
-                        type: TypeActions.SET_LOADING,
-                        payload: { state: false, message: '' },
-                    });
-                    dispatchAction({ type: TypeActions.SET_LOADING_BUY, payload: false });
-                });
-        }
-    };
-
-    const fetchBuyerBalancesInCents = async () => {
-        // dispatchAction({ type: TypeActions.SET_AVAILABLE, payload: false });
-
-        return getBuyerBalancesInCents({ wallet: address!, client: client! })
-            .then((balances) => {
-                dispatchAction({ type: TypeActions.SET_BUYER_BALANCES, payload: balances });
-            })
-            .catch(() => {
-                toast(`Error getting buyer balances (access logs for more details)`, {
-                    type: 'error',
-                });
-            })
-            .finally(() => {
-                dispatchAction({
-                    type: TypeActions.SET_LOADING,
-                    payload: { state: false, message: '' },
-                });
-            });
     };
 
     const fetchAvailableCredits = async () => {
@@ -384,7 +332,6 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
                 platformFee: state.platformFee,
                 totalFee: state.totalFee,
                 feesCurator: state.feesCurator,
-                buyerBalances: state.buyerBalances,
                 buyCapability: state.buyCapability,
                 loadingBuy: state.loadingBuy,
                 expandedAccordion: state.expandedAccordion,
