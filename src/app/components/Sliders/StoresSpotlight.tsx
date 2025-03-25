@@ -28,7 +28,7 @@ function StoresSpotlightSlider({ stores }: Props) {
 
     return (
         <Box marginTop={1} minHeight={250}>
-            <Typography variant="h5">Store Spotlight</Typography>
+            <Typography variant="h5">Folio Spotlight</Typography>
             <Marquee autoFill style={{ overflow: 'hidden' }}>
                 {stores.map((item) => {
                     return (

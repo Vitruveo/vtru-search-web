@@ -8,7 +8,7 @@ export const initialState = {
     openModalMinted: false,
     openModalLicense: false,
     openModalBuyVUSD: false,
-    expandedAccordion: false,
+    expandedAccordion: 'digitalCollectible',
     link: '',
     available: false,
     credits: 0,

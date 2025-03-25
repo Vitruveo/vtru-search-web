@@ -109,7 +109,7 @@ const Stores = ({ data, actions }: StacksProps) => {
                     <Box display={'flex'} gap={1} alignItems={'center'} paddingInline={'24px'}>
                         <OutlinedInput
                             id="outlined-search"
-                            placeholder="Search Store"
+                            placeholder="Search Folio"
                             size="small"
                             type="search"
                             color="primary"
