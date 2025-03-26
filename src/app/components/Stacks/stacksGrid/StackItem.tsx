@@ -10,6 +10,7 @@ import { IconInfoCircle, IconPlayerPlayFilled, IconX } from '@tabler/icons-react
 import React, { useState } from 'react';
 import { useI18n } from '@/app/hooks/useI18n';
 import Username from '../../Username';
+import { NO_IMAGE_ASSET } from '@/constants/asset';
 
 interface Props {
     stack: Stack;
@@ -53,7 +54,7 @@ const StackItemMain = ({ stack }: Props) => {
                     <MediaRenderer
                         key={stack.stacks.id}
                         src={handleImage()}
-                        fallbackSrc={'https://via.placeholder.com/250'}
+                        fallbackSrc={NO_IMAGE_ASSET}
                         type={stack.stacks.type}
                         onClick={handleCardClick}
                     />
@@ -150,7 +151,7 @@ const StackItemMain = ({ stack }: Props) => {
                     <Box style={{ height: 'calc(100vh - 80px)' }}>
                         <MediaRenderer
                             src={handleImage()}
-                            fallbackSrc={'https://via.placeholder.com/250'}
+                            fallbackSrc={NO_IMAGE_ASSET}
                             type={stack.stacks.type}
                             controls
                             muted={false}
