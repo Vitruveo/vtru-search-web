@@ -25,7 +25,7 @@ interface StateType {
 
 const initialState = {
     products: productsMock,
-    selectedProduct: '',
+    selectedProduct: '1',
     checkoutInProgress: false,
     productSearch: '',
     sortBy: 'newest',
