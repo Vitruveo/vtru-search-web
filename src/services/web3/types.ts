@@ -24,14 +24,13 @@ export interface GetAvailableCreditsParams {
     client: Client<Transport, Chain, Account>;
 }
 
-export interface GetBuyerBalancesInCentsParams {
+export interface GetBuyerBalanceInCentsParams {
     wallet: string;
     client: Client<Transport, Chain, Account>;
 }
 
 export interface GetBuyCapabilityInCents {
     wallet: string;
-    vault: string;
     price: number;
     fee: number;
     curatorFee: number;

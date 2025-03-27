@@ -32,6 +32,7 @@ import validateCryptoAddress from '@/utils/adressValidate';
 import { overwriteWithInitialFilters } from '@/utils/assets';
 
 function* getAssetsSpotlight() {
+    yield put(actions.setSpotlightLoading(true));
     try {
         const URL_ASSETS_SPOTLIGHT = `${API_BASE_URL}/assets/public/spotlight`;
 
@@ -93,10 +94,13 @@ function* getAssetsSpotlight() {
     } catch (error) {
         console.error(error);
         // Handle error
+    } finally {
+        yield put(actions.setSpotlightLoading(false));
     }
 }
 
 function* getAssetsLastSold() {
+    yield put(actions.setLastSoldLoading(true));
     try {
         const URL_ASSETS_LAST_SOLD = `${API_BASE_URL}/assets/public/lastSold`;
 
@@ -157,10 +161,13 @@ function* getAssetsLastSold() {
         yield put(actions.setLastSold(response.data.data));
     } catch (error) {
         // Handle error
+    } finally {
+        yield put(actions.setLastSoldLoading(false));
     }
 }
 
 function* getArtistsSpotlight() {
+    yield put(actions.setArtistSpotlightLoading(true));
     try {
         const storesFilters: Record<string, any> = yield select((state: AppState) => state.filters.storesFilters);
 
@@ -174,6 +181,8 @@ function* getArtistsSpotlight() {
         yield put(actions.setArtistSpotlight(response.data.data));
     } catch (error) {
         // handle error
+    } finally {
+        yield put(actions.setArtistSpotlightLoading(false));
     }
 }
 
@@ -205,6 +214,7 @@ function* getAssetsGroupByCreator() {
             target: sortState,
         });
 
+        const price = filters.price;
         const name = filters.name;
         const hasBts = filters.hasBts;
         const artists = filters.tabNavigation.artists;
@@ -263,6 +273,8 @@ function* getAssetsGroupByCreator() {
             `${API_BASE_URL}/assets/public/groupByCreator`,
             {
                 query: buildQuery,
+                minPrice: price.min,
+                maxPrice: price.max,
                 limit: limit || 25,
                 page: page || 1,
                 name: name.trim() || null,
@@ -400,6 +412,19 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
         if (wallets.length) {
             buildQuery['mintExplorer.address'] = {
                 $in: wallets.filter((item) => validateCryptoAddress(item)).filter(Boolean),
+            };
+        }
+
+        if (filters.exclude.arts.length > 0) {
+            buildQuery['_id'] = {
+                // @ts-expect-error $nin dont exist in type of BuidlQuery
+                $nin: filters.exclude.arts,
+            };
+        }
+        if (filters.exclude.artists.length > 0) {
+            buildQuery['framework.createdBy'] = {
+                // @ts-expect-error $nin dont exist in type of BuidlQuery
+                $nin: filters.exclude.artists,
             };
         }
 
@@ -592,7 +617,7 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                onUploadProgress: (_progressEvent: any) => {},
+                onUploadProgress: (_progressEvent: any) => { },
             }
         );
         yield put(actions.setVideoUrl(response.data.data.url));
@@ -719,6 +744,7 @@ export function* assetsSagas() {
         takeEvery(actionsFilter.changePortfolioWallets.type, getAssetsGroupByCreator),
         takeEvery(actionsFilter.changeHasBts.type, getAssetsGroupByCreator),
         takeEvery(actionsFilter.changeLicenseChecked.type, getAssetsGroupByCreator),
+        takeEvery(actionsFilter.changePrice.type, getAssetsGroupByCreator),
 
         // Sold
         takeEvery(actions.loadAssetsLastSold.type, getAssetsLastSold),

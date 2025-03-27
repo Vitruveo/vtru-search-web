@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    Grid,
     InputAdornment,
     OutlinedInput,
     Pagination,
@@ -15,6 +16,7 @@ import '../../Assets/assetsGrid/AssetScroll.css';
 import { GetStoresResponse, Stores as StoresType } from '@/features/stores/types';
 import { StoresCardContainer, StoresItem } from './storesItem';
 import { IconSearch } from '@tabler/icons-react';
+import StoresSpotlightSlider from '../../Sliders/StoresSpotlight';
 
 interface StacksProps {
     data: {
@@ -100,11 +102,14 @@ const Stores = ({ data, actions }: StacksProps) => {
                 maxHeight={'calc(100vh - 85px)'}
                 ref={topRef}
             >
+                <Grid item xs={12} mb={10} mr={6} width={'97.5%'} margin={'0 auto'}>
+                    <StoresSpotlightSlider />
+                </Grid>
                 <Box display={mdUp ? 'flex' : 'none'} justifyContent="space-between" width="100%" my={2} mb={4}>
                     <Box display={'flex'} gap={1} alignItems={'center'} paddingInline={'24px'}>
                         <OutlinedInput
                             id="outlined-search"
-                            placeholder="Search Store"
+                            placeholder="Search Folio"
                             size="small"
                             type="search"
                             color="primary"

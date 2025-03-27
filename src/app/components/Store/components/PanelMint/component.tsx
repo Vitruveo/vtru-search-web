@@ -1,4 +1,4 @@
-import { Box, Button, Card, Typography } from '@mui/material';
+import { Box, Button, Card, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
 import BuyVUSDModalHOC from '@/app/components/BuyVUSD/modalHOC';
@@ -49,15 +49,8 @@ export interface PanelMintProps {
             value: number;
         };
         loadingBuy: boolean;
-        buyerBalances: {
-            grantBalance: number;
-            nonGrantBalance: number;
-        };
         buyCapability: {
             totalAmount: number;
-            grantBalance: number;
-            nonGrantBalance: number;
-            transactionBalance: number;
         };
         expandedAccordion: string | false;
         lastAssets: LastAssets[];
@@ -82,6 +75,7 @@ export interface PanelMintProps {
 
 export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actions }: PanelMintProps) => {
     const theme = useTheme();
+    const isMobile = useMediaQuery('(max-width: 900px)');
     const {
         link,
         assetLicenses,
@@ -125,12 +119,16 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                 flexDirection="column"
                                 height={140}
                                 justifyContent="space-between"
-                                marginLeft={3}
+                                marginLeft={isMobile ? 0 : 3}
                             >
-                                <Typography marginTop={3} variant="h5" sx={{ color: theme.palette.text.primary }}>
+                                <Typography
+                                    marginTop={isMobile ? 0 : 3}
+                                    variant="h5"
+                                    sx={{ color: theme.palette.text.primary }}
+                                >
                                     Own this artwork as a digital collectible.
                                 </Typography>
-                                <Box marginBottom={3} display="flex" alignItems="center" gap={2}>
+                                <Box marginBottom={isMobile ? 0 : 3} display="flex" alignItems="center" gap={2}>
                                     <Button
                                         variant="contained"
                                         onClick={handleOpenModalLicense}

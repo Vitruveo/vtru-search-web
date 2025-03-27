@@ -74,8 +74,22 @@ const Store = ({ data }: StoreProps) => {
             </Grid>
         );
 
+    const previewPath = `${ASSET_STORAGE_URL}/${asset.formats?.preview.path}`;
+
+    const getWidth = () => {
+        if (image === previewPath && isMobile) return 300;
+        if (isMobile) return '100%';
+        if (image === previewPath) return 500;
+        return size.width;
+    };
+    const getHeight = () => {
+        if (image === previewPath && isMobile) return 300;
+        if (image === previewPath) return 500;
+        return size.height;
+    };
+
     return (
-        <LazyLoad once>
+        <LazyLoad once style={{ minWidth: !isMobile ? 1300 : 0 }}>
             <Box display="flex" flexDirection="column" gap={3}>
                 <Grid
                     container
@@ -99,8 +113,8 @@ const Store = ({ data }: StoreProps) => {
                     >
                         <MediaRenderStore
                             media={image}
-                            width={isMobile ? '100%' : size.width}
-                            height={size.height}
+                            width={getWidth()}
+                            height={getHeight()}
                             alt="original"
                             onClick={() => handleOpen(image)}
                         />
@@ -110,14 +124,14 @@ const Store = ({ data }: StoreProps) => {
                             <ActionButtons asset={asset} setImage={setImage} handleLoad={handleLoad} />
                         </Grid>
                     )}
-                    <Grid item md={6} width="100%">
+                    <Grid item md={6} width="100%" display={'flex'} flexDirection={'column'} gap={4}>
                         <Box display="flex" flexDirection="column" gap={1}>
                             <Typography variant="h1" sx={{ color: '#ffff' }}>
                                 {asset.assetMetadata?.context.formData.title}
                             </Typography>
                             <User creator={creatorAvatar} creatorName={username} asset={asset} />
                         </Box>
-                        <Box display="flex" flexDirection="column" justifyContent="center" height="70%" gap={2}>
+                        <Box display="flex" flexDirection="column" justifyContent="center" height="70%">
                             <PanelMint
                                 image={image}
                                 creatorAvatar={creatorAvatar}

@@ -86,12 +86,13 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                     opacity: 1,
                     p: 4,
                     height: '100%',
+                    overflowY: 'auto',
                 }}
             >
                 <Box
                     display={'flex'}
                     justifyContent={'space-between'}
-                    flexDirection={smUp ? 'row' : 'column-reverse'}
+                    flexDirection={mdUp ? 'row' : 'column-reverse'}
                     gap={3}
                     alignItems={'center'}
                     paddingInline={lgUp ? 14 : 0}
@@ -100,12 +101,16 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                         <Typography
                             variant="h2"
                             display={currentChain?.toLowerCase().includes('vitruveo') ? 'block' : 'none'}
+                            fontSize={smUp ? '4vh' : '3vh'}
+                            lineHeight={smUp ? '5vh' : '4vh'}
                         >
                             VTRU Balance: {isConnected ? `${balance.value}` : 'Connect Wallet'}
                         </Typography>
                         <Typography
                             variant="h2"
                             display={currentChain?.toLowerCase().includes('vitruveo') ? 'block' : 'none'}
+                            fontSize={smUp ? '4vh' : '3vh'}
+                            lineHeight={smUp ? '5vh' : '4vh'}
                         >
                             VUSD Balance:{' '}
                             {isConnected
@@ -128,18 +133,29 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                                 : 'Connect Wallet'}
                         </Typography>
                     </Box>
-                    <Typography variant="h1" fontWeight={'900'} sx={{ fontSize: '3rem' }}>
+                    <Typography
+                        variant="h1"
+                        textAlign="center"
+                        fontWeight="900"
+                        fontSize={smUp ? '5vh' : '4vh'}
+                        lineHeight="4rem"
+                    >
                         Buy VUSD
                     </Typography>
-                    <Box display={'flex'}>
+                    <Box display={'flex'} alignItems={'center'}>
                         <ConnectWallet size={'large'} rounded />
                         <IconButton aria-label="close" onClick={onClose} sx={{ color: 'white' }}>
-                            <IconX size={'2rem'} />
+                            <IconX size={smUp ? '4vh' : '3vh'} />
                         </IconButton>
                     </Box>
                 </Box>
 
-                <Box display={'flex'} flexDirection={'column'} justifyContent={'center'} height={'90%'}>
+                <Box
+                    display={'flex'}
+                    flexDirection={'column'}
+                    justifyContent={'center'}
+                    marginTop={smUp ? '10vh' : '4vh'}
+                >
                     <Box
                         display={'flex'}
                         flexDirection={smUp ? 'row' : 'column'}
@@ -147,7 +163,12 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                         justifyContent={'center'}
                         gap={3}
                     >
-                        <Typography variant="h1" width={'100%'} fontSize={'4rem'} textAlign={smUp ? 'end' : 'center'}>
+                        <Typography
+                            variant="h1"
+                            width={'100%'}
+                            fontSize={smUp ? '5vh' : '4vh'}
+                            textAlign={smUp ? 'end' : 'center'}
+                        >
                             BUY
                         </Typography>
                         <TextField
@@ -161,7 +182,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                                 width: lgUp ? '70%' : '100%',
                                 '& .MuiInputBase-input': {
                                     textAlign: 'end',
-                                    fontSize: '3rem',
+                                    fontSize: smUp ? '5vh' : '4vh',
                                     fontWeight: 'bold',
                                     paddingInline: 4,
                                     '&::-webkit-outer-spin-button, &::-webkit-inner-spin-button': {
@@ -175,7 +196,12 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                                 },
                             }}
                         />
-                        <Typography variant="h1" width={'100%'} fontSize={'4rem'} textAlign={smUp ? 'start' : 'center'}>
+                        <Typography
+                            variant="h1"
+                            width={'100%'}
+                            fontSize={smUp ? '5vh' : '4vh'}
+                            textAlign={smUp ? 'start' : 'center'}
+                        >
                             VUSD
                         </Typography>
                     </Box>
@@ -186,12 +212,14 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                                 <Box display={'flex'} justifyContent={'space-between'}>
                                     <FormControlLabel
                                         value="USDC"
-                                        control={<Radio sx={{ '& .MuiSvgIcon-root': { fontSize: '2rem' } }} />}
+                                        control={
+                                            <Radio sx={{ '& .MuiSvgIcon-root': { fontSize: smUp ? '5vh' : '4vh' } }} />
+                                        }
                                         label="USDC"
                                         sx={{
                                             width: smUp ? '52%' : '100%',
                                             margin: currentChain?.toLowerCase().includes('vitruveo') ? '' : 0,
-                                            '& .MuiFormControlLabel-label': { fontSize: '2rem' },
+                                            '& .MuiFormControlLabel-label': { fontSize: smUp ? '5vh' : '4vh' },
                                             '& .MuiRadio-root': {
                                                 display: currentChain?.toLowerCase().includes('vitruveo')
                                                     ? 'block'
@@ -200,7 +228,12 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                                         }}
                                     />
                                     <Box bgcolor={'#1a1a1a'} width={'100%'}>
-                                        <Typography variant="h1" fontSize={'2rem'} paddingBlock={1} paddingInline={2}>
+                                        <Typography
+                                            variant="h1"
+                                            fontSize={smUp ? '5vh' : '4vh'}
+                                            paddingBlock={smUp ? '4vh' : '1vh'}
+                                            paddingInline={smUp ? '2vh' : '1vh'}
+                                        >
                                             {usdcConverted}
                                         </Typography>
                                     </Box>
@@ -211,15 +244,22 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                                 >
                                     <FormControlLabel
                                         value="VTRU"
-                                        control={<Radio sx={{ '& .MuiSvgIcon-root': { fontSize: '2rem' } }} />}
+                                        control={
+                                            <Radio sx={{ '& .MuiSvgIcon-root': { fontSize: smUp ? '5vh' : '4vh' } }} />
+                                        }
                                         label="VTRU"
                                         sx={{
                                             width: smUp ? '52%' : '100%',
-                                            '& .MuiFormControlLabel-label': { fontSize: '2rem' },
+                                            '& .MuiFormControlLabel-label': { fontSize: smUp ? '5vh' : '4vh' },
                                         }}
                                     />
                                     <Box bgcolor={'#1a1a1a'} width={'100%'}>
-                                        <Typography variant="h1" fontSize={'2rem'} paddingBlock={1} paddingInline={2}>
+                                        <Typography
+                                            variant="h1"
+                                            fontSize={smUp ? '5vh' : '4vh'}
+                                            paddingBlock={smUp ? '1vh' : '0.5vh'}
+                                            paddingInline={smUp ? '2vh' : '1vh'}
+                                        >
                                             {vtruConverted}
                                         </Typography>
                                     </Box>
@@ -232,7 +272,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                         <Button
                             variant="contained"
                             sx={{
-                                fontSize: '2rem',
+                                fontSize: smUp ? '5vh' : '4vh',
                                 width: lgUp ? '25.5%' : mdUp ? '52%' : '100%',
                                 background: theme.palette.primary.main,
                                 '&:hover': {

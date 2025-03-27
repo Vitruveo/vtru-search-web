@@ -95,6 +95,10 @@ export const initialState: FilterSliceState = {
         wallets: [],
     },
     licenseChecked: '',
+    exclude: {
+        arts: [],
+        artists: [],
+    },
 };
 
 export const filterSlice = createSlice({
@@ -183,6 +187,10 @@ export const filterSlice = createSlice({
             };
             state.reseted += 1;
             state.hasBts = '';
+            state.exclude = {
+                arts: [],
+                artists: [],
+            };
 
             const payload = extractObjects(initialState);
 
@@ -209,16 +217,34 @@ export const filterSlice = createSlice({
                         if (!state.storesFilters?.[parent as keyof typeof state.storesFilters])
                             state.storesFilters[parent as keyof typeof state.storesFilters] = {} as any;
 
+                        let value: string | number | string[] = initialParams[key];
+
+                        if (typeof payload[key] === 'number') {
+                            const checkNumber = parseInt(value);
+                            if (!isNaN(checkNumber)) value = checkNumber;
+                        } else {
+                            value = value.split(',');
+                        }
+
                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
-                        state.storesFilters[parent][item] = initialParams[key].split(',');
+                        state.storesFilters[parent][item] = value;
 
                         state.taxonomy.aiGeneration = ['partial', 'none'];
                         state.taxonomy.nudity = ['no'];
                     } else {
+                        let value: string | number | string[] = initialParams[key];
+
+                        if (typeof payload[key] === 'number') {
+                            const checkNumber = parseInt(value);
+                            if (!isNaN(checkNumber)) value = checkNumber;
+                        } else {
+                            value = value.split(',');
+                        }
+
                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
-                        state[parent][item] = initialParams[key].split(',');
+                        state[parent][item] = value;
                     }
                 }
             });

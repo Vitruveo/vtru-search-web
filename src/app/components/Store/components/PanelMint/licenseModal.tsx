@@ -35,7 +35,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
     } = data;
 
     const isMobile = useMediaQuery('(max-width: 900px)');
-    const smUp = useMediaQuery((them: Theme) => them.breakpoints.up('sm'));
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.down('sm'));
 
     const { state, message } = loading;
     const { handleMintNFT, handleCloseModalLicense } = actions;
@@ -73,166 +73,170 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                     position: 'relative',
                     bgcolor: '#6C3BAF',
                     opacity: 1,
-                    p: 4,
+                    p: smUp ? 2 : 4,
                     height: '100%',
                 }}
             >
                 <Box
                     display={'flex'}
                     justifyContent={'space-between'}
-                    flexDirection={smUp ? 'row' : 'column-reverse'}
+                    flexDirection="row"
                     gap={3}
                     alignItems={'center'}
                 >
-                    <Typography variant="h1" fontWeight={'900'} sx={{ fontSize: '3rem' }}>
-                        Digital Collectible License
-                    </Typography>
+                    {!smUp ? (
+                        <Typography variant="h1" fontWeight={'900'} sx={{ fontSize: '3rem' }}>
+                            Digital Collectible License
+                        </Typography>
+                    ) : (
+                        <ConnectWallet size={'regular'} rounded />
+                    )}
+
                     <Box display={'flex'} gap={2}>
-                        <ConnectWallet size={'large'} rounded />
+                        {!smUp && <ConnectWallet size={'large'} rounded />}
+
                         <IconButton aria-label="close" onClick={handleCloseModalLicense} sx={{ color: 'white' }}>
-                            <IconX size={'3rem'} />
+                            <IconX size={smUp ? '1.5rem' : '3rem'} />
                         </IconButton>
                     </Box>
                 </Box>
-                {isConnected ? (
-                    <Box>
-                        <Box display="flex" alignItems="center" gap={4} marginTop={5}>
-                            <MediaRenderStore
-                                removeMargin
-                                media={image}
-                                width={mediaWidth}
-                                height={mediaHeight}
-                                alt="original"
-                            />
-                            <Box>
-                                <Box
-                                    position="relative"
-                                    minWidth={600}
-                                    marginTop={0.3}
-                                    height={365}
-                                    width={isMobile ? '100%' : 700}
-                                    bgcolor="rgba(0,0,0,0.6)"
-                                    padding={3}
-                                    borderRadius={0}
-                                >
-                                    {state ? (
-                                        <Box minHeight={319}>
-                                            <LoadingAvailableLincenses message={message} />
-                                        </Box>
-                                    ) : (
-                                        <Box flexDirection="column" display="flex" gap={2}>
-                                            <Licenses title="License type" license={license} />
-                                            {isConnected && available && chain ? (
-                                                <Box display={'flex'} flexDirection={'column'} gap={4}>
-                                                    <Box display={'flex'} flexDirection={'column'} gap={2}>
-                                                        <PanelMintInfo title="Price" content={contentMessage()} />
-                                                        <Fees
-                                                            title="Fees"
-                                                            value={platformFee.value + feesCurator.value}
-                                                            fees={{
-                                                                platform: platformFee,
-                                                                curator: feesCurator,
-                                                            }}
-                                                        />
-
-                                                        <PanelMintInfo
-                                                            title="Total"
-                                                            content={formatPrice({
-                                                                price: totalFee,
-                                                                withUS: true,
-                                                                decimals: true,
-                                                            })}
-                                                        />
-                                                    </Box>
-                                                    <Box display={'flex'} flexDirection={'column'} gap={2}>
-                                                        <PanelMintInfo
-                                                            title="Usable Credits"
-                                                            color="white"
-                                                            content={formatPrice({
-                                                                price: buyCapability?.grantBalance,
-                                                                withUS: true,
-                                                                decimals: true,
-                                                            })}
-                                                            disable
-                                                        />
-                                                        <PanelMintInfo
-                                                            title="Usable Balance"
-                                                            color="white"
-                                                            content={formatPrice({
-                                                                price: buyCapability?.nonGrantBalance,
-                                                                withUS: true,
-                                                                decimals: true,
-                                                            })}
-                                                            disable
-                                                        />
-                                                        <PanelMintInfo
-                                                            title="Transaction Balance"
-                                                            color="white"
-                                                            content={formatPrice({
-                                                                price: buyCapability?.transactionBalance,
-                                                                withUS: true,
-                                                                decimals: true,
-                                                            })}
-                                                            disable
-                                                        />
-                                                    </Box>
-                                                </Box>
-                                            ) : (
-                                                <PanelMintInfo title="Price" content={contentMessage()} />
-                                            )}
-                                        </Box>
-                                    )}
-                                    <Button
-                                        size="large"
-                                        variant="contained"
-                                        disabled={
-                                            !walletCredits ||
-                                            !available ||
-                                            !address ||
-                                            walletCredits < credits ||
-                                            buyCapability.transactionBalance > 0 ||
-                                            loading.state
-                                        }
-                                        onClick={handleMintNFT}
-                                        sx={{
-                                            left: 0,
-                                            top: 400,
-                                            position: 'absolute',
-                                            bottom: 16,
-                                            fontSize: 22,
-                                            width: 300,
-                                            height: 60,
-                                            lineHeight: '2',
-                                            borderRadius: 2,
-                                        }}
+                <Box overflow={isConnected ? 'auto' : 'hidden'} maxHeight="90vh">
+                    {smUp && (
+                        <Typography marginTop={3} variant="h1" fontWeight={'900'} sx={{ fontSize: '1.6rem' }}>
+                            Digital Collectible License
+                        </Typography>
+                    )}
+                    {isConnected ? (
+                        <Box>
+                            <Box
+                                display="flex"
+                                flexWrap="wrap"
+                                alignItems="center"
+                                gap={smUp ? 1 : 4}
+                                marginTop={smUp ? 1 : 5}
+                            >
+                                <MediaRenderStore
+                                    removeMargin
+                                    media={image}
+                                    width={mediaWidth}
+                                    height={mediaHeight}
+                                    alt="original"
+                                />
+                                <Box width={smUp ? '100%' : 700}>
+                                    <Box
+                                        position="relative"
+                                        minHeight={365}
+                                        width={smUp ? '100%' : 700}
+                                        bgcolor="rgba(0,0,0,0.6)"
+                                        padding={3}
+                                        borderRadius={0}
                                     >
-                                        Buy {warningMessage()}
-                                    </Button>
+                                        {state ? (
+                                            <Box minHeight={319}>
+                                                <LoadingAvailableLincenses message={message} />
+                                            </Box>
+                                        ) : (
+                                            <Box flexDirection="column" display="flex" gap={2}>
+                                                <Licenses title="License type" license={license} />
+                                                {isConnected && available && chain ? (
+                                                    <Box display={'flex'} flexDirection={'column'} gap={4}>
+                                                        <Box display={'flex'} flexDirection={'column'} gap={2}>
+                                                            <PanelMintInfo title="Price" content={contentMessage()} />
+                                                            <Fees
+                                                                title="Fees"
+                                                                value={platformFee.value + feesCurator.value}
+                                                                fees={{
+                                                                    platform: platformFee,
+                                                                    curator: feesCurator,
+                                                                }}
+                                                            />
+
+                                                            <PanelMintInfo
+                                                                title="Total"
+                                                                content={formatPrice({
+                                                                    price: totalFee,
+                                                                    withUS: true,
+                                                                    decimals: true,
+                                                                })}
+                                                            />
+                                                        </Box>
+                                                        <Box display={'flex'} flexDirection={'column'} gap={2}>
+                                                            <PanelMintInfo
+                                                                title="Available Balance"
+                                                                color="white"
+                                                                content={formatPrice({
+                                                                    price: walletCredits,
+                                                                    withUS: true,
+                                                                    decimals: true,
+                                                                })}
+                                                                disable
+                                                                hasHidden
+                                                            />
+                                                        </Box>
+                                                    </Box>
+                                                ) : (
+                                                    <PanelMintInfo title="Price" content={contentMessage()} />
+                                                )}
+                                            </Box>
+                                        )}
+                                        <Button
+                                            size="large"
+                                            variant="contained"
+                                            disabled={
+                                                !walletCredits ||
+                                                !available ||
+                                                !address ||
+                                                walletCredits < credits ||
+                                                walletCredits < buyCapability.totalAmount ||
+                                                loading.state
+                                            }
+                                            onClick={handleMintNFT}
+                                            sx={{
+                                                left: 0,
+                                                top: 400,
+                                                position: 'absolute',
+                                                bottom: 16,
+                                                fontSize: smUp ? 18 : 22,
+                                                width: smUp ? '100%' : 300,
+                                                height: 60,
+                                                lineHeight: '2',
+                                                borderRadius: 2,
+                                            }}
+                                        >
+                                            Buy {warningMessage()}
+                                        </Button>
+                                    </Box>
                                 </Box>
                             </Box>
+                            <Box
+                                marginTop={smUp ? 14 : 12}
+                                marginBottom={3}
+                                display="flex"
+                                flexDirection="column"
+                                gap={1}
+                            >
+                                <Typography variant="h1" sx={{ color: '#ffff', fontSize: smUp ? '1.5rem' : '2.2rem' }}>
+                                    {assetTitle}
+                                </Typography>
+                                <User creator={creatorAvatar} creatorName={creatorName} asset={asset} />
+                            </Box>
                         </Box>
-                        <Box marginTop={12} display="flex" flexDirection="column" gap={1}>
-                            <Typography variant="h1" sx={{ color: '#ffff' }}>
-                                {assetTitle}
+                    ) : (
+                        <Box
+                            sx={{
+                                height: '85vh',
+                                width: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <Typography variant="h3" fontWeight={'900'} sx={{ fontSize: smUp ? '1rem' : '1.5rem' }}>
+                                Connect your crypto wallet for licensing options.
                             </Typography>
-                            <User creator={creatorAvatar} creatorName={creatorName} asset={asset} />
                         </Box>
-                    </Box>
-                ) : (
-                    <Box
-                        sx={{
-                            height: '85vh',
-                            width: '100%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <Typography variant="h3" fontWeight={'900'}>
-                            Connect your crypto wallet for licensing options.
-                        </Typography>
-                    </Box>
-                )}
+                    )}
+                </Box>
             </Box>
         </Modal>
     );

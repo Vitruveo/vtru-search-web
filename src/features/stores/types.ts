@@ -37,6 +37,8 @@ export interface Stores {
         taxonomy: any;
         artists: any;
         portfolio: any;
+        wallets: any;
+        exclude: any;
     };
     status: 'draft' | 'active' | 'inactive' | 'pending';
     username: string;
@@ -67,6 +69,7 @@ export interface StoresState {
     sort: string;
     search: string;
     currentDomain: Stores;
+    spotlight: StoresSpotlight[];
     paginated: {
         list: Stores[];
         limit: number;
@@ -74,6 +77,14 @@ export interface StoresState {
         total: number;
         totalPage: number;
     };
+}
+
+export interface StoresSpotlight {
+    _id: string;
+    name: string;
+    url: string;
+    description: string;
+    logo: string;
 }
 
 export interface GetStoresParams {
