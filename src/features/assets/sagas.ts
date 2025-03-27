@@ -268,6 +268,29 @@ function* getAssetsGroupByCreator() {
             };
         }
 
+        if (filters.exclude.arts.length > 0) {
+            buildQuery['_id'] = {
+                // @ts-expect-error $nin dont exist in type of BuidlQuery
+                $nin: filters.exclude.arts,
+            };
+        }
+        if (filters.exclude.artists.length > 0) {
+            buildQuery['framework.createdBy'] = {
+                // @ts-expect-error $nin dont exist in type of BuidlQuery
+                $nin: filters.exclude.artists,
+            };
+        }
+        if (filters.include.arts.length > 0) {
+            buildQuery['_id'] = {
+                $in: filters.include.arts,
+            };
+        }
+        if (filters.include.artists.length > 0) {
+            buildQuery['framework.createdBy'] = {
+                $in: filters.include.artists,
+            };
+        }
+
         const response: AxiosResponse<APIResponse<ResponseAssetGroupByCreator>> = yield call(
             axios.post,
             `${API_BASE_URL}/assets/public/groupByCreator`,
@@ -415,16 +438,18 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
             };
         }
 
-        if (filters.exclude.arts.length > 0) {
+        if (filters.exclude.arts.length > 0 || filters.include.arts.length > 0) {
+            // @ts-expect-error $nin dont exist in type of BuidlQuery
             buildQuery['_id'] = {
-                // @ts-expect-error $nin dont exist in type of BuidlQuery
-                $nin: filters.exclude.arts,
+                ...(filters.exclude.arts.length > 0 && { $nin: filters.exclude.arts }),
+                ...(filters.include.arts.length > 0 && { $in: filters.include.arts }),
             };
         }
-        if (filters.exclude.artists.length > 0) {
+        if (filters.exclude.artists.length > 0 || filters.include.artists.length > 0) {
+            // @ts-expect-error $nin dont exist in type of BuidlQuery
             buildQuery['framework.createdBy'] = {
-                // @ts-expect-error $nin dont exist in type of BuidlQuery
-                $nin: filters.exclude.artists,
+                ...(filters.exclude.artists.length > 0 && { $nin: filters.exclude.artists }),
+                ...(filters.include.artists.length > 0 && { $in: filters.include.artists }),
             };
         }
 

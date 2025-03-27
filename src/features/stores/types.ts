@@ -39,6 +39,7 @@ export interface Stores {
         portfolio: any;
         wallets: any;
         exclude: any;
+        include: any;
     };
     status: 'draft' | 'active' | 'inactive' | 'pending';
     username: string;
