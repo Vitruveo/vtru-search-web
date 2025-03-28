@@ -8,6 +8,7 @@ import BlankCard from '../../Shared/BlankCard';
 import { useTheme } from '@mui/material/styles';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { Stores } from '@/features/stores/types';
+import { NO_IMAGE_ASSET } from '@/constants/asset';
 
 interface Props {
     store: Stores;
@@ -40,7 +41,7 @@ const StoresItemMain = ({ store }: Props) => {
                     <MediaRenderer
                         key={store._id}
                         src={`${STORES_STORAGE_URL}/${store.organization?.formats?.logo?.square?.path}`}
-                        fallbackSrc={'https://via.placeholder.com/250'}
+                        fallbackSrc={NO_IMAGE_ASSET}
                         onClick={handleCardClick}
                     />
                 </Box>

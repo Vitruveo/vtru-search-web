@@ -9,6 +9,7 @@ import BlankCard from '../../Shared/BlankCard';
 import Username from '../../Username';
 import DeckEffect from '../components/DeckEffect';
 import { MediaRenderer } from '../components/MediaRenderer';
+import { NO_IMAGE_ASSET } from '@/constants/asset';
 
 interface Props {
     assetView: Asset;
@@ -111,7 +112,7 @@ const AssetItemMain = ({
                 {!isHiddenCardDetail ? (
                     <>
                         <Box height={250} borderRadius="8px 8px 0 0" position="relative">
-                            <MediaRenderer src={media} fallbackSrc={'https://via.placeholder.com/250'} />
+                            <MediaRenderer src={media} fallbackSrc={NO_IMAGE_ASSET} />
                         </Box>
 
                         <CardContent sx={{ p: 3, pt: 2 }} style={{ backgroundColor: theme.palette.grey[100] }}>
@@ -185,7 +186,7 @@ const AssetItemMain = ({
                         </CardContent>
                     </>
                 ) : (
-                    <MediaRenderer src={media} fallbackSrc={'https://via.placeholder.com/250'} />
+                    <MediaRenderer src={media} fallbackSrc={NO_IMAGE_ASSET} />
                 )}
             </BlankCard>
         </div>

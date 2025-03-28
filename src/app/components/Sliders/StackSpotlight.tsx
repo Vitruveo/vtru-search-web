@@ -8,6 +8,7 @@ import { Stack } from '@/features/stacks/types';
 import { useSelector } from '@/store/hooks';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import Username from '../Username';
+import { NO_IMAGE_ASSET } from '@/constants/asset';
 
 function StackSpotlightSlider() {
     const stacks = useSelector((state) => state.stacks.spotlight);
@@ -52,7 +53,7 @@ function StackSpotlightSlider() {
                                 <MediaRenderer
                                     key={item.stack.stacks.id}
                                     src={handleImage(item.stack)}
-                                    fallbackSrc={'https://via.placeholder.com/250'}
+                                    fallbackSrc={NO_IMAGE_ASSET}
                                     type={item.stack.stacks.type}
                                     onClick={() => handleClickItem(item.stack)}
                                 />
