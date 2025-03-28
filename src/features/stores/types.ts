@@ -40,6 +40,7 @@ export interface Stores {
         wallets: any;
         exclude: any;
         include: any;
+        searchOption: string;
     };
     status: 'draft' | 'active' | 'inactive' | 'pending';
     username: string;
