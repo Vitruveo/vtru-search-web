@@ -455,6 +455,14 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
         if (storesSearchOption === 'select') {
             const { arts, artists } = filters.include;
 
+            Object.keys(buildQuery).forEach((key) => {
+                delete buildQuery[key];
+            });
+
+            // default keys
+            buildQuery['assetMetadata.taxonomy.formData.aiGeneration'] = { $in: ['partial', 'none'] };
+            buildQuery['assetMetadata.taxonomy.formData.nudity'] = { $in: ['no'] };
+
             if (arts.length > 0) {
                 buildQuery['_id'] = { $in: arts };
             }
@@ -652,7 +660,7 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                onUploadProgress: (_progressEvent: any) => { },
+                onUploadProgress: (_progressEvent: any) => {},
             }
         );
         yield put(actions.setVideoUrl(response.data.data.url));
