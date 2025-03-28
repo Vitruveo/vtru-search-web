@@ -57,14 +57,14 @@ const TreeItem = ({ title, link, params }: TreeItemParam) => {
     );
 };
 
-interface AssetTreeProps {
+interface AssetGoProps {
     params: {
         username: string;
         assetId: string;
     };
 }
 
-export default function AssetTree({ params }: AssetTreeProps) {
+export default function AssetGo({ params }: AssetGoProps) {
     return (
         <Box
             padding={2}
