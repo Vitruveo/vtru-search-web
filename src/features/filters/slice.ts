@@ -95,6 +95,14 @@ export const initialState: FilterSliceState = {
         wallets: [],
     },
     licenseChecked: '',
+    exclude: {
+        arts: [],
+        artists: [],
+    },
+    include: {
+        arts: [],
+        artists: [],
+    },
 };
 
 export const filterSlice = createSlice({
@@ -183,6 +191,14 @@ export const filterSlice = createSlice({
             };
             state.reseted += 1;
             state.hasBts = '';
+            state.exclude = {
+                arts: [],
+                artists: [],
+            };
+            state.include = {
+                arts: [],
+                artists: [],
+            };
 
             const payload = extractObjects(initialState);
 

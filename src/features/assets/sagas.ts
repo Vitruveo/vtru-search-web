@@ -196,6 +196,9 @@ function* getAssetsGroupByCreator() {
         const filtersState: FilterSliceState = yield select((state: AppState) => state.filters);
         const storesFilters: Record<string, any> = yield select((state: AppState) => state.filters.storesFilters);
         const storesId: string = yield select((state: AppState) => state.stores.currentDomain?._id);
+        const storesSearchOption: string = yield select(
+            (state: AppState) => state.stores.currentDomain?.artworks?.searchOption
+        );
 
         const filters = overwriteWithInitialFilters<FilterSliceState>({
             initialFilters: storesFilters,
@@ -262,10 +265,28 @@ function* getAssetsGroupByCreator() {
 
         buildQuery.grouped = groupByCreator;
 
-        if (artists.length) {
-            buildQuery['framework.createdBy'] = {
-                $in: artists,
-            };
+        if (storesSearchOption === 'filter') {
+            const { arts, artists: excludeArtists } = filters.exclude;
+
+            if (arts.length > 0) {
+                // @ts-expect-error $nin doesn't exist in type of BuildQuery
+                buildQuery['_id'] = { $nin: arts };
+            }
+
+            if (excludeArtists.length > 0) {
+                // @ts-expect-error $nin doesn't exist in type of BuildQuery
+                buildQuery['framework.createdBy'] = { $nin: excludeArtists };
+            }
+        }
+        if (storesSearchOption === 'select') {
+            const { arts, artists: includeArtists } = filters.include;
+
+            if (arts.length > 0) {
+                buildQuery['_id'] = { $in: arts };
+            }
+            if (includeArtists.length > 0) {
+                buildQuery['framework.createdBy'] = { $in: includeArtists };
+            }
         }
 
         const response: AxiosResponse<APIResponse<ResponseAssetGroupByCreator>> = yield call(
@@ -323,6 +344,9 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
         let ids: string[] = [];
 
         const storesId: string = yield select((state: AppState) => state.stores.currentDomain?._id);
+        const storesSearchOption: string = yield select(
+            (state: AppState) => state.stores.currentDomain?.artworks?.searchOption
+        );
         const filtersState: FilterSliceState = yield select((state: AppState) => state.filters);
         const storesFilters: Record<string, any> = yield select((state: AppState) => state.filters.storesFilters);
 
@@ -413,6 +437,30 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
             buildQuery['mintExplorer.address'] = {
                 $in: wallets.filter((item) => validateCryptoAddress(item)).filter(Boolean),
             };
+        }
+
+        if (storesSearchOption === 'filter') {
+            const { arts, artists } = filters.exclude;
+
+            if (arts.length > 0) {
+                // @ts-expect-error $nin doesn't exist in type of BuildQuery
+                buildQuery['_id'] = { $nin: arts };
+            }
+
+            if (artists.length > 0) {
+                // @ts-expect-error $nin doesn't exist in type of BuildQuery
+                buildQuery['framework.createdBy'] = { $nin: artists };
+            }
+        }
+        if (storesSearchOption === 'select') {
+            const { arts, artists } = filters.include;
+
+            if (arts.length > 0) {
+                buildQuery['_id'] = { $in: arts };
+            }
+            if (artists.length > 0) {
+                buildQuery['framework.createdBy'] = { $in: artists };
+            }
         }
 
         const URL_ASSETS_SEARCH = `${API_BASE_URL}/assets/public/search`;

@@ -82,6 +82,14 @@ interface FiltersInitialState {
         wallets: string[];
     };
     licenseChecked: string;
+    exclude: {
+        arts: string[];
+        artists: string[];
+    };
+    include: {
+        arts: string[];
+        artists: string[];
+    };
 }
 
 export interface FilterSliceState extends FiltersInitialState {
