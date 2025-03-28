@@ -26,10 +26,14 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ items, params }) => {
                         <Link
                             href={item.href.replace(/\{(\w+)\}/g, (_, key) => params[key as keyof typeof params] || '')}
                         >
-                            <Typography color="#ffffff">{item.label}</Typography>
+                            <Typography color="#ffffff" fontSize={['1rem', '1.25rem']}>
+                                {item.label}
+                            </Typography>
                         </Link>
                     ) : (
-                        <Typography color="#ffffff">{item.label}</Typography>
+                        <Typography color="#ffffff" fontSize={['1rem', '1.25rem']}>
+                            {item.label}
+                        </Typography>
                     )}
 
                     {index < items.length - 1 && <span>&#x27F6;</span>}

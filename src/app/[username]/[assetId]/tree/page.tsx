@@ -74,21 +74,40 @@ export default function AssetTree({ params }: AssetTreeProps) {
                 paddingBottom: 10,
             }}
         >
+            {/* <Box
+                sx={{
+                    backgroundImage: 'url(/images/icons/xibit-icon-redondo-litemode.png)',
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    // backgroundPosition: 'left',
+                    backgroundPosition: 'center center',
+                    opacity: 0.1,
+
+                    width: '100vw',
+                    height: '100vh',
+                    position: 'fixed',
+
+                    zIndex: -1,
+                }}
+            /> */}
+
             <Box display="flex" justifyContent="center" alignItems="center">
                 <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
             </Box>
 
-            <TreeItem
-                title="License Artwork"
-                link={[
-                    { label: 'Print', link: '/{username}/{assetId}/print/segments' },
-                    { label: 'Digital Collectible', link: '/{username}/{assetId}' },
-                ]}
-                params={params}
-            />
-            <TreeItem link={[{ label: 'View Artwork', link: '/{username}/{assetId}' }]} params={params} />
+            <Box display="flex" flexDirection="column" maxWidth={400} margin="auto">
+                <TreeItem
+                    title="License Artwork"
+                    link={[
+                        { label: 'Print', link: '/{username}/{assetId}/print/segments' },
+                        { label: 'Digital Collectible', link: '/{username}/{assetId}' },
+                    ]}
+                    params={params}
+                />
+                <TreeItem link={[{ label: 'View Artwork', link: '/{username}/{assetId}' }]} params={params} />
 
-            <TreeItem link={[{ label: 'About Xibit', link: 'https://about.xibit.app' }]} params={params} />
+                <TreeItem link={[{ label: 'About Xibit', link: 'https://about.xibit.app' }]} params={params} />
+            </Box>
         </Box>
     );
 }

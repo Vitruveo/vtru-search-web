@@ -1,5 +1,5 @@
 import { Breadcrumb } from '@/app/components/Breadcrumb';
-import { Badge, Box, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Catalog } from '../../types';
@@ -72,7 +72,7 @@ export default async function PrintCategories({ params }: PrintCategoriesProps) 
                 <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
             </Box>
 
-            <Typography variant="h1" mt={2}>
+            <Typography variant="h1" mt={2} fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
                 Print License
             </Typography>
 
@@ -83,12 +83,23 @@ export default async function PrintCategories({ params }: PrintCategoriesProps) 
                 params={params}
             />
 
-            <Typography mt={2}>
+            <Typography
+                mt={2}
+                fontSize={['1rem', '1.25rem', '1.5rem', '2rem']}
+                lineHeight={['1.5rem', '1.75rem', '2rem', '2.5rem']}
+            >
                 Capture attention and tell your brand{"'"}s story through strategic, innovative display solutions that
                 transform how audiences perceive and interact with your message.
             </Typography>
 
-            <Box mt={4} display="flex" flexDirection="column" alignItems="center">
+            <Box
+                display="flex"
+                flexWrap="wrap"
+                justifyContent={['center', 'flex-start', 'flex-start']}
+                gap={2}
+                mt={4}
+                width="100%"
+            >
                 {categories.map((item) => (
                     <Link
                         key={item.categoryId}

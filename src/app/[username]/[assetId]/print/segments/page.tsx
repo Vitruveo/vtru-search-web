@@ -1,4 +1,4 @@
-import { Badge, Box, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Catalog } from './types';
@@ -11,14 +11,14 @@ interface CardItemProps {
 
 const CardItem = ({ title, count }: CardItemProps) => {
     return (
-        <Box mt={4} position="relative">
+        <Box position="relative">
             <Image
                 src="https://vitruveo-studio-production-general.s3.amazonaws.com/noImage.jpg"
                 alt="No image"
                 width={300}
                 height={300}
             />
-            <Box bgcolor="gray" marginTop={-1} width="100%" p={2} display="flex" justifyContent="space-between">
+            <Box bgcolor="gray" marginTop={-1} width={300} p={2} display="flex" justifyContent="space-between">
                 <Typography variant="h4" color="#ffffff">
                     {title}
                 </Typography>
@@ -56,16 +56,27 @@ export default async function PrintSegments({ params }: PrintSegmentsProps) {
                 <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
             </Box>
 
-            <Typography variant="h1" mt={2}>
+            <Typography variant="h1" mt={2} fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
                 Print License
             </Typography>
 
-            <Typography mt={4}>
+            <Typography
+                mt={4}
+                fontSize={['1rem', '1.25rem', '1.5rem', '2rem']}
+                lineHeight={['1.5rem', '1.75rem', '2rem', '2.5rem']}
+            >
                 Transform your brand{"'"}s presence with our integrated Display and Merchandise strategies. We turn
                 visual communication into powerful brand experiences that capture attention and drive engagement.
             </Typography>
 
-            <Box mt={4} display="flex" flexDirection="column" alignItems="center">
+            <Box
+                display="flex"
+                flexWrap="wrap"
+                justifyContent={['center', 'flex-start', 'flex-start']}
+                gap={2}
+                mt={4}
+                width="100%"
+            >
                 {segments.map((item) => (
                     <Link
                         key={item.segmentId}
