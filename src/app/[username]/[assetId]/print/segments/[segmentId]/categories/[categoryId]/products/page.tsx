@@ -72,7 +72,13 @@ export default async function PrintProducts({ params }: PrintProductsProps) {
                 paddingBottom: 10,
             }}
         >
-            <Typography variant="h1">Print License</Typography>
+            <Box display="flex" justifyContent="center" alignItems="center">
+                <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
+            </Box>
+
+            <Typography variant="h1" mt={2}>
+                Print License
+            </Typography>
 
             <Breadcrumb
                 items={breadcrumbItems({

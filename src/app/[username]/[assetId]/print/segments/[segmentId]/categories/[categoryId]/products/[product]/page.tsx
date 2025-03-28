@@ -1,6 +1,7 @@
 'use client';
 
 import { Box, Button, Chip, Grid, Typography } from '@mui/material';
+import Image from 'next/image';
 
 // components
 import ProductCarousel from '@/app/components/Store/components/PanelMint/PrintLicense/ecommerce/productDetail/ProductCarousel';
@@ -43,7 +44,13 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
                 paddingBottom: 10,
             }}
         >
-            <Typography variant="h1">Print License</Typography>
+            <Box display="flex" justifyContent="center" alignItems="center">
+                <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
+            </Box>
+
+            <Typography variant="h1" mt={2}>
+                Print License
+            </Typography>
 
             <Breadcrumb items={breadcrumbItems} params={params} />
 

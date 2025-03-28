@@ -1,4 +1,5 @@
 import { Box, Button, Card, Typography, useMediaQuery } from '@mui/material';
+import { useRouter, useParams } from 'next/navigation';
 import { useTheme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
 import BuyVUSDModalHOC from '@/app/components/BuyVUSD/modalHOC';
@@ -75,6 +76,9 @@ export interface PanelMintProps {
 
 export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actions }: PanelMintProps) => {
     const theme = useTheme();
+    const router = useRouter();
+    const params = useParams();
+
     const isMobile = useMediaQuery('(max-width: 900px)');
     const {
         link,
@@ -169,7 +173,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                             <Box display="flex" alignItems="center" height={140} marginLeft={3}>
                                 <Button
                                     variant="contained"
-                                    onClick={handleOpenModalPrintLicense}
+                                    onClick={() => router.push(`/${params.username}/${params.assetId}/print/segments`)}
                                     sx={{
                                         backgroundColor: theme.palette.primary.main,
                                         color: '#ffff',

@@ -12,24 +12,18 @@ interface CardItemProps {
 const CardItem = ({ title, count }: CardItemProps) => {
     return (
         <Box mt={4} position="relative">
-            <Badge
-                badgeContent={count}
-                color="primary"
-                sx={{
-                    position: 'absolute',
-                    top: 0,
-                    right: 0,
-                }}
-            />
             <Image
                 src="https://vitruveo-studio-production-general.s3.amazonaws.com/noImage.jpg"
                 alt="No image"
                 width={300}
                 height={300}
             />
-            <Box bgcolor="gray" marginTop={-1} width="100%" p={2}>
+            <Box bgcolor="gray" marginTop={-1} width="100%" p={2} display="flex" justifyContent="space-between">
                 <Typography variant="h4" color="#ffffff">
                     {title}
+                </Typography>
+                <Typography variant="h4" color="#FF0066">
+                    {count}
                 </Typography>
             </Box>
         </Box>
@@ -58,7 +52,13 @@ export default async function PrintSegments({ params }: PrintSegmentsProps) {
                 paddingBottom: 10,
             }}
         >
-            <Typography variant="h1">Print License</Typography>
+            <Box display="flex" justifyContent="center" alignItems="center">
+                <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
+            </Box>
+
+            <Typography variant="h1" mt={2}>
+                Print License
+            </Typography>
 
             <Typography mt={4}>
                 Transform your brand{"'"}s presence with our integrated Display and Merchandise strategies. We turn
