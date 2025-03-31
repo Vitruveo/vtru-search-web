@@ -201,7 +201,7 @@ function* getAssetsGroupByCreator() {
         );
 
         const filters = overwriteWithInitialFilters<FilterSliceState>({
-            initialFilters: storesFilters,
+            initialFilters: storesSearchOption === 'select' ? { include: storesFilters.include } : storesFilters,
             target: filtersState,
         });
 
@@ -351,7 +351,7 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
         const storesFilters: Record<string, any> = yield select((state: AppState) => state.filters.storesFilters);
 
         const filters = overwriteWithInitialFilters<FilterSliceState>({
-            initialFilters: storesFilters,
+            initialFilters: storesSearchOption === 'select' ? { include: storesFilters.include } : storesFilters,
             target: filtersState,
         });
 
@@ -452,16 +452,9 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
                 buildQuery['framework.createdBy'] = { $nin: artists };
             }
         }
+
         if (storesSearchOption === 'select') {
             const { arts, artists } = filters.include;
-
-            Object.keys(buildQuery).forEach((key) => {
-                delete buildQuery[key];
-            });
-
-            // default keys
-            buildQuery['assetMetadata.taxonomy.formData.aiGeneration'] = { $in: ['partial', 'none'] };
-            buildQuery['assetMetadata.taxonomy.formData.nudity'] = { $in: ['no'] };
 
             if (arts.length > 0) {
                 buildQuery['_id'] = { $in: arts };
@@ -660,7 +653,7 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                onUploadProgress: (_progressEvent: any) => {},
+                onUploadProgress: (_progressEvent: any) => { },
             }
         );
         yield put(actions.setVideoUrl(response.data.data.url));
