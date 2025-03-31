@@ -201,7 +201,7 @@ function* getAssetsGroupByCreator() {
         );
 
         const filters = overwriteWithInitialFilters<FilterSliceState>({
-            initialFilters: storesFilters,
+            initialFilters: storesSearchOption === 'select' ? { include: storesFilters.include } : storesFilters,
             target: filtersState,
         });
 
@@ -362,7 +362,7 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
         const storesFilters: Record<string, any> = yield select((state: AppState) => state.filters.storesFilters);
 
         const filters = overwriteWithInitialFilters<FilterSliceState>({
-            initialFilters: storesFilters,
+            initialFilters: storesSearchOption === 'select' ? { include: storesFilters.include } : storesFilters,
             target: filtersState,
         });
 
@@ -463,19 +463,9 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
                 buildQuery['framework.createdBy'] = { $nin: artists };
             }
         }
+
         if (storesSearchOption === 'select') {
             const { arts, artists } = filters.include;
-
-            // Remove store filters excepet the defaults, hide AI and nudity
-            Object.entries(storesFilters).forEach((item) => {
-                const [key, value] = item as [string, { [key: string]: string[] | string }];
-                const valueKeys = Object.keys(value);
-
-                valueKeys.forEach((valueKey) => {
-                    if (valueKey === 'nudity' || valueKey === 'aiGeneration') return;
-                    delete buildQuery[`assetMetadata.${key}.formData.${valueKey}`];
-                });
-            });
 
             if (arts.length > 0) {
                 buildQuery['_id'] = { $in: arts };
@@ -674,7 +664,7 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                onUploadProgress: (_progressEvent: any) => {},
+                onUploadProgress: (_progressEvent: any) => { },
             }
         );
         yield put(actions.setVideoUrl(response.data.data.url));
