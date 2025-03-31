@@ -281,17 +281,6 @@ function* getAssetsGroupByCreator() {
         if (storesSearchOption === 'select') {
             const { arts, artists: includeArtists } = filters.include;
 
-            // Remove store filters excepet the defaults, hide AI and nudity
-            Object.entries(storesFilters).forEach((item) => {
-                const [key, value] = item as [string, { [key: string]: string[] | string }];
-                const valueKeys = Object.keys(value);
-
-                valueKeys.forEach((valueKey) => {
-                    if (valueKey === 'nudity' || valueKey === 'aiGeneration') return;
-                    delete buildQuery[`assetMetadata.${key}.formData.${valueKey}`];
-                });
-            });
-
             if (arts.length > 0) {
                 buildQuery['_id'] = { $in: arts };
             }
