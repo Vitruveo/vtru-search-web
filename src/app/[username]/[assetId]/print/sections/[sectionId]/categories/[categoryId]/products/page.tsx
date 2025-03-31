@@ -2,15 +2,16 @@ import { Breadcrumb } from '@/app/components/Breadcrumb';
 import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Catalog } from '../../types';
-import { CATALOG_BASE_URL } from '@/constants/api';
+import { Catalog, Products } from '../../../../types';
+import { CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
+import { formatPrice } from '@/utils/assets';
 
 interface CardItemProps {
     title: string;
-    count: number;
+    price: number;
 }
 
-const CardItem = ({ title, count }: CardItemProps) => {
+const CardItem = ({ title, price }: CardItemProps) => {
     return (
         <Box mt={4} position="relative">
             <Image
@@ -19,12 +20,12 @@ const CardItem = ({ title, count }: CardItemProps) => {
                 width={300}
                 height={300}
             />
-            <Box bgcolor="gray" marginTop={-1} width="100%" p={2} display="flex" justifyContent="space-between">
+            <Box bgcolor="gray" marginTop={-1} width="100%" p={2}>
                 <Typography variant="h4" color="#ffffff">
                     {title}
                 </Typography>
-                <Typography variant="h4" color="#FF0066">
-                    {count}
+                <Typography variant="h5" color="#FF0066">
+                    {formatPrice({ price: price || 0, withUS: true, decimals: true })}
                 </Typography>
             </Box>
         </Box>
@@ -33,31 +34,40 @@ const CardItem = ({ title, count }: CardItemProps) => {
 
 interface BreadCrumbIParams {
     segment: string;
+    category: string;
 }
 
-const breadcrumbItems = ({ segment = 'Unknown' }: BreadCrumbIParams) => [
+const breadcrumbItems = ({ segment = 'Unknown', category = 'Unknown' }: BreadCrumbIParams) => [
     {
         label: 'Home',
-        href: '/{username}/{assetId}/print/segments',
+        href: '/{username}/{assetId}/print/sections',
     },
     {
         label: segment,
+        href: '/{username}/{assetId}/print/sections/{sectionId}/categories',
+    },
+    {
+        label: category,
     },
 ];
 
-interface PrintCategoriesProps {
+interface PrintProductsProps {
     params: {
         username: string;
         assetId: string;
-        segmentId: string;
+        sectionId: string;
+        categoryId: string;
     };
 }
 
-export default async function PrintCategories({ params }: PrintCategoriesProps) {
+export default async function PrintProducts({ params }: PrintProductsProps) {
     const catalogRequest = await fetch(CATALOG_BASE_URL);
     const catalog: Catalog = await catalogRequest.json();
 
-    const categories = catalog.categories;
+    const productsRequest = await fetch(PRODUCTS_BASE_URL);
+    const products: Products[] = (await productsRequest.json()).filter(
+        (item: Products) => item.categoryId === params.categoryId
+    );
 
     return (
         <Box
@@ -78,7 +88,8 @@ export default async function PrintCategories({ params }: PrintCategoriesProps) 
 
             <Breadcrumb
                 items={breadcrumbItems({
-                    segment: catalog.segments.find((item) => item.segmentId === params.segmentId)!.title,
+                    segment: catalog.sections.find((item) => item.sectionId === params.sectionId)!.title,
+                    category: catalog.categories.find((item) => item.categoryId === params.categoryId)!.title,
                 })}
                 params={params}
             />
@@ -100,12 +111,12 @@ export default async function PrintCategories({ params }: PrintCategoriesProps) 
                 mt={4}
                 width="100%"
             >
-                {categories.map((item) => (
+                {products.map((item) => (
                     <Link
-                        key={item.categoryId}
-                        href={`/${params.username}/${params.assetId}/print/segments/${params.segmentId}/categories/${item.categoryId}/products`}
+                        key={item.productId}
+                        href={`/${params.username}/${params.assetId}/print/sections/${params.sectionId}/categories/${params.categoryId}/products/${item.productId}`}
                     >
-                        <CardItem title={item.title} count={3} />
+                        <CardItem title={item.title} price={item.price} />
                     </Link>
                 ))}
             </Box>

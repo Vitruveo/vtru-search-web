@@ -30,18 +30,18 @@ const CardItem = ({ title, count }: CardItemProps) => {
     );
 };
 
-interface PrintSegmentsProps {
+interface PrintSectionsProps {
     params: {
         username: string;
         assetId: string;
     };
 }
 
-export default async function PrintSegments({ params }: PrintSegmentsProps) {
+export default async function PrintSections({ params }: PrintSectionsProps) {
     const catalogRequest = await fetch(CATALOG_BASE_URL);
     const catalog: Catalog = await catalogRequest.json();
 
-    const segments = catalog.segments;
+    const sections = catalog.sections;
 
     return (
         <Box
@@ -77,10 +77,10 @@ export default async function PrintSegments({ params }: PrintSegmentsProps) {
                 mt={4}
                 width="100%"
             >
-                {segments.map((item) => (
+                {sections.map((item) => (
                     <Link
-                        key={item.segmentId}
-                        href={`/${params.username}/${params.assetId}/print/segments/${item.segmentId}/categories`}
+                        key={item.sectionId}
+                        href={`/${params.username}/${params.assetId}/print/sections/${item.sectionId}/categories`}
                     >
                         <CardItem title={item.title} count={item.categories.length} />
                     </Link>

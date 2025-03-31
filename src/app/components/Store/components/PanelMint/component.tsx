@@ -173,7 +173,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                             <Box display="flex" alignItems="center" height={140} marginLeft={3}>
                                 <Button
                                     variant="contained"
-                                    onClick={() => router.push(`/${params.username}/${params.assetId}/print/segments`)}
+                                    onClick={() => router.push(`/${params.username}/${params.assetId}/print/sections`)}
                                     sx={{
                                         backgroundColor: theme.palette.primary.main,
                                         color: '#ffff',
