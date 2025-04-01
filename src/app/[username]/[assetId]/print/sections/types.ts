@@ -2,6 +2,9 @@ export interface Segment {
     sectionId: string;
     title: string;
     categories: string[];
+    images: {
+        preview: string;
+    };
 }
 
 export interface Category {
