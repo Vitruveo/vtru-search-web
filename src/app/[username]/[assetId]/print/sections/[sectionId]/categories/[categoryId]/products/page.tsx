@@ -116,7 +116,7 @@ export default async function PrintProducts({ params }: PrintProductsProps) {
                         key={item.productId}
                         href={`/${params.username}/${params.assetId}/print/sections/${params.sectionId}/categories/${params.categoryId}/products/${item.productId}`}
                     >
-                        <CardItem title={item.title} price={item.price} />
+                        <CardItem title={item.title} price={item.price / 100} />
                     </Link>
                 ))}
             </Box>

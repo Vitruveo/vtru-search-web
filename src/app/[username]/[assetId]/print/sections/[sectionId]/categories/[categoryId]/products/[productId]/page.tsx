@@ -35,6 +35,27 @@ const breadcrumbItems = ({ segment, category, product }: BreadCrumbIParams) => [
     },
 ];
 
+interface PriceInfoProps {
+    title: string;
+    price: number;
+    mt?: number;
+}
+
+const PriceInfo = ({ title, price, mt = 2 }: PriceInfoProps) => (
+    <Box display="flex" alignItems="center" justifyContent="space-between" mt={mt}>
+        <Typography variant="h4" fontWeight={600}>
+            {title}
+        </Typography>
+        <Typography variant="h4" fontWeight={600}>
+            {formatPrice({
+                price: price,
+                withUS: true,
+                decimals: true,
+            })}
+        </Typography>
+    </Box>
+);
+
 interface PrintProductProps {
     params: {
         username: string;
@@ -110,9 +131,15 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
                             {product?.description}
                         </Typography>
 
-                        <Typography mt={2} variant="h3" fontWeight={600}>
-                            {formatPrice({ price: product?.price || 0, withUS: true, decimals: true })}
-                        </Typography>
+                        <Box bgcolor="rgba(0,0,0,0.6)" width="100%" maxWidth={700} p={3} mt={2}>
+                            <Typography variant="h4">Artwork License</Typography>
+
+                            <PriceInfo title="Price:" price={(product?.price || 0) / 100} mt={4} />
+                            <PriceInfo title="Merchandise Fee:" price={29} />
+                            <PriceInfo title="Platform Fee:" price={29} />
+                            <PriceInfo title="Shipping:" price={29} />
+                            <PriceInfo title="Total:" price={29} mt={4} />
+                        </Box>
 
                         <Grid container spacing={2} mt={3}>
                             <Grid item xs={12} lg={4} md={6}>
