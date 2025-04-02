@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { Breadcrumb } from '@/app/components/Breadcrumb';
-import { Box, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Catalog, Products } from '../../../../types';
+import { Catalog, Product, Products } from '../../../../types';
 import { CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
-import { getProductsImages } from '../../../../utils';
+import { getProductsImages, getProductsPlaceholders } from '../../../../utils';
 
 interface CardItemProps {
     title: string;
@@ -52,9 +52,7 @@ interface PrintProductsProps {
 
 export default function PrintProducts({ params }: PrintProductsProps) {
     const [catalog, setCatalog] = useState<Catalog | null>(null);
-    const [productsImgs, setProductsImgs] = useState<Products[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [productsImgs, setProductsImgs] = useState<Product[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -64,15 +62,18 @@ export default function PrintProducts({ params }: PrintProductsProps) {
             ]);
 
             const catalogData: Catalog = await catalogResponse.json();
-            const products: Products[] = (await productsResponse.json()).filter(
-                (item: Products) => item.categoryId === params.categoryId
+            const products: Product[] = ((await productsResponse.json()) as Products).vertical.filter(
+                (item: Product) => item.categoryId === params.categoryId
             );
+
+            const imagesPlaceholders = getProductsPlaceholders({ products });
+
+            setProductsImgs(imagesPlaceholders);
 
             const images = await getProductsImages({ assetId: params.assetId, products, onlyFirst: true });
 
             setCatalog(catalogData);
             setProductsImgs(images);
-            setLoading(false);
         };
 
         fetchData();
@@ -114,14 +115,18 @@ export default function PrintProducts({ params }: PrintProductsProps) {
                 mt={4}
                 width="100%"
             >
-                {productsImgs.map((item) => (
-                    <Link
-                        key={item.productId}
-                        href={`/${params.username}/${params.assetId}/print/sections/${params.sectionId}/categories/${params.categoryId}/products/${item.productId}`}
-                    >
-                        <CardItem img={item.images[0]} title={item.title} price={item.price} />
-                    </Link>
-                ))}
+                {productsImgs.length ? (
+                    productsImgs.map((item) => (
+                        <Link
+                            key={item.productId}
+                            href={`/${params.username}/${params.assetId}/print/sections/${params.sectionId}/categories/${params.categoryId}/products/${item.productId}`}
+                        >
+                            <CardItem img={item.images[0]} title={item.title} price={item.price} />
+                        </Link>
+                    ))
+                ) : (
+                    <CircularProgress />
+                )}
             </Box>
         </Box>
     );

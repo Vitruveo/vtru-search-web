@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { Breadcrumb } from '@/app/components/Breadcrumb';
-import { Box, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Catalog, Products } from '../../types';
+import { Catalog, Product, Products } from '../../types';
 import { CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
-import { getProductsImages } from '../../utils';
+import { getProductsImages, getProductsPlaceholders } from '../../utils';
 
 interface CardItemProps {
     title: string;
@@ -60,7 +60,15 @@ interface PrintCategoriesProps {
 
 export default function PrintCategories({ params }: PrintCategoriesProps) {
     const [categories, setCategories] = useState<{ src?: string; categoryId: string; title: string }[]>([]);
-    const [loading, setLoading] = useState(true);
+
+    const handleSetCategories = ({ catalog, products }: { catalog: Catalog; products: Product[] }) => {
+        const mappedCategoriesPlaceholders = catalog.categories.map((v) => ({
+            ...v,
+            src: products.find((imgProd) => imgProd.categoryId === v.categoryId)?.images[0],
+        }));
+
+        setCategories(mappedCategoriesPlaceholders);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -71,26 +79,25 @@ export default function PrintCategories({ params }: PrintCategoriesProps) {
                 ]);
 
                 const catalog: Catalog = await catalogResponse.json();
-                const products: Products[] = await productsResponse.json();
-                const images = await getProductsImages({ assetId: params.assetId, products, onlyFirst: true });
+                const products: Products = await productsResponse.json();
 
-                const mappedCategories = catalog.categories.map((v) => ({
-                    ...v,
-                    src: images.find((imgProd) => imgProd.categoryId === v.categoryId)?.images[0],
-                }));
+                const imagesPlaceholders = getProductsPlaceholders({ products: products.vertical });
+                handleSetCategories({ catalog, products: imagesPlaceholders });
 
-                setCategories(mappedCategories);
+                const images = await getProductsImages({
+                    assetId: params.assetId,
+                    products: products.vertical,
+                    onlyFirst: true,
+                });
+
+                handleSetCategories({ catalog, products: images });
             } catch (error) {
                 console.error('Error fetching data:', error);
-            } finally {
-                setLoading(false);
             }
         };
 
         fetchData();
     }, [params.assetId]);
-
-    if (loading) return <div>Loading...</div>;
 
     return (
         <Box
@@ -133,14 +140,18 @@ export default function PrintCategories({ params }: PrintCategoriesProps) {
                 mt={4}
                 width="100%"
             >
-                {categories.map((item) => (
-                    <Link
-                        key={item.categoryId}
-                        href={`/${params.username}/${params.assetId}/print/sections/${params.sectionId}/categories/${item.categoryId}/products`}
-                    >
-                        <CardItem img={item.src} title={item.title} count={3} />
-                    </Link>
-                ))}
+                {categories.length ? (
+                    categories.map((item) => (
+                        <Link
+                            key={item.categoryId}
+                            href={`/${params.username}/${params.assetId}/print/sections/${params.sectionId}/categories/${item.categoryId}/products`}
+                        >
+                            <CardItem img={item.src} title={item.title} count={3} />
+                        </Link>
+                    ))
+                ) : (
+                    <CircularProgress />
+                )}
             </Box>
         </Box>
     );

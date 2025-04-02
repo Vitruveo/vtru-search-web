@@ -46,7 +46,7 @@ const EcommerceDetail = ({ data, actions }: EcommerceDetailProps) => {
                         <ChildCard>
                             <Grid container spacing={3}>
                                 <Grid item xs={12} sm={12} lg={6}>
-                                    <ProductCarousel />
+                                    {/* <ProductCarousel /> */}
                                 </Grid>
                                 <Grid item xs={12} sm={12} lg={6}>
                                     <ProductDetail />

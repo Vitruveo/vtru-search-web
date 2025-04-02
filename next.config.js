@@ -11,6 +11,7 @@ const nextConfig = {
             'vitruveo-studio-production-general.s3.amazonaws.com',
             'vitruveo-studio-production-stores.s3.amazonaws.com',
             'vitruveo-studio-production-assets.s3.amazonaws.com',
+            'vitruveo-projects.s3.amazonaws.com',
             'via.placeholder.com',
             'slideshow.vtru.dev',
         ],

@@ -1,78 +1,69 @@
 import { api } from '@/services/api';
-import { Products } from './types';
+import { Product } from './types';
 
 export const getProductsImages = async ({
     products,
     assetId,
     onlyFirst,
 }: {
-    products: Products[];
+    products: Product[];
     assetId: string;
     onlyFirst?: boolean;
-}): Promise<Products[]> => {
-    console.log('Iniciando processamento de imagens');
-
-    const requests = products.flatMap((product) => {
-        const imagesToProcess = onlyFirst ? product.images.slice(0, 1) : product.images;
-        return imagesToProcess.map((imgName) => ({
-            productId: product.productId,
+}): Promise<Product[]> => {
+    const requests = products.flatMap(({ productId, images }) =>
+        (onlyFirst ? images.slice(0, 1) : images).map((imgName) => ({
+            productId,
             imgName,
-            requestData: {
-                source: `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${product.productId}/${imgName.replace(/^~\//, '')}`,
-            },
-        }));
-    });
+            source: `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${productId}/${imgName.replace(/^~\//, '')}`,
+        }))
+    );
 
-    const fetchImage = async (request: { productId: string; imgName: string; requestData: { source: string } }) => {
-        try {
-            console.log(`Processando: ${request.imgName}`);
-            const response = await api.get(
-                `assets/public/printOutputGenerator/${assetId}?source=${encodeURIComponent(request.requestData.source)}`,
-                {
-                    responseType: 'blob',
-                }
-            );
+    const results = await Promise.allSettled(
+        requests.map(async ({ productId, imgName, source }) => {
+            try {
+                if (!imgName.includes('chroma')) return { productId, imgName, response: source, success: true };
 
-            const blob = new Blob([response.data], { type: response.headers['content-type'] });
-            const imageUrl = URL.createObjectURL(blob);
+                const { data, headers } = await api.get(
+                    `assets/public/printOutputGenerator/${assetId}?source=${encodeURIComponent(source)}`,
+                    { responseType: 'blob' }
+                );
 
-            return {
-                productId: request.productId,
-                imgName: request.imgName,
-                response: imageUrl,
-                success: true,
-            };
-        } catch (error) {
-            return {
-                productId: request.productId,
-                imgName: request.imgName,
-                response: error,
-                success: false,
-            };
+                return {
+                    productId,
+                    imgName,
+                    response: URL.createObjectURL(new Blob([data], { type: headers['content-type'] })),
+                    success: true,
+                };
+            } catch (error) {
+                return { productId, imgName, response: error, success: false };
+            }
+        })
+    );
+
+    const processedResults: Record<string, string[]> = {};
+    results.forEach((r) => {
+        if (r.status === 'fulfilled' && r.value.success) {
+            const { productId, response } = r.value;
+            processedResults[productId] = processedResults[productId] || [];
+            processedResults[productId].push(response as string);
         }
-    };
-
-    const results = await Promise.allSettled(requests.map(fetchImage));
-
-    const processedResults = results.map((result, index) =>
-        result.status === 'fulfilled'
-            ? result.value
-            : {
-                  productId: requests[index].productId,
-                  imgName: requests[index].imgName,
-                  response: result.reason,
-                  success: false,
-              }
-    );
-
-    console.log(
-        `Total de resultados: ${processedResults.length} (${processedResults.filter((r) => r.success).length} sucesso / ${processedResults.filter((r) => !r.success).length} falha)`
-    );
+    });
 
     return products.map((product) => ({
         ...product,
-        images: processedResults
-            .filter((result) => result.productId === product.productId && result.success)
-            .map((result) => result.response),
+        images: processedResults[product.productId] || [],
     }));
 };
+
+const removeFinalS = (word: string) => {
+    return word.endsWith('s') ? word.slice(0, -1) : word;
+};
+
+export const getProductsPlaceholders = ({ products }: { products: Product[] }) =>
+    products.map((prod) => ({
+        ...prod,
+        images: prod.images.map(
+            (_, imgIndex) =>
+                `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${prod.productId}/placeholder_${removeFinalS(prod.categoryId)}-${imgIndex + 1}.png`
+        ),
+    }));

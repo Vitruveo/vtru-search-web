@@ -14,7 +14,7 @@ export interface Catalog {
     categories: Category[];
 }
 
-export interface Products {
+export interface Product {
     categoryId: string;
     productId: string;
     title: string;
@@ -23,4 +23,10 @@ export interface Products {
     images: string[];
     price: number;
     shipping: number;
+}
+
+export interface Products {
+    horizontal: Product[];
+    vertical: Product[];
+    square: Product[];
 }

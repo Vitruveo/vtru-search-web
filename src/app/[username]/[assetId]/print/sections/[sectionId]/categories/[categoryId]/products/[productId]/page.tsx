@@ -6,11 +6,11 @@ import Image from 'next/image';
 // components
 import ProductCarousel from '@/app/components/Store/components/PanelMint/PrintLicense/ecommerce/productDetail/ProductCarousel';
 import { Breadcrumb } from '@/app/components/Breadcrumb';
-import { Catalog, Products } from '../../../../../types';
+import { Catalog, Product, Products } from '../../../../../types';
 import { useEffect, useState } from 'react';
 import { CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
-import { getProductsImages } from '../../../../../utils';
+import { getProductsImages, getProductsPlaceholders } from '../../../../../utils';
 
 interface BreadCrumbIParams {
     segment: string;
@@ -47,34 +47,38 @@ interface PrintProductProps {
 }
 
 export default function PrintProductDetails({ params }: PrintProductProps) {
-    const [product, setProduct] = useState<Products | null>(null);
+    const [product, setProduct] = useState<Product | null>(null);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
 
     const [loading, setLoading] = useState(true);
 
+    const handleSetProduct = (products: Product[]) => {
+        const newProducts = products.find((item: Product) => item.productId === params.productId);
+        setProduct(newProducts || null);
+    };
+
     useEffect(() => {
         const fetchProduct = async () => {
-            const productsRequest = await fetch(PRODUCTS_BASE_URL);
-            const products = await productsRequest.json();
+            const [catalogResponse, productsResponse] = await Promise.all([
+                fetch(CATALOG_BASE_URL),
+                fetch(PRODUCTS_BASE_URL),
+            ]);
 
-            const imgProducts = await getProductsImages({ assetId: params.assetId, products });
+            const catalogData: Catalog = await catalogResponse.json();
+            const products: Products = await productsResponse.json();
 
-            const data = imgProducts.find((item: Products) => item.productId === params.productId);
-            if (!data) {
-                setLoading(false);
-                return;
-            }
-            setProduct(data);
+            setCatalog(catalogData);
+
+            const imagesPlaceholders = getProductsPlaceholders({ products: products.vertical });
+
+            handleSetProduct(imagesPlaceholders);
+            setLoading(false);
+
+            const imgProducts = await getProductsImages({ assetId: params.assetId, products: products.vertical });
+
+            handleSetProduct(imgProducts);
         };
-
-        const fetchCatalog = async () => {
-            const catalogRequest = await fetch(CATALOG_BASE_URL);
-            const data: Catalog = await catalogRequest.json();
-
-            setCatalog(data);
-        };
-
-        Promise.all([fetchProduct(), fetchCatalog()]).then(() => setLoading(false));
+        fetchProduct();
     }, []);
 
     if (loading || !product) {
