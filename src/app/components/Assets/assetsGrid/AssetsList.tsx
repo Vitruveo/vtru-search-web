@@ -440,8 +440,8 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                         isHidden?.order && isHidden?.header
                             ? '105vh'
                             : isHidden?.order || isHidden?.header
-                                ? '95vh'
-                                : '85vh',
+                              ? '95vh'
+                              : '85vh',
                     justifyContent: 'flex-end',
                 }}
             >
@@ -802,7 +802,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                                         })
                                                     );
 
-                                                    if (Array.isArray(asset.assetMetadata?.creators.formData)) {
+                                                    if (Array.isArray(asset.assetMetadata?.creators?.formData)) {
                                                         dispatch(
                                                             actions.changeGroupByCreatorName(
                                                                 asset.assetMetadata?.creators.formData[0].name

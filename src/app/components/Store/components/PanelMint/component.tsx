@@ -112,6 +112,33 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                 </Typography>
                 {available ? (
                     <Box>
+                        {asset.assetMetadata?.context?.formData?.orientation === 'vertical' && (
+                            <MetadataAccordion
+                                title="Print"
+                                last
+                                expanded={expandedAccordion === 'print'}
+                                onChange={handleAccordionChange('print')}
+                            >
+                                <Box display="flex" alignItems="center" height={140} marginLeft={3}>
+                                    <Button
+                                        variant="contained"
+                                        onClick={() =>
+                                            router.push(`/${params.username}/${params.assetId}/print/sections`)
+                                        }
+                                        sx={{
+                                            backgroundColor: theme.palette.primary.main,
+                                            color: '#ffff',
+                                            '&:hover': {
+                                                backgroundColor: theme.palette.primary.main,
+                                            },
+                                            borderRadius: 0,
+                                        }}
+                                    >
+                                        Buy
+                                    </Button>
+                                </Box>
+                            </MetadataAccordion>
+                        )}
                         <MetadataAccordion
                             title="Digital Collectible"
                             last={false}
@@ -162,29 +189,6 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                         </Typography>
                                     </Typography>
                                 </Box>
-                            </Box>
-                        </MetadataAccordion>
-                        <MetadataAccordion
-                            title="Print"
-                            last
-                            expanded={expandedAccordion === 'print'}
-                            onChange={handleAccordionChange('print')}
-                        >
-                            <Box display="flex" alignItems="center" height={140} marginLeft={3}>
-                                <Button
-                                    variant="contained"
-                                    onClick={() => router.push(`/${params.username}/${params.assetId}/print/sections`)}
-                                    sx={{
-                                        backgroundColor: theme.palette.primary.main,
-                                        color: '#ffff',
-                                        '&:hover': {
-                                            backgroundColor: theme.palette.primary.main,
-                                        },
-                                        borderRadius: 0,
-                                    }}
-                                >
-                                    Buy
-                                </Button>
                             </Box>
                         </MetadataAccordion>
                     </Box>
