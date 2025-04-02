@@ -5,7 +5,7 @@ import { Box, Button, Chip, CircularProgress, Grid, Typography } from '@mui/mate
 // components
 import ProductCarousel from '@/app/components/Store/components/PanelMint/PrintLicense/ecommerce/productDetail/ProductCarousel';
 import { Breadcrumb } from '@/app/components/Breadcrumb';
-import { Catalog, Products } from '../../../../../types';
+import { Catalog, ProductItem, Products } from '../../../../../types';
 import { API_BASE_URL, CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
 import { Asset } from '@/features/assets/types';
@@ -66,7 +66,7 @@ interface PrintProductProps {
 }
 
 export default function PrintProductDetails({ params }: PrintProductProps) {
-    const [product, setProduct] = useState<Products | null>(null);
+    const [product, setProduct] = useState<ProductItem | null>(null);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
     const [asset, setAsset] = useState<Asset | null>(null);
 
@@ -75,9 +75,9 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
     useEffect(() => {
         const fetchProduct = async () => {
             const productsRequest = await fetch(PRODUCTS_BASE_URL);
-            const products = await productsRequest.json();
+            const products: Products = await productsRequest.json();
 
-            const data = products.find((item: Products) => item.productId === params.productId);
+            const data = products.vertical.find((item) => item.productId === params.productId)!;
             setProduct(data);
         };
 
