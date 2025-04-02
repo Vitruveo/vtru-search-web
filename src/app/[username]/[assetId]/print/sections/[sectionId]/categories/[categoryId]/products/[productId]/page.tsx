@@ -10,6 +10,7 @@ import { Catalog, Products } from '../../../../../types';
 import { useEffect, useState } from 'react';
 import { CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
+import { getProductsImages } from '../../../../../utils';
 
 interface BreadCrumbIParams {
     segment: string;
@@ -56,7 +57,13 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
             const productsRequest = await fetch(PRODUCTS_BASE_URL);
             const products = await productsRequest.json();
 
-            const data = products.find((item: Products) => item.productId === params.productId);
+            const imgProducts = await getProductsImages({ assetId: params.assetId, products });
+
+            const data = imgProducts.find((item: Products) => item.productId === params.productId);
+            if (!data) {
+                setLoading(false);
+                return;
+            }
             setProduct(data);
         };
 
@@ -70,7 +77,7 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
         Promise.all([fetchProduct(), fetchCatalog()]).then(() => setLoading(false));
     }, []);
 
-    if (loading) {
+    if (loading || !product) {
         return (
             <Box display="flex" justifyContent="center" alignItems="center" mt={5}>
                 <CircularProgress />
@@ -92,7 +99,7 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
             <Box mt={4}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={12} lg={6}>
-                        <ProductCarousel />
+                        <ProductCarousel product={product} />
                     </Grid>
 
                     <Grid item xs={12} sm={12} lg={6}>

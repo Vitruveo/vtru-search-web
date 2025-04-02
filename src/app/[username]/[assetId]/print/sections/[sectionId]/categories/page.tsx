@@ -1,20 +1,25 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { Breadcrumb } from '@/app/components/Breadcrumb';
 import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Catalog } from '../../types';
-import { CATALOG_BASE_URL } from '@/constants/api';
+import { Catalog, Products } from '../../types';
+import { CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
+import { getProductsImages } from '../../utils';
 
 interface CardItemProps {
     title: string;
     count: number;
+    img?: string;
 }
 
-const CardItem = ({ title, count }: CardItemProps) => {
+const CardItem = ({ title, count, img }: CardItemProps) => {
     return (
         <Box mt={4} position="relative">
             <Image
-                src="https://vitruveo-studio-production-general.s3.amazonaws.com/noImage.jpg"
+                src={img || 'https://vitruveo-studio-production-general.s3.amazonaws.com/noImage.jpg'}
                 alt="No image"
                 width={300}
                 height={300}
@@ -53,11 +58,39 @@ interface PrintCategoriesProps {
     };
 }
 
-export default async function PrintCategories({ params }: PrintCategoriesProps) {
-    const catalogRequest = await fetch(CATALOG_BASE_URL);
-    const catalog: Catalog = await catalogRequest.json();
+export default function PrintCategories({ params }: PrintCategoriesProps) {
+    const [categories, setCategories] = useState<{ src?: string; categoryId: string; title: string }[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const categories = catalog.categories;
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [catalogResponse, productsResponse] = await Promise.all([
+                    fetch(CATALOG_BASE_URL),
+                    fetch(PRODUCTS_BASE_URL),
+                ]);
+
+                const catalog: Catalog = await catalogResponse.json();
+                const products: Products[] = await productsResponse.json();
+                const images = await getProductsImages({ assetId: params.assetId, products, onlyFirst: true });
+
+                const mappedCategories = catalog.categories.map((v) => ({
+                    ...v,
+                    src: images.find((imgProd) => imgProd.categoryId === v.categoryId)?.images[0],
+                }));
+
+                setCategories(mappedCategories);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [params.assetId]);
+
+    if (loading) return <div>Loading...</div>;
 
     return (
         <Box
@@ -78,7 +111,7 @@ export default async function PrintCategories({ params }: PrintCategoriesProps) 
 
             <Breadcrumb
                 items={breadcrumbItems({
-                    segment: catalog.sections.find((item) => item.sectionId === params.sectionId)!.title,
+                    segment: categories.length ? categories[0].title : 'Loading...',
                 })}
                 params={params}
             />
@@ -105,7 +138,7 @@ export default async function PrintCategories({ params }: PrintCategoriesProps) 
                         key={item.categoryId}
                         href={`/${params.username}/${params.assetId}/print/sections/${params.sectionId}/categories/${item.categoryId}/products`}
                     >
-                        <CardItem title={item.title} count={3} />
+                        <CardItem img={item.src} title={item.title} count={3} />
                     </Link>
                 ))}
             </Box>

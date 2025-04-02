@@ -16,10 +16,15 @@ import './Carousel.css';
 
 import Image from 'next/image';
 import { fetchProducts } from '@/features/ecommerce/slice';
-import { ProductType } from '../types';
-import { Theme, useMediaQuery } from '@mui/material';
 
-const ProductCarousel = () => {
+import { Theme, useMediaQuery } from '@mui/material';
+import { Products } from '@/app/[username]/[assetId]/print/sections/types';
+
+interface ProductCarouselProps {
+    product: Products;
+}
+
+const ProductCarousel = ({ product }: ProductCarouselProps) => {
     const [state, setState] = React.useState<any>({ nav1: null, nav2: null });
     const slider1 = useRef();
     const slider2 = useRef();
@@ -36,11 +41,6 @@ const ProductCarousel = () => {
     }, [dispatch, pathName, searchParams]);
 
     // Get Products
-    const product = useSelector((rxState) =>
-        rxState.ecommerce.products.find((v) => v.id.toString() === rxState.ecommerce.selectedProduct)
-    );
-
-    const getProductImage = product ? product.photo : '';
 
     useEffect(() => {
         setState({

@@ -1,3 +1,6 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { Breadcrumb } from '@/app/components/Breadcrumb';
 import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
@@ -5,50 +8,37 @@ import Link from 'next/link';
 import { Catalog, Products } from '../../../../types';
 import { CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
+import { getProductsImages } from '../../../../utils';
 
 interface CardItemProps {
     title: string;
     price: number;
+    img?: string;
 }
 
-const CardItem = ({ title, price }: CardItemProps) => {
-    return (
-        <Box mt={4} position="relative">
-            <Image
-                src="https://vitruveo-studio-production-general.s3.amazonaws.com/noImage.jpg"
-                alt="No image"
-                width={300}
-                height={300}
-            />
-            <Box bgcolor="gray" marginTop={-1} width="100%" p={2}>
-                <Typography variant="h4" color="#ffffff">
-                    {title}
-                </Typography>
-                <Typography variant="h5" color="#FF0066">
-                    {formatPrice({ price: price || 0, withUS: true, decimals: true })}
-                </Typography>
-            </Box>
+const CardItem = ({ title, price, img }: CardItemProps) => (
+    <Box mt={4} position="relative">
+        <Image
+            src={img || 'https://vitruveo-studio-production-general.s3.amazonaws.com/noImage.jpg'}
+            alt="No image"
+            width={300}
+            height={300}
+        />
+        <Box bgcolor="gray" marginTop={-1} width="100%" p={2}>
+            <Typography variant="h4" color="#ffffff">
+                {title}
+            </Typography>
+            <Typography variant="h5" color="#FF0066">
+                {formatPrice({ price: price || 0, withUS: true, decimals: true })}
+            </Typography>
         </Box>
-    );
-};
+    </Box>
+);
 
-interface BreadCrumbIParams {
-    segment: string;
-    category: string;
-}
-
-const breadcrumbItems = ({ segment = 'Unknown', category = 'Unknown' }: BreadCrumbIParams) => [
-    {
-        label: 'Home',
-        href: '/{username}/{assetId}/print/sections',
-    },
-    {
-        label: segment,
-        href: '/{username}/{assetId}/print/sections/{sectionId}/categories',
-    },
-    {
-        label: category,
-    },
+const breadcrumbItems = ({ segment = 'Unknown', category = 'Unknown' }) => [
+    { label: 'Home', href: '/{username}/{assetId}/print/sections' },
+    { label: segment, href: '/{username}/{assetId}/print/sections/{sectionId}/categories' },
+    { label: category },
 ];
 
 interface PrintProductsProps {
@@ -60,24 +50,36 @@ interface PrintProductsProps {
     };
 }
 
-export default async function PrintProducts({ params }: PrintProductsProps) {
-    const catalogRequest = await fetch(CATALOG_BASE_URL);
-    const catalog: Catalog = await catalogRequest.json();
+export default function PrintProducts({ params }: PrintProductsProps) {
+    const [catalog, setCatalog] = useState<Catalog | null>(null);
+    const [productsImgs, setProductsImgs] = useState<Products[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const productsRequest = await fetch(PRODUCTS_BASE_URL);
-    const products: Products[] = (await productsRequest.json()).filter(
-        (item: Products) => item.categoryId === params.categoryId
-    );
+    useEffect(() => {
+        const fetchData = async () => {
+            const [catalogResponse, productsResponse] = await Promise.all([
+                fetch(CATALOG_BASE_URL),
+                fetch(PRODUCTS_BASE_URL),
+            ]);
+
+            const catalogData: Catalog = await catalogResponse.json();
+            const products: Products[] = (await productsResponse.json()).filter(
+                (item: Products) => item.categoryId === params.categoryId
+            );
+
+            const images = await getProductsImages({ assetId: params.assetId, products, onlyFirst: true });
+
+            setCatalog(catalogData);
+            setProductsImgs(images);
+            setLoading(false);
+        };
+
+        fetchData();
+    }, [params]);
 
     return (
-        <Box
-            padding={2}
-            sx={{
-                overflowY: 'auto',
-                height: '100vh',
-                paddingBottom: 10,
-            }}
-        >
+        <Box padding={2} sx={{ overflowY: 'auto', height: '100vh', paddingBottom: 10 }}>
             <Box display="flex" justifyContent="center" alignItems="center">
                 <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
             </Box>
@@ -88,8 +90,9 @@ export default async function PrintProducts({ params }: PrintProductsProps) {
 
             <Breadcrumb
                 items={breadcrumbItems({
-                    segment: catalog.sections.find((item) => item.sectionId === params.sectionId)!.title,
-                    category: catalog.categories.find((item) => item.categoryId === params.categoryId)!.title,
+                    segment: catalog?.sections.find((item) => item.sectionId === params.sectionId)?.title ?? 'Unknown',
+                    category:
+                        catalog?.categories.find((item) => item.categoryId === params.categoryId)?.title ?? 'Unknown',
                 })}
                 params={params}
             />
@@ -111,12 +114,12 @@ export default async function PrintProducts({ params }: PrintProductsProps) {
                 mt={4}
                 width="100%"
             >
-                {products.map((item) => (
+                {productsImgs.map((item) => (
                     <Link
                         key={item.productId}
                         href={`/${params.username}/${params.assetId}/print/sections/${params.sectionId}/categories/${params.categoryId}/products/${item.productId}`}
                     >
-                        <CardItem title={item.title} price={item.price} />
+                        <CardItem img={item.images[0]} title={item.title} price={item.price} />
                     </Link>
                 ))}
             </Box>
