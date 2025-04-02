@@ -2,22 +2,18 @@ import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Catalog } from './types';
-import { CATALOG_BASE_URL } from '@/constants/api';
+import { CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
 
 interface CardItemProps {
     title: string;
     count: number;
+    image: string;
 }
 
-const CardItem = ({ title, count }: CardItemProps) => {
+const CardItem = ({ title, count, image }: CardItemProps) => {
     return (
         <Box position="relative">
-            <Image
-                src="https://vitruveo-studio-production-general.s3.amazonaws.com/noImage.jpg"
-                alt="No image"
-                width={300}
-                height={300}
-            />
+            <Image src={`${CATALOG_ASSETS_BASE_URL}/${image}`} alt="No image" width={300} height={300} />
             <Box bgcolor="gray" marginTop={-1} width={300} p={2} display="flex" justifyContent="space-between">
                 <Typography variant="h4" color="#ffffff">
                     {title}
@@ -82,7 +78,7 @@ export default async function PrintSections({ params }: PrintSectionsProps) {
                         key={item.sectionId}
                         href={`/${params.username}/${params.assetId}/print/sections/${item.sectionId}/categories`}
                     >
-                        <CardItem title={item.title} count={item.categories.length} />
+                        <CardItem title={item.title} count={item.categories.length} image={item.images.preview} />
                     </Link>
                 ))}
             </Box>

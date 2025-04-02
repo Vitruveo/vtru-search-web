@@ -13,6 +13,7 @@ export interface FormData {
     colors?: string[] | null;
     title?: string;
     description?: string;
+    orientation?: string;
 }
 export interface Schema {
     type: string;
@@ -68,7 +69,6 @@ export interface TitleOrDescriptionOrCopyrightOrNameOrBioOrProfileUrlOrNationali
 export interface Uioptions {
     label: boolean;
     placeholder: string;
-    
 }
 export interface CultureOrMoodOrOrientationOrObjectTypeOrAiGenerationOrArenabledOrNudityOrCategoryOrMediumOrStyle {
     ['ui:widget']: string;

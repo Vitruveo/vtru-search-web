@@ -2,6 +2,7 @@ import { useEffect, useReducer } from 'react';
 import { confetti } from '@tsparticles/confetti';
 import { useAccount, useConnectorClient } from 'wagmi';
 import { toast } from 'react-toastify';
+import { useSearchParams } from 'next/navigation';
 
 import { PanelMint } from './component';
 import { getAvailableCredits, getPlatformFeeBasisPoints, issueLicenseUsingCredits } from '@/services/web3/mint';
@@ -39,6 +40,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     const dispatch = useDispatch();
     const coockieGrid = cookie.get('grid') as string;
     const coockieVideo = cookie.get('video') as string;
+    const searchParams = useSearchParams();
 
     const { isConnected, address, chain } = useAccount();
     const { data: client } = useConnectorClient();
@@ -47,6 +49,19 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     const { lastAssets, lastAssetsLoading } = useSelector((reduxState) => reduxState.store);
     const assetLicenses = useAssetLicenses(asset._id);
     const stores = useSelector((stateRx) => stateRx.stores.currentDomain);
+
+    useEffect(() => {
+        if (searchParams.get('type') === 'digital') {
+            handleOpenModalLicense();
+        }
+
+        if (asset.assetMetadata?.context?.formData?.orientation === 'vertical') {
+            dispatchAction({
+                type: TypeActions.SET_EXPANDED_ACCORDION,
+                payload: 'print',
+            });
+        }
+    }, []);
 
     useEffect(() => {
         if (coockieGrid) {

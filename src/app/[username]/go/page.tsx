@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/constants/api';
 import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -60,11 +61,14 @@ const TreeItem = ({ title, link, params }: TreeItemParam) => {
 interface AssetGoProps {
     params: {
         username: string;
-        assetId: string;
     };
 }
 
-export default function AssetGo({ params }: AssetGoProps) {
+export default async function AssetGo({ params }: AssetGoProps) {
+    const assetId = params.username;
+    const assetRaw = await fetch(`${API_BASE_URL}/assets/store/${assetId}`);
+    const asset = await assetRaw.json();
+
     return (
         <Box
             padding={2}
@@ -74,23 +78,6 @@ export default function AssetGo({ params }: AssetGoProps) {
                 paddingBottom: 10,
             }}
         >
-            {/* <Box
-                sx={{
-                    backgroundImage: 'url(/images/icons/xibit-icon-redondo-litemode.png)',
-                    backgroundSize: 'cover',
-                    backgroundRepeat: 'no-repeat',
-                    // backgroundPosition: 'left',
-                    backgroundPosition: 'center center',
-                    opacity: 0.1,
-
-                    width: '100vw',
-                    height: '100vh',
-                    position: 'fixed',
-
-                    zIndex: -1,
-                }}
-            /> */}
-
             <Box display="flex" justifyContent="center" alignItems="center">
                 <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
             </Box>
@@ -99,14 +86,29 @@ export default function AssetGo({ params }: AssetGoProps) {
                 <TreeItem
                     title="License Artwork"
                     link={[
-                        { label: 'Print', link: '/{username}/{assetId}/print/segments' },
-                        { label: 'Digital Collectible', link: '/{username}/{assetId}' },
+                        { label: 'Print', link: '/{username}/{assetId}/print/sections' },
+                        { label: 'Digital Collectible', link: '/{username}/{assetId}?type=digital' },
                     ]}
-                    params={params}
+                    params={{
+                        assetId,
+                        username: asset.data.creator.username,
+                    }}
                 />
-                <TreeItem link={[{ label: 'View Artwork', link: '/{username}/{assetId}' }]} params={params} />
+                <TreeItem
+                    link={[{ label: 'View Artwork', link: '/{username}/{assetId}' }]}
+                    params={{
+                        assetId,
+                        username: asset.data.creator.username,
+                    }}
+                />
 
-                <TreeItem link={[{ label: 'About Xibit', link: 'https://about.xibit.app' }]} params={params} />
+                <TreeItem
+                    link={[{ label: 'About Xibit', link: 'https://about.xibit.app' }]}
+                    params={{
+                        assetId,
+                        username: asset.data.creator.username,
+                    }}
+                />
             </Box>
         </Box>
     );
