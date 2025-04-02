@@ -22,7 +22,7 @@ export default function MetadataList({ asset, expandedAccordion, handleAccordion
                 expanded={expandedAccordion === 'context'}
                 onChange={handleAccordionChange('context')}
             >
-                <MetadataContext content={asset.assetMetadata?.context.formData as Context} />
+                <MetadataContext content={asset.assetMetadata?.context.formData as unknown as Context} />
             </MetadataAccordion>
             {asset.mediaAuxiliary?.description && (
                 <MetadataAccordion

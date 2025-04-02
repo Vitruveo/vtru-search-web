@@ -14,6 +14,7 @@ const nextConfig = {
             'vitruveo-projects.s3.amazonaws.com',
             'via.placeholder.com',
             'slideshow.vtru.dev',
+            'vitruveo-projects.s3.amazonaws.com',
         ],
     },
     reactStrictMode: false,

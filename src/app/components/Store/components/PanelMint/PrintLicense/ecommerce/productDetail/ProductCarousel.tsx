@@ -18,10 +18,10 @@ import Image from 'next/image';
 import { fetchProducts } from '@/features/ecommerce/slice';
 
 import { Theme, useMediaQuery } from '@mui/material';
-import { Product } from '@/app/[username]/[assetId]/print/sections/types';
+import { ProductItem } from '@/app/[username]/[assetId]/print/sections/types';
 
 interface ProductCarouselProps {
-    product: Product;
+    product: ProductItem;
 }
 
 const ProductCarousel = ({ product }: ProductCarouselProps) => {

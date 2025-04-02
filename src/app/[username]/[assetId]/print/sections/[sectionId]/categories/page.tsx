@@ -5,7 +5,7 @@ import { Breadcrumb } from '@/app/components/Breadcrumb';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Catalog, Product, Products } from '../../types';
+import { Catalog, ProductItem, Products } from '../../types';
 import { CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
 import { getProductsImages, getProductsPlaceholders } from '../../utils';
 
@@ -61,7 +61,7 @@ interface PrintCategoriesProps {
 export default function PrintCategories({ params }: PrintCategoriesProps) {
     const [categories, setCategories] = useState<{ src?: string; categoryId: string; title: string }[]>([]);
 
-    const handleSetCategories = ({ catalog, products }: { catalog: Catalog; products: Product[] }) => {
+    const handleSetCategories = ({ catalog, products }: { catalog: Catalog; products: ProductItem[] }) => {
         const mappedCategoriesPlaceholders = catalog.categories.map((v) => ({
             ...v,
             src: products.find((imgProd) => imgProd.categoryId === v.categoryId)?.images[0],
@@ -150,7 +150,9 @@ export default function PrintCategories({ params }: PrintCategoriesProps) {
                         </Link>
                     ))
                 ) : (
-                    <CircularProgress />
+                    <Box display="flex" justifyContent="center" alignItems="center" mt={5}>
+                        <CircularProgress />
+                    </Box>
                 )}
             </Box>
         </Box>

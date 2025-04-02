@@ -5,7 +5,7 @@ import { Breadcrumb } from '@/app/components/Breadcrumb';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Catalog, Product, Products } from '../../../../types';
+import { Catalog, ProductItem, Products } from '../../../../types';
 import { CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
 import { getProductsImages, getProductsPlaceholders } from '../../../../utils';
@@ -52,7 +52,7 @@ interface PrintProductsProps {
 
 export default function PrintProducts({ params }: PrintProductsProps) {
     const [catalog, setCatalog] = useState<Catalog | null>(null);
-    const [productsImgs, setProductsImgs] = useState<Product[]>([]);
+    const [productsImgs, setProductsImgs] = useState<ProductItem[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -62,8 +62,8 @@ export default function PrintProducts({ params }: PrintProductsProps) {
             ]);
 
             const catalogData: Catalog = await catalogResponse.json();
-            const products: Product[] = ((await productsResponse.json()) as Products).vertical.filter(
-                (item: Product) => item.categoryId === params.categoryId
+            const products: ProductItem[] = ((await productsResponse.json()) as Products).vertical.filter(
+                (item: ProductItem) => item.categoryId === params.categoryId
             );
 
             const imagesPlaceholders = getProductsPlaceholders({ products });
@@ -121,11 +121,13 @@ export default function PrintProducts({ params }: PrintProductsProps) {
                             key={item.productId}
                             href={`/${params.username}/${params.assetId}/print/sections/${params.sectionId}/categories/${params.categoryId}/products/${item.productId}`}
                         >
-                            <CardItem img={item.images[0]} title={item.title} price={item.price} />
+                            <CardItem img={item.images[0]} title={item.title} price={item.price / 100} />
                         </Link>
                     ))
                 ) : (
-                    <CircularProgress />
+                    <Box display="flex" justifyContent="center" alignItems="center" mt={5}>
+                        <CircularProgress />
+                    </Box>
                 )}
             </Box>
         </Box>

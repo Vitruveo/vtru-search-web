@@ -1,15 +1,15 @@
 import { api } from '@/services/api';
-import { Product } from './types';
+import { ProductItem } from './types';
 
 export const getProductsImages = async ({
     products,
     assetId,
     onlyFirst,
 }: {
-    products: Product[];
+    products: ProductItem[];
     assetId: string;
     onlyFirst?: boolean;
-}): Promise<Product[]> => {
+}): Promise<ProductItem[]> => {
     const requests = products.flatMap(({ productId, images }) =>
         (onlyFirst ? images.slice(0, 1) : images).map((imgName) => ({
             productId,
@@ -59,7 +59,7 @@ const removeFinalS = (word: string) => {
     return word.endsWith('s') ? word.slice(0, -1) : word;
 };
 
-export const getProductsPlaceholders = ({ products }: { products: Product[] }) =>
+export const getProductsPlaceholders = ({ products }: { products: ProductItem[] }) =>
     products.map((prod) => ({
         ...prod,
         images: prod.images.map(
