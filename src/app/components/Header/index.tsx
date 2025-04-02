@@ -168,7 +168,7 @@ const Header = ({
                     </MenuItem>
                     {isPersonalizedStore && (
                         <MenuItem onClick={generatePack} disabled={packIsLoading}>
-                            {packIsLoading ? <CircularProgress size="1.6rem" /> : 'Pack'}
+                            {packIsLoading ? <CircularProgress size="1.6rem" /> : 'Gallery Pack'}
                         </MenuItem>
                     )}
                     <Box display={'flex'} justifyContent={'space-around'}>
