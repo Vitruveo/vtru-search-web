@@ -86,6 +86,10 @@ interface FiltersInitialState {
         arts: string[];
         artists: string[];
     };
+    include: {
+        arts: string[];
+        artists: string[];
+    };
 }
 
 export interface FilterSliceState extends FiltersInitialState {

@@ -11,6 +11,7 @@ import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import { formatPrice, getPriceWithMarkup } from '@/utils/assets';
 import Username from '../Username';
 import { useDomainContext } from '@/app/context/domain';
+import { NO_IMAGE_ASSET } from '@/constants/asset';
 
 function SpotlightSlider() {
     const { subdomain } = useDomainContext();
@@ -63,7 +64,7 @@ function SpotlightSlider() {
                             <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
                                 <MediaRenderer
                                     src={`${ASSET_STORAGE_URL}/${asset?.preview}`}
-                                    fallbackSrc={'https://via.placeholder.com/250'}
+                                    fallbackSrc={NO_IMAGE_ASSET}
                                     preSource={
                                         nextAssetExists ? `${ASSET_STORAGE_URL}/${assets[index + 1]?.preview}` : ''
                                     }

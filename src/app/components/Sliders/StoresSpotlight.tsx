@@ -8,6 +8,7 @@ import { StoresSpotlight } from '@/features/stores/types';
 import { STORES_STORAGE_URL } from '@/constants/aws';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
+import { NO_IMAGE_ASSET } from '@/constants/asset';
 
 interface Props {
     stores: StoresSpotlight[];
@@ -51,7 +52,7 @@ function StoresSpotlightSlider({ stores }: Props) {
                             <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
                                 <MediaRenderer
                                     src={`${STORES_STORAGE_URL}/${item.logo}`}
-                                    fallbackSrc={'https://via.placeholder.com/250'}
+                                    fallbackSrc={NO_IMAGE_ASSET}
                                     onClick={() => handleClickItem(item)}
                                 />
                             </Box>

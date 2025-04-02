@@ -156,6 +156,11 @@ const Search = () => {
             initialFilters[`exclude_${key}`] = value.map((v) => v.value).join(',');
         });
 
+        Object.entries(storeFilters?.include || {}).forEach((item) => {
+            const [key, value] = item as [string, { value: string; label: string }[]];
+            initialFilters[`include_${key}`] = value.map((v) => v.value).join(',');
+        });
+
         dispatch(actions.initialParams({ initialParams: initialFilters, persistStoresFilters: true }));
         dispatch(
             actionsAssets.initialSort({

@@ -8,6 +8,7 @@ import { useTheme } from '@mui/material/styles';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
 import '../../Assets/assetsGrid/AssetScroll.css';
 import { SEARCH_BASE_URL } from '@/constants/api';
+import { NO_IMAGE_ASSET } from '@/constants/asset';
 
 interface Props {
     asset: Asset;
@@ -28,7 +29,7 @@ const AssetItemMain = ({ asset, username }: Props) => {
                     <Box height={280} borderRadius="8px 8px 0 0" position="relative">
                         <MediaRenderer
                             src={`${ASSET_STORAGE_URL}/${asset.formats.preview.path}`}
-                            fallbackSrc={'https://via.placeholder.com/250'}
+                            fallbackSrc={NO_IMAGE_ASSET}
                         />
                     </Box>
                     <CardContent sx={{ p: 3, pt: 2 }} style={{ backgroundColor: theme.palette.grey[100] }}>

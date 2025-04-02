@@ -6,6 +6,7 @@ import Marquee from 'react-fast-marquee';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import { actions } from '@/features/filters/slice';
 import { actions as actionsAssets } from '@/features/assets/slice';
+import { NO_IMAGE_ASSET } from '@/constants/asset';
 
 export default function ArtistsSpotlight() {
     const dispatch = useDispatch();
@@ -44,7 +45,7 @@ export default function ArtistsSpotlight() {
                             <Box width={250} height={250} borderRadius="8px 8px 0 0" position="relative">
                                 <MediaRenderer
                                     src={`${GENERAL_STORAGE_URL}/${artist.profile.avatar}`}
-                                    fallbackSrc={'https://via.placeholder.com/250'}
+                                    fallbackSrc={NO_IMAGE_ASSET}
                                     preSource={
                                         nextAssetExists
                                             ? `${GENERAL_STORAGE_URL}/${artists[index + 1]?.profile.avatar}`
