@@ -14,6 +14,7 @@ import type {
     GetCreatorParams,
     MakeVideoParams,
     MakeVideoResponse,
+    PaymentParams,
     ResponseArtistsSpotlight,
     ResponseAsserCreator,
     ResponseAssetGroupByCreator,
@@ -655,7 +656,7 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                onUploadProgress: (_progressEvent: any) => { },
+                onUploadProgress: (_progressEvent: any) => {},
             }
         );
         yield put(actions.setVideoUrl(response.data.data.url));
@@ -787,6 +788,25 @@ function* setup() {
     }
 }
 
+function* payment(action: PayloadAction<PaymentParams>) {
+    try {
+        const { assetId, productId } = action.payload;
+
+        const response: AxiosResponse<APIResponse<string>> = yield call(
+            axios.post,
+            `${API_BASE_URL}/assets/payment/create-checkout-session`,
+            {
+                assetId,
+                productId,
+            }
+        );
+
+        window.location.href = response.data.data;
+    } catch (error) {
+        //
+    }
+}
+
 export function* assetsSagas() {
     yield all([
         // Assets
@@ -835,6 +855,8 @@ export function* assetsSagas() {
         takeEvery(actions.generateSlideshow.type, generateSlideshow),
 
         takeEvery(actions.getPack.type, getPack),
+
+        takeEvery(actions.payment.type, payment),
 
         // setup
         takeLatest('persist/REHYDRATE', setup),

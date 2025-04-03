@@ -19,7 +19,7 @@ const CardItem = ({ title, count, image }: CardItemProps) => {
                     {title}
                 </Typography>
                 <Typography variant="h4" color="#FF0066">
-                    {count}
+                    {count} Items
                 </Typography>
             </Box>
         </Box>

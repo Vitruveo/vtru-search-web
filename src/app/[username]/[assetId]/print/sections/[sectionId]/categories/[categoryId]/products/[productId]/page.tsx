@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Box, Button, Chip, CircularProgress, Grid, Typography } from '@mui/material';
 
 // components
@@ -10,6 +11,7 @@ import { API_BASE_URL, CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/a
 import { formatPrice } from '@/utils/assets';
 import { Asset } from '@/features/assets/types';
 import { getProductsImages, getProductsPlaceholders } from '../../../../../utils';
+import * as actionsAssets from '@/features/assets/slice';
 
 interface BreadCrumbIParams {
     segment: string;
@@ -67,6 +69,8 @@ interface PrintProductProps {
 }
 
 export default function PrintProductDetails({ params }: PrintProductProps) {
+    const dispatch = useDispatch();
+
     const [product, setProduct] = useState<ProductItem | null>(null);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
     const [asset, setAsset] = useState<Asset | null>(null);
@@ -124,6 +128,12 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
 
         return 0;
     }, [asset]);
+
+    const handleSubmitPayment = () => {
+        if (!product) return;
+
+        dispatch(actionsAssets.actions.payment({ assetId: params.assetId, productId: product.productId }));
+    };
 
     const merchandiseFee = useMemo(() => (!product ? 0 : (product.price / 100) * 1.2), [product]);
     const platformFee = useMemo(() => (!asset ? 0 : asset.licenses.nft.single.editionPrice * 0.02), [asset]);
@@ -191,7 +201,13 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
 
                         <Grid container spacing={2} mt={3}>
                             <Grid item xs={12} lg={4} md={6}>
-                                <Button color="primary" size="large" fullWidth variant="contained">
+                                <Button
+                                    color="primary"
+                                    size="large"
+                                    fullWidth
+                                    variant="contained"
+                                    onClick={handleSubmitPayment}
+                                >
                                     Buy Now
                                 </Button>
                             </Grid>
