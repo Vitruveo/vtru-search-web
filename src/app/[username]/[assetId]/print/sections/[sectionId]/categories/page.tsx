@@ -63,7 +63,8 @@ export default function PrintCategories({ params }: PrintCategoriesProps) {
     const [section, setSection] = useState<Sections | null>(null);
 
     const handleSetCategories = ({ catalog, products }: { catalog: Catalog; products: ProductItem[] }) => {
-        const mappedCategoriesPlaceholders = catalog.categories.map((v) => ({
+        const catalogSection = catalog.sections.find((item) => item.sectionId === params.sectionId)!;
+        const mappedCategoriesPlaceholders = catalog.categories.filter(c => catalogSection?.categories.includes(c.categoryId)).map((v) => ({
             ...v,
             src:
                 products.find((imgProd) => imgProd.categoryId === v.categoryId)?.images[0] || v.images.preview
