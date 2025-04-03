@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { AppBar, Box, CircularProgress, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import { useTheme, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { IconMoon, IconSun, IconMenu2 } from '@tabler/icons-react';
@@ -11,7 +11,6 @@ import { Language } from '../Language';
 import { Rss } from '../Rss';
 import Logo from '../Shared/Logo';
 import BuyVUSDModal from '../BuyVUSD/modalHOC';
-import { actions } from '@/features/assets';
 
 interface Props {
     rssOptions: {
@@ -46,7 +45,7 @@ const Header = ({
     const paused = useSelector((state) => state.assets.paused);
     const isHidden = useSelector((state) => state.customizer.hidden?.header);
     const storesName = useSelector((state) => state.stores.currentDomain?.organization?.name);
-    const packIsLoading = useSelector((state) => state.assets.packLoading);
+    // const packIsLoading = useSelector((state) => state.assets.packLoading);
 
     const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -84,9 +83,9 @@ const Header = ({
         }
     };
 
-    const generatePack = () => {
-        dispatch(actions.getPack());
-    };
+    // const generatePack = () => {
+    //     dispatch(actions.getPack());
+    // };
 
     if (isHidden) return null;
 
@@ -166,11 +165,11 @@ const Header = ({
                         RSS Feed
                         <Rss options={rssOptions} showIcon={false} ref={rssRef} onClose={handleClose} />
                     </MenuItem>
-                    {isPersonalizedStore && (
+                    {/* {isPersonalizedStore && (
                         <MenuItem onClick={generatePack} disabled={packIsLoading}>
                             {packIsLoading ? <CircularProgress size="1.6rem" /> : 'Gallery Pack'}
                         </MenuItem>
-                    )}
+                    )} */}
                     <Box display={'flex'} justifyContent={'space-around'}>
                         <MenuItem onClick={handleOpenLanguage}>
                             <Language ref={languageRef} onClose={handleClose} />

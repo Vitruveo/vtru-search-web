@@ -19,7 +19,7 @@ interface BreadcrumbProps {
 
 export const Breadcrumb: React.FC<BreadcrumbProps> = ({ items, params }) => {
     return (
-        <Box mt={2} display="flex" alignItems="center" gap={1}>
+        <Box display="flex" alignItems="center" gap={1}>
             {items.map((item, index) => (
                 <React.Fragment key={index}>
                     {item.href ? (
