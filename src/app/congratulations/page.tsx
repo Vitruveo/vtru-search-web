@@ -1,10 +1,13 @@
+'use client';
 import Image from "next/image";
-import { Box, Link, Typography } from "@mui/material";
+import { Box, Link, Typography, useMediaQuery } from "@mui/material";
 import { SEARCH_BASE_URL } from "@/constants/api";
 
 export default function Congratulations() {
+    const isMobile = useMediaQuery('(max-width: 900px)');
+
     return (
-        <Box width="100%" height="100vh" display="flex" flexDirection="column" gap={8} marginBlock={10}>
+        <Box width="100%" height={isMobile ? "90vh" : "100vh"} display="flex" flexDirection="column" gap={8} marginBlock={10} overflow={'auto'}>
             <Box display="flex" justifyContent="center" alignItems="center">
                 <Image
                     src={'/images/logos/XIBIT-logo_dark.png'}
@@ -14,7 +17,7 @@ export default function Congratulations() {
                     priority
                 />
             </Box>
-            <Box display="flex" justifyContent="center" flexDirection="column" gap={6} paddingInline="10%">
+            <Box display="flex" justifyContent="center" flexDirection="column" gap={6} paddingInline={isMobile ? "5%" : "10%"}>
                 <Typography variant="h1" sx={{ fontSize: '2rem', fontWeight: 'bold' }}>
                     Thank you for your order!
                 </Typography>
