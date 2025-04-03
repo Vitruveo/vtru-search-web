@@ -28,9 +28,9 @@ const CardItem = ({ title, count, img }: CardItemProps) => {
                 <Typography variant="h4" color="#ffffff">
                     {title}
                 </Typography>
-                <Typography variant="h4" color="#FF0066">
+                {/* <Typography variant="h4" color="#FF0066">
                     {count}
-                </Typography>
+                </Typography> */}
             </Box>
         </Box>
     );

@@ -331,3 +331,8 @@ export interface GenerateSlideshowParams {
     display: string;
     interval: number;
 }
+
+export interface PaymentParams {
+    assetId: string;
+    productId: string;
+}

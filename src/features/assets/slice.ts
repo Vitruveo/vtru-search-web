@@ -8,6 +8,7 @@ import type {
     GetCreatorParams,
     LastSoldAsset,
     MakeVideoParams,
+    PaymentParams,
     SpotlightAsset,
 } from './types';
 
@@ -181,6 +182,7 @@ export const assetsSlice = createSlice({
         setCurateStacks: (state, action: PayloadAction<AssetsSliceState['curateStacks']>) => {
             state.curateStacks = action.payload;
         },
+        payment: (_state, _action: PayloadAction<PaymentParams>) => {},
     },
 });
 
