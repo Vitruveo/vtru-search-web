@@ -59,7 +59,13 @@ const ProductCarousel = ({ product }: ProductCarouselProps) => {
     const settings = {
         focusOnSelect: true,
         infinite: true,
-        slidesToShow: smUp ? 4 : 2,
+        slidesToShow: smUp
+            ? sliderData.length > 4
+                ? 4
+                : sliderData.length
+            : sliderData.length > 2
+              ? 2
+              : sliderData.length,
         arrows: false,
         swipeToSlide: true,
         slidesToScroll: 1,

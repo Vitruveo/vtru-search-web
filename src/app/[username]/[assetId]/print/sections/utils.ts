@@ -62,8 +62,9 @@ const removeFinalS = (word: string) => {
 export const getProductsPlaceholders = ({ products }: { products: ProductItem[] }) =>
     products.map((prod) => ({
         ...prod,
-        images: prod.images.map(
-            (_, imgIndex) =>
-                `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${prod.productId}/placeholder_${removeFinalS(prod.categoryId)}-${imgIndex + 1}.png`
+        images: prod.images.map((imgName, imgIndex) =>
+            imgName.includes('chroma')
+                ? `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${prod.productId}/placeholder_${removeFinalS(prod.categoryId)}-${imgIndex + 1}.png`
+                : `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${prod.productId}/${imgName.replace(/^~\//, '')}`
         ),
     }));
