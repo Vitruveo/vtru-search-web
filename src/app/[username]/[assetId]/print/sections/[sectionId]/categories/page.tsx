@@ -25,7 +25,7 @@ const CardItem = ({ title, count, img }: CardItemProps) => {
                 height={300}
             />
             <Box bgcolor="gray" marginTop={-1} width="100%" p={2} display="flex" justifyContent="space-between">
-                <Typography variant="h4" color="#ffffff">
+                <Typography variant="h4" color="#ffffff" maxWidth={270}>
                     {title}
                 </Typography>
                 {/* <Typography variant="h4" color="#FF0066">

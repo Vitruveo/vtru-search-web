@@ -144,7 +144,7 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
             return asset.licenses.nft.single.editionPrice * section.priceMultiplier;
         }
 
-        if (params.categoryId === 'frames') {
+        if (params.categoryId === 'frames' || params.categoryId === 'posters') {
             return asset.licenses.nft.single.editionPrice * section.priceMultiplier * product.area;
         }
 

@@ -26,7 +26,7 @@ const CardItem = ({ title, price, img }: CardItemProps) => (
             height={300}
         />
         <Box bgcolor="gray" marginTop={-1} width="100%" p={2}>
-            <Typography variant="h4" color="#ffffff">
+            <Typography variant="h4" color="#ffffff" maxWidth={270}>
                 {title}
             </Typography>
             <Typography variant="h5" color="#FF0066">
