@@ -64,6 +64,8 @@ export default function PrintProducts({ params }: PrintProductsProps) {
             ]);
 
             const catalogData: Catalog = await catalogResponse.json();
+            setCatalog(catalogData);
+
             const products: ProductItem[] = ((await productsResponse.json()) as Products).vertical.filter(
                 (item: ProductItem) => item.categoryId === params.categoryId
             );
@@ -74,7 +76,6 @@ export default function PrintProducts({ params }: PrintProductsProps) {
 
             const images = await getProductsImages({ assetId: params.assetId, products, onlyFirst: true });
 
-            setCatalog(catalogData);
             setProductsImgs(images);
         };
 
@@ -85,8 +86,8 @@ export default function PrintProducts({ params }: PrintProductsProps) {
             setAsset(data.data);
         };
 
-        fetchData();
         fetchAsset();
+        fetchData();
     }, [params]);
 
     const section = useMemo(
