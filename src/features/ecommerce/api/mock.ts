@@ -1,8 +1,4 @@
 import { sub } from 'date-fns';
-import { Chance } from 'chance';
-import mock from '@/features/common/mock';
-
-const chance = new Chance();
 
 const ProductsData = [
     {
@@ -22,12 +18,7 @@ const ProductsData = [
         created: sub(new Date(), { days: 8, hours: 6, minutes: 20 }).toString(),
         description:
             'Add a touch of elegance to your space with this stunning artwork. Printed on high-quality canvas, this piece brings creativity and sophistication to any room. Perfect for art lovers, collectors, or as a unique gift!',
-        images: [
-            '/images/products/wallArt/scene04.webp',
-            '/images/products/wallArt/scene01.webp',
-            '/images/products/wallArt/scene02.webp',
-            '/images/products/wallArt/scene03.webp',
-        ],
+        images: [],
     },
     {
         title: 'White 11oz Ceramic Mug',
@@ -46,14 +37,7 @@ const ProductsData = [
         created: sub(new Date(), { days: 8, hours: 6, minutes: 20 }).toString(),
         description:
             'Enjoy your favorite drink in style with this unique mug featuring exclusive artwork. Perfect for art lovers and collectors, this high-quality ceramic mug adds a creative touch to your daily routine. Ideal as a gift or a special addition to your collection!',
-        images: [
-            '/images/products/whiteCeramicMug/right.webp',
-            '/images/products/whiteCeramicMug/default.webp',
-            '/images/products/whiteCeramicMug/front.webp',
-            '/images/products/whiteCeramicMug/scene01.webp',
-            '/images/products/whiteCeramicMug/scene02.webp',
-            '/images/products/whiteCeramicMug/scene03.webp',
-        ],
+        images: [],
     },
     {
         title: 'The Resilient Rose Classic Unisex',
@@ -76,12 +60,7 @@ Offers a seamless double-needle collar with high stitch density for a smoother p
 Includes a tear-away label for easy rebranding.
 Tubular fit to minimize torque.
 Available in a wide range of colors to suit various design needs.`,
-        images: [
-            '/images/products/white-mist/scene01.webp',
-            '/images/products/white-mist/scene02.webp',
-            '/images/products/white-mist/scene03.webp',
-            '/images/products/white-mist/scene04.webp',
-        ],
+        images: [],
     },
     {
         title: 'The Resilient Rose Premium Tote Bag',
@@ -102,17 +81,8 @@ Available in a wide range of colors to suit various design needs.`,
     - Reinforced stitching on handles
     - Large printable area for front & back
     - Capacity 10 litres`,
-        images: [
-            '/images/products/bag/scene01.webp',
-            '/images/products/bag/scene02.webp',
-            '/images/products/bag/scene03.webp',
-            '/images/products/bag/scene04.webp',
-        ],
+        images: [],
     },
 ];
-
-// mock.onGet('/api/mock').reply(() => {
-//     return [200, ProductsData];
-// });
 
 export default ProductsData;

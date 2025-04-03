@@ -1,9 +1,6 @@
 import { filter, map } from 'lodash';
 import { createSlice } from '@reduxjs/toolkit';
-import { ReduxDispatch } from '@/store';
 import productsMock from './api/mock';
-
-const API_URL = '/api/mock';
 
 interface StateType {
     products: any[];
@@ -161,15 +158,5 @@ export const {
     setSelectedProduct,
     setCheckoutProgress,
 } = EcommerceSlice.actions;
-
-export const fetchProducts = async (dispatch: ReduxDispatch) => {
-    try {
-        // const response = await axios.get(`${API_URL}`);
-        // console.log({ response });
-        // dispatch(getProducts(response.data));
-    } catch (error) {
-        dispatch(hasError(error));
-    }
-};
 
 export default EcommerceSlice.reducer;

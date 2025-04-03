@@ -26,7 +26,7 @@ import emptyCart from 'public/images/products/empty-shopping-cart.svg';
 import Image from 'next/image';
 import { ProductType } from '../types';
 
-import { addToCart, fetchProducts, filterReset, setSelectedProduct } from '@/features/ecommerce/slice';
+import { addToCart, filterReset, setSelectedProduct } from '@/features/ecommerce/slice';
 import { PanelMintProps } from '../../../component';
 import BlankCard from '@/app/components/Shared/BlankCard';
 import Cart from '../productCart/Cart';

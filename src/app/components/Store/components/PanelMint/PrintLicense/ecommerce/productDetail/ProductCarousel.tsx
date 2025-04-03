@@ -15,7 +15,6 @@ import './Carousel.css';
 //fetch product
 
 import Image from 'next/image';
-import { fetchProducts } from '@/features/ecommerce/slice';
 
 import { Theme, useMediaQuery } from '@mui/material';
 import { ProductItem } from '@/app/[username]/[assetId]/print/sections/types';

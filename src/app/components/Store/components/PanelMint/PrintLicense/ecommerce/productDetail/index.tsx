@@ -21,7 +21,7 @@ import { IconCheck, IconMinus, IconPlus } from '@tabler/icons-react';
 import AlertCart from '../productCart/AlertCart';
 import { AppState } from '@/store';
 import { ProductType } from '../types';
-import { addToCart, fetchProducts, setCheckoutProgress } from '@/features/ecommerce/slice';
+import { addToCart, setCheckoutProgress } from '@/features/ecommerce/slice';
 
 const ProductDetail = () => {
     const theme = useTheme();
