@@ -25,7 +25,10 @@ export default function Congratulations() {
                     Your payment has been received and a receipt has been emailed to you. Fulfillment will take approximately 2-3 weeks.
                 </Typography>
                 <Typography variant="body1" sx={{ fontSize: '2rem', lineHeight: 1.5 }}>
-                    Meanwhile, if you have any questions please visit https://support.xibit.app
+                    Meanwhile, if you have any questions please visit {' '}
+                    <Link href="https://support.xibit.app" rel="noopener noreferrer" target="_blank" style={{ textDecoration: 'none' }} color="inherit">
+                        support.xibit.app
+                    </Link>
                 </Typography>
             </Box>
             <Box display="flex" justifyContent="center" alignItems="center">
