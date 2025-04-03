@@ -1,7 +1,8 @@
-export interface Segment {
+export interface Sections {
     sectionId: string;
     title: string;
     categories: string[];
+    priceMultiplier: number;
     images: {
         preview: string;
     };
@@ -10,10 +11,13 @@ export interface Segment {
 export interface Category {
     categoryId: string;
     title: string;
+    images: {
+        preview: string;
+    };
 }
 
 export interface Catalog {
-    sections: Segment[];
+    sections: Sections[];
     categories: Category[];
 }
 
@@ -26,6 +30,7 @@ export interface ProductItem {
     images: string[];
     price: number;
     shipping: number;
+    area: number;
 }
 
 export interface Products {

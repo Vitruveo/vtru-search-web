@@ -18,7 +18,7 @@ const CardItem = ({ title, count, image }: CardItemProps) => {
                 <Typography variant="h4" color="#ffffff">
                     {title}
                 </Typography>
-                <Typography variant="h4" color="#FF0066">
+                <Typography variant="h4" color="#ffffff">
                     {count} Items
                 </Typography>
             </Box>
@@ -41,38 +41,26 @@ export default async function PrintSections({ params }: PrintSectionsProps) {
 
     return (
         <Box
-            padding={2}
+            padding={4}
             sx={{
                 overflowY: 'auto',
                 height: '100vh',
                 paddingBottom: 10,
+
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 4,
             }}
         >
             <Box display="flex" justifyContent="center" alignItems="center">
                 <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
             </Box>
 
-            <Typography variant="h1" mt={2} fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
+            <Typography variant="h1" fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
                 Print License
             </Typography>
 
-            <Typography
-                mt={4}
-                fontSize={['1rem', '1.25rem', '1.5rem', '2rem']}
-                lineHeight={['1.5rem', '1.75rem', '2rem', '2.5rem']}
-            >
-                Transform your brand{"'"}s presence with our integrated Display and Merchandise strategies. We turn
-                visual communication into powerful brand experiences that capture attention and drive engagement.
-            </Typography>
-
-            <Box
-                display="flex"
-                flexWrap="wrap"
-                justifyContent={['center', 'flex-start', 'flex-start']}
-                gap={2}
-                mt={4}
-                width="100%"
-            >
+            <Box display="flex" flexWrap="wrap" justifyContent="center" gap={4} width="100%">
                 {sections.map((item) => (
                     <Link
                         key={item.sectionId}

@@ -5,8 +5,8 @@ import { Breadcrumb } from '@/app/components/Breadcrumb';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Catalog, ProductItem, Products } from '../../types';
-import { CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
+import { Catalog, ProductItem, Products, Sections } from '../../types';
+import { CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
 import { getProductsImages, getProductsPlaceholders } from '../../utils';
 
 interface CardItemProps {
@@ -17,7 +17,7 @@ interface CardItemProps {
 
 const CardItem = ({ title, count, img }: CardItemProps) => {
     return (
-        <Box mt={4} position="relative">
+        <Box position="relative">
             <Image
                 src={img || 'https://vitruveo-studio-production-general.s3.amazonaws.com/noImage.jpg'}
                 alt="No image"
@@ -25,7 +25,7 @@ const CardItem = ({ title, count, img }: CardItemProps) => {
                 height={300}
             />
             <Box bgcolor="gray" marginTop={-1} width="100%" p={2} display="flex" justifyContent="space-between">
-                <Typography variant="h4" color="#ffffff">
+                <Typography variant="h4" color="#ffffff" maxWidth={270}>
                     {title}
                 </Typography>
                 {/* <Typography variant="h4" color="#FF0066">
@@ -60,11 +60,16 @@ interface PrintCategoriesProps {
 
 export default function PrintCategories({ params }: PrintCategoriesProps) {
     const [categories, setCategories] = useState<{ src?: string; categoryId: string; title: string }[]>([]);
+    const [section, setSection] = useState<Sections | null>(null);
 
     const handleSetCategories = ({ catalog, products }: { catalog: Catalog; products: ProductItem[] }) => {
-        const mappedCategoriesPlaceholders = catalog.categories.map((v) => ({
+        const catalogSection = catalog.sections.find((item) => item.sectionId === params.sectionId)!;
+        const mappedCategoriesPlaceholders = catalog.categories.filter(c => catalogSection?.categories.includes(c.categoryId)).map((v) => ({
             ...v,
-            src: products.find((imgProd) => imgProd.categoryId === v.categoryId)?.images[0],
+            src:
+                products.find((imgProd) => imgProd.categoryId === v.categoryId)?.images[0] || v.images.preview
+                    ? `${CATALOG_ASSETS_BASE_URL}/${v.images.preview}`
+                    : '',
         }));
 
         setCategories(mappedCategoriesPlaceholders);
@@ -80,6 +85,9 @@ export default function PrintCategories({ params }: PrintCategoriesProps) {
 
                 const catalog: Catalog = await catalogResponse.json();
                 const products: Products = await productsResponse.json();
+
+                const catalogSection = catalog.sections.find((item) => item.sectionId === params.sectionId)!;
+                setSection(catalogSection);
 
                 const imagesPlaceholders = getProductsPlaceholders({ products: products.vertical });
                 handleSetCategories({ catalog, products: imagesPlaceholders });
@@ -101,45 +109,33 @@ export default function PrintCategories({ params }: PrintCategoriesProps) {
 
     return (
         <Box
-            padding={2}
+            padding={4}
             sx={{
                 overflowY: 'auto',
                 height: '100vh',
                 paddingBottom: 10,
+
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 4,
             }}
         >
             <Box display="flex" justifyContent="center" alignItems="center">
                 <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
             </Box>
 
-            <Typography variant="h1" mt={2} fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
+            <Typography variant="h1" fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
                 Print License
             </Typography>
 
             <Breadcrumb
                 items={breadcrumbItems({
-                    segment: categories.length ? categories[0].title : 'Loading...',
+                    segment: section ? section.title : '',
                 })}
                 params={params}
             />
 
-            <Typography
-                mt={2}
-                fontSize={['1rem', '1.25rem', '1.5rem', '2rem']}
-                lineHeight={['1.5rem', '1.75rem', '2rem', '2.5rem']}
-            >
-                Capture attention and tell your brand{"'"}s story through strategic, innovative display solutions that
-                transform how audiences perceive and interact with your message.
-            </Typography>
-
-            <Box
-                display="flex"
-                flexWrap="wrap"
-                justifyContent={['center', 'flex-start', 'flex-start']}
-                gap={2}
-                mt={4}
-                width="100%"
-            >
+            <Box display="flex" flexWrap="wrap" justifyContent="center" gap={4} width="100%">
                 {categories.length ? (
                     categories.map((item) => (
                         <Link

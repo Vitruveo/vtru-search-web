@@ -7,7 +7,7 @@ import { Box, Button, Chip, CircularProgress, Grid, Typography } from '@mui/mate
 import ProductCarousel from '@/app/components/Store/components/PanelMint/PrintLicense/ecommerce/productDetail/ProductCarousel';
 import { Breadcrumb } from '@/app/components/Breadcrumb';
 import { Catalog, ProductItem, Products } from '../../../../../types';
-import { API_BASE_URL, CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
 import { Asset } from '@/features/assets/types';
 import { getProductsImages, getProductsPlaceholders } from '../../../../../utils';
@@ -37,14 +37,22 @@ const breadcrumbItems = ({ segment, category, product }: BreadCrumbIParams) => [
     },
 ];
 
+interface HTMLRendererProps {
+    html: string;
+}
+
+const HTMLRenderer = ({ html }: HTMLRendererProps) => {
+    return <div dangerouslySetInnerHTML={{ __html: html }} />;
+};
+
 interface PriceInfoProps {
     title: string;
     price: number;
-    mt?: number;
+    mb?: number;
 }
 
-const PriceInfo = ({ title, price, mt = 2 }: PriceInfoProps) => (
-    <Box display="flex" alignItems="center" justifyContent="space-between" mt={mt}>
+const PriceInfo = ({ title, price, mb = 1 }: PriceInfoProps) => (
+    <Box display="flex" alignItems="center" justifyContent="space-between" mb={mb}>
         <Typography variant="h4" fontWeight={600}>
             {title}
         </Typography>
@@ -74,6 +82,7 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
     const [product, setProduct] = useState<ProductItem | null>(null);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
     const [asset, setAsset] = useState<Asset | null>(null);
+    const [description, setDescription] = useState<string | null>(null);
 
     const [loadingProduct, setLoadingProduct] = useState(true);
     const [loadingProductAsset, setLoadingAsset] = useState(true);
@@ -82,6 +91,16 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
         const newProducts = products.find((item: ProductItem) => item.productId === params.productId);
         setProduct(newProducts || null);
     };
+
+    useEffect(() => {
+        if (!product) return;
+
+        fetch(`${CATALOG_ASSETS_BASE_URL}/${product.productId}/intro.html`)
+            .then((response) => response.text())
+            .then((text) => {
+                setDescription(text);
+            });
+    }, [product]);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -116,18 +135,21 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
     }, []);
 
     const artworkLicense = useMemo(() => {
-        if (!asset) return 0;
+        if (!asset || !product || !catalog) return 0;
+
+        const section = catalog.sections.find((item) => item.sectionId === params.sectionId);
+        if (!section) return 0;
 
         if (params.categoryId === 'mugs') {
-            return asset.licenses.nft.single.editionPrice * 0.1;
+            return asset.licenses.nft.single.editionPrice * section.priceMultiplier;
         }
 
-        if (params.categoryId === 'frames') {
-            return asset.licenses.nft.single.editionPrice * 0.0008 * 600;
+        if (params.categoryId === 'frames' || params.categoryId === 'posters') {
+            return asset.licenses.nft.single.editionPrice * section.priceMultiplier * product.area;
         }
 
         return 0;
-    }, [asset]);
+    }, [asset, catalog]);
 
     const handleSubmitPayment = () => {
         if (!product) return;
@@ -156,7 +178,13 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
     }
 
     return (
-        <Box>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 4,
+            }}
+        >
             <Breadcrumb
                 items={breadcrumbItems({
                     segment: catalog.sections.find((item) => item.sectionId === params.sectionId)!.title || '',
@@ -166,7 +194,7 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
                 params={params}
             />
 
-            <Box mt={4}>
+            <Box>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={12} lg={6}>
                         <ProductCarousel product={product} />
@@ -183,19 +211,17 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
                         <Typography fontWeight="600" variant="h4" mt={2}>
                             {product.title}
                         </Typography>
-                        <Typography variant="subtitle2" mt={1}>
-                            {product.description}
-                        </Typography>
+
+                        <HTMLRenderer html={description || ''} />
 
                         <Box bgcolor="rgba(0,0,0,0.6)" width="100%" maxWidth={700} p={3} mt={2}>
                             <PriceInfo title="Artwork License:" price={artworkLicense} />
                             <PriceInfo title="Merchandise Fee:" price={merchandiseFee} />
                             <PriceInfo title="Platform Fee:" price={platformFee} />
-                            <PriceInfo title="Shipping:" price={shipping} />
+                            <PriceInfo title="Shipping:" price={shipping} mb={4} />
                             <PriceInfo
                                 title="Total:"
                                 price={artworkLicense + merchandiseFee + platformFee + shipping}
-                                mt={4}
                             />
                         </Box>
 

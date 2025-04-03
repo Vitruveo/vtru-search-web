@@ -54,13 +54,6 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
         if (searchParams.get('type') === 'digital') {
             handleOpenModalLicense();
         }
-
-        if (asset.assetMetadata?.context?.formData?.orientation === 'vertical') {
-            dispatchAction({
-                type: TypeActions.SET_EXPANDED_ACCORDION,
-                payload: 'print',
-            });
-        }
     }, []);
 
     useEffect(() => {
