@@ -11,6 +11,7 @@ interface Sort {
 }
 export interface AssetsSliceState {
     loading: boolean;
+    packLoading: boolean;
     error: string | null;
     data: AssetData;
     tags: Tags[];
@@ -296,17 +297,17 @@ export interface GetCreatorParams {
 
 export interface BuidlQuery {
     [key: string]:
-    | string
-    | boolean
-    | {
-        $in: string[];
-    }
-    | {
-        [key: string]: {
-            $regex: string;
-            $options: string;
-        };
-    }[];
+        | string
+        | boolean
+        | {
+              $in: string[];
+          }
+        | {
+              [key: string]: {
+                  $regex: string;
+                  $options: string;
+              };
+          }[];
 }
 
 export interface MakeVideoResponse {
@@ -329,4 +330,9 @@ export interface GenerateSlideshowParams {
     fees: number;
     display: string;
     interval: number;
+}
+
+export interface PaymentParams {
+    assetId: string;
+    productId: string;
 }

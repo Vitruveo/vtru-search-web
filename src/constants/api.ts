@@ -7,3 +7,11 @@ export const STORE_BASE_URL = process.env.NEXT_PUBLIC_STORE_BASE_URL || '';
 export const STUDIO_BASE_URL = process.env.NEXT_PUBLIC_STUDIO_BASE_URL || '';
 export const SLIDESHOW_BASE_URL = process.env.NEXT_PUBLIC_SLIDESHOW_BASE_URL || '';
 export const SEARCH_BASE_URL = process.env.NEXT_PUBLIC_SEARCH_BASE_URL || 'http://localhost:3000';
+
+export const CATALOG_BASE_URL =
+    process.env.NEXT_PUBLIC_CATALOG_BASE_URL || 'https://vitruveo-projects.s3.amazonaws.com/Xibit/prod/catalog.json';
+export const PRODUCTS_BASE_URL =
+    process.env.NEXT_PUBLIC_PRODUCTS_BASE_URL || 'https://vitruveo-projects.s3.amazonaws.com/Xibit/prod/products.json';
+
+export const CATALOG_ASSETS_BASE_URL =
+    process.env.NEXT_PUBLIC_CATALOG_ASSETS_BASE_URL || 'https://vitruveo-projects.s3.amazonaws.com/Xibit/assets';

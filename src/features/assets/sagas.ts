@@ -6,6 +6,7 @@ import { confetti } from '@tsparticles/confetti';
 import { API_BASE_URL, API3_BASE_URL } from '@/constants/api';
 import type { FilterSliceState } from '../filters/types';
 import type {
+    Asset,
     AssetsSliceState,
     BuidlQuery,
     GenerateSlideshowParams,
@@ -13,6 +14,7 @@ import type {
     GetCreatorParams,
     MakeVideoParams,
     MakeVideoResponse,
+    PaymentParams,
     ResponseArtistsSpotlight,
     ResponseAsserCreator,
     ResponseAssetGroupByCreator,
@@ -30,6 +32,7 @@ import { AppState } from '@/store';
 import { getAssetsIdsFromURL } from '@/utils/url-assets';
 import validateCryptoAddress from '@/utils/adressValidate';
 import { overwriteWithInitialFilters } from '@/utils/assets';
+import { videoExtension } from '@/utils/videoExtensions';
 
 function* getAssetsSpotlight() {
     yield put(actions.setSpotlightLoading(true));
@@ -653,7 +656,7 @@ function* makeVideo(action: PayloadAction<MakeVideoParams>) {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                onUploadProgress: (_progressEvent: any) => { },
+                onUploadProgress: (_progressEvent: any) => {},
             }
         );
         yield put(actions.setVideoUrl(response.data.data.url));
@@ -739,11 +742,66 @@ function* getTabNavigation(action: PayloadAction<string>) {
     }
 }
 
+function* getPack() {
+    try {
+        yield put(actions.setPackLoading(true));
+        const GENERATE_PACK_URL = `${API_BASE_URL}/assets/public/generator/pack`;
+
+        const assets: Asset[] = yield select((state: AppState) => state.assets.data.data);
+
+        const ids = assets
+            .filter(
+                (item) => item.formats.original.definition && ['portrait'].includes(item.formats.original.definition)
+            )
+            .filter((item) => !videoExtension.some((ext) => item.formats.preview.path.endsWith(ext)))
+            .slice(0, 8)
+            .map((item) => item._id);
+
+        const response: AxiosResponse<Blob> = yield call(
+            axios.post,
+            GENERATE_PACK_URL,
+            { ids },
+            { responseType: 'blob' }
+        );
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'pack.zip');
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    } catch (error) {
+        // handle error
+    } finally {
+        yield put(actions.setPackLoading(false));
+    }
+}
+
 function* setup() {
     try {
         const response: AxiosResponse<APIResponse<boolean>> = yield call(axios.get, `${API3_BASE_URL}/mint/status`);
 
         yield put(actions.setPaused(response.data.data));
+    } catch (error) {
+        //
+    }
+}
+
+function* payment(action: PayloadAction<PaymentParams>) {
+    try {
+        const { assetId, productId } = action.payload;
+
+        const response: AxiosResponse<APIResponse<string>> = yield call(
+            axios.post,
+            `${API_BASE_URL}/assets/payment/create-checkout-session`,
+            {
+                assetId,
+                productId,
+            }
+        );
+
+        window.location.href = response.data.data;
     } catch (error) {
         //
     }
@@ -795,6 +853,10 @@ export function* assetsSagas() {
         takeEvery(actions.setTabNavigation.type, getTabNavigation),
 
         takeEvery(actions.generateSlideshow.type, generateSlideshow),
+
+        takeEvery(actions.getPack.type, getPack),
+
+        takeEvery(actions.payment.type, payment),
 
         // setup
         takeLatest('persist/REHYDRATE', setup),

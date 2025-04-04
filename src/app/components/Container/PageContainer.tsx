@@ -5,7 +5,7 @@ type Props = {
     description?: string;
     children: JSX.Element | JSX.Element[];
     title?: string;
-    icon: string | null;
+    icon?: string | null;
 };
 
 const PageContainer = ({ title, description, icon = null, children }: Props) => {

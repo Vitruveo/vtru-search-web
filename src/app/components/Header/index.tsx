@@ -45,6 +45,7 @@ const Header = ({
     const paused = useSelector((state) => state.assets.paused);
     const isHidden = useSelector((state) => state.customizer.hidden?.header);
     const storesName = useSelector((state) => state.stores.currentDomain?.organization?.name);
+    // const packIsLoading = useSelector((state) => state.assets.packLoading);
 
     const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -81,6 +82,10 @@ const Header = ({
             languageRef.current.handleClick(event);
         }
     };
+
+    // const generatePack = () => {
+    //     dispatch(actions.getPack());
+    // };
 
     if (isHidden) return null;
 
@@ -160,6 +165,11 @@ const Header = ({
                         RSS Feed
                         <Rss options={rssOptions} showIcon={false} ref={rssRef} onClose={handleClose} />
                     </MenuItem>
+                    {/* {isPersonalizedStore && (
+                        <MenuItem onClick={generatePack} disabled={packIsLoading}>
+                            {packIsLoading ? <CircularProgress size="1.6rem" /> : 'Gallery Pack'}
+                        </MenuItem>
+                    )} */}
                     <Box display={'flex'} justifyContent={'space-around'}>
                         <MenuItem onClick={handleOpenLanguage}>
                             <Language ref={languageRef} onClose={handleClose} />

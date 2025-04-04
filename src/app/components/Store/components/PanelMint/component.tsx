@@ -1,10 +1,12 @@
 import { Box, Button, Card, Typography, useMediaQuery } from '@mui/material';
+import { useRouter, useParams } from 'next/navigation';
 import { useTheme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
 import BuyVUSDModalHOC from '@/app/components/BuyVUSD/modalHOC';
 import ModalMinted from '../ModalMinted';
 import MetadataAccordion from '../Metadata/MetadataAccordion';
 import LicenseModal from './licenseModal';
+import PrintLicenseModal from './PrintLicense/index';
 import { LastAssetsList } from '../LastAssetsList';
 import { LastAssets } from '@/features/store/types';
 import { LoadingAvailableLincenses } from '../LoadingAvailableLicenses';
@@ -27,6 +29,7 @@ export interface PanelMintProps {
         isConnected: boolean;
         stateModalMinted: boolean;
         stateModalLicense: boolean;
+        stateModalPrintLicense: boolean;
         link: string;
         loading: {
             state: boolean;
@@ -63,6 +66,8 @@ export interface PanelMintProps {
         handleCloseModalMinted: () => void;
         handleCloseModalLicense: () => void;
         handleOpenModalLicense: () => void;
+        handleCloseModalPrintLicense: () => void;
+        handleOpenModalPrintLicense: () => void;
         handleOpenModalBuyVUSD: () => void;
         handleCloseModalBuyVUSD: () => void;
         handleAccordionChange: (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => void;
@@ -71,12 +76,16 @@ export interface PanelMintProps {
 
 export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actions }: PanelMintProps) => {
     const theme = useTheme();
+    const router = useRouter();
+    const params = useParams();
+
     const isMobile = useMediaQuery('(max-width: 900px)');
     const {
         link,
         assetLicenses,
         stateModalMinted,
         stateModalLicense,
+        stateModalPrintLicense,
         expandedAccordion,
         available,
         asset,
@@ -87,6 +96,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
     const {
         handleCloseModalMinted,
         handleOpenModalLicense,
+        handleOpenModalPrintLicense,
         handleAccordionChange,
         handleOpenModalBuyVUSD,
         handleCloseModalBuyVUSD,
@@ -94,7 +104,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
 
     if (!assetLicenses) return <LoadingAvailableLincenses message="Checking Licenses..." background="#000000" />;
 
-    if (!stateModalLicense && !openModalBuyVUSD && !stateModalMinted) {
+    if (!stateModalPrintLicense && !stateModalLicense && !openModalBuyVUSD && !stateModalMinted) {
         return (
             <>
                 <Typography variant="h4" sx={{ color: '#ffff' }} marginBottom={2}>
@@ -185,6 +195,15 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
         <>
             <Card style={{ display: 'flex', flexDirection: 'column', borderRadius: 0 }}>
                 <LicenseModal
+                    image={image}
+                    size={size}
+                    creatorAvatar={creatorAvatar}
+                    creatorName={creatorName}
+                    data={data}
+                    actions={actions}
+                />
+
+                <PrintLicenseModal
                     image={image}
                     size={size}
                     creatorAvatar={creatorAvatar}

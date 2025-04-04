@@ -7,10 +7,11 @@ export const initialState = {
     feesVideo: null,
     openModalMinted: false,
     openModalLicense: false,
+    openModalPrintLicense: false,
     openModalBuyVUSD: false,
     expandedAccordion: 'digitalCollectible',
     link: '',
-    available: false,
+    available: true,
     credits: 0,
     walletCredits: 0,
     platformFee: {
@@ -48,6 +49,7 @@ export enum TypeActions {
     SET_OPEN_MODAL_LICENSE = 'SET_OPEN_MODAL_LICENSE',
     SET_OPEN_MODAL_BUY_VUSD = 'SET_OPEN_MODAL_BUY_VUSD',
     DISCONNECT = 'DISCONNECT',
+    SET_OPEN_MODAL_PRINT_LICENSE = 'SET_OPEN_MODAL_PRINT_LICENSE',
 }
 
 interface Action {
@@ -63,6 +65,7 @@ interface State {
     feesGrid: number | null;
     feesVideo: number | null;
     openModalMinted: boolean;
+    openModalPrintLicense: boolean;
     openModalLicense: boolean;
     openModalBuyVUSD: boolean;
     expandedAccordion: string | false;
@@ -107,6 +110,7 @@ export const reducer = (state: State, action: Action) => {
                 ...state,
                 openModalMinted: action.payload,
             };
+
         case 'SET_OPEN_MODAL_BUY_VUSD':
             return {
                 ...state,
@@ -166,6 +170,11 @@ export const reducer = (state: State, action: Action) => {
             return {
                 ...state,
                 openModalLicense: action.payload,
+            };
+        case 'SET_OPEN_MODAL_PRINT_LICENSE':
+            return {
+                ...state,
+                openModalPrintLicense: action.payload,
             };
         case 'DISCONNECT':
             return {

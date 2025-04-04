@@ -2,6 +2,7 @@ import { useEffect, useReducer } from 'react';
 import { confetti } from '@tsparticles/confetti';
 import { useAccount, useConnectorClient } from 'wagmi';
 import { toast } from 'react-toastify';
+import { useSearchParams } from 'next/navigation';
 
 import { PanelMint } from './component';
 import { getAvailableCredits, getPlatformFeeBasisPoints, issueLicenseUsingCredits } from '@/services/web3/mint';
@@ -39,6 +40,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     const dispatch = useDispatch();
     const coockieGrid = cookie.get('grid') as string;
     const coockieVideo = cookie.get('video') as string;
+    const searchParams = useSearchParams();
 
     const { isConnected, address, chain } = useAccount();
     const { data: client } = useConnectorClient();
@@ -47,6 +49,12 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     const { lastAssets, lastAssetsLoading } = useSelector((reduxState) => reduxState.store);
     const assetLicenses = useAssetLicenses(asset._id);
     const stores = useSelector((stateRx) => stateRx.stores.currentDomain);
+
+    useEffect(() => {
+        if (searchParams.get('type') === 'digital') {
+            handleOpenModalLicense();
+        }
+    }, []);
 
     useEffect(() => {
         if (coockieGrid) {
@@ -85,7 +93,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     }, [state.credits, state.feesGrid, state.feesVideo]);
 
     useEffect(() => {
-        fetchAssetLicenses();
+        // fetchAssetLicenses();
 
         if (!client) {
             dispatchAction({ type: TypeActions.DISCONNECT, payload: null });
@@ -273,7 +281,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
         dispatchAction({ type: TypeActions.SET_OPEN_MODAL_MINTED, payload: false });
         dispatch(actions.getAssetRequest({ id: asset._id }));
 
-        await fetchAssetLicenses();
+        // await fetchAssetLicenses();
         if (client) {
             await fetchAvailableCredits();
         }
@@ -283,12 +291,25 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
         dispatchAction({ type: TypeActions.SET_OPEN_MODAL_LICENSE, payload: false });
     };
 
+    const handleCloseModalPrintLicense = async () => {
+        dispatchAction({ type: TypeActions.SET_OPEN_MODAL_PRINT_LICENSE, payload: false });
+    };
+
     const handleOpenModalBuyVUSD = () => {
         dispatchAction({ type: TypeActions.SET_OPEN_MODAL_BUY_VUSD, payload: true });
     };
 
     const handleCloseModalBuyVUSD = () => {
         dispatchAction({ type: TypeActions.SET_OPEN_MODAL_BUY_VUSD, payload: false });
+    };
+
+    const handleOpenModalPrintLicense = () => {
+        // connect wallet if not connected
+        // if (!isConnected && openConnectModal) {
+        //     openConnectModal();
+        // }
+
+        dispatchAction({ type: TypeActions.SET_OPEN_MODAL_PRINT_LICENSE, payload: true });
     };
 
     const handleOpenModalLicense = () => {
@@ -328,6 +349,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
                 link: state.link,
                 stateModalMinted: state.openModalMinted,
                 stateModalLicense: state.openModalLicense,
+                stateModalPrintLicense: state.openModalPrintLicense,
                 chain: chain ? chain.name.toLowerCase().includes('vitruveo') : false,
                 platformFee: state.platformFee,
                 totalFee: state.totalFee,
@@ -343,11 +365,13 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
             actions={{
                 handleMintNFT,
                 handleCloseModalMinted,
+                handleCloseModalPrintLicense,
                 handleCloseModalLicense,
                 handleOpenModalLicense,
                 handleOpenModalBuyVUSD,
                 handleCloseModalBuyVUSD,
                 handleAccordionChange,
+                handleOpenModalPrintLicense,
             }}
         />
     );

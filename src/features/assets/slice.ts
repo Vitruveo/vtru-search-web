@@ -8,11 +8,13 @@ import type {
     GetCreatorParams,
     LastSoldAsset,
     MakeVideoParams,
+    PaymentParams,
     SpotlightAsset,
 } from './types';
 
 export const initialState: AssetsSliceState = {
     loading: false,
+    packLoading: false,
     error: null,
     data: {
         data: [],
@@ -53,9 +55,13 @@ export const assetsSlice = createSlice({
     name: 'assets',
     initialState,
     reducers: {
-        loadAssets: (_state, _action: PayloadAction<GetAssetsParams | null>) => { },
-        loadAssetsLastSold: (_state, _action: PayloadAction) => { },
-        setGridId: (_state, _action: PayloadAction<string>) => { },
+        loadAssets: (_state, _action: PayloadAction<GetAssetsParams | null>) => {},
+        loadAssetsLastSold: (_state, _action: PayloadAction) => {},
+        getPack: (_state) => {},
+        setPackLoading: (state, action: PayloadAction<boolean>) => {
+            state.packLoading = action.payload;
+        },
+        setGridId: (_state, _action: PayloadAction<string>) => {},
         startLoading: (state) => {
             state.loading = true;
         },
@@ -92,7 +98,7 @@ export const assetsSlice = createSlice({
         changeGroupByCreatorName: (state, action: PayloadAction<string>) => {
             state.groupByCreator.name = action.payload;
         },
-        loadCreator: (_state, _action: PayloadAction<GetCreatorParams>) => { },
+        loadCreator: (_state, _action: PayloadAction<GetCreatorParams>) => {},
         finishLoading: (state) => {
             state.loading = false;
         },
@@ -102,9 +108,9 @@ export const assetsSlice = createSlice({
         setError: (state, action) => {
             state.error = action.payload;
         },
-        setVideoId: (state, action: PayloadAction<string>) => { },
-        setSlideshowId: (state, action: PayloadAction<string>) => { },
-        setTabNavigation: (state, action: PayloadAction<string>) => { },
+        setVideoId: (state, action: PayloadAction<string>) => {},
+        setSlideshowId: (state, action: PayloadAction<string>) => {},
+        setTabNavigation: (state, action: PayloadAction<string>) => {},
         setVideoUrl: (state, action: PayloadAction<string>) => {
             state.video = action.payload;
         },
@@ -120,7 +126,7 @@ export const assetsSlice = createSlice({
         setLoadingVideo: (state, action: PayloadAction<boolean>) => {
             state.loadingVideo = action.payload;
         },
-        makeVideo: (_state, _payload: PayloadAction<MakeVideoParams>) => { },
+        makeVideo: (_state, _payload: PayloadAction<MakeVideoParams>) => {},
         setTags: (state, action: PayloadAction<AssetsSliceState['tags']>) => {
             state.tags = action.payload;
         },
@@ -169,13 +175,14 @@ export const assetsSlice = createSlice({
             state.sort = action.payload.sort;
             if (action.payload.persistStoresSort) state.storesSort = action.payload.sort;
         },
-        generateSlideshow: (state, action: PayloadAction<GenerateSlideshowParams>) => { },
+        generateSlideshow: (state, action: PayloadAction<GenerateSlideshowParams>) => {},
         setSlideshow: (state, action: PayloadAction<string>) => {
             state.slideshow = action.payload;
         },
         setCurateStacks: (state, action: PayloadAction<AssetsSliceState['curateStacks']>) => {
             state.curateStacks = action.payload;
         },
+        payment: (_state, _action: PayloadAction<PaymentParams>) => {},
     },
 });
 

@@ -28,6 +28,7 @@ import { storeSlice } from '@/features/store/slice';
 import { profileCreatorSlice } from '@/features/profile/creator/slice';
 import { profileAssetsSlice } from '@/features/profile/assets/slice';
 import { storesSlice } from '@/features/stores/slice';
+import { EcommerceSlice } from '@/features/ecommerce/slice';
 
 const sagaMiddleware = createSagaMiddleware({
     onError: (error, errorInfo) => {
@@ -72,6 +73,7 @@ const rootReducer = combineReducers({
     profileCreator: profileCreatorSlice.reducer,
     profileAssets: profileAssetsSlice.reducer,
     stores: storesSlice.reducer,
+    ecommerce: EcommerceSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
