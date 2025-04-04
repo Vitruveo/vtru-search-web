@@ -25,7 +25,7 @@ const CardItem = ({ title, price, img }: CardItemProps) => (
             width={300}
             height={300}
         />
-        <Box bgcolor="gray" marginTop={-1} width="100%" p={2}>
+        <Box sx={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }} bgcolor="gray" marginTop={-1} width="100%" p={2}>
             <Typography variant="h4" color="#ffffff" maxWidth={270}>
                 {title}
             </Typography>
@@ -102,7 +102,6 @@ export default function PrintProducts({ params }: PrintProductsProps) {
                 overflowY: 'auto',
                 height: '100vh',
                 paddingBottom: 10,
-
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 4,

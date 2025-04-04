@@ -14,12 +14,20 @@ const CardItem = ({ title, count, image }: CardItemProps) => {
     return (
         <Box position="relative">
             <Image src={`${CATALOG_ASSETS_BASE_URL}/${image}`} alt="No image" width={300} height={300} />
-            <Box bgcolor="gray" marginTop={-1} width={300} p={2} display="flex" justifyContent="space-between">
+            <Box
+                sx={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
+                bgcolor="gray"
+                marginTop={-1}
+                width={300}
+                p={2}
+                display="flex"
+                justifyContent="space-between"
+            >
                 <Typography variant="h4" color="#ffffff">
                     {title}
                 </Typography>
                 <Typography variant="h4" color="#ffffff">
-                    {count} Items
+                    {count} {count > 1 ? 'Items' : 'Item'}
                 </Typography>
             </Box>
         </Box>

@@ -24,7 +24,15 @@ const CardItem = ({ title, count, img }: CardItemProps) => {
                 width={300}
                 height={300}
             />
-            <Box bgcolor="gray" marginTop={-1} width="100%" p={2} display="flex" justifyContent="space-between">
+            <Box
+                sx={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
+                bgcolor="gray"
+                marginTop={-1}
+                width="100%"
+                p={2}
+                display="flex"
+                justifyContent="space-between"
+            >
                 <Typography variant="h4" color="#ffffff" maxWidth={270}>
                     {title}
                 </Typography>
@@ -64,13 +72,15 @@ export default function PrintCategories({ params }: PrintCategoriesProps) {
 
     const handleSetCategories = ({ catalog, products }: { catalog: Catalog; products: ProductItem[] }) => {
         const catalogSection = catalog.sections.find((item) => item.sectionId === params.sectionId)!;
-        const mappedCategoriesPlaceholders = catalog.categories.filter(c => catalogSection?.categories.includes(c.categoryId)).map((v) => ({
-            ...v,
-            src:
-                products.find((imgProd) => imgProd.categoryId === v.categoryId)?.images[0] || v.images.preview
-                    ? `${CATALOG_ASSETS_BASE_URL}/${v.images.preview}`
-                    : '',
-        }));
+        const mappedCategoriesPlaceholders = catalog.categories
+            .filter((c) => catalogSection?.categories.includes(c.categoryId))
+            .map((v) => ({
+                ...v,
+                src:
+                    products.find((imgProd) => imgProd.categoryId === v.categoryId)?.images[0] || v.images.preview
+                        ? `${CATALOG_ASSETS_BASE_URL}/${v.images.preview}`
+                        : '',
+            }));
 
         setCategories(mappedCategoriesPlaceholders);
     };
