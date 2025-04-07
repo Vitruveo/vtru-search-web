@@ -5,7 +5,6 @@ import { Catalog, ProductItem, Products } from '../[assetId]/print/sections/type
 import { Box, Typography } from '@mui/material';
 import Link from 'next/link';
 import { IconLink } from '@tabler/icons-react';
-import { alignProperty } from '@mui/material/styles/cssUtils';
 
 interface Option {
     value: string;
