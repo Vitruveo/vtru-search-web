@@ -14,7 +14,7 @@ export const CountOptionLabel = forwardRef<HTMLDivElement, CountOptionLabelProps
 
     return (
         <Box ref={ref} display="flex" alignItems="center" justifyContent="space-between" {...props}>
-            <Typography>{name.toLowerCase()}</Typography> <Badge badgeContent={count} color="primary" sx={{ mr: 1 }} />
+            <Typography>{name?.toLowerCase()}</Typography> <Badge badgeContent={count} color="primary" sx={{ mr: 1 }} />
         </Box>
     );
 });

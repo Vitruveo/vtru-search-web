@@ -331,6 +331,8 @@ function* getAssetsGroupByCreator() {
                 totalPage: response.data.data.totalPage,
             })
         );
+
+        yield put(actions.setTags(response.data.data.tags.sort((a, b) => (a.count > b.count ? -1 : 1))));
     } catch (error) {
         // Handle error
     }
