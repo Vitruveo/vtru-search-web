@@ -2,7 +2,7 @@ import Async from 'react-select/async';
 import { ActionMeta, OptionProps } from 'react-select';
 import { api } from '@/services/api';
 import { CountOptionLabel } from './CountOptionLabel';
-import { Option } from '../types';
+import { Option, Tag } from '../types';
 import { MultiValue } from 'react-select';
 import { debounce } from 'lodash';
 import { CSSProperties, useEffect, useState } from 'react';
@@ -19,7 +19,7 @@ interface SubjectItem {
 }
 
 interface LoadItemResponse {
-    data: CollectionItem[] | SubjectItem[];
+    data: CollectionItem[] | SubjectItem[] | Tag[];
 }
 
 interface AsyncSelectProps {
@@ -28,6 +28,7 @@ interface AsyncSelectProps {
     defaultValue?: Option[];
     showAdditionalAssets?: boolean;
     fixedOptions?: string[];
+    defaultOptions: Option[];
 }
 
 export const AsyncSelect = ({
@@ -36,6 +37,7 @@ export const AsyncSelect = ({
     endpoint,
     showAdditionalAssets = false,
     fixedOptions,
+    defaultOptions,
 }: AsyncSelectProps) => {
     const theme = useTheme();
     const [orderedValues, setOrderedValues] = useState(defaultValue);
@@ -59,6 +61,15 @@ export const AsyncSelect = ({
                     count: item.count,
                 }));
                 return collectionItems;
+            }
+
+            if ((data[0] as Tag)?.tag) {
+                const tagItems = (data as Tag[]).map((item) => ({
+                    value: item.tag,
+                    label: item.tag,
+                    count: item.count,
+                }));
+                return tagItems;
             }
 
             const subjectItems = (data as SubjectItem[]).map((item) => ({
@@ -140,7 +151,7 @@ export const AsyncSelect = ({
                 }),
             }}
             isMulti
-            defaultOptions
+            defaultOptions={defaultOptions}
             loadOptions={endpoint ? debouncedLoadOptions : undefined}
             isClearable={defaultValue?.some((item) => !fixedOptions?.includes(item.value))}
         />

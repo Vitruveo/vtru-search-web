@@ -91,6 +91,7 @@ export function CreatorsItem({
                     )}
                     showAdditionalAssets={showAdditionalAssets}
                     fixedOptions={fixedOptions}
+                    defaultOptions={[]}
                 />
             )}
         </Box>
