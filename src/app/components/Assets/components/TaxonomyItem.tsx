@@ -3,7 +3,6 @@ import { Box, Typography } from '@mui/material';
 import { useI18n } from '@/app/hooks/useI18n';
 import { InputSelect } from './InputSelect';
 import { InputText } from './InputText';
-import { CountOptionLabel } from './CountOptionLabel';
 import type { TaxonomyItem, Option } from '../types';
 import { AsyncSelect } from './AsyncSelect';
 import { useSelector } from '@/store/hooks';
@@ -69,23 +68,6 @@ export function TaxonomyItem({
                 />
             )}
 
-            {type === 'tags' && (
-                <InputSelect
-                    value={(values['taxonomy'][title] ? (values['taxonomy'][title] as string[]) : []).map(
-                        (item: string) => ({
-                            value: item,
-                            label: item,
-                        })
-                    )}
-                    options={tags.map((item) => ({
-                        label: <CountOptionLabel count={item.count} label={item.tag} />,
-                        value: item.tag,
-                    }))}
-                    onChange={(option: Option[]) => onChange(option.map((item) => item.value))}
-                    fixed={fixedOptions}
-                />
-            )}
-
             {typeof values['taxonomy'][title] === 'string' && type === 'text' && (
                 <InputText
                     name={title}
@@ -108,6 +90,15 @@ export function TaxonomyItem({
                     )}
                     showAdditionalAssets={showAdditionalAssets}
                     fixedOptions={fixedOptions}
+                    defaultOptions={
+                        title === 'tags'
+                            ? tags.map((item) => ({
+                                  value: item.tag,
+                                  label: item.tag,
+                                  count: item.count,
+                              }))
+                            : []
+                    }
                 />
             )}
         </Box>

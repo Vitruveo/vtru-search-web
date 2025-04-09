@@ -217,6 +217,7 @@ export interface ResponseAssetGroupByCreator {
             vaultAddress: string | null;
         };
     }[];
+    tags: Tags[];
     limit: number;
     page: number;
     total: number;
