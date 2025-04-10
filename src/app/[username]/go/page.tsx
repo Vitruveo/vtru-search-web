@@ -160,15 +160,15 @@ const TreeItem = ({ username, assetId, sections }: TreeItemParam) => {
                     <Typography variant="h4" color="white" fontWeight={700}>
                         {section.title.label}
                     </Typography>
-                    <Box display="flex" flexDirection="column" gap={1}>
+                    <Box display="flex" flexDirection="column" gap={3}>
                         {section.categories.map((item) => (
                             <Link
                                 key={item.category.value}
                                 href={`${SEARCH_BASE_URL}/${username}/${assetId}/print/sections/${section.title.value}/categories/${item.category.value}/products`}
-                                style={{ textDecoration: 'none', color: 'white' }}
+                                style={{ color: 'white' }}
                             >
                                 <Box display="flex" alignItems="center" gap={1}>
-                                    <Typography variant="h6" sx={{ textIndent: 25 }}>
+                                    <Typography variant="h6" sx={{ textIndent: 25, textDecoration: 'underline' }}>
                                         {item.category.label}
                                     </Typography>
                                     <Typography variant="h6">( {item.quantity} )</Typography>
