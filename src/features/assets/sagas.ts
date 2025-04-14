@@ -301,12 +301,12 @@ function* getAssetsGroupByCreator() {
                 maxPrice: price.max,
                 limit: limit || 25,
                 page: page || 1,
-                name: name.trim() || null,
+                name: name.trim() || '',
                 sort: {
                     order: sortState.order,
                     isIncludeSold: sort.sold === 'yes' ? true : false,
                 },
-                hasBts,
+                hasBts: hasBts === 'yes' ? true : false,
                 storesId,
                 // hasNftAutoStake: selectedLicense === 'nft auto',
             }
@@ -477,14 +477,14 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
             query: buildQuery,
             minPrice: price.min,
             maxPrice: price.max,
-            name: name.trim() ? name : null,
-            precision: colorPrecision.value,
+            name: name.trim() || '',
+            precision: colorPrecision.value.toString(),
             showAdditionalAssets,
             sort: {
                 order: sortState.order,
                 isIncludeSold: sort.sold === 'yes' ? true : false,
             },
-            hasBts,
+            hasBts: hasBts === 'yes' ? true : false,
             storesId,
             // hasNftAutoStake: selectedLicense === 'nft auto',
         });
