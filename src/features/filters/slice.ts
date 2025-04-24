@@ -94,7 +94,7 @@ export const initialState: FilterSliceState = {
     portfolio: {
         wallets: [],
     },
-    licenseChecked: '',
+    licenseChecked: { nft: [], print: [] },
     exclude: {
         arts: [],
         artists: [],
@@ -199,6 +199,7 @@ export const filterSlice = createSlice({
                 arts: [],
                 artists: [],
             };
+            state.licenseChecked = { nft: [], print: [] };
 
             const payload = extractObjects(initialState);
 
