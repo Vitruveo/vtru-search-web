@@ -199,7 +199,7 @@ export const filterSlice = createSlice({
                 arts: [],
                 artists: [],
             };
-            state.licenseChecked = { nft: [], print: [] };
+            state.licenseChecked = { nft: ['yes'], print: [] };
 
             const payload = extractObjects(initialState);
 
