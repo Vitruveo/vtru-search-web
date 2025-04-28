@@ -325,7 +325,6 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
             payload: isExpanded ? panel : false,
         });
     };
-    console.log(asset);
 
     return (
         <PanelMint
