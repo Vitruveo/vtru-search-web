@@ -9,7 +9,7 @@ export const initialState = {
     openModalLicense: false,
     openModalPrintLicense: false,
     openModalBuyVUSD: false,
-    expandedAccordion: 'digitalCollectible',
+    expandedAccordion: 'print',
     link: '',
     available: true,
     credits: 0,
