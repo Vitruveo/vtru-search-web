@@ -339,6 +339,10 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
                 walletCredits: state.walletCredits,
                 blocked: asset.consignArtwork?.status === 'blocked',
                 available: asset.consignArtwork?.status === 'active' && state.available,
+                licenseAdded: {
+                    nft: asset.licenses?.nft?.added || false,
+                    print: asset.licenses?.print?.added || false,
+                },
                 notListed: !asset?.contractExplorer?.transactionHash,
                 assetTitle: asset.assetMetadata?.context.formData.title,
                 address,

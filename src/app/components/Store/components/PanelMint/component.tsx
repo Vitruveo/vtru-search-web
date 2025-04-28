@@ -25,6 +25,7 @@ export interface PanelMintProps {
         credits: number;
         walletCredits: number;
         available: boolean;
+        licenseAdded: { nft: boolean; print: boolean };
         address: `0x${string}` | undefined;
         isConnected: boolean;
         stateModalMinted: boolean;
@@ -92,6 +93,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
         lastAssets,
         lastAssetsLoading,
         openModalBuyVUSD,
+        licenseAdded,
     } = data;
     const {
         handleCloseModalMinted,
@@ -108,13 +110,27 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
         return (
             <>
                 <Typography variant="h4" sx={{ color: '#ffff' }} marginBottom={2}>
-                    {available ? 'Available Licenses' : 'No Licenses Available'}
+                    {available || licenseAdded.print ? 'Available Licenses' : 'No Licenses Available'}
                 </Typography>
-                {available ? (
-                    <Box>
+                <Box>
+                    {licenseAdded.print && (
+                        <MetadataAccordion
+                            title="Print"
+                            last={false}
+                            expanded={expandedAccordion === 'print'}
+                            onChange={handleAccordionChange('print')}
+                        >
+                            <Box display="flex" alignItems="center" height={140} marginLeft={3}>
+                                <Typography variant="h6" sx={{ color: theme.palette.text.primary }}>
+                                    Coming Soon!
+                                </Typography>
+                            </Box>
+                        </MetadataAccordion>
+                    )}
+                    {available && licenseAdded.nft && (
                         <MetadataAccordion
                             title="Digital Collectible"
-                            last={false}
+                            last
                             expanded={expandedAccordion === 'digitalCollectible'}
                             onChange={handleAccordionChange('digitalCollectible')}
                         >
@@ -164,29 +180,18 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                 </Box>
                             </Box>
                         </MetadataAccordion>
-                        <MetadataAccordion
-                            title="Print"
-                            last
-                            expanded={expandedAccordion === 'print'}
-                            onChange={handleAccordionChange('print')}
-                        >
-                            <Box display="flex" alignItems="center" height={140} marginLeft={3}>
-                                <Typography variant="h6" sx={{ color: theme.palette.text.primary }}>
-                                    Coming Soon!
-                                </Typography>
-                            </Box>
-                        </MetadataAccordion>
-                    </Box>
-                ) : (
-                    <Box>
-                        <LastAssetsList
-                            assets={lastAssets}
-                            loading={lastAssetsLoading}
-                            creatorName={creatorName}
-                            creatorId={asset.framework?.createdBy}
-                        />
-                    </Box>
-                )}
+                    )}
+                    {!available && !licenseAdded.print && (
+                        <Box>
+                            <LastAssetsList
+                                assets={lastAssets}
+                                loading={lastAssetsLoading}
+                                creatorName={creatorName}
+                                creatorId={asset.framework?.createdBy}
+                            />
+                        </Box>
+                    )}
+                </Box>
             </>
         );
     }
