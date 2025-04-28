@@ -72,6 +72,7 @@ export interface PanelMintProps {
         handleOpenModalBuyVUSD: () => void;
         handleCloseModalBuyVUSD: () => void;
         handleAccordionChange: (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => void;
+        handleRedirectToPrint: () => void;
     };
 }
 
@@ -99,6 +100,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
         handleCloseModalMinted,
         handleOpenModalLicense,
         handleOpenModalPrintLicense,
+        handleRedirectToPrint,
         handleAccordionChange,
         handleOpenModalBuyVUSD,
         handleCloseModalBuyVUSD,
@@ -121,9 +123,22 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                             onChange={handleAccordionChange('print')}
                         >
                             <Box display="flex" alignItems="center" height={140} marginLeft={3}>
-                                <Typography variant="h6" sx={{ color: theme.palette.text.primary }}>
-                                    Coming Soon!
-                                </Typography>
+                                <Box marginBottom={isMobile ? 0 : 3} display="flex" alignItems="center" gap={2}>
+                                    <Button
+                                        variant="contained"
+                                        onClick={handleRedirectToPrint}
+                                        sx={{
+                                            backgroundColor: theme.palette.primary.main,
+                                            color: '#ffff',
+                                            '&:hover': {
+                                                backgroundColor: theme.palette.primary.main,
+                                            },
+                                            borderRadius: 0,
+                                        }}
+                                    >
+                                        Buy
+                                    </Button>
+                                </Box>
                             </Box>
                         </MetadataAccordion>
                     )}
