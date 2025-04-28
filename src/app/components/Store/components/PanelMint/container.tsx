@@ -16,6 +16,8 @@ import { EXPLORER_URL } from '@/constants/web3';
 import { useSelector } from '@/store/hooks';
 import { useAssetLicenses } from '@/app/hooks/useAssetLicenses';
 import { getPriceWithMarkup } from '@/utils/assets';
+import { SEARCH_BASE_URL } from '@/constants/api';
+import Username from '@/app/components/Username';
 
 const showConfetti = () => {
     confetti({
@@ -319,6 +321,10 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
         dispatchAction({ type: TypeActions.SET_OPEN_MODAL_LICENSE, payload: true });
     };
 
+    const handleRedirectToPrint = () => {
+        window.location.href = `${SEARCH_BASE_URL}/${creatorName}/${asset._id}/print/sections`;
+    };
+
     const handleAccordionChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
         dispatchAction({
             type: TypeActions.SET_EXPANDED_ACCORDION,
@@ -368,6 +374,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
                 handleMintNFT,
                 handleCloseModalMinted,
                 handleCloseModalPrintLicense,
+                handleRedirectToPrint,
                 handleCloseModalLicense,
                 handleOpenModalLicense,
                 handleOpenModalBuyVUSD,
