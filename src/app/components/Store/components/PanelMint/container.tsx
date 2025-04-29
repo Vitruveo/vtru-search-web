@@ -46,6 +46,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     const { isConnected, address, chain } = useAccount();
     const { data: client } = useConnectorClient();
 
+    initialState.expandedAccordion = asset.licenses?.print?.added ? 'print' : 'digitalCollectible';
     const [state, dispatchAction] = useReducer(reducer, initialState);
     const { lastAssets, lastAssetsLoading } = useSelector((reduxState) => reduxState.store);
     const assetLicenses = useAssetLicenses(asset._id);
@@ -363,7 +364,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
                 feesCurator: state.feesCurator,
                 buyCapability: state.buyCapability,
                 loadingBuy: state.loadingBuy,
-                expandedAccordion: asset.licenses?.print?.added ? 'print' : state.expandedAccordion,
+                expandedAccordion: state.expandedAccordion,
                 lastAssets,
                 lastAssetsLoading,
                 assetLicenses,
