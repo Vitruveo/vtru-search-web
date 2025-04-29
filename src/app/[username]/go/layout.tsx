@@ -5,18 +5,18 @@ interface SectionLayoutProps {
     children: React.ReactNode;
     params: {
         username: string;
-        assetId: string;
     };
 }
 
 export default async function SectionLayout({ children, params }: SectionLayoutProps) {
-    const { assetId, username } = params;
+    const { username: assetId } = params;
 
     try {
         const assetRaw = await fetch(`${API_BASE_URL}/assets/store/${assetId}`);
         const asset = (await assetRaw.json()).data;
 
         const hasPrintAdded = asset.licenses.print.added;
+        const username = asset.creator.username;
 
         if (!hasPrintAdded) {
             redirect(`/${username}/${assetId}`);
