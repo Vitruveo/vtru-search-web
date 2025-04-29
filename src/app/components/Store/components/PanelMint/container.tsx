@@ -17,7 +17,6 @@ import { useSelector } from '@/store/hooks';
 import { useAssetLicenses } from '@/app/hooks/useAssetLicenses';
 import { getPriceWithMarkup } from '@/utils/assets';
 import { SEARCH_BASE_URL } from '@/constants/api';
-import Username from '@/app/components/Username';
 
 const showConfetti = () => {
     confetti({
@@ -364,7 +363,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
                 feesCurator: state.feesCurator,
                 buyCapability: state.buyCapability,
                 loadingBuy: state.loadingBuy,
-                expandedAccordion: state.expandedAccordion,
+                expandedAccordion: asset.licenses?.print?.added ? 'print' : state.expandedAccordion,
                 lastAssets,
                 lastAssetsLoading,
                 assetLicenses,
