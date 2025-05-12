@@ -11,7 +11,7 @@ export const LicenseItem = ({ checkedItems, handleChange }: Props) => {
             <FormControlLabel
                 value="nft"
                 control={<Checkbox checked={checkedItems.nft} onChange={handleChange} />}
-                label="NFT"
+                label="Digital Collectible"
             />
             <FormControlLabel
                 value="print"

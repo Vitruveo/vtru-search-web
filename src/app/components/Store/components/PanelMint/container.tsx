@@ -1,6 +1,6 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { confetti } from '@tsparticles/confetti';
-import { useAccount, useConnectorClient } from 'wagmi';
+import { useAccount, useConnectorClient, useSwitchChain } from 'wagmi';
 import { toast } from 'react-toastify';
 import { useSearchParams } from 'next/navigation';
 
@@ -16,7 +16,7 @@ import { EXPLORER_URL } from '@/constants/web3';
 import { useSelector } from '@/store/hooks';
 import { useAssetLicenses } from '@/app/hooks/useAssetLicenses';
 import { getPriceWithMarkup } from '@/utils/assets';
-import { SEARCH_BASE_URL } from '@/constants/api';
+import { NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
 
 const showConfetti = () => {
     confetti({
@@ -37,6 +37,10 @@ interface Props {
     };
 }
 
+const mainnetId = 1490;
+const testnetId = 14333;
+const targetChainId = NODE_ENV === 'production' ? mainnetId : testnetId;
+
 export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Props) => {
     const dispatch = useDispatch();
     const coockieGrid = cookie.get('grid') as string;
@@ -45,12 +49,27 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
 
     const { isConnected, address, chain } = useAccount();
     const { data: client } = useConnectorClient();
+    const { switchChain } = useSwitchChain();
 
     initialState.expandedAccordion = asset.licenses?.print?.added ? 'print' : 'digitalCollectible';
     const [state, dispatchAction] = useReducer(reducer, initialState);
+    const [hasAttemptedSwitch, setHasAttemptedSwitch] = useState(false);
     const { lastAssets, lastAssetsLoading } = useSelector((reduxState) => reduxState.store);
     const assetLicenses = useAssetLicenses(asset._id);
     const stores = useSelector((stateRx) => stateRx.stores.currentDomain);
+
+    useEffect(() => {
+        const shouldSwitchChain = isConnected && !hasAttemptedSwitch && chain?.id !== targetChainId;
+
+        if (shouldSwitchChain) {
+            switchChain?.({ chainId: targetChainId });
+            setHasAttemptedSwitch(true);
+        }
+    }, [state.openModalLicense]);
+
+    useEffect(() => {
+        setHasAttemptedSwitch(false);
+    }, [isConnected]);
 
     useEffect(() => {
         if (searchParams.get('type') === 'digital') {

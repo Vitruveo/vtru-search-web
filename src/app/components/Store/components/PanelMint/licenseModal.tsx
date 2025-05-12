@@ -197,7 +197,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                                                 position: 'absolute',
                                                 bottom: 16,
                                                 fontSize: smUp ? 18 : 22,
-                                                width: smUp ? '100%' : 300,
+                                                width: smUp ? '100%' : 400,
                                                 height: 60,
                                                 lineHeight: '2',
                                                 borderRadius: 2,
