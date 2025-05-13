@@ -105,9 +105,10 @@ export default function PrintProducts({ params }: PrintProductsProps) {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 4,
+                backgroundColor: '#6c3baf',
             }}
         >
-            <Box display="flex" justifyContent="center" alignItems="center">
+            <Box display="flex" justifyContent="start">
                 <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
             </Box>
 

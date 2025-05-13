@@ -183,6 +183,7 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 4,
+                backgroundColor: '#6c3baf',
             }}
         >
             <Breadcrumb
