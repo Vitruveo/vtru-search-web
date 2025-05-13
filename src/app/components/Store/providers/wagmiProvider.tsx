@@ -14,7 +14,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WAGMI_APP_NAME, WAGMI_PROJECT_ID } from '@/constants/web3';
 import { NODE_ENV } from '@/constants/api';
 
-const vitruveoMainnet = {
+export const vitruveoMainnet = {
     id: 1490,
     name: 'Vitruveo',
     network: 'vitruveo',
@@ -36,7 +36,7 @@ const vitruveoMainnet = {
     testnet: false,
 };
 
-const vitruveoTestnet = {
+export const vitruveoTestnet = {
     id: 14333,
     name: 'Vitruveo Testnet',
     network: 'vitruveo-testnet',

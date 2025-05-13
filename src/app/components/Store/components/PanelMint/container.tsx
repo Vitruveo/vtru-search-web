@@ -17,6 +17,7 @@ import { useSelector } from '@/store/hooks';
 import { useAssetLicenses } from '@/app/hooks/useAssetLicenses';
 import { getPriceWithMarkup } from '@/utils/assets';
 import { NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
+import { vitruveoMainnet, vitruveoTestnet } from '../../providers/wagmiProvider';
 
 const showConfetti = () => {
     confetti({
@@ -37,9 +38,7 @@ interface Props {
     };
 }
 
-const mainnetId = 1490;
-const testnetId = 14333;
-const targetChainId = NODE_ENV === 'production' ? mainnetId : testnetId;
+const targetChainId = NODE_ENV === 'production' ? vitruveoMainnet.id : vitruveoTestnet.id;
 
 export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Props) => {
     const dispatch = useDispatch();
@@ -53,23 +52,19 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
 
     initialState.expandedAccordion = asset.licenses?.print?.added ? 'print' : 'digitalCollectible';
     const [state, dispatchAction] = useReducer(reducer, initialState);
-    const [hasAttemptedSwitch, setHasAttemptedSwitch] = useState(false);
     const { lastAssets, lastAssetsLoading } = useSelector((reduxState) => reduxState.store);
     const assetLicenses = useAssetLicenses(asset._id);
     const stores = useSelector((stateRx) => stateRx.stores.currentDomain);
 
     useEffect(() => {
-        const shouldSwitchChain = isConnected && !hasAttemptedSwitch && chain?.id !== targetChainId;
+        if (!state.openModalLicense) return;
+
+        const shouldSwitchChain = isConnected && chain?.id !== targetChainId;
 
         if (shouldSwitchChain) {
             switchChain?.({ chainId: targetChainId });
-            setHasAttemptedSwitch(true);
         }
     }, [state.openModalLicense]);
-
-    useEffect(() => {
-        setHasAttemptedSwitch(false);
-    }, [isConnected]);
 
     useEffect(() => {
         if (searchParams.get('type') === 'digital') {
