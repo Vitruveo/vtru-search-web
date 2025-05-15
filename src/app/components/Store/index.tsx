@@ -50,11 +50,11 @@ const Store = ({ data }: StoreProps) => {
     };
 
     const handleLoad = () => {
-        setImage(`${ASSET_STORAGE_URL}/${asset.formats?.original?.path}`);
-        if (asset.formats?.original?.definition === 'portrait') {
+        setImage(`${ASSET_STORAGE_URL}/${asset.formats?.display?.path}`);
+        if (asset.formats?.display?.definition === 'portrait') {
             setSize({ width: 430, height: 630 });
         }
-        if (asset.formats?.original?.definition === 'landscape') {
+        if (asset.formats?.display?.definition === 'landscape') {
             setSize({ width: 500, height: 300 });
         }
     };

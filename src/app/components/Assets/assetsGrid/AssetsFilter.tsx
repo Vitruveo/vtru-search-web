@@ -419,6 +419,8 @@ const Filters = () => {
                     </Box>
                 </AssetFilterAccordion>
 
+                <Divider />
+
                 <AssetFilterAccordion title={'Licenses'}>
                     <LicenseItem handleChange={handleChangeLicenseType} checkedItems={checkedLicenseType} />
                 </AssetFilterAccordion>
@@ -658,6 +660,8 @@ const Filters = () => {
                         }}
                     />
                 </AssetFilterAccordion>
+
+                <Divider />
 
                 <Box>
                     <Button

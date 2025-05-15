@@ -136,7 +136,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                             borderRadius: 0,
                                         }}
                                     >
-                                        Choose products
+                                        Choose Products
                                     </Button>
                                 </Box>
                             </Box>
