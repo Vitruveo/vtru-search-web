@@ -128,7 +128,6 @@ export default function PrintCategories({ params }: PrintCategoriesProps) {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 4,
-                backgroundColor: '#6c3baf',
             }}
         >
             <Box display="flex" justifyContent="start">

@@ -71,7 +71,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
             <Box
                 sx={{
                     position: 'relative',
-                    bgcolor: '#6C3BAF',
+                    bgcolor: '#171C23',
                     opacity: 1,
                     p: smUp ? 2 : 4,
                     height: '100%',

@@ -58,7 +58,6 @@ export default async function PrintSections({ params }: PrintSectionsProps) {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 4,
-                backgroundColor: '#6c3baf',
             }}
         >
             <Box display="flex" justifyContent="start">

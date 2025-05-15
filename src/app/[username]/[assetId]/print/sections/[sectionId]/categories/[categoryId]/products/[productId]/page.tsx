@@ -42,7 +42,7 @@ interface HTMLRendererProps {
 }
 
 const HTMLRenderer = ({ html }: HTMLRendererProps) => {
-    return <div dangerouslySetInnerHTML={{ __html: html }} />;
+    return <div dangerouslySetInnerHTML={{ __html: html }} style={{ maxWidth: 700, fontSize: 17, lineHeight: 1.5 }} />;
 };
 
 interface PriceInfoProps {
@@ -53,10 +53,10 @@ interface PriceInfoProps {
 
 const PriceInfo = ({ title, price, mb = 1 }: PriceInfoProps) => (
     <Box display="flex" alignItems="center" justifyContent="space-between" mb={mb}>
-        <Typography variant="h4" fontWeight={600}>
+        <Typography variant="h4" fontWeight={600} style={{ fontSize: 17 }}>
             {title}
         </Typography>
-        <Typography variant="h4" fontWeight={600}>
+        <Typography variant="h4" fontWeight={600} style={{ fontSize: 17 }}>
             {formatPrice({
                 price: price,
                 withUS: true,
@@ -183,7 +183,6 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 4,
-                backgroundColor: '#6c3baf',
             }}
         >
             <Breadcrumb
@@ -204,16 +203,20 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
                     <Grid item xs={12} sm={12} lg={6}>
                         <Box display="flex" alignItems="center" mt={2}>
                             <Chip label="In Stock" color="success" size="small" />
-                            <Typography color="textSecondary" variant="caption" ml={1} textTransform="capitalize">
+                            <Typography
+                                color="textSecondary"
+                                variant="caption"
+                                ml={1}
+                                textTransform="capitalize"
+                                style={{ fontSize: 17 }}
+                            >
                                 {product.categoryId}
                             </Typography>
                         </Box>
 
-                        <Typography fontWeight="600" variant="h4" mt={2}>
+                        <Typography fontWeight="600" variant="h4" mt={2} style={{ fontSize: 17 }}>
                             {product.title}
                         </Typography>
-
-                        <HTMLRenderer html={description || ''} />
 
                         <Box bgcolor="rgba(0,0,0,0.6)" width="100%" maxWidth={700} p={3} mt={2}>
                             <PriceInfo title="Artwork License:" price={artworkLicense} />
@@ -234,11 +237,14 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
                                     fullWidth
                                     variant="contained"
                                     onClick={handleSubmitPayment}
+                                    style={{ fontSize: 17 }}
                                 >
                                     Buy Now
                                 </Button>
                             </Grid>
                         </Grid>
+
+                        <HTMLRenderer html={description || ''} />
                     </Grid>
                 </Grid>
             </Box>

@@ -13,7 +13,6 @@ export default function PrintProductDetailsLayout({ children }: { children: Reac
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 4,
-                backgroundColor: '#6c3baf',
             }}
         >
             <Box display="flex" justifyContent="start">
