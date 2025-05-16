@@ -56,7 +56,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     const { lastAssets, lastAssetsLoading } = useSelector((reduxState) => reduxState.store);
     const assetLicenses = useAssetLicenses(asset._id);
     const stores = useSelector((stateRx) => stateRx.stores.currentDomain);
-    const [printIsBlocked, setPrintIsBlocked] = useState(false);
+    const [printIsBlocked, setPrintIsBlocked] = useState(true);
 
     useEffect(() => {
         const getSetupPrintLicense = async () => {
