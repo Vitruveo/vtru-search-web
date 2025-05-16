@@ -3,6 +3,7 @@ import { confetti } from '@tsparticles/confetti';
 import { useAccount, useConnectorClient, useSwitchChain } from 'wagmi';
 import { toast } from 'react-toastify';
 import { useSearchParams } from 'next/navigation';
+import axios from 'axios';
 
 import { PanelMint } from './component';
 import { getAvailableCredits, getPlatformFeeBasisPoints, issueLicenseUsingCredits } from '@/services/web3/mint';
@@ -13,10 +14,10 @@ import { TypeActions, initialState, reducer } from './slice';
 import cookie from 'cookiejs';
 import { Asset } from '@/features/assets/types';
 import { EXPLORER_URL } from '@/constants/web3';
+import { API_BASE_URL, NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
 import { useSelector } from '@/store/hooks';
 import { useAssetLicenses } from '@/app/hooks/useAssetLicenses';
 import { getPriceWithMarkup } from '@/utils/assets';
-import { NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
 import { vitruveoMainnet, vitruveoTestnet } from '../../providers/wagmiProvider';
 
 const showConfetti = () => {
@@ -55,6 +56,15 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     const { lastAssets, lastAssetsLoading } = useSelector((reduxState) => reduxState.store);
     const assetLicenses = useAssetLicenses(asset._id);
     const stores = useSelector((stateRx) => stateRx.stores.currentDomain);
+    const [printIsBlocked, setPrintIsBlocked] = useState(true);
+
+    useEffect(() => {
+        const getSetupPrintLicense = async () => {
+            const result = await axios.get(`${API_BASE_URL}/setup/print-license`);
+            setPrintIsBlocked(result.data.data.isBlocked);
+        };
+        getSetupPrintLicense();
+    }, []);
 
     useEffect(() => {
         if (!state.openModalLicense) return;
@@ -383,6 +393,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
                 lastAssetsLoading,
                 assetLicenses,
                 openModalBuyVUSD: state.openModalBuyVUSD,
+                printIsBlocked,
             }}
             actions={{
                 handleMintNFT,
