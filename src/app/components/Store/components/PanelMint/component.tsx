@@ -1,5 +1,4 @@
 import { Box, Button, Card, Typography } from '@mui/material';
-import { useRouter, useParams } from 'next/navigation';
 import { useTheme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
 import BuyVUSDModalHOC from '@/app/components/BuyVUSD/modalHOC';
@@ -61,6 +60,7 @@ export interface PanelMintProps {
             available: boolean;
             credits: number;
         } | null;
+        printIsBlocked: boolean;
     };
     actions: {
         handleMintNFT: () => void;
@@ -78,8 +78,6 @@ export interface PanelMintProps {
 
 export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actions }: PanelMintProps) => {
     const theme = useTheme();
-    const router = useRouter();
-    const params = useParams();
 
     const {
         link,
@@ -94,11 +92,11 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
         lastAssetsLoading,
         openModalBuyVUSD,
         licenseAdded,
+        printIsBlocked,
     } = data;
     const {
         handleCloseModalMinted,
         handleOpenModalLicense,
-        handleOpenModalPrintLicense,
         handleRedirectToPrint,
         handleAccordionChange,
         handleOpenModalBuyVUSD,
@@ -144,9 +142,15 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                                 },
                                                 borderRadius: 0,
                                             }}
+                                            disabled={printIsBlocked}
                                         >
                                             Choose Products
                                         </Button>
+                                        {printIsBlocked && (
+                                            <Typography variant="h6" sx={{ color: theme.palette.error.main }}>
+                                                Print is unavailable for now
+                                            </Typography>
+                                        )}
                                     </Box>
                                 </Box>
                             </Box>
