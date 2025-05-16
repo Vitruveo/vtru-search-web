@@ -33,7 +33,7 @@ const CardItem = ({ title, count, img }: CardItemProps) => {
                 display="flex"
                 justifyContent="space-between"
             >
-                <Typography variant="h4" color="#ffffff" maxWidth={270}>
+                <Typography variant="h5" color="#ffffff" maxWidth={270}>
                     {title}
                 </Typography>
                 {/* <Typography variant="h4" color="#FF0066">
@@ -134,7 +134,7 @@ export default function PrintCategories({ params }: PrintCategoriesProps) {
                 <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
             </Box>
 
-            <Typography variant="h1" fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
+            <Typography variant="h4" fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
                 Print License
             </Typography>
 

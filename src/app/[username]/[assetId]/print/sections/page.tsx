@@ -23,10 +23,10 @@ const CardItem = ({ title, count, image }: CardItemProps) => {
                 display="flex"
                 justifyContent="space-between"
             >
-                <Typography variant="h4" color="#ffffff">
+                <Typography variant="h5" color="#ffffff">
                     {title}
                 </Typography>
-                <Typography variant="h4" color="#ffffff">
+                <Typography variant="h5" color="#ffffff">
                     {count} {count > 1 ? 'Items' : 'Item'}
                 </Typography>
             </Box>

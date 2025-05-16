@@ -26,10 +26,10 @@ const CardItem = ({ title, price, img }: CardItemProps) => (
             height={300}
         />
         <Box sx={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }} bgcolor="gray" marginTop={-1} width="100%" p={2}>
-            <Typography variant="h4" color="#ffffff" maxWidth={270}>
+            <Typography variant="subtitle1" color="#ffffff" maxWidth={270}>
                 {title}
             </Typography>
-            <Typography variant="h5" color="#FF0066">
+            <Typography variant="subtitle1" color="#FF0066">
                 {formatPrice({ price: price || 0, withUS: true, decimals: true })}
             </Typography>
         </Box>
