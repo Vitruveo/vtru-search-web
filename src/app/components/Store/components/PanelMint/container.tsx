@@ -1,8 +1,9 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { confetti } from '@tsparticles/confetti';
-import { useAccount, useConnectorClient } from 'wagmi';
+import { useAccount, useConnectorClient, useSwitchChain } from 'wagmi';
 import { toast } from 'react-toastify';
 import { useSearchParams } from 'next/navigation';
+import axios from 'axios';
 
 import { PanelMint } from './component';
 import { getAvailableCredits, getPlatformFeeBasisPoints, issueLicenseUsingCredits } from '@/services/web3/mint';
@@ -13,9 +14,11 @@ import { TypeActions, initialState, reducer } from './slice';
 import cookie from 'cookiejs';
 import { Asset } from '@/features/assets/types';
 import { EXPLORER_URL } from '@/constants/web3';
+import { API_BASE_URL, NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
 import { useSelector } from '@/store/hooks';
 import { useAssetLicenses } from '@/app/hooks/useAssetLicenses';
 import { getPriceWithMarkup } from '@/utils/assets';
+import { vitruveoMainnet, vitruveoTestnet } from '../../providers/wagmiProvider';
 
 const showConfetti = () => {
     confetti({
@@ -36,6 +39,8 @@ interface Props {
     };
 }
 
+const targetChainId = NODE_ENV === 'production' ? vitruveoMainnet.id : vitruveoTestnet.id;
+
 export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Props) => {
     const dispatch = useDispatch();
     const coockieGrid = cookie.get('grid') as string;
@@ -44,11 +49,32 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
 
     const { isConnected, address, chain } = useAccount();
     const { data: client } = useConnectorClient();
+    const { switchChain } = useSwitchChain();
 
+    initialState.expandedAccordion = asset.licenses?.print?.added ? 'print' : 'digitalCollectible';
     const [state, dispatchAction] = useReducer(reducer, initialState);
     const { lastAssets, lastAssetsLoading } = useSelector((reduxState) => reduxState.store);
     const assetLicenses = useAssetLicenses(asset._id);
     const stores = useSelector((stateRx) => stateRx.stores.currentDomain);
+    const [printIsBlocked, setPrintIsBlocked] = useState(true);
+
+    useEffect(() => {
+        const getSetupPrintLicense = async () => {
+            const result = await axios.get(`${API_BASE_URL}/setup/print-license`);
+            setPrintIsBlocked(result.data.data.isBlocked);
+        };
+        getSetupPrintLicense();
+    }, []);
+
+    useEffect(() => {
+        if (!state.openModalLicense) return;
+
+        const shouldSwitchChain = isConnected && chain?.id !== targetChainId;
+
+        if (shouldSwitchChain) {
+            switchChain?.({ chainId: targetChainId });
+        }
+    }, [state.openModalLicense]);
 
     useEffect(() => {
         if (searchParams.get('type') === 'digital') {
@@ -319,6 +345,10 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
         dispatchAction({ type: TypeActions.SET_OPEN_MODAL_LICENSE, payload: true });
     };
 
+    const handleRedirectToPrint = () => {
+        window.location.href = `${SEARCH_BASE_URL}/${asset._id}/go`;
+    };
+
     const handleAccordionChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
         dispatchAction({
             type: TypeActions.SET_EXPANDED_ACCORDION,
@@ -339,6 +369,10 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
                 walletCredits: state.walletCredits,
                 blocked: asset.consignArtwork?.status === 'blocked',
                 available: asset.consignArtwork?.status === 'active' && state.available,
+                licenseAdded: {
+                    nft: asset.licenses?.nft?.added || false,
+                    print: asset.licenses?.print?.added || false,
+                },
                 notListed: !asset?.contractExplorer?.transactionHash,
                 assetTitle: asset.assetMetadata?.context.formData.title,
                 address,
@@ -359,11 +393,13 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
                 lastAssetsLoading,
                 assetLicenses,
                 openModalBuyVUSD: state.openModalBuyVUSD,
+                printIsBlocked,
             }}
             actions={{
                 handleMintNFT,
                 handleCloseModalMinted,
                 handleCloseModalPrintLicense,
+                handleRedirectToPrint,
                 handleCloseModalLicense,
                 handleOpenModalLicense,
                 handleOpenModalBuyVUSD,

@@ -224,7 +224,7 @@ function* getAssetsGroupByCreator() {
         const name = filters.name;
         const hasBts = filters.hasBts;
         const artists = filters.tabNavigation.artists;
-        const selectedLicense = filters.licenseChecked;
+        const licenseChecked = filters.licenseChecked;
 
         const buildFilters = {
             context: filters.context,
@@ -292,6 +292,11 @@ function* getAssetsGroupByCreator() {
             }
         }
 
+        const licenseCheckedBoolean: { nft: boolean; print: boolean } = {
+            nft: licenseChecked.nft[0] === 'yes',
+            print: licenseChecked.print[0] === 'yes',
+        };
+
         const response: AxiosResponse<APIResponse<ResponseAssetGroupByCreator>> = yield call(
             axios.post,
             `${API_BASE_URL}/assets/public/groupByCreator`,
@@ -301,14 +306,14 @@ function* getAssetsGroupByCreator() {
                 maxPrice: price.max,
                 limit: limit || 25,
                 page: page || 1,
-                name: name.trim() || null,
+                name: name.trim() || '',
                 sort: {
                     order: sortState.order,
                     isIncludeSold: sort.sold === 'yes' ? true : false,
                 },
-                hasBts,
+                hasBts: hasBts === 'yes' ? true : false,
                 storesId,
-                // hasNftAutoStake: selectedLicense === 'nft auto',
+                licenseChecked: licenseCheckedBoolean,
             }
         );
 
@@ -394,7 +399,7 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
         const creatorName: string = yield select((state: AppState) => state.assets.groupByCreator.name);
         const colorPrecision = filters.colorPrecision;
         const showAdditionalAssets = filters.showAdditionalAssets.value;
-        const selectedLicense = filters.licenseChecked;
+        const licenseChecked = filters.licenseChecked;
 
         const buildFilters = {
             context: filters.context,
@@ -469,6 +474,11 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
             }
         }
 
+        const licenseCheckedBoolean: { nft: boolean; print: boolean } = {
+            nft: licenseChecked.nft[0] === 'yes',
+            print: licenseChecked.print[0] === 'yes',
+        };
+
         const URL_ASSETS_SEARCH = `${API_BASE_URL}/assets/public/search`;
 
         const response: AxiosResponse<APIResponse<ResponseAssets>> = yield call(axios.post, URL_ASSETS_SEARCH, {
@@ -477,16 +487,16 @@ function* getAssets(_action: PayloadAction<GetAssetsParams>) {
             query: buildQuery,
             minPrice: price.min,
             maxPrice: price.max,
-            name: name.trim() ? name : null,
-            precision: colorPrecision.value,
+            name: name.trim() || '',
+            precision: colorPrecision.value.toString(),
             showAdditionalAssets,
             sort: {
                 order: sortState.order,
                 isIncludeSold: sort.sold === 'yes' ? true : false,
             },
-            hasBts,
+            hasBts: hasBts === 'yes' ? true : false,
             storesId,
-            // hasNftAutoStake: selectedLicense === 'nft auto',
+            licenseChecked: licenseCheckedBoolean,
         });
 
         if (!creatorId && ids.length === 0 && (page === 1 || page === 0)) {

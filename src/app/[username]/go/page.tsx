@@ -125,7 +125,7 @@ export default async function AssetGo({ params }: AssetGoProps) {
                                 height={22}
                                 width={22}
                             />
-                            <Typography variant="body1" color={mainColor}>
+                            <Typography variant="subtitle1" color={mainColor}>
                                 About Xibit
                             </Typography>
                         </Box>
@@ -133,7 +133,7 @@ export default async function AssetGo({ params }: AssetGoProps) {
                     <Link href={`${STUDIO_BASE_URL}/home`}>
                         <Box display={'flex'} alignItems="center" gap={1}>
                             <IconLink color={mainColor} size={20} />
-                            <Typography variant="body1" color={mainColor}>
+                            <Typography variant="subtitle1" color={mainColor}>
                                 Xibit Studio
                             </Typography>
                         </Box>
@@ -157,7 +157,7 @@ const TreeItem = ({ username, assetId, sections }: TreeItemParam) => {
         >
             {sections.map((section) => (
                 <Box key={section.title.value} display="flex" flexDirection="column" gap={2} marginBottom={2}>
-                    <Typography variant="h4" color="white" fontWeight={700}>
+                    <Typography variant="h5" color="white" fontWeight={700}>
                         {section.title.label}
                     </Typography>
                     <Box display="flex" flexDirection="column" gap={3}>
@@ -168,10 +168,13 @@ const TreeItem = ({ username, assetId, sections }: TreeItemParam) => {
                                 style={{ color: 'white' }}
                             >
                                 <Box display="flex" alignItems="center" gap={1}>
-                                    <Typography variant="h6" sx={{ textIndent: 25, textDecoration: 'underline' }}>
+                                    <Typography
+                                        variant="subtitle1"
+                                        sx={{ textIndent: 25, textDecoration: 'underline' }}
+                                    >
                                         {item.category.label}
                                     </Typography>
-                                    <Typography variant="h6">( {item.quantity} )</Typography>
+                                    <Typography variant="subtitle1">( {item.quantity} )</Typography>
                                 </Box>
                             </Link>
                         ))}

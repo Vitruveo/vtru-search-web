@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
 import { IconCaretDown } from '@tabler/icons-react';
 
 interface MetadataAccordionProps {
@@ -11,7 +11,7 @@ interface MetadataAccordionProps {
 
 export default function MetadataAccordion({ title, children, last, expanded, onChange }: MetadataAccordionProps) {
     return (
-        <Accordion expanded={expanded} onChange={onChange} disableGutters>
+        <Accordion expanded={expanded} onChange={onChange} disableGutters style={{ padding: 0 }}>
             <AccordionSummary
                 expandIcon={<IconCaretDown color="#ffff" />}
                 style={!last ? { backgroundColor: '#777777', marginBottom: '2px' } : { backgroundColor: '#777777' }}
@@ -20,7 +20,7 @@ export default function MetadataAccordion({ title, children, last, expanded, onC
                     {title}
                 </Typography>
             </AccordionSummary>
-            <AccordionDetails>{children}</AccordionDetails>
+            <AccordionDetails style={{ padding: 0 }}>{children}</AccordionDetails>
         </Accordion>
     );
 }

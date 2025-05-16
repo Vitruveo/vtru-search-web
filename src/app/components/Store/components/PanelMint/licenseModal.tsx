@@ -9,6 +9,7 @@ import ConnectWallet from '@/app/components/ConnectWallet';
 import { IconX } from '@tabler/icons-react';
 import { MediaRenderStore } from '../MediaRenderStore';
 import { User } from '../User';
+import Image from 'next/image';
 
 interface LicenseModalPropsType extends PanelMintProps {}
 
@@ -61,22 +62,21 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
         return formattedPrice;
     };
 
-    const isSquare = asset.formats?.original?.definition === 'square';
-    const isPortrait = asset.formats?.original?.definition === 'portrait';
-    const mediaWidth = isMobile ? '100%' : isPortrait ? 360 : isSquare ? 400 : 500;
-    const mediaHeight = isPortrait ? 500 : isSquare ? 400 : 365;
-
     return (
         <Modal open={stateModalLicense} onClose={handleCloseModalLicense}>
             <Box
                 sx={{
                     position: 'relative',
-                    bgcolor: '#6C3BAF',
+                    bgcolor: '#171C23',
                     opacity: 1,
                     p: smUp ? 2 : 4,
                     height: '100%',
                 }}
             >
+                <Box display="flex" justifyContent="start">
+                    <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
+                </Box>
+
                 <Box
                     display={'flex'}
                     justifyContent={'space-between'}
@@ -85,7 +85,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                     alignItems={'center'}
                 >
                     {!smUp ? (
-                        <Typography variant="h1" fontWeight={'900'} sx={{ fontSize: '3rem' }}>
+                        <Typography mt={4} variant="h1" fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
                             Digital Collectible License
                         </Typography>
                     ) : (
@@ -93,7 +93,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                     )}
 
                     <Box display={'flex'} gap={2}>
-                        {!smUp && <ConnectWallet size={'large'} rounded />}
+                        {!smUp && <ConnectWallet size={'large'} rounded showChain={false} />}
 
                         <IconButton aria-label="close" onClick={handleCloseModalLicense} sx={{ color: 'white' }}>
                             <IconX size={smUp ? '1.5rem' : '3rem'} />
@@ -111,17 +111,11 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                             <Box
                                 display="flex"
                                 flexWrap="wrap"
-                                alignItems="center"
+                                // alignItems="center"
                                 gap={smUp ? 1 : 4}
                                 marginTop={smUp ? 1 : 5}
                             >
-                                <MediaRenderStore
-                                    removeMargin
-                                    media={image}
-                                    width={mediaWidth}
-                                    height={mediaHeight}
-                                    alt="original"
-                                />
+                                <MediaRenderStore removeMargin media={image} width={400} height={400} alt="original" />
                                 <Box width={smUp ? '100%' : 700}>
                                     <Box
                                         position="relative"
@@ -130,6 +124,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                                         bgcolor="rgba(0,0,0,0.6)"
                                         padding={3}
                                         borderRadius={0}
+                                        height={400}
                                     >
                                         {state ? (
                                             <Box minHeight={319}>
@@ -179,33 +174,27 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                                                 )}
                                             </Box>
                                         )}
-                                        <Button
-                                            size="large"
-                                            variant="contained"
-                                            disabled={
-                                                !walletCredits ||
-                                                !available ||
-                                                !address ||
-                                                walletCredits < credits ||
-                                                walletCredits < buyCapability.totalAmount ||
-                                                loading.state
-                                            }
-                                            onClick={handleMintNFT}
-                                            sx={{
-                                                left: 0,
-                                                top: 400,
-                                                position: 'absolute',
-                                                bottom: 16,
-                                                fontSize: smUp ? 18 : 22,
-                                                width: smUp ? '100%' : 300,
-                                                height: 60,
-                                                lineHeight: '2',
-                                                borderRadius: 2,
-                                            }}
-                                        >
-                                            Buy {warningMessage()}
-                                        </Button>
                                     </Box>
+                                    <Button
+                                        size="large"
+                                        variant="contained"
+                                        disabled={
+                                            !walletCredits ||
+                                            !available ||
+                                            !address ||
+                                            walletCredits < credits ||
+                                            walletCredits < buyCapability.totalAmount ||
+                                            loading.state
+                                        }
+                                        onClick={handleMintNFT}
+                                        sx={{
+                                            marginTop: 6,
+                                            fontSize: 17,
+                                            width: smUp ? '100%' : 300,
+                                        }}
+                                    >
+                                        Buy Now{warningMessage()}
+                                    </Button>
                                 </Box>
                             </Box>
                             <Box

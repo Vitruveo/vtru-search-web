@@ -15,7 +15,7 @@ export default function PrintProductDetailsLayout({ children }: { children: Reac
                 gap: 4,
             }}
         >
-            <Box display="flex" justifyContent="center" alignItems="center">
+            <Box display="flex" justifyContent="start">
                 <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
             </Box>
 
