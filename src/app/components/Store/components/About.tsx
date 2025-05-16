@@ -24,7 +24,7 @@ export const About = ({ data }: AboutProps) => {
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <Card>
+                <Card sx={{ borderRadius: 0 }}>
                     <Typography variant="body1" sx={{ wordWrap: 'break-word' }}>
                         {data}
                     </Typography>

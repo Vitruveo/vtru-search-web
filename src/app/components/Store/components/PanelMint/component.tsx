@@ -1,4 +1,4 @@
-import { Box, Button, Card, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, Card, Typography } from '@mui/material';
 import { useRouter, useParams } from 'next/navigation';
 import { useTheme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
@@ -81,7 +81,6 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
     const router = useRouter();
     const params = useParams();
 
-    const isMobile = useMediaQuery('(max-width: 900px)');
     const {
         link,
         assetLicenses,
@@ -110,8 +109,8 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
 
     if (!stateModalPrintLicense && !stateModalLicense && !openModalBuyVUSD && !stateModalMinted) {
         return (
-            <>
-                <Typography variant="h4" sx={{ color: '#ffff' }} marginBottom={2}>
+            <Box display={'flex'} flexDirection="column" gap={1} padding={0}>
+                <Typography variant="h4" sx={{ color: '#ffff' }}>
                     {available || licenseAdded.print ? 'Available Licenses' : 'No Licenses Available'}
                 </Typography>
                 <Box>
@@ -122,22 +121,33 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                             expanded={expandedAccordion === 'print'}
                             onChange={handleAccordionChange('print')}
                         >
-                            <Box display="flex" alignItems="center" height={140} marginLeft={3}>
-                                <Box marginBottom={isMobile ? 0 : 3} display="flex" alignItems="center" gap={2}>
-                                    <Button
-                                        variant="contained"
-                                        onClick={handleRedirectToPrint}
-                                        sx={{
-                                            backgroundColor: theme.palette.primary.main,
-                                            color: '#ffff',
-                                            '&:hover': {
+                            <Box display="flex" alignItems="center" height={140}>
+                                <Box
+                                    display="flex"
+                                    flexDirection="column"
+                                    height={140}
+                                    justifyContent="space-between"
+                                    padding={4}
+                                >
+                                    <Typography variant="h5" sx={{ color: theme.palette.text.primary }}>
+                                        Own this artwork as a physical collectible.
+                                    </Typography>
+                                    <Box display="flex" alignItems="center" gap={2}>
+                                        <Button
+                                            variant="contained"
+                                            onClick={handleRedirectToPrint}
+                                            sx={{
                                                 backgroundColor: theme.palette.primary.main,
-                                            },
-                                            borderRadius: 0,
-                                        }}
-                                    >
-                                        Choose Products
-                                    </Button>
+                                                color: '#ffff',
+                                                '&:hover': {
+                                                    backgroundColor: theme.palette.primary.main,
+                                                },
+                                                borderRadius: 0,
+                                            }}
+                                        >
+                                            Choose Products
+                                        </Button>
+                                    </Box>
                                 </Box>
                             </Box>
                         </MetadataAccordion>
@@ -154,16 +164,12 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                 flexDirection="column"
                                 height={140}
                                 justifyContent="space-between"
-                                marginLeft={isMobile ? 0 : 3}
+                                padding={4}
                             >
-                                <Typography
-                                    marginTop={isMobile ? 0 : 3}
-                                    variant="h5"
-                                    sx={{ color: theme.palette.text.primary }}
-                                >
+                                <Typography variant="h5" sx={{ color: theme.palette.text.primary }}>
                                     Own this artwork as a digital collectible.
                                 </Typography>
-                                <Box marginBottom={isMobile ? 0 : 3} display="flex" alignItems="center" gap={2}>
+                                <Box display="flex" alignItems="center" gap={2}>
                                     <Button
                                         variant="contained"
                                         onClick={handleOpenModalLicense}
@@ -207,7 +213,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                         </Box>
                     )}
                 </Box>
-            </>
+            </Box>
         );
     }
 

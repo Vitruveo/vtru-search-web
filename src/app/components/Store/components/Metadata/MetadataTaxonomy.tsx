@@ -8,7 +8,7 @@ interface MetadataTaxonomyProps {
 
 export default function MetadataTaxonomy({ content }: MetadataTaxonomyProps) {
     return (
-        <Box display={'flex'} flexDirection={'column'} gap={1}>
+        <Box display={'flex'} flexDirection={'column'} gap={1} padding={2}>
             <Table title={'Object type'} content={content.objectType} />
             <Table title={'Tags'} content={(content?.tags || []).filter(Boolean)} tags />
             <Table title={'Collections'} content={(content?.collections || []).filter(Boolean)} />

@@ -60,6 +60,7 @@ export default function AboutCreator({ data, creatorAvatar, creatorLoading }: Ab
                                                 '&:hover': {
                                                     backgroundColor: theme.palette.primary.main,
                                                 },
+                                                borderRadius: 0,
                                             }}
                                             fullWidth
                                             href={data![0].profileUrl}

@@ -8,7 +8,7 @@ interface MetadataContextProps {
 
 export default function MetadataContext({ content }: MetadataContextProps) {
     return (
-        <Box display={'flex'} flexDirection={'column'} gap={1}>
+        <Box display={'flex'} flexDirection={'column'} gap={1} padding={2}>
             <Table title={'Title'} content={content.title} />
             <Table title={'Culture'} content={content.culture} />
             <Table title={'Color'} content={(content?.colors || []).filter(Boolean)} displayColor />
