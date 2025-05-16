@@ -29,7 +29,7 @@ export default function PanelMintInfo({
         <Grid container spacing={2} style={{ justifyContent: 'space-between' }}>
             <Grid item sm={6}>
                 <Typography
-                    variant="body1"
+                    variant="h4"
                     fontWeight="bold"
                     style={{
                         fontSize: smUp ? 15 : 22,
@@ -44,7 +44,7 @@ export default function PanelMintInfo({
             <Grid item sm={6}>
                 <Box display="flex" gap={1} justifyContent={'flex-end'} marginRight={smUp ? 3.2 : 4.2}>
                     <Typography
-                        variant="body1"
+                        variant="h4"
                         style={{
                             // blur if content is hidden
                             filter: !hasHidden ? '' : showContent ? 'unset' : 'blur(6px)',

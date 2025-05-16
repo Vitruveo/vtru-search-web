@@ -53,10 +53,10 @@ interface PriceInfoProps {
 
 const PriceInfo = ({ title, price, mb = 1 }: PriceInfoProps) => (
     <Box display="flex" alignItems="center" justifyContent="space-between" mb={mb}>
-        <Typography variant="h4" fontWeight={600} style={{ fontSize: 17 }}>
+        <Typography variant="h4" fontWeight={600} style={{ fontSize: 22 }}>
             {title}
         </Typography>
-        <Typography variant="h4" fontWeight={600} style={{ fontSize: 17 }}>
+        <Typography variant="h4" fontWeight={600} style={{ fontSize: 22 }}>
             {formatPrice({
                 price: price,
                 withUS: true,
@@ -202,11 +202,10 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
 
                     <Grid item xs={12} sm={12} lg={6}>
                         <Box display="flex" alignItems="center" mt={2}>
-                            <Chip label="In Stock" color="success" size="small" />
+                            {/* <Chip label="In Stock" color="success" size="small" /> */}
                             <Typography
                                 color="textSecondary"
                                 variant="caption"
-                                ml={1}
                                 textTransform="capitalize"
                                 style={{ fontSize: 17 }}
                             >

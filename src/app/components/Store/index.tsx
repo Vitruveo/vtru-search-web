@@ -133,7 +133,7 @@ const Store = ({ data }: StoreProps) => {
                         </Box>
                         <Box display="flex" flexDirection="column" justifyContent="center" height="70%">
                             <PanelMint
-                                image={image}
+                                image={`${ASSET_STORAGE_URL}/${asset.formats?.preview?.path}`}
                                 creatorAvatar={creatorAvatar}
                                 creatorName={username}
                                 size={size}
