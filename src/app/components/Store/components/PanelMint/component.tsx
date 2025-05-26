@@ -4,8 +4,7 @@ import { Asset } from '@/features/assets/types';
 import BuyVUSDModalHOC from '@/app/components/BuyVUSD/modalHOC';
 import ModalMinted from '../ModalMinted';
 import MetadataAccordion from '../Metadata/MetadataAccordion';
-import LicenseModal from './licenseModal';
-import PrintLicenseModal from './PrintLicense/index';
+import DigitalLicenseModal from './DigitalLicenseModal';
 import { LastAssetsList } from '../LastAssetsList';
 import { LastAssets } from '@/features/store/types';
 import { LoadingAvailableLincenses } from '../LoadingAvailableLicenses';
@@ -184,6 +183,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                                 backgroundColor: theme.palette.primary.main,
                                             },
                                             borderRadius: 0,
+                                            whiteSpace: 'nowrap',
                                         }}
                                     >
                                         Buy with VUSD
@@ -224,7 +224,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
     return (
         <>
             <Card style={{ display: 'flex', flexDirection: 'column', borderRadius: 0 }}>
-                <LicenseModal
+                <DigitalLicenseModal
                     image={image}
                     size={size}
                     creatorAvatar={creatorAvatar}
@@ -232,16 +232,6 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                     data={data}
                     actions={actions}
                 />
-
-                <PrintLicenseModal
-                    image={image}
-                    size={size}
-                    creatorAvatar={creatorAvatar}
-                    creatorName={creatorName}
-                    data={data}
-                    actions={actions}
-                />
-
                 <ModalMinted open={stateModalMinted} handleClose={handleCloseModalMinted} link={link} />
                 <BuyVUSDModalHOC isOpen={openModalBuyVUSD} onClose={handleCloseModalBuyVUSD} />
             </Card>
