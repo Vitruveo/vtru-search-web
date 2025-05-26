@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material';
+import { Breadcrumb } from '@/app/components/Breadcrumb';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Catalog } from './types';
@@ -27,12 +28,19 @@ const CardItem = ({ title, count, image }: CardItemProps) => {
                     {title}
                 </Typography>
                 <Typography variant="h5" color="#ffffff">
-                    {count} {count > 1 ? 'Items' : 'Item'}
+                    ({count})
                 </Typography>
             </Box>
         </Box>
     );
 };
+
+const breadcrumbItems = () => [
+    {
+        label: 'Home',
+        href: '/{username}/{assetId}/print/sections',
+    },
+];
 
 interface PrintSectionsProps {
     params: {
@@ -53,8 +61,6 @@ export default async function PrintSections({ params }: PrintSectionsProps) {
             sx={{
                 overflowY: 'auto',
                 height: '100vh',
-                paddingBottom: 10,
-
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 4,
@@ -64,9 +70,11 @@ export default async function PrintSections({ params }: PrintSectionsProps) {
                 <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
             </Box>
 
-            <Typography variant="h1" fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
+            <Typography variant="h4" fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
                 Print License
             </Typography>
+
+            <Breadcrumb items={breadcrumbItems()} params={params} />
 
             <Box display="flex" flexWrap="wrap" justifyContent="center" gap={4} width="100%">
                 {sections.map((item) => (

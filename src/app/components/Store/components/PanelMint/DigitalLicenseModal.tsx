@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Modal, Theme, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, Grid, IconButton, Modal, Theme, Typography, useMediaQuery } from '@mui/material';
 import { formatPrice } from '@/utils/assets';
 import { LoadingAvailableLincenses } from '../LoadingAvailableLicenses';
 import Licenses from '../Licenses';
@@ -10,6 +10,7 @@ import { IconX } from '@tabler/icons-react';
 import { MediaRenderStore } from '../MediaRenderStore';
 import { User } from '../User';
 import Image from 'next/image';
+import { Breadcrumb } from '@/app/components/Breadcrumb';
 
 interface LicenseModalPropsType extends PanelMintProps {}
 
@@ -73,72 +74,62 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                     height: '100%',
                 }}
             >
-                <Box display="flex" justifyContent="start">
+                <Box display="flex" justifyContent="space-between">
                     <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
-                </Box>
-
-                <Box
-                    display={'flex'}
-                    justifyContent={'space-between'}
-                    flexDirection="row"
-                    gap={3}
-                    alignItems={'center'}
-                >
-                    {!smUp ? (
-                        <Typography mt={4} variant="h1" fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
-                            Digital Collectible License
-                        </Typography>
-                    ) : (
-                        <ConnectWallet size={'regular'} rounded />
-                    )}
-
-                    <Box display={'flex'} gap={2}>
-                        {!smUp && <ConnectWallet size={'large'} rounded showChain={false} />}
-
+                    <Box display="flex" alignItems="center" gap={2}>
+                        <ConnectWallet size={'regular'} rounded showChain={false} />
                         <IconButton aria-label="close" onClick={handleCloseModalLicense} sx={{ color: 'white' }}>
-                            <IconX size={smUp ? '1.5rem' : '3rem'} />
+                            <IconX />
                         </IconButton>
                     </Box>
                 </Box>
-                <Box overflow={isConnected ? 'auto' : 'hidden'} maxHeight="90vh">
-                    {smUp && (
-                        <Typography marginTop={3} variant="h1" fontWeight={'900'} sx={{ fontSize: '1.6rem' }}>
-                            Digital Collectible License
-                        </Typography>
-                    )}
+
+                <Typography mt={4} variant="h1" fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
+                    Digital Collectible License
+                </Typography>
+
+                <Box mt={4}>
+                    <Breadcrumb items={[{ label: 'Home' }, { label: 'Digital Collectible License' }]} params={{}} />
+                </Box>
+                <Box overflow={isConnected ? 'auto' : 'hidden'} maxHeight="90vh" pb={12}>
                     {isConnected ? (
-                        <Box>
-                            <Box
-                                display="flex"
-                                flexWrap="wrap"
-                                // alignItems="center"
-                                gap={smUp ? 1 : 4}
-                                marginTop={smUp ? 1 : 5}
-                            >
-                                <MediaRenderStore removeMargin media={image} width={400} height={400} alt="original" />
-                                <Box width={smUp ? '100%' : 700}>
+                        <Box mt={4}>
+                            <Grid container>
+                                <Grid item xs={12} sm={12} lg={6}>
+                                    <Box display="flex" alignItems="center" justifyContent="center">
+                                        <MediaRenderStore
+                                            removeMargin
+                                            media={image}
+                                            width={600}
+                                            height={600}
+                                            alt="preview"
+                                        />
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={12} sm={12} lg={6}>
+                                    <Typography fontWeight="600" variant="h2">
+                                        {assetTitle}
+                                    </Typography>
                                     <Box
                                         position="relative"
-                                        minHeight={365}
-                                        width={smUp ? '100%' : 700}
+                                        width="100%"
+                                        maxWidth={700}
                                         bgcolor="rgba(0,0,0,0.6)"
                                         padding={3}
-                                        borderRadius={0}
-                                        height={400}
+                                        mt={2}
                                     >
                                         {state ? (
-                                            <Box minHeight={319}>
+                                            <Box>
                                                 <LoadingAvailableLincenses message={message} />
                                             </Box>
                                         ) : (
-                                            <Box flexDirection="column" display="flex" gap={2}>
-                                                <Licenses title="License type" license={license} />
+                                            <Box flexDirection="column" display="flex">
                                                 {isConnected && available && chain ? (
-                                                    <Box display={'flex'} flexDirection={'column'} gap={4}>
-                                                        <Box display={'flex'} flexDirection={'column'} gap={2}>
-                                                            <PanelMintInfo title="Price" content={contentMessage()} />
+                                                    <Box display={'flex'} flexDirection={'column'} gap={1}>
+                                                        <Box display={'flex'} flexDirection={'column'} gap={1}>
+                                                            <PanelMintInfo title="Price:" content={contentMessage()} />
                                                             <Fees
-                                                                title="Fees"
+                                                                title="Fees:"
                                                                 value={platformFee.value + feesCurator.value}
                                                                 fees={{
                                                                     platform: platformFee,
@@ -147,7 +138,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                                                             />
 
                                                             <PanelMintInfo
-                                                                title="Total"
+                                                                title="Total:"
                                                                 content={formatPrice({
                                                                     price: totalFee,
                                                                     withUS: true,
@@ -157,7 +148,7 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                                                         </Box>
                                                         <Box display={'flex'} flexDirection={'column'} gap={2}>
                                                             <PanelMintInfo
-                                                                title="Available Balance"
+                                                                title="Available Balance:"
                                                                 color="white"
                                                                 content={formatPrice({
                                                                     price: walletCredits,
@@ -168,6 +159,9 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                                                                 hasHidden
                                                             />
                                                         </Box>
+                                                        <Box mt={3} mb={1}>
+                                                            <Licenses title="License type:" license={license} />
+                                                        </Box>
                                                     </Box>
                                                 ) : (
                                                     <PanelMintInfo title="Price" content={contentMessage()} />
@@ -175,40 +169,34 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
                                             </Box>
                                         )}
                                     </Box>
-                                    <Button
-                                        size="large"
-                                        variant="contained"
-                                        disabled={
-                                            !walletCredits ||
-                                            !available ||
-                                            !address ||
-                                            walletCredits < credits ||
-                                            walletCredits < buyCapability.totalAmount ||
-                                            loading.state
-                                        }
-                                        onClick={handleMintNFT}
-                                        sx={{
-                                            marginTop: 6,
-                                            fontSize: 17,
-                                            width: smUp ? '100%' : 300,
-                                        }}
-                                    >
-                                        Buy Now{warningMessage()}
-                                    </Button>
-                                </Box>
-                            </Box>
-                            <Box
-                                marginTop={smUp ? 14 : 12}
-                                marginBottom={3}
-                                display="flex"
-                                flexDirection="column"
-                                gap={1}
-                            >
-                                <Typography variant="h1" sx={{ color: '#ffff', fontSize: smUp ? '1.5rem' : '2.2rem' }}>
-                                    {assetTitle}
-                                </Typography>
-                                <User creator={creatorAvatar} creatorName={creatorName} asset={asset} />
-                            </Box>
+                                    <Grid container spacing={2} mt={3}>
+                                        <Grid item xs={12} lg={4} md={6}>
+                                            <Button
+                                                size="large"
+                                                variant="contained"
+                                                disabled={
+                                                    !walletCredits ||
+                                                    !available ||
+                                                    !address ||
+                                                    walletCredits < credits ||
+                                                    walletCredits < buyCapability.totalAmount ||
+                                                    loading.state
+                                                }
+                                                onClick={handleMintNFT}
+                                                sx={{
+                                                    fontSize: 17,
+                                                    width: smUp ? '100%' : 300,
+                                                }}
+                                            >
+                                                Buy Now {warningMessage()}
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                    <Box marginTop={3} marginBottom={3} display="flex" flexDirection="column" gap={2}>
+                                        <User creator={creatorAvatar} creatorName={creatorName} asset={asset} />
+                                    </Box>
+                                </Grid>
+                            </Grid>
                         </Box>
                     ) : (
                         <Box

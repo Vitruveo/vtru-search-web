@@ -201,19 +201,7 @@ export default function PrintProductDetails({ params }: PrintProductProps) {
                     </Grid>
 
                     <Grid item xs={12} sm={12} lg={6}>
-                        <Box display="flex" alignItems="center" mt={2}>
-                            {/* <Chip label="In Stock" color="success" size="small" /> */}
-                            <Typography
-                                color="textSecondary"
-                                variant="caption"
-                                textTransform="capitalize"
-                                style={{ fontSize: 17 }}
-                            >
-                                {product.categoryId}
-                            </Typography>
-                        </Box>
-
-                        <Typography fontWeight="600" variant="h4" mt={2} style={{ fontSize: 17 }}>
+                        <Typography fontWeight="600" variant="h2">
                             {product.title}
                         </Typography>
 
