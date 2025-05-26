@@ -36,9 +36,9 @@ const CardItem = ({ title, count, img }: CardItemProps) => {
                 <Typography variant="h5" color="#ffffff" maxWidth={270}>
                     {title}
                 </Typography>
-                {/* <Typography variant="h4" color="#FF0066">
-                    {count}
-                </Typography> */}
+                <Typography variant="h5" color="#ffffff">
+                    ({count})
+                </Typography>
             </Box>
         </Box>
     );
@@ -69,6 +69,7 @@ interface PrintCategoriesProps {
 export default function PrintCategories({ params }: PrintCategoriesProps) {
     const [categories, setCategories] = useState<{ src?: string; categoryId: string; title: string }[]>([]);
     const [section, setSection] = useState<Sections | null>(null);
+    const [productsQuantity, setProductsQuantity] = useState<{ [key: string]: number }>({});
 
     const handleSetCategories = ({ catalog, products }: { catalog: Catalog; products: ProductItem[] }) => {
         const catalogSection = catalog.sections.find((item) => item.sectionId === params.sectionId)!;
@@ -95,6 +96,12 @@ export default function PrintCategories({ params }: PrintCategoriesProps) {
 
                 const catalog: Catalog = await catalogResponse.json();
                 const products: Products = await productsResponse.json();
+
+                const productsQuantityPerCategory = products.vertical.reduce((acc, product) => {
+                    acc[product.categoryId] = (acc[product.categoryId] || 0) + 1;
+                    return acc;
+                }, {} as any);
+                setProductsQuantity(productsQuantityPerCategory);
 
                 const catalogSection = catalog.sections.find((item) => item.sectionId === params.sectionId)!;
                 setSection(catalogSection);
@@ -123,8 +130,6 @@ export default function PrintCategories({ params }: PrintCategoriesProps) {
             sx={{
                 overflowY: 'auto',
                 height: '100vh',
-                paddingBottom: 10,
-
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 4,
@@ -152,7 +157,7 @@ export default function PrintCategories({ params }: PrintCategoriesProps) {
                             key={item.categoryId}
                             href={`/${params.username}/${params.assetId}/print/sections/${params.sectionId}/categories/${item.categoryId}/products`}
                         >
-                            <CardItem img={item.src} title={item.title} count={3} />
+                            <CardItem img={item.src} title={item.title} count={productsQuantity[item.categoryId]} />
                         </Link>
                     ))
                 ) : (

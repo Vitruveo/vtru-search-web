@@ -26,10 +26,10 @@ const CardItem = ({ title, price, img }: CardItemProps) => (
             height={300}
         />
         <Box sx={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }} bgcolor="gray" marginTop={-1} width="100%" p={2}>
-            <Typography variant="subtitle1" color="#ffffff" maxWidth={270}>
+            <Typography variant="h5" color="#ffffff" maxWidth={270}>
                 {title}
             </Typography>
-            <Typography variant="subtitle1" color="#FF0066">
+            <Typography variant="h5" color="#ffffff">
                 {formatPrice({ price: price || 0, withUS: true, decimals: true })}
             </Typography>
         </Box>
@@ -101,7 +101,6 @@ export default function PrintProducts({ params }: PrintProductsProps) {
             sx={{
                 overflowY: 'auto',
                 height: '100vh',
-                paddingBottom: 10,
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 4,
@@ -111,7 +110,7 @@ export default function PrintProducts({ params }: PrintProductsProps) {
                 <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
             </Box>
 
-            <Typography variant="h1" fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
+            <Typography variant="h4" fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
                 Print License
             </Typography>
 
