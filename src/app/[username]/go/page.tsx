@@ -28,6 +28,12 @@ interface AssetGoProps {
     };
 }
 
+const definitions: Record<string, keyof Products> = {
+    portrait: 'vertical',
+    landscape: 'horizontal',
+    square: 'square',
+};
+
 export default async function AssetGo({ params }: AssetGoProps) {
     const mainColor = '#ff0066';
     const assetId = params.username;
@@ -40,6 +46,7 @@ export default async function AssetGo({ params }: AssetGoProps) {
 
     const assetRaw = await fetch(`${API_BASE_URL}/assets/store/${assetId}`);
     const asset = (await assetRaw.json()).data;
+    const definition = definitions[asset?.formats?.original?.definition as keyof typeof definitions] || 'vertical';
 
     const getSectionWithCategory = (): SectionProps[] => {
         return catalog.sections.map((section) => {
@@ -50,8 +57,11 @@ export default async function AssetGo({ params }: AssetGoProps) {
                         label: matchedCategory?.title || '',
                         value: matchedCategory?.categoryId || '',
                     },
-                    quantity: Object.values(products).reduce((acc, cur) => {
-                        return acc + cur.filter((product: ProductItem) => product.categoryId === category).length;
+                    quantity: products[definition].reduce((acc, cur) => {
+                        if (category === cur.categoryId) {
+                            return acc + 1;
+                        }
+                        return acc;
                     }, 0),
                 };
             });
@@ -161,23 +171,44 @@ const TreeItem = ({ username, assetId, sections }: TreeItemParam) => {
                         {section.title.label}
                     </Typography>
                     <Box display="flex" flexDirection="column" gap={3}>
-                        {section.categories.map((item) => (
-                            <Link
-                                key={item.category.value}
-                                href={`${SEARCH_BASE_URL}/${username}/${assetId}/print/sections/${section.title.value}/categories/${item.category.value}/products`}
-                                style={{ color: 'white' }}
-                            >
-                                <Box display="flex" alignItems="center" gap={1}>
+                        {section.categories.map((item) => {
+                            return item.quantity === 0 ? (
+                                <Box
+                                    display="flex"
+                                    alignItems="center"
+                                    gap={1}
+                                    key={item.category.value}
+                                    sx={{ '&:hover': { cursor: 'not-allowed' } }}
+                                >
                                     <Typography
                                         variant="subtitle1"
                                         sx={{ textIndent: 25, textDecoration: 'underline' }}
+                                        color="rgba(255, 255, 255, 0.5)"
                                     >
                                         {item.category.label}
                                     </Typography>
-                                    <Typography variant="subtitle1">( {item.quantity} )</Typography>
+                                    <Typography variant="subtitle1" color="rgba(255, 255, 255, 0.5)">
+                                        ( {item.quantity} )
+                                    </Typography>
                                 </Box>
-                            </Link>
-                        ))}
+                            ) : (
+                                <Link
+                                    key={item.category.value}
+                                    href={`${SEARCH_BASE_URL}/${username}/${assetId}/print/sections/${section.title.value}/categories/${item.category.value}/products`}
+                                    style={{ color: 'white' }}
+                                >
+                                    <Box display="flex" alignItems="center" gap={1}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            sx={{ textIndent: 25, textDecoration: 'underline' }}
+                                        >
+                                            {item.category.label}
+                                        </Typography>
+                                        <Typography variant="subtitle1">( {item.quantity} )</Typography>
+                                    </Box>
+                                </Link>
+                            );
+                        })}
                     </Box>
                 </Box>
             ))}

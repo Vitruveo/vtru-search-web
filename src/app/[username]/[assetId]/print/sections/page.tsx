@@ -13,7 +13,10 @@ interface CardItemProps {
 
 const CardItem = ({ title, count, image }: CardItemProps) => {
     return (
-        <Box position="relative">
+        <Box
+            position="relative"
+            sx={count === 0 ? { filter: 'grayscale(1)', '&:hover': { cursor: 'not-allowed' } } : {}}
+        >
             <Image src={`${CATALOG_ASSETS_BASE_URL}/${image}`} alt="No image" width={300} height={300} />
             <Box
                 sx={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
@@ -77,14 +80,18 @@ export default async function PrintSections({ params }: PrintSectionsProps) {
             <Breadcrumb items={breadcrumbItems()} params={params} />
 
             <Box display="flex" flexWrap="wrap" justifyContent="center" gap={4} width="100%">
-                {sections.map((item) => (
-                    <Link
-                        key={item.sectionId}
-                        href={`/${params.username}/${params.assetId}/print/sections/${item.sectionId}/categories`}
-                    >
+                {sections.map((item) => {
+                    return item.categories.length === 0 ? (
                         <CardItem title={item.title} count={item.categories.length} image={item.images.preview} />
-                    </Link>
-                ))}
+                    ) : (
+                        <Link
+                            key={item.sectionId}
+                            href={`/${params.username}/${params.assetId}/print/sections/${item.sectionId}/categories`}
+                        >
+                            <CardItem title={item.title} count={item.categories.length} image={item.images.preview} />
+                        </Link>
+                    );
+                })}
             </Box>
         </Box>
     );

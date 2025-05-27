@@ -16,7 +16,8 @@ export default async function CategoriesServer({ params }: CategoriesLayoutProps
     const assetRaw = await fetch(`${API_BASE_URL}/assets/store/${params.assetId}`);
     const asset = await assetRaw.json();
 
-    const definition = definitions[asset.data.formats.original.definition as keyof typeof definitions] || '';
+    const definition =
+        definitions[asset?.data?.formats?.original?.definition as keyof typeof definitions] || 'vertical';
 
     return <PrintCategories params={params} definition={definition} />;
 }

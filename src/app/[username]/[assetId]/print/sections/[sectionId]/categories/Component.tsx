@@ -17,7 +17,10 @@ interface CardItemProps {
 
 const CardItem = ({ title, count, img }: CardItemProps) => {
     return (
-        <Box position="relative">
+        <Box
+            position="relative"
+            sx={count === 0 ? { filter: 'grayscale(1)', '&:hover': { cursor: 'not-allowed' } } : {}}
+        >
             <Image
                 src={img || 'https://vitruveo-studio-production-general.s3.amazonaws.com/noImage.jpg'}
                 alt="No image"
@@ -154,18 +157,26 @@ export function PrintCategories({ params, definition }: PrintCategoriesProps) {
 
             <Box display="flex" flexWrap="wrap" justifyContent="center" gap={4} width="100%">
                 {categories.length ? (
-                    categories.map((item) => (
-                        <Link
-                            key={item.categoryId}
-                            href={`/${params.username}/${params.assetId}/print/sections/${params.sectionId}/categories/${item.categoryId}/products`}
-                        >
+                    categories.map((item) => {
+                        return !productsQuantity[item.categoryId] ? (
                             <CardItem
                                 img={item.src}
                                 title={item.title}
                                 count={productsQuantity[item.categoryId] || 0}
                             />
-                        </Link>
-                    ))
+                        ) : (
+                            <Link
+                                key={item.categoryId}
+                                href={`/${params.username}/${params.assetId}/print/sections/${params.sectionId}/categories/${item.categoryId}/products`}
+                            >
+                                <CardItem
+                                    img={item.src}
+                                    title={item.title}
+                                    count={productsQuantity[item.categoryId] || 0}
+                                />
+                            </Link>
+                        );
+                    })
                 ) : (
                     <Box display="flex" justifyContent="center" alignItems="center" mt={5}>
                         <CircularProgress />
