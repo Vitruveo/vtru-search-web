@@ -11,7 +11,7 @@ export const SEARCH_BASE_URL = process.env.NEXT_PUBLIC_SEARCH_BASE_URL || 'http:
 export const CATALOG_BASE_URL =
     process.env.NEXT_PUBLIC_CATALOG_BASE_URL || 'https://vitruveo-projects.s3.amazonaws.com/Xibit/prod/catalog.json';
 export const PRODUCTS_BASE_URL =
-    process.env.NEXT_PUBLIC_PRODUCTS_BASE_URL || 'https://vitruveo-projects.s3.amazonaws.com/Xibit/prod/products.json';
+    process.env.NEXT_PUBLIC_PRODUCTS_BASE_URL || 'https://m-paice.github.io/products-vtru/data.json';
 
 export const CATALOG_ASSETS_BASE_URL =
     process.env.NEXT_PUBLIC_CATALOG_ASSETS_BASE_URL || 'https://vitruveo-projects.s3.amazonaws.com/Xibit/assets';
