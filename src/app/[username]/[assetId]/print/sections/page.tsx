@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material';
-import { Breadcrumb } from '@/app/components/Breadcrumb';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Catalog } from './types';
@@ -38,13 +37,6 @@ const CardItem = ({ title, count, image }: CardItemProps) => {
     );
 };
 
-const breadcrumbItems = () => [
-    {
-        label: 'Home',
-        href: '/{username}/{assetId}/print/sections',
-    },
-];
-
 interface PrintSectionsProps {
     params: {
         username: string;
@@ -76,8 +68,6 @@ export default async function PrintSections({ params }: PrintSectionsProps) {
             <Typography variant="h4" fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
                 Print License
             </Typography>
-
-            <Breadcrumb items={breadcrumbItems()} params={params} />
 
             <Box display="flex" flexWrap="wrap" justifyContent="center" gap={4} width="100%">
                 {sections.map((item) => {

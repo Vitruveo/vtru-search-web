@@ -1,5 +1,4 @@
-// src/app/layout.tsx
-'use client'; // Isso indica que é um componente de cliente
+'use client';
 import store, { persistor } from '@/store';
 import '@/utils/i18n';
 import { NextAppDirEmotionCacheProvider } from '@/utils/theme/EmotionCache';

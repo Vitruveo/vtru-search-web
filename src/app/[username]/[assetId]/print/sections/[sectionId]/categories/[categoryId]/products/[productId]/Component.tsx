@@ -12,6 +12,9 @@ import { formatPrice } from '@/utils/assets';
 import { Asset } from '@/features/assets/types';
 import { getProductsImages, getProductsPlaceholders } from '../../../../../utils';
 import * as actionsAssets from '@/features/assets/slice';
+import { useSelector } from '@/store/hooks';
+import { useDomainContext } from '@/app/context/domain';
+import cookie from 'cookiejs';
 
 interface BreadCrumbIParams {
     segment: string;
@@ -75,10 +78,13 @@ interface PrintProductProps {
         productId: string;
     };
     definition: keyof Products;
+    curatorId?: string;
 }
 
-export default function PrintProductDetails({ params, definition }: PrintProductProps) {
+export default function PrintProductDetails({ params, definition, curatorId }: PrintProductProps) {
     const dispatch = useDispatch();
+    const { subdomain, isValidSubdomain } = useDomainContext();
+    const { _id: storesId } = useSelector((state) => state.stores.currentDomain);
 
     const [product, setProduct] = useState<ProductItem | null>(null);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
@@ -156,7 +162,14 @@ export default function PrintProductDetails({ params, definition }: PrintProduct
     const handleSubmitPayment = () => {
         if (!product) return;
 
-        dispatch(actionsAssets.actions.payment({ assetId: params.assetId, productId: product.productId }));
+        dispatch(
+            actionsAssets.actions.payment({
+                assetId: params.assetId,
+                productId: product.productId,
+                storesId: !!isValidSubdomain && !!subdomain ? storesId : null,
+                curatorId,
+            })
+        );
     };
 
     const merchandiseFee = useMemo(() => (!product ? 0 : (product.price / 100) * 1.2), [product]);
@@ -206,32 +219,37 @@ export default function PrintProductDetails({ params, definition }: PrintProduct
                         <Typography fontWeight="600" variant="h2">
                             {product.title}
                         </Typography>
+                        <Box
+                            display={'flex'}
+                            flexDirection={'column'}
+                            alignItems={'center'}
+                            width="100%"
+                            maxWidth={700}
+                        >
+                            <Box bgcolor="rgba(0,0,0,0.6)" width="100%" p={3} mt={4}>
+                                <PriceInfo title="Artwork License:" price={artworkLicense} />
+                                <PriceInfo title="Merchandise Fee:" price={merchandiseFee} />
+                                <PriceInfo title="Platform Fee:" price={platformFee} />
+                                <PriceInfo title="Shipping:" price={shipping} mb={4} />
+                                <PriceInfo
+                                    title="Total:"
+                                    price={artworkLicense + merchandiseFee + platformFee + shipping}
+                                />
+                            </Box>
 
-                        <Box bgcolor="rgba(0,0,0,0.6)" width="100%" maxWidth={700} p={3} mt={2}>
-                            <PriceInfo title="Artwork License:" price={artworkLicense} />
-                            <PriceInfo title="Merchandise Fee:" price={merchandiseFee} />
-                            <PriceInfo title="Platform Fee:" price={platformFee} />
-                            <PriceInfo title="Shipping:" price={shipping} mb={4} />
-                            <PriceInfo
-                                title="Total:"
-                                price={artworkLicense + merchandiseFee + platformFee + shipping}
-                            />
-                        </Box>
-
-                        <Grid container spacing={2} mt={3}>
-                            <Grid item xs={12} lg={4} md={6}>
+                            <Box width="50%" mt={4}>
                                 <Button
                                     color="primary"
                                     size="large"
                                     fullWidth
                                     variant="contained"
                                     onClick={handleSubmitPayment}
-                                    style={{ fontSize: 17 }}
+                                    style={{ fontSize: 32 }}
                                 >
                                     Buy Now
                                 </Button>
-                            </Grid>
-                        </Grid>
+                            </Box>
+                        </Box>
 
                         <HTMLRenderer html={description || ''} />
                     </Grid>

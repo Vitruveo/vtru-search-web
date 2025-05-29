@@ -1,6 +1,7 @@
 import { API_BASE_URL } from '@/constants/api';
 import { Products } from '../../../../../types';
 import PrintProductDetails from './Component';
+import cookie from 'cookiejs';
 
 interface ProductsLayoutProps {
     params: {
@@ -25,5 +26,21 @@ export default async function ProductsServer({ params }: ProductsLayoutProps) {
     const definition =
         definitions[asset?.data?.formats?.original?.definition as keyof typeof definitions] || 'vertical';
 
-    return <PrintProductDetails params={params} definition={definition} />;
+    let curatorId = '';
+
+    const grid = cookie.get('grid');
+    if (grid) {
+        const gridRaw = await fetch(`${API_BASE_URL}/assets/public/grid/${grid}`);
+        const gridData = await gridRaw.json();
+        curatorId = gridData?.data?.grid?._id;
+    }
+
+    const video = cookie.get('video');
+    if (video) {
+        const videoRaw = await fetch(`${API_BASE_URL}/assets/public/video/${video}`);
+        const videoData = await videoRaw.json();
+        curatorId = videoData?.data?.video?._id;
+    }
+
+    return <PrintProductDetails params={params} definition={definition} curatorId={curatorId} />;
 }
