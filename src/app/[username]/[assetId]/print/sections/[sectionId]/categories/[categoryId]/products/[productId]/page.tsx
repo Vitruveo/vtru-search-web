@@ -1,7 +1,7 @@
+import { cookies } from 'next/headers';
 import { API_BASE_URL } from '@/constants/api';
 import { Products } from '../../../../../types';
 import PrintProductDetails from './Component';
-import cookie from 'cookiejs';
 
 interface ProductsLayoutProps {
     params: {
@@ -28,14 +28,14 @@ export default async function ProductsServer({ params }: ProductsLayoutProps) {
 
     let curatorId = '';
 
-    const grid = cookie.get('grid');
+    const grid = cookies().get('grid')?.value;
     if (grid) {
         const gridRaw = await fetch(`${API_BASE_URL}/assets/public/grid/${grid}`);
         const gridData = await gridRaw.json();
         curatorId = gridData?.data?.grid?._id;
     }
 
-    const video = cookie.get('video');
+    const video = cookies().get('video')?.value;
     if (video) {
         const videoRaw = await fetch(`${API_BASE_URL}/assets/public/video/${video}`);
         const videoData = await videoRaw.json();

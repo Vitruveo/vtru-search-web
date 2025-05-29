@@ -7,14 +7,13 @@ import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 import ProductCarousel from '@/app/components/Store/components/PanelMint/PrintLicense/ecommerce/productDetail/ProductCarousel';
 import { Breadcrumb } from '@/app/components/Breadcrumb';
 import { Catalog, ProductItem, Products } from '../../../../../types';
-import { API_BASE_URL, CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
 import { Asset } from '@/features/assets/types';
 import { getProductsImages, getProductsPlaceholders } from '../../../../../utils';
 import * as actionsAssets from '@/features/assets/slice';
 import { useSelector } from '@/store/hooks';
 import { useDomainContext } from '@/app/context/domain';
-import cookie from 'cookiejs';
 
 interface BreadCrumbIParams {
     segment: string;
@@ -111,16 +110,11 @@ export default function PrintProductDetails({ params, definition, curatorId }: P
 
     useEffect(() => {
         const fetchProduct = async () => {
-            const [catalogResponse, productsResponse] = await Promise.all([
-                fetch(CATALOG_BASE_URL),
-                fetch(PRODUCTS_BASE_URL),
-            ]);
-
+            const catalogResponse = await fetch(CATALOG_BASE_URL);
             const catalogData: Catalog = await catalogResponse.json();
-            const productsAll: Products = await productsResponse.json();
-            const products = productsAll[definition] || {};
-
             setCatalog(catalogData);
+
+            const products = catalogData.products[definition] || {};
 
             const imagesPlaceholders = getProductsPlaceholders({ products: products });
 

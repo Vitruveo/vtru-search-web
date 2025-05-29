@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import { API_BASE_URL, CATALOG_BASE_URL, PRODUCTS_BASE_URL, SEARCH_BASE_URL, STUDIO_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, CATALOG_BASE_URL, SEARCH_BASE_URL, STUDIO_BASE_URL } from '@/constants/api';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
-import { Catalog, ProductItem, Products } from '../[assetId]/print/sections/types';
+import { Catalog, Products } from '../[assetId]/print/sections/types';
 import { Box, Typography } from '@mui/material';
 import Link from 'next/link';
 import { IconLink } from '@tabler/icons-react';
@@ -41,9 +41,6 @@ export default async function AssetGo({ params }: AssetGoProps) {
     const catalogRaw = await fetch(CATALOG_BASE_URL);
     const catalog: Catalog = await catalogRaw.json();
 
-    const productsRaw = await fetch(PRODUCTS_BASE_URL);
-    const products: Products = await productsRaw.json();
-
     const assetRaw = await fetch(`${API_BASE_URL}/assets/store/${assetId}`);
     const asset = (await assetRaw.json()).data;
     const definition = definitions[asset?.formats?.original?.definition as keyof typeof definitions] || 'vertical';
@@ -57,7 +54,7 @@ export default async function AssetGo({ params }: AssetGoProps) {
                         label: matchedCategory?.title || '',
                         value: matchedCategory?.categoryId || '',
                     },
-                    quantity: products[definition].reduce((acc, cur) => {
+                    quantity: catalog.products[definition].reduce((acc, cur) => {
                         if (category === cur.categoryId) {
                             return acc + 1;
                         }

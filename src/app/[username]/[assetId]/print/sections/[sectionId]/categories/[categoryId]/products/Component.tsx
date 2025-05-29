@@ -6,7 +6,7 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Catalog, ProductItem, Products } from '../../../../types';
-import { API_BASE_URL, CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
 import { getProductsImages, getProductsPlaceholders } from '../../../../utils';
 import { Asset } from '@/features/assets/types';
@@ -59,16 +59,12 @@ export default function PrintProducts({ params, definition }: PrintProductsProps
 
     useEffect(() => {
         const fetchData = async () => {
-            const [catalogResponse, productsResponse] = await Promise.all([
-                fetch(CATALOG_BASE_URL),
-                fetch(PRODUCTS_BASE_URL),
-            ]);
+            const catalogResponse = await fetch(CATALOG_BASE_URL);
 
             const catalogData: Catalog = await catalogResponse.json();
             setCatalog(catalogData);
-            const productsAll: Products = await productsResponse.json();
 
-            const products: ProductItem[] = (productsAll[definition] || []).filter(
+            const products: ProductItem[] = (catalog?.products[definition] || []).filter(
                 (item: ProductItem) => item.categoryId === params.categoryId
             );
 

@@ -6,7 +6,7 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Catalog, ProductItem, Products, Sections } from '../../types';
-import { CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
+import { CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
 import { getProductsImages, getProductsPlaceholders } from '../../utils';
 
 interface CardItemProps {
@@ -93,14 +93,9 @@ export function PrintCategories({ params, definition }: PrintCategoriesProps) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [catalogResponse, productsResponse] = await Promise.all([
-                    fetch(CATALOG_BASE_URL),
-                    fetch(PRODUCTS_BASE_URL),
-                ]);
-
+                const catalogResponse = await fetch(CATALOG_BASE_URL);
                 const catalog: Catalog = await catalogResponse.json();
-                const productsAll: Products = await productsResponse.json();
-                const products = productsAll[definition] || [];
+                const products = catalog.products[definition] || [];
 
                 const productsQuantityPerCategory = products.reduce((acc, product) => {
                     acc[product.categoryId] = (acc[product.categoryId] || 0) + 1;
@@ -160,6 +155,7 @@ export function PrintCategories({ params, definition }: PrintCategoriesProps) {
                     categories.map((item) => {
                         return !productsQuantity[item.categoryId] ? (
                             <CardItem
+                                key={item.categoryId}
                                 img={item.src}
                                 title={item.title}
                                 count={productsQuantity[item.categoryId] || 0}
