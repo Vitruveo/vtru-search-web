@@ -2,7 +2,15 @@ import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Catalog, Products } from './types';
-import { API_BASE_URL, CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
+import {
+    API_BASE_URL,
+    CATALOG_ASSETS_BASE_URL,
+    CATALOG_BASE_URL,
+    SEARCH_BASE_URL,
+    STUDIO_BASE_URL,
+} from '@/constants/api';
+import { ASSET_STORAGE_URL } from '@/constants/aws';
+import { IconLink } from '@tabler/icons-react';
 
 interface CardItemProps {
     title: string;
@@ -46,6 +54,8 @@ const definitions: Record<string, keyof Products> = {
     landscape: 'horizontal',
     square: 'square',
 };
+
+const mainColor = '#ff0066';
 
 export default async function PrintSections({ params }: PrintSectionsProps) {
     const catalogRequest = await fetch(CATALOG_BASE_URL);
@@ -92,7 +102,27 @@ export default async function PrintSections({ params }: PrintSectionsProps) {
                 Print License
             </Typography>
 
-            <Box display="flex" flexWrap="wrap" justifyContent="center" gap={4} width="100%">
+            <Box display="flex" flexWrap="wrap" justifyContent="center" gap={16} width="100%">
+                <Box display={'flex'} flexDirection={'column'} gap={4} alignItems={'center'}>
+                    <Typography variant="h1" color={mainColor} fontWeight={700}>
+                        SOUL Print License
+                    </Typography>
+                    <Image
+                        src={`${ASSET_STORAGE_URL}/${asset.data.formats.preview.path}`}
+                        height={230}
+                        width={230}
+                        alt={`asset ${asset.data.assetMetadata.context.formData.title}`}
+                    />
+                    <Link href={`${SEARCH_BASE_URL}/${asset.data.creator.username}/${asset.data._id}`}>
+                        <Box display={'flex'} alignItems="center" gap={1}>
+                            <IconLink color={mainColor} size={20} />
+                            <Typography variant="h6" color={mainColor}>
+                                View Artwork
+                            </Typography>
+                        </Box>
+                    </Link>
+                </Box>
+
                 {sections.map((item) => {
                     return (
                         productsBySection[item.sectionId].countAll > 0 && (
@@ -110,6 +140,32 @@ export default async function PrintSections({ params }: PrintSectionsProps) {
                     );
                 })}
             </Box>
+            <Box sx={{ flexGrow: 1 }} />
+            <footer>
+                <Box display={'flex'} justifyContent={'center'} gap={2} bottom={0} left={0} width={'100%'}>
+                    <Link href={'https://about.xibit.app'}>
+                        <Box display={'flex'} alignItems="center" gap={1}>
+                            <Image
+                                src={'/images/icons/xibit-icon-redondo-litemode.png'}
+                                alt="logo"
+                                height={22}
+                                width={22}
+                            />
+                            <Typography variant="subtitle1" color={mainColor}>
+                                About Xibit
+                            </Typography>
+                        </Box>
+                    </Link>
+                    <Link href={`${STUDIO_BASE_URL}/home`}>
+                        <Box display={'flex'} alignItems="center" gap={1}>
+                            <IconLink color={mainColor} size={20} />
+                            <Typography variant="subtitle1" color={mainColor}>
+                                Xibit Studio
+                            </Typography>
+                        </Box>
+                    </Link>
+                </Box>
+            </footer>
         </Box>
     );
 }

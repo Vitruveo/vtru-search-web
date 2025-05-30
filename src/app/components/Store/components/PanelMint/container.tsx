@@ -346,7 +346,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     };
 
     const handleRedirectToPrint = () => {
-        window.location.href = `${SEARCH_BASE_URL}/${asset._id}/go`;
+        window.location.href = `${SEARCH_BASE_URL}/${creatorName}/${asset._id}/print/sections`;
     };
 
     const handleAccordionChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
