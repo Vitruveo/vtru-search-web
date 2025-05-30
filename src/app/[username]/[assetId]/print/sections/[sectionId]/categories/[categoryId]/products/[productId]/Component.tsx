@@ -231,7 +231,7 @@ export default function PrintProductDetails({ params, definition, curatorId }: P
                                 />
                             </Box>
 
-                            <Box width="50%" mt={4}>
+                            <Box width="50%" mt={4} mb={2}>
                                 <Button
                                     color="primary"
                                     size="large"
