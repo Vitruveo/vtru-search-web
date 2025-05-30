@@ -1,8 +1,8 @@
 import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Catalog } from './types';
-import { CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
+import { Catalog, Products } from './types';
+import { API_BASE_URL, CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
 
 interface CardItemProps {
     title: string;
@@ -12,11 +12,8 @@ interface CardItemProps {
 
 const CardItem = ({ title, count, image }: CardItemProps) => {
     return (
-        <Box
-            position="relative"
-            sx={count === 0 ? { filter: 'grayscale(1)', '&:hover': { cursor: 'not-allowed' } } : {}}
-        >
-            <Image src={`${CATALOG_ASSETS_BASE_URL}/${image}`} alt="No image" width={300} height={300} />
+        <Box position="relative">
+            <Image src={`${CATALOG_ASSETS_BASE_URL}/${image}`} alt="No image" width={300} height={300} priority />
             <Box
                 sx={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
                 bgcolor="gray"
@@ -44,11 +41,37 @@ interface PrintSectionsProps {
     };
 }
 
+const definitions: Record<string, keyof Products> = {
+    portrait: 'vertical',
+    landscape: 'horizontal',
+    square: 'square',
+};
+
 export default async function PrintSections({ params }: PrintSectionsProps) {
     const catalogRequest = await fetch(CATALOG_BASE_URL);
     const catalog: Catalog = await catalogRequest.json();
 
+    const assetRaw = await fetch(`${API_BASE_URL}/assets/store/${params.assetId}`);
+    const asset = await assetRaw.json();
+    const definition = definitions[asset?.data?.formats?.original?.definition] || 'vertical';
+
     const sections = catalog.sections;
+    const products = catalog.products[definition] || [];
+
+    const productsBySection = sections.reduce((acc: Record<string, any>, section) => {
+        acc[section.sectionId] = section.categories.reduce((catAcc: Record<string, any>, category) => {
+            catAcc[category] = {
+                count: products.reduce((prodAcc, prod) => {
+                    if (prod.categoryId === category) prodAcc++;
+                    else prodAcc = 0;
+                    return prodAcc;
+                }, 0),
+            };
+            catAcc['countAll'] = Object.values(catAcc).reduce((sum, value) => sum + (value.count || 0), 0);
+            return catAcc;
+        }, {});
+        return acc;
+    }, {});
 
     return (
         <Box
@@ -71,15 +94,19 @@ export default async function PrintSections({ params }: PrintSectionsProps) {
 
             <Box display="flex" flexWrap="wrap" justifyContent="center" gap={4} width="100%">
                 {sections.map((item) => {
-                    return item.categories.length === 0 ? (
-                        <CardItem title={item.title} count={item.categories.length} image={item.images.preview} />
-                    ) : (
-                        <Link
-                            key={item.sectionId}
-                            href={`/${params.username}/${params.assetId}/print/sections/${item.sectionId}/categories`}
-                        >
-                            <CardItem title={item.title} count={item.categories.length} image={item.images.preview} />
-                        </Link>
+                    return (
+                        productsBySection[item.sectionId].countAll > 0 && (
+                            <Link
+                                key={item.sectionId}
+                                href={`/${params.username}/${params.assetId}/print/sections/${item.sectionId}/categories`}
+                            >
+                                <CardItem
+                                    title={item.title}
+                                    count={productsBySection[item.sectionId].countAll}
+                                    image={item.images.preview}
+                                />
+                            </Link>
+                        )
                     );
                 })}
             </Box>
