@@ -59,36 +59,42 @@ export default function PrintProducts({ params, definition }: PrintProductsProps
     const [asset, setAsset] = useState<Asset | null>(null);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchCatalog = async () => {
             const catalogResponse = await axios.get(CATALOG_BASE_URL);
-
-            const catalogData: Catalog = catalogResponse.data;
-
-            setCatalog(catalogData);
-
-            const products: ProductItem[] = (catalog?.products[definition] || []).filter(
-                (item: ProductItem) => item.categoryId === params.categoryId
-            );
-
-            const imagesPlaceholders = getProductsPlaceholders({ products });
-
-            setProductsImgs(imagesPlaceholders);
-
-            const images = await getProductsImages({ assetId: params.assetId, products, onlyFirst: true });
-
-            setProductsImgs(images);
+            setCatalog(catalogResponse.data);
         };
 
         const fetchAsset = async () => {
             const assetRequest = await axios.get(`${API_BASE_URL}/assets/store/${params.assetId}`);
             const data: { data: Asset } = assetRequest.data;
-
             setAsset(data.data);
         };
 
+        fetchCatalog();
         fetchAsset();
-        fetchData();
     }, [params]);
+
+    useEffect(() => {
+        if (!catalog) return;
+
+        const fetchProductImages = async () => {
+            const products: ProductItem[] = (catalog.products[definition] || []).filter(
+                (item: ProductItem) => item.categoryId === params.categoryId
+            );
+
+            const imagesPlaceholders = getProductsPlaceholders({ products });
+            setProductsImgs(imagesPlaceholders);
+
+            const images = await getProductsImages({
+                assetId: params.assetId,
+                products,
+                onlyFirst: true,
+            });
+            setProductsImgs(images);
+        };
+
+        fetchProductImages();
+    }, [catalog, definition, params]);
 
     const section = useMemo(
         () => catalog?.sections.find((item) => item.sectionId === params.sectionId),
