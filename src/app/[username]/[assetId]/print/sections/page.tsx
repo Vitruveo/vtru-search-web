@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { Catalog, Products } from './types';
 import { API_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
 import { PrintSectionComponent } from './Component';
@@ -16,11 +17,11 @@ const definitions: Record<string, keyof Products> = {
 };
 
 export default async function PrintSections({ params }: PrintSectionsProps) {
-    const catalogRequest = await fetch(CATALOG_BASE_URL);
-    const catalog: Catalog = await catalogRequest.json();
+    const catalogRequest = await axios.get(CATALOG_BASE_URL);
+    const catalog: Catalog = catalogRequest.data;
 
-    const assetRaw = await fetch(`${API_BASE_URL}/assets/store/${params.assetId}`);
-    const asset = await assetRaw.json();
+    const assetRaw = await axios.get(`${API_BASE_URL}/assets/store/${params.assetId}`);
+    const asset = assetRaw.data;
     const definition = definitions[asset?.data?.formats?.original?.definition] || 'vertical';
 
     const sections = catalog.sections;

@@ -10,6 +10,7 @@ import { API_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
 import { getProductsImages, getProductsPlaceholders } from '../../../../utils';
 import { Asset } from '@/features/assets/types';
+import axios from 'axios';
 
 interface CardItemProps {
     title: string;
@@ -59,9 +60,10 @@ export default function PrintProducts({ params, definition }: PrintProductsProps
 
     useEffect(() => {
         const fetchData = async () => {
-            const catalogResponse = await fetch(CATALOG_BASE_URL);
+            const catalogResponse = await axios.get(CATALOG_BASE_URL);
 
-            const catalogData: Catalog = await catalogResponse.json();
+            const catalogData: Catalog = catalogResponse.data;
+
             setCatalog(catalogData);
 
             const products: ProductItem[] = (catalog?.products[definition] || []).filter(
@@ -78,8 +80,8 @@ export default function PrintProducts({ params, definition }: PrintProductsProps
         };
 
         const fetchAsset = async () => {
-            const assetRequest = await fetch(`${API_BASE_URL}/assets/store/${params.assetId}`);
-            const data: { data: Asset } = await assetRequest.json();
+            const assetRequest = await axios.get(`${API_BASE_URL}/assets/store/${params.assetId}`);
+            const data: { data: Asset } = assetRequest.data;
 
             setAsset(data.data);
         };

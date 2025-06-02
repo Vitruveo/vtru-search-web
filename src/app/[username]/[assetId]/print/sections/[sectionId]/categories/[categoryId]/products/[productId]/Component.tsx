@@ -83,7 +83,7 @@ interface PrintProductProps {
 export default function PrintProductDetails({ params, definition, stackId }: PrintProductProps) {
     const dispatch = useDispatch();
     const { subdomain, isValidSubdomain } = useDomainContext();
-    const { _id: storesId } = useSelector((state) => state.stores.currentDomain);
+    const { _id: folioId } = useSelector((state) => state.stores.currentDomain);
 
     const [product, setProduct] = useState<ProductItem | null>(null);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
@@ -160,7 +160,7 @@ export default function PrintProductDetails({ params, definition, stackId }: Pri
             actionsAssets.actions.payment({
                 assetId: params.assetId,
                 productId: product.productId,
-                storesId: !!isValidSubdomain && !!subdomain ? storesId : null,
+                folioId: !!isValidSubdomain && !!subdomain ? folioId : null,
                 stackId,
             })
         );
@@ -241,6 +241,23 @@ export default function PrintProductDetails({ params, definition, stackId }: Pri
                                     style={{ fontSize: 32 }}
                                 >
                                     Buy Now
+                                </Button>
+                                <Button
+                                    color="primary"
+                                    size="large"
+                                    fullWidth
+                                    variant="contained"
+                                    onClick={() =>
+                                        console.log('teste: ', {
+                                            assetId: params.assetId,
+                                            productId: product.productId,
+                                            folioId: !!isValidSubdomain && !!subdomain ? folioId : null,
+                                            stackId,
+                                        })
+                                    }
+                                    style={{ fontSize: 32 }}
+                                >
+                                    TEste
                                 </Button>
                             </Box>
                         </Box>

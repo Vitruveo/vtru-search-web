@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { API_BASE_URL } from '@/constants/api';
 import { PrintCategories } from './Component';
 import { Products } from '../../types';
@@ -13,8 +14,8 @@ const definitions: Record<string, keyof Products> = {
 };
 
 export default async function CategoriesServer({ params }: CategoriesLayoutProps) {
-    const assetRaw = await fetch(`${API_BASE_URL}/assets/store/${params.assetId}`);
-    const asset = await assetRaw.json();
+    const assetRaw = await axios.get(`${API_BASE_URL}/assets/store/${params.assetId}`);
+    const asset = await assetRaw.data;
 
     const definition =
         definitions[asset?.data?.formats?.original?.definition as keyof typeof definitions] || 'vertical';

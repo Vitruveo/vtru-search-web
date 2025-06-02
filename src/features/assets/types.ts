@@ -336,6 +336,6 @@ export interface GenerateSlideshowParams {
 export interface PaymentParams {
     assetId: string;
     productId: string;
-    storesId?: string | null;
+    folioId?: string | null;
     stackId?: string | null;
 }

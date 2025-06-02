@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { redirect } from 'next/navigation';
 import { API_BASE_URL } from '@/constants/api';
 
@@ -11,16 +12,16 @@ interface SectionLayoutProps {
 
 const getData = async (assetId: string) => {
     try {
-        const assetRaw = await fetch(`${API_BASE_URL}/assets/store/${assetId}`);
-        return (await assetRaw.json()).data;
+        const assetRaw = await axios.get(`${API_BASE_URL}/assets/store/${assetId}`);
+        return assetRaw.data.data;
     } catch (error) {
         return null;
     }
 };
 const getSetupPrintLicense = async () => {
     try {
-        const setupPrintLicenseRaw = await fetch(`${API_BASE_URL}/setup/print-license`);
-        return (await setupPrintLicenseRaw.json()).data;
+        const setupPrintLicenseRaw = await axios.get(`${API_BASE_URL}/setup/print-license`);
+        return setupPrintLicenseRaw.data.data;
     } catch (error) {
         return null;
     }

@@ -802,7 +802,7 @@ function* setup() {
 
 function* payment(action: PayloadAction<PaymentParams>) {
     try {
-        const { assetId, productId, stackId, storesId } = action.payload;
+        const { assetId, productId, stackId, folioId } = action.payload;
 
         const response: AxiosResponse<APIResponse<string>> = yield call(
             axios.post,
@@ -810,7 +810,7 @@ function* payment(action: PayloadAction<PaymentParams>) {
             {
                 assetId,
                 productId,
-                storesId,
+                folioId,
                 stackId,
             }
         );
