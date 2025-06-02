@@ -77,10 +77,10 @@ interface PrintProductProps {
         productId: string;
     };
     definition: keyof Products;
-    curatorId?: string;
+    stackId?: string;
 }
 
-export default function PrintProductDetails({ params, definition, curatorId }: PrintProductProps) {
+export default function PrintProductDetails({ params, definition, stackId }: PrintProductProps) {
     const dispatch = useDispatch();
     const { subdomain, isValidSubdomain } = useDomainContext();
     const { _id: storesId } = useSelector((state) => state.stores.currentDomain);
@@ -161,7 +161,7 @@ export default function PrintProductDetails({ params, definition, curatorId }: P
                 assetId: params.assetId,
                 productId: product.productId,
                 storesId: !!isValidSubdomain && !!subdomain ? storesId : null,
-                curatorId,
+                stackId,
             })
         );
     };

@@ -337,5 +337,5 @@ export interface PaymentParams {
     assetId: string;
     productId: string;
     storesId?: string | null;
-    curatorId?: string | null;
+    stackId?: string | null;
 }

@@ -26,21 +26,17 @@ export default async function ProductsServer({ params }: ProductsLayoutProps) {
     const definition =
         definitions[asset?.data?.formats?.original?.definition as keyof typeof definitions] || 'vertical';
 
-    let curatorId = '';
+    let stackId = '';
 
     const grid = cookies().get('grid')?.value;
     if (grid) {
-        const gridRaw = await fetch(`${API_BASE_URL}/assets/public/grid/${grid}`);
-        const gridData = await gridRaw.json();
-        curatorId = gridData?.data?.grid?._id;
+        stackId = grid;
     }
 
     const video = cookies().get('video')?.value;
     if (video) {
-        const videoRaw = await fetch(`${API_BASE_URL}/assets/public/video/${video}`);
-        const videoData = await videoRaw.json();
-        curatorId = videoData?.data?.video?._id;
+        stackId = video;
     }
 
-    return <PrintProductDetails params={params} definition={definition} curatorId={curatorId} />;
+    return <PrintProductDetails params={params} definition={definition} stackId={stackId} />;
 }
