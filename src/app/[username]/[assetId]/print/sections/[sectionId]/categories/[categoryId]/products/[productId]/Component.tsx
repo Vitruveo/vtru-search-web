@@ -242,23 +242,6 @@ export default function PrintProductDetails({ params, definition, stackId }: Pri
                                 >
                                     Buy Now
                                 </Button>
-                                <Button
-                                    color="primary"
-                                    size="large"
-                                    fullWidth
-                                    variant="contained"
-                                    onClick={() =>
-                                        console.log('teste: ', {
-                                            assetId: params.assetId,
-                                            productId: product.productId,
-                                            folioId: !!isValidSubdomain && !!subdomain ? folioId : null,
-                                            stackId,
-                                        })
-                                    }
-                                    style={{ fontSize: 32 }}
-                                >
-                                    TEste
-                                </Button>
                             </Box>
                         </Box>
 
