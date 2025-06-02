@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { Breadcrumb } from '@/app/components/Breadcrumb';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography, useMediaQuery } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Catalog, ProductItem, Products, Sections } from '../../types';
 import { CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
 import { getProductsImages, getProductsPlaceholders } from '../../utils';
+import { ASSET_STORAGE_URL } from '@/constants/aws';
 
 interface CardItemProps {
     title: string;
@@ -65,9 +66,11 @@ interface PrintCategoriesProps {
         sectionId: string;
     };
     definition: keyof Products;
+    previewPath: string;
 }
 
-export function PrintCategories({ params, definition }: PrintCategoriesProps) {
+export function PrintCategories({ params, definition, previewPath }: PrintCategoriesProps) {
+    const isMobile = useMediaQuery('(max-width: 900px)');
     const [categories, setCategories] = useState<{ src?: string; categoryId: string; title: string }[]>([]);
     const [section, setSection] = useState<Sections | null>(null);
     const [productsQuantity, setProductsQuantity] = useState<{ [key: string]: number }>({});
@@ -147,7 +150,21 @@ export function PrintCategories({ params, definition }: PrintCategoriesProps) {
                 params={params}
             />
 
-            <Box display="flex" flexWrap="wrap" justifyContent="center" gap={4} width="100%">
+            <Box
+                display="flex"
+                flexWrap="wrap"
+                justifyContent={isMobile ? 'center' : 'start'}
+                gap={isMobile ? 4 : 16}
+                marginInline={isMobile ? 0 : 15}
+            >
+                <Box display={'flex'} flexDirection={'column'} gap={4} alignItems={'center'}>
+                    <Image
+                        src={`${ASSET_STORAGE_URL}/${previewPath}`}
+                        height={isMobile ? 310 : 450}
+                        width={isMobile ? 310 : 450}
+                        alt={`asset ${params.assetId}`}
+                    />
+                </Box>
                 {categories.length ? (
                     categories.map((item) => {
                         return (

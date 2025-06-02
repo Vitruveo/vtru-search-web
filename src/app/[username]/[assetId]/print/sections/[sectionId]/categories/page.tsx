@@ -19,6 +19,7 @@ export default async function CategoriesServer({ params }: CategoriesLayoutProps
 
     const definition =
         definitions[asset?.data?.formats?.original?.definition as keyof typeof definitions] || 'vertical';
+    const assetPreviewPath = asset?.data?.formats?.preview?.path || '';
 
-    return <PrintCategories params={params} definition={definition} />;
+    return <PrintCategories params={params} definition={definition} previewPath={assetPreviewPath} />;
 }

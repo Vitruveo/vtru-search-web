@@ -1,5 +1,5 @@
 'use client';
-import { CATALOG_ASSETS_BASE_URL, SEARCH_BASE_URL, STUDIO_BASE_URL } from '@/constants/api';
+import { CATALOG_ASSETS_BASE_URL, STUDIO_BASE_URL } from '@/constants/api';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import { IconLink } from '@tabler/icons-react';
@@ -87,14 +87,6 @@ export const PrintSectionComponent = ({ data }: Props) => {
                         width={isMobile ? 310 : 450}
                         alt={`asset ${assetTitle}`}
                     />
-                    <Link href={`${SEARCH_BASE_URL}/${username}/${assetId}`}>
-                        <Box display={'flex'} alignItems="center" gap={1}>
-                            <IconLink color={mainColor} size={20} />
-                            <Typography variant="h6" color={mainColor}>
-                                View Artwork
-                            </Typography>
-                        </Box>
-                    </Link>
                 </Box>
 
                 {sections.map((item) => {
