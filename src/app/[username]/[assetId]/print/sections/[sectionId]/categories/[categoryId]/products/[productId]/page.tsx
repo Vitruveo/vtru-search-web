@@ -46,8 +46,8 @@ export default async function ProductsServer({ params }: ProductsLayoutProps) {
         stackId,
         stackType,
     });
-    const stackInfo = stackInfoRaw.data;
-    const stackFees = stackInfo.data.search.grid[0].fees || 0;
+    const stackInfo = stackInfoRaw?.data;
+    const stackFees = stackInfo?.data?.search?.grid[0]?.fees || 0;
 
     return <PrintProductDetails params={params} definition={definition} stackId={stackId} stackFees={stackFees} />;
 }
