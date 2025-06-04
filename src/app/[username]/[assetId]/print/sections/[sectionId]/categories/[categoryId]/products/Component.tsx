@@ -11,6 +11,8 @@ import { formatPrice } from '@/utils/assets';
 import { getProductsImages, getProductsPlaceholders } from '../../../../utils';
 import { Asset } from '@/features/assets/types';
 import axios from 'axios';
+import { useDomainContext } from '@/app/context/domain';
+import { useSelector } from '@/store/hooks';
 
 interface CardItemProps {
     title: string;
@@ -51,9 +53,12 @@ interface PrintProductsProps {
         categoryId: string;
     };
     definition: keyof Products;
+    stackFees?: number;
 }
 
-export default function PrintProducts({ params, definition }: PrintProductsProps) {
+export default function PrintProducts({ params, definition, stackFees }: PrintProductsProps) {
+    const { subdomain, isValidSubdomain } = useDomainContext();
+    const { organization } = useSelector((state) => state.stores.currentDomain);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
     const [productsImgs, setProductsImgs] = useState<ProductItem[]>([]);
     const [asset, setAsset] = useState<Asset | null>(null);
@@ -132,19 +137,24 @@ export default function PrintProducts({ params, definition }: PrintProductsProps
                 {productsImgs.length && asset && section ? (
                     productsImgs.map((item) => {
                         const artworkLicense = () => {
+                            const folioMarkup = subdomain && isValidSubdomain ? organization?.markup / 100 || 0 : 0;
+                            const stackMarkup = stackFees ? stackFees / 100 : 0;
+                            const comission = 1 + (folioMarkup + stackMarkup);
+
                             if (params.categoryId === 'mugs') {
-                                return asset.licenses.nft.single.editionPrice * section.priceMultiplier;
+                                return asset.licenses.print.merchandisePrice * comission;
                             }
 
                             if (params.categoryId === 'frames' || params.categoryId === 'posters') {
-                                return asset.licenses.nft.single.editionPrice * section.priceMultiplier * item.area;
+                                const discount = asset.licenses.print.multiplier / 100;
+                                return item.area * asset.licenses.print.displayPrice * discount * comission;
                             }
 
                             return 0;
                         };
 
                         const merchandiseFee = (item.price / 100) * 1.2;
-                        const platformFee = asset.licenses.nft.single.editionPrice * 0.02;
+                        const platformFee = artworkLicense() * 0.02;
                         const shipping = item.shipping / 100;
 
                         const total = artworkLicense() + merchandiseFee + platformFee + shipping;

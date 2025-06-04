@@ -22,22 +22,32 @@ const definitions: Record<string, keyof Products> = {
 
 export default async function ProductsServer({ params }: ProductsLayoutProps) {
     const assetRaw = await axios.get(`${API_BASE_URL}/assets/store/${params.assetId}`);
-    const asset = await assetRaw.data;
+    const asset = assetRaw.data;
 
     const definition =
         definitions[asset?.data?.formats?.original?.definition as keyof typeof definitions] || 'vertical';
 
     let stackId = '';
+    let stackType = '';
 
     const grid = cookies().get('grid')?.value;
     if (grid) {
         stackId = grid;
+        stackType = 'grid';
     }
 
     const video = cookies().get('video')?.value;
     if (video) {
         stackId = video;
+        stackType = 'video';
     }
 
-    return <PrintProductDetails params={params} definition={definition} stackId={stackId} />;
+    const stackInfoRaw = await axios.post(`${API_BASE_URL}/creators/public/stacks`, {
+        stackId,
+        stackType,
+    });
+    const stackInfo = stackInfoRaw.data;
+    const stackFees = stackInfo.data.search.grid[0].fees || 0;
+
+    return <PrintProductDetails params={params} definition={definition} stackId={stackId} stackFees={stackFees} />;
 }

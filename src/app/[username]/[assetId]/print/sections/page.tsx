@@ -31,8 +31,9 @@ export default async function PrintSections({ params }: PrintSectionsProps) {
         acc[section.sectionId] = section.categories.reduce((catAcc: Record<string, any>, category) => {
             catAcc[category] = {
                 count: products.reduce((prodAcc, prod) => {
-                    if (prod.categoryId === category) prodAcc++;
-                    else prodAcc = 0;
+                    if (prod.categoryId === category) {
+                        return prodAcc + 1;
+                    }
                     return prodAcc;
                 }, 0),
             };

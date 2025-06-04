@@ -63,9 +63,11 @@ export interface LicensesFormValues {
         added: boolean;
     };
     print: {
-        version: string;
         added: boolean;
-        unitPrice: number;
+        availableLicenses: number;
+        merchandisePrice: number;
+        displayPrice: number;
+        multiplier: number;
     };
     remix: {
         version: string;

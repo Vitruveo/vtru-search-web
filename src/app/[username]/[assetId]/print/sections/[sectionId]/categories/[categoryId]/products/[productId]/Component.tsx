@@ -78,12 +78,13 @@ interface PrintProductProps {
     };
     definition: keyof Products;
     stackId?: string;
+    stackFees?: number;
 }
 
-export default function PrintProductDetails({ params, definition, stackId }: PrintProductProps) {
+export default function PrintProductDetails({ params, definition, stackId, stackFees }: PrintProductProps) {
     const dispatch = useDispatch();
     const { subdomain, isValidSubdomain } = useDomainContext();
-    const { _id: folioId } = useSelector((state) => state.stores.currentDomain);
+    const { _id: folioId, organization } = useSelector((state) => state.stores.currentDomain);
 
     const [product, setProduct] = useState<ProductItem | null>(null);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
@@ -138,16 +139,22 @@ export default function PrintProductDetails({ params, definition, stackId }: Pri
 
     const artworkLicense = useMemo(() => {
         if (!asset || !product || !catalog) return 0;
+        console.log(asset);
 
         const section = catalog.sections.find((item) => item.sectionId === params.sectionId);
         if (!section) return 0;
 
+        const folioMarkup = subdomain && isValidSubdomain ? organization?.markup / 100 || 0 : 0;
+        const stackMarkup = stackFees ? stackFees / 100 : 0;
+        const comisssion = 1 + (folioMarkup + stackMarkup);
+
         if (params.categoryId === 'mugs') {
-            return asset.licenses.nft.single.editionPrice * section.priceMultiplier;
+            return asset.licenses.print.merchandisePrice * comisssion;
         }
 
         if (params.categoryId === 'frames' || params.categoryId === 'posters') {
-            return asset.licenses.nft.single.editionPrice * section.priceMultiplier * product.area;
+            const discount = asset.licenses.print.multiplier / 100;
+            return product.area * asset.licenses.print.displayPrice * discount * comisssion;
         }
 
         return 0;
@@ -167,7 +174,7 @@ export default function PrintProductDetails({ params, definition, stackId }: Pri
     };
 
     const merchandiseFee = useMemo(() => (!product ? 0 : (product.price / 100) * 1.2), [product]);
-    const platformFee = useMemo(() => (!asset ? 0 : asset.licenses.nft.single.editionPrice * 0.02), [asset]);
+    const platformFee = useMemo(() => artworkLicense * 0.02, [artworkLicense]);
     const shipping = useMemo(() => (!product ? 0 : product.shipping / 100), [product]);
 
     if (loadingProduct || loadingProductAsset) {
