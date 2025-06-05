@@ -17,6 +17,7 @@ import { EXPLORER_URL } from '@/constants/web3';
 import { API_BASE_URL, NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
 import { useSelector } from '@/store/hooks';
 import { useAssetLicenses } from '@/app/hooks/useAssetLicenses';
+import { useDomainContext } from '@/app/context/domain';
 import { getPriceWithMarkup } from '@/utils/assets';
 import { vitruveoMainnet, vitruveoTestnet } from '../../providers/wagmiProvider';
 
@@ -46,6 +47,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     const coockieGrid = cookie.get('grid') as string;
     const coockieVideo = cookie.get('video') as string;
     const searchParams = useSearchParams();
+    const { subdomain } = useDomainContext();
 
     const { isConnected, address, chain } = useAccount();
     const { data: client } = useConnectorClient();
@@ -346,7 +348,11 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     };
 
     const handleRedirectToPrint = () => {
-        window.location.href = `${SEARCH_BASE_URL}/${asset._id}/go`;
+        const url = new URL(subdomain && NODE_ENV === 'production' ? 'https://xibit.live' : SEARCH_BASE_URL);
+        if (subdomain) {
+            url.hostname = `${subdomain}.${url.hostname}`;
+        }
+        window.open(`${url.toString()}/${creatorName}/${asset?._id}/print/sections`);
     };
 
     const handleAccordionChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {

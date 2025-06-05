@@ -7,11 +7,13 @@ import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 import ProductCarousel from '@/app/components/Store/components/PanelMint/PrintLicense/ecommerce/productDetail/ProductCarousel';
 import { Breadcrumb } from '@/app/components/Breadcrumb';
 import { Catalog, ProductItem, Products } from '../../../../../types';
-import { API_BASE_URL, CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
 import { Asset } from '@/features/assets/types';
 import { getProductsImages, getProductsPlaceholders } from '../../../../../utils';
 import * as actionsAssets from '@/features/assets/slice';
+import { useSelector } from '@/store/hooks';
+import { useDomainContext } from '@/app/context/domain';
 
 interface BreadCrumbIParams {
     segment: string;
@@ -75,10 +77,14 @@ interface PrintProductProps {
         productId: string;
     };
     definition: keyof Products;
+    stackId?: string;
+    stackFees?: number;
 }
 
-export default function PrintProductDetails({ params, definition }: PrintProductProps) {
+export default function PrintProductDetails({ params, definition, stackId, stackFees }: PrintProductProps) {
     const dispatch = useDispatch();
+    const { subdomain, isValidSubdomain } = useDomainContext();
+    const { _id: folioId, organization } = useSelector((state) => state.stores.currentDomain);
 
     const [product, setProduct] = useState<ProductItem | null>(null);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
@@ -105,16 +111,11 @@ export default function PrintProductDetails({ params, definition }: PrintProduct
 
     useEffect(() => {
         const fetchProduct = async () => {
-            const [catalogResponse, productsResponse] = await Promise.all([
-                fetch(CATALOG_BASE_URL),
-                fetch(PRODUCTS_BASE_URL),
-            ]);
-
+            const catalogResponse = await fetch(CATALOG_BASE_URL);
             const catalogData: Catalog = await catalogResponse.json();
-            const productsAll: Products = await productsResponse.json();
-            const products = productsAll[definition] || {};
-
             setCatalog(catalogData);
+
+            const products = catalogData.products[definition] || {};
 
             const imagesPlaceholders = getProductsPlaceholders({ products: products });
 
@@ -138,16 +139,22 @@ export default function PrintProductDetails({ params, definition }: PrintProduct
 
     const artworkLicense = useMemo(() => {
         if (!asset || !product || !catalog) return 0;
+        console.log(asset);
 
         const section = catalog.sections.find((item) => item.sectionId === params.sectionId);
         if (!section) return 0;
 
+        const folioMarkup = subdomain && isValidSubdomain ? organization?.markup / 100 || 0 : 0;
+        const stackMarkup = stackFees ? stackFees / 100 : 0;
+        const comisssion = 1 + (folioMarkup + stackMarkup);
+
         if (params.categoryId === 'mugs') {
-            return asset.licenses.nft.single.editionPrice * section.priceMultiplier;
+            return asset.licenses.print.merchandisePrice * comisssion;
         }
 
         if (params.categoryId === 'frames' || params.categoryId === 'posters') {
-            return asset.licenses.nft.single.editionPrice * section.priceMultiplier * product.area;
+            const discount = asset.licenses.print.multiplier / 100;
+            return product.area * asset.licenses.print.displayPrice * discount * comisssion;
         }
 
         return 0;
@@ -156,11 +163,18 @@ export default function PrintProductDetails({ params, definition }: PrintProduct
     const handleSubmitPayment = () => {
         if (!product) return;
 
-        dispatch(actionsAssets.actions.payment({ assetId: params.assetId, productId: product.productId }));
+        dispatch(
+            actionsAssets.actions.payment({
+                assetId: params.assetId,
+                productId: product.productId,
+                folioId: !!isValidSubdomain && !!subdomain ? folioId : null,
+                stackId,
+            })
+        );
     };
 
     const merchandiseFee = useMemo(() => (!product ? 0 : (product.price / 100) * 1.2), [product]);
-    const platformFee = useMemo(() => (!asset ? 0 : asset.licenses.nft.single.editionPrice * 0.02), [asset]);
+    const platformFee = useMemo(() => artworkLicense * 0.02, [artworkLicense]);
     const shipping = useMemo(() => (!product ? 0 : product.shipping / 100), [product]);
 
     if (loadingProduct || loadingProductAsset) {
@@ -206,32 +220,37 @@ export default function PrintProductDetails({ params, definition }: PrintProduct
                         <Typography fontWeight="600" variant="h2">
                             {product.title}
                         </Typography>
+                        <Box
+                            display={'flex'}
+                            flexDirection={'column'}
+                            alignItems={'center'}
+                            width="100%"
+                            maxWidth={700}
+                        >
+                            <Box bgcolor="rgba(0,0,0,0.6)" width="100%" p={3} mt={4}>
+                                <PriceInfo title="Artwork License:" price={artworkLicense} />
+                                <PriceInfo title="Merchandise Fee:" price={merchandiseFee} />
+                                <PriceInfo title="Platform Fee:" price={platformFee} />
+                                <PriceInfo title="Shipping:" price={shipping} mb={4} />
+                                <PriceInfo
+                                    title="Total:"
+                                    price={artworkLicense + merchandiseFee + platformFee + shipping}
+                                />
+                            </Box>
 
-                        <Box bgcolor="rgba(0,0,0,0.6)" width="100%" maxWidth={700} p={3} mt={2}>
-                            <PriceInfo title="Artwork License:" price={artworkLicense} />
-                            <PriceInfo title="Merchandise Fee:" price={merchandiseFee} />
-                            <PriceInfo title="Platform Fee:" price={platformFee} />
-                            <PriceInfo title="Shipping:" price={shipping} mb={4} />
-                            <PriceInfo
-                                title="Total:"
-                                price={artworkLicense + merchandiseFee + platformFee + shipping}
-                            />
-                        </Box>
-
-                        <Grid container spacing={2} mt={3}>
-                            <Grid item xs={12} lg={4} md={6}>
+                            <Box width="50%" mt={4} mb={2}>
                                 <Button
                                     color="primary"
                                     size="large"
                                     fullWidth
                                     variant="contained"
                                     onClick={handleSubmitPayment}
-                                    style={{ fontSize: 17 }}
+                                    style={{ fontSize: 32 }}
                                 >
                                     Buy Now
                                 </Button>
-                            </Grid>
-                        </Grid>
+                            </Box>
+                        </Box>
 
                         <HTMLRenderer html={description || ''} />
                     </Grid>

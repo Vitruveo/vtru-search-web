@@ -19,6 +19,7 @@ export interface Category {
 export interface Catalog {
     sections: Sections[];
     categories: Category[];
+    products: Products;
 }
 
 export interface ProductItem {

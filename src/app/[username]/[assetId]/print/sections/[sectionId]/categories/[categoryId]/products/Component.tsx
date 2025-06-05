@@ -6,10 +6,13 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Catalog, ProductItem, Products } from '../../../../types';
-import { API_BASE_URL, CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
 import { getProductsImages, getProductsPlaceholders } from '../../../../utils';
 import { Asset } from '@/features/assets/types';
+import axios from 'axios';
+import { useDomainContext } from '@/app/context/domain';
+import { useSelector } from '@/store/hooks';
 
 interface CardItemProps {
     title: string;
@@ -50,47 +53,53 @@ interface PrintProductsProps {
         categoryId: string;
     };
     definition: keyof Products;
+    stackFees?: number;
 }
 
-export default function PrintProducts({ params, definition }: PrintProductsProps) {
+export default function PrintProducts({ params, definition, stackFees }: PrintProductsProps) {
+    const { subdomain, isValidSubdomain } = useDomainContext();
+    const { organization } = useSelector((state) => state.stores.currentDomain);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
     const [productsImgs, setProductsImgs] = useState<ProductItem[]>([]);
     const [asset, setAsset] = useState<Asset | null>(null);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const [catalogResponse, productsResponse] = await Promise.all([
-                fetch(CATALOG_BASE_URL),
-                fetch(PRODUCTS_BASE_URL),
-            ]);
+        const fetchCatalog = async () => {
+            const catalogResponse = await axios.get(CATALOG_BASE_URL);
+            setCatalog(catalogResponse.data);
+        };
 
-            const catalogData: Catalog = await catalogResponse.json();
-            setCatalog(catalogData);
-            const productsAll: Products = await productsResponse.json();
+        const fetchAsset = async () => {
+            const assetRequest = await axios.get(`${API_BASE_URL}/assets/store/${params.assetId}`);
+            const data: { data: Asset } = assetRequest.data;
+            setAsset(data.data);
+        };
 
-            const products: ProductItem[] = (productsAll[definition] || []).filter(
+        fetchCatalog();
+        fetchAsset();
+    }, [params]);
+
+    useEffect(() => {
+        if (!catalog) return;
+
+        const fetchProductImages = async () => {
+            const products: ProductItem[] = (catalog.products[definition] || []).filter(
                 (item: ProductItem) => item.categoryId === params.categoryId
             );
 
             const imagesPlaceholders = getProductsPlaceholders({ products });
-
             setProductsImgs(imagesPlaceholders);
 
-            const images = await getProductsImages({ assetId: params.assetId, products, onlyFirst: true });
-
+            const images = await getProductsImages({
+                assetId: params.assetId,
+                products,
+                onlyFirst: true,
+            });
             setProductsImgs(images);
         };
 
-        const fetchAsset = async () => {
-            const assetRequest = await fetch(`${API_BASE_URL}/assets/store/${params.assetId}`);
-            const data: { data: Asset } = await assetRequest.json();
-
-            setAsset(data.data);
-        };
-
-        fetchAsset();
-        fetchData();
-    }, [params]);
+        fetchProductImages();
+    }, [catalog, definition, params]);
 
     const section = useMemo(
         () => catalog?.sections.find((item) => item.sectionId === params.sectionId),
@@ -112,7 +121,7 @@ export default function PrintProducts({ params, definition }: PrintProductsProps
                 <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
             </Box>
 
-            <Typography variant="h4" fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
+            <Typography variant="h4" fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']} lineHeight={1}>
                 Print License
             </Typography>
 
@@ -128,19 +137,24 @@ export default function PrintProducts({ params, definition }: PrintProductsProps
                 {productsImgs.length && asset && section ? (
                     productsImgs.map((item) => {
                         const artworkLicense = () => {
+                            const folioMarkup = subdomain && isValidSubdomain ? organization?.markup / 100 || 0 : 0;
+                            const stackMarkup = stackFees ? stackFees / 100 : 0;
+                            const comission = 1 + (folioMarkup + stackMarkup);
+
                             if (params.categoryId === 'mugs') {
-                                return asset.licenses.nft.single.editionPrice * section.priceMultiplier;
+                                return asset.licenses.print.merchandisePrice * comission;
                             }
 
                             if (params.categoryId === 'frames' || params.categoryId === 'posters') {
-                                return asset.licenses.nft.single.editionPrice * section.priceMultiplier * item.area;
+                                const discount = asset.licenses.print.multiplier / 100;
+                                return item.area * asset.licenses.print.displayPrice * discount * comission;
                             }
 
                             return 0;
                         };
 
                         const merchandiseFee = (item.price / 100) * 1.2;
-                        const platformFee = asset.licenses.nft.single.editionPrice * 0.02;
+                        const platformFee = artworkLicense() * 0.02;
                         const shipping = item.shipping / 100;
 
                         const total = artworkLicense() + merchandiseFee + platformFee + shipping;

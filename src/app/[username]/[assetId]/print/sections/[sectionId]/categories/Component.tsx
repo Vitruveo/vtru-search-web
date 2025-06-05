@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { Breadcrumb } from '@/app/components/Breadcrumb';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography, useMediaQuery } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Catalog, ProductItem, Products, Sections } from '../../types';
-import { CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
+import { CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
 import { getProductsImages, getProductsPlaceholders } from '../../utils';
+import { ASSET_STORAGE_URL } from '@/constants/aws';
 
 interface CardItemProps {
     title: string;
@@ -17,10 +18,7 @@ interface CardItemProps {
 
 const CardItem = ({ title, count, img }: CardItemProps) => {
     return (
-        <Box
-            position="relative"
-            sx={count === 0 ? { filter: 'grayscale(1)', '&:hover': { cursor: 'not-allowed' } } : {}}
-        >
+        <Box position="relative">
             <Image
                 src={img || 'https://vitruveo-studio-production-general.s3.amazonaws.com/noImage.jpg'}
                 alt="No image"
@@ -68,9 +66,11 @@ interface PrintCategoriesProps {
         sectionId: string;
     };
     definition: keyof Products;
+    previewPath: string;
 }
 
-export function PrintCategories({ params, definition }: PrintCategoriesProps) {
+export function PrintCategories({ params, definition, previewPath }: PrintCategoriesProps) {
+    const isMobile = useMediaQuery('(max-width: 900px)');
     const [categories, setCategories] = useState<{ src?: string; categoryId: string; title: string }[]>([]);
     const [section, setSection] = useState<Sections | null>(null);
     const [productsQuantity, setProductsQuantity] = useState<{ [key: string]: number }>({});
@@ -93,14 +93,9 @@ export function PrintCategories({ params, definition }: PrintCategoriesProps) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [catalogResponse, productsResponse] = await Promise.all([
-                    fetch(CATALOG_BASE_URL),
-                    fetch(PRODUCTS_BASE_URL),
-                ]);
-
+                const catalogResponse = await fetch(CATALOG_BASE_URL);
                 const catalog: Catalog = await catalogResponse.json();
-                const productsAll: Products = await productsResponse.json();
-                const products = productsAll[definition] || [];
+                const products = catalog.products[definition] || [];
 
                 const productsQuantityPerCategory = products.reduce((acc, product) => {
                     acc[product.categoryId] = (acc[product.categoryId] || 0) + 1;
@@ -144,7 +139,7 @@ export function PrintCategories({ params, definition }: PrintCategoriesProps) {
                 <Image src={'/images/logos/XIBIT-logo_dark.png'} alt="logo" height={40} width={120} priority />
             </Box>
 
-            <Typography variant="h4" fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']}>
+            <Typography variant="h4" fontSize={['1.5rem', '1.75rem', '2rem', '2.5rem']} lineHeight={1}>
                 Print License
             </Typography>
 
@@ -155,26 +150,36 @@ export function PrintCategories({ params, definition }: PrintCategoriesProps) {
                 params={params}
             />
 
-            <Box display="flex" flexWrap="wrap" justifyContent="center" gap={4} width="100%">
+            <Box
+                display="flex"
+                flexWrap="wrap"
+                justifyContent={isMobile ? 'center' : 'start'}
+                gap={isMobile ? 4 : 16}
+                marginInline={isMobile ? 0 : 15}
+            >
+                <Box display={'flex'} flexDirection={'column'} gap={4} alignItems={'center'}>
+                    <Image
+                        src={`${ASSET_STORAGE_URL}/${previewPath}`}
+                        height={isMobile ? 310 : 450}
+                        width={isMobile ? 310 : 450}
+                        alt={`asset ${params.assetId}`}
+                    />
+                </Box>
                 {categories.length ? (
                     categories.map((item) => {
-                        return !productsQuantity[item.categoryId] ? (
-                            <CardItem
-                                img={item.src}
-                                title={item.title}
-                                count={productsQuantity[item.categoryId] || 0}
-                            />
-                        ) : (
-                            <Link
-                                key={item.categoryId}
-                                href={`/${params.username}/${params.assetId}/print/sections/${params.sectionId}/categories/${item.categoryId}/products`}
-                            >
-                                <CardItem
-                                    img={item.src}
-                                    title={item.title}
-                                    count={productsQuantity[item.categoryId] || 0}
-                                />
-                            </Link>
+                        return (
+                            productsQuantity[item.categoryId] && (
+                                <Link
+                                    key={item.categoryId}
+                                    href={`/${params.username}/${params.assetId}/print/sections/${params.sectionId}/categories/${item.categoryId}/products`}
+                                >
+                                    <CardItem
+                                        img={item.src}
+                                        title={item.title}
+                                        count={productsQuantity[item.categoryId] || 0}
+                                    />
+                                </Link>
+                            )
                         );
                     })
                 ) : (
