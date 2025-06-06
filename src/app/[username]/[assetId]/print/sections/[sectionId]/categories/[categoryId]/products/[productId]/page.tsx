@@ -49,5 +49,17 @@ export default async function ProductsServer({ params }: ProductsLayoutProps) {
     const stackInfo = stackInfoRaw?.data;
     const stackFees = stackInfo?.data?.search?.grid[0]?.fees || 0;
 
-    return <PrintProductDetails params={params} definition={definition} stackId={stackId} stackFees={stackFees} />;
+    const setupPrintLicenseRaw = await axios.get(`${API_BASE_URL}/setup/print-license`);
+    const setupPrintLicense = setupPrintLicenseRaw.data;
+    const discountedBasisPoints = setupPrintLicense?.data?.discountedBasisPoints || 0;
+
+    return (
+        <PrintProductDetails
+            params={params}
+            definition={definition}
+            stackId={stackId}
+            stackFees={stackFees}
+            discountedBasisPoints={discountedBasisPoints}
+        />
+    );
 }

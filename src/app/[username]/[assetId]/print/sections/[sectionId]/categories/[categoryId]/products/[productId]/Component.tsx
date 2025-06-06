@@ -51,14 +51,23 @@ interface PriceInfoProps {
     title: string;
     price: number;
     mb?: number;
+    strikethrough?: boolean;
 }
 
-const PriceInfo = ({ title, price, mb = 1 }: PriceInfoProps) => (
+const PriceInfo = ({ title, price, mb = 1, strikethrough = false }: PriceInfoProps) => (
     <Box display="flex" alignItems="center" justifyContent="space-between" mb={mb}>
-        <Typography variant="h4" fontWeight={600} style={{ fontSize: 22 }}>
+        <Typography
+            variant="h4"
+            fontWeight={600}
+            style={strikethrough ? { fontSize: 22, textDecoration: 'line-through' } : { fontSize: 22 }}
+        >
             {title}
         </Typography>
-        <Typography variant="h4" fontWeight={600} style={{ fontSize: 22 }}>
+        <Typography
+            variant="h4"
+            fontWeight={600}
+            style={strikethrough ? { fontSize: 22, textDecoration: 'line-through' } : { fontSize: 22 }}
+        >
             {formatPrice({
                 price: price,
                 withUS: true,
@@ -77,11 +86,18 @@ interface PrintProductProps {
         productId: string;
     };
     definition: keyof Products;
+    discountedBasisPoints: number;
     stackId?: string;
     stackFees?: number;
 }
 
-export default function PrintProductDetails({ params, definition, stackId, stackFees }: PrintProductProps) {
+export default function PrintProductDetails({
+    params,
+    definition,
+    discountedBasisPoints,
+    stackId,
+    stackFees,
+}: PrintProductProps) {
     const dispatch = useDispatch();
     const { subdomain, isValidSubdomain } = useDomainContext();
     const { _id: folioId, organization } = useSelector((state) => state.stores.currentDomain);
@@ -139,7 +155,6 @@ export default function PrintProductDetails({ params, definition, stackId, stack
 
     const artworkLicense = useMemo(() => {
         if (!asset || !product || !catalog) return 0;
-        console.log(asset);
 
         const section = catalog.sections.find((item) => item.sectionId === params.sectionId);
         if (!section) return 0;
@@ -173,7 +188,16 @@ export default function PrintProductDetails({ params, definition, stackId, stack
         );
     };
 
-    const merchandiseFee = useMemo(() => (!product ? 0 : (product.price / 100) * 1.2), [product]);
+    const merchandiseFee = useMemo(() => {
+        if (!product) return { merchandise: 0, merchandiseDiscounted: 0 };
+        const merchandise = (product.price / 100) * 1.2;
+        if (discountedBasisPoints > 0) {
+            const discount = (10_000 - discountedBasisPoints) / 10_000;
+            const merchandiseDiscounted = merchandise * discount;
+            return { merchandise, merchandiseDiscounted };
+        }
+        return { merchandise, merchandiseDiscounted: 0 };
+    }, [product, discountedBasisPoints]);
     const platformFee = useMemo(() => artworkLicense * 0.02, [artworkLicense]);
     const shipping = useMemo(() => (!product ? 0 : product.shipping / 100), [product]);
 
@@ -229,13 +253,32 @@ export default function PrintProductDetails({ params, definition, stackId, stack
                         >
                             <Box bgcolor="rgba(0,0,0,0.6)" width="100%" p={3} mt={4}>
                                 <PriceInfo title="Artwork License:" price={artworkLicense} />
-                                <PriceInfo title="Merchandise Fee:" price={merchandiseFee} />
+                                <PriceInfo
+                                    title="Merchandise Fee:"
+                                    price={merchandiseFee.merchandise}
+                                    strikethrough={discountedBasisPoints > 0}
+                                />
+                                {discountedBasisPoints > 0 && (
+                                    <PriceInfo
+                                        title={`Discounted Price(${discountedBasisPoints / 100}%):`}
+                                        price={merchandiseFee.merchandiseDiscounted}
+                                    />
+                                )}
                                 <PriceInfo title="Platform Fee:" price={platformFee} />
                                 <PriceInfo title="Shipping:" price={shipping} mb={4} />
                                 <PriceInfo
                                     title="Total:"
-                                    price={artworkLicense + merchandiseFee + platformFee + shipping}
+                                    price={
+                                        artworkLicense +
+                                        platformFee +
+                                        shipping +
+                                        (discountedBasisPoints > 0
+                                            ? merchandiseFee.merchandiseDiscounted
+                                            : merchandiseFee.merchandise)
+                                    }
+                                    mb={4}
                                 />
+                                <Typography variant="h4">*Store credit will be applied at checkout.</Typography>
                             </Box>
 
                             <Box width="50%" mt={4} mb={2}>
