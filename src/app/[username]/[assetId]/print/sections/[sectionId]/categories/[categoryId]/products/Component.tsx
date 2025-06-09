@@ -53,10 +53,11 @@ interface PrintProductsProps {
         categoryId: string;
     };
     definition: keyof Products;
+    discountedBasisPoints: number;
     stackFees?: number;
 }
 
-export default function PrintProducts({ params, definition, stackFees }: PrintProductsProps) {
+export default function PrintProducts({ params, definition, discountedBasisPoints, stackFees }: PrintProductsProps) {
     const { subdomain, isValidSubdomain } = useDomainContext();
     const { organization } = useSelector((state) => state.stores.currentDomain);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
@@ -153,7 +154,9 @@ export default function PrintProducts({ params, definition, stackFees }: PrintPr
                             return 0;
                         };
 
-                        const merchandiseFee = (item.price / 100) * 1.2;
+                        const merchandise = (item.price / 100) * 1.2;
+                        const discount = (10_000 - discountedBasisPoints) / 10_000;
+                        const merchandiseFee = discountedBasisPoints > 0 ? merchandise * discount : merchandise;
                         const platformFee = artworkLicense() * 0.02;
                         const shipping = item.shipping / 100;
 
