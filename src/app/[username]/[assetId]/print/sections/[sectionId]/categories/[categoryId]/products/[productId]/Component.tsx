@@ -156,24 +156,32 @@ export default function PrintProductDetails({
     const artworkLicense = useMemo(() => {
         if (!asset || !product || !catalog) return 0;
 
-        const section = catalog.sections.find((item) => item.sectionId === params.sectionId);
-        if (!section) return 0;
-
         const folioMarkup = subdomain && isValidSubdomain ? organization?.markup / 100 || 0 : 0;
         const stackMarkup = stackFees ? stackFees / 100 : 0;
-        const comisssion = 1 + (folioMarkup + stackMarkup);
+        const comission = 1 + (folioMarkup + stackMarkup);
 
         if (params.categoryId === 'mugs') {
-            return asset.licenses.print.merchandisePrice * comisssion;
+            return asset.licenses.print.merchandisePrice * comission;
         }
 
         if (params.categoryId === 'frames' || params.categoryId === 'posters') {
-            const discount = asset.licenses.print.multiplier / 100;
-            return product.area * asset.licenses.print.displayPrice * discount * comisssion;
+            return product.area * asset.licenses.print.displayPrice * comission;
         }
 
         return 0;
-    }, [asset, catalog]);
+    }, [asset, catalog, isValidSubdomain, organization?.markup, params.categoryId, product, subdomain, stackFees]);
+
+    const platformFee = useMemo(() => artworkLicense * 0.02, [artworkLicense]);
+    const merchandise = useMemo(() => (!product ? 0 : (product.price / 100) * 1.2), [product]);
+    const merchandiseWithDiscount = useMemo(() => {
+        if (!product) return 0;
+
+        const productPrice = product.price / 100;
+        const discounted = productPrice * ((10_000 - discountedBasisPoints) / 10_000);
+
+        return discounted * 1.2;
+    }, [product, discountedBasisPoints]);
+    const shipping = useMemo(() => (!product ? 0 : product.shipping / 100), [product]);
 
     const handleSubmitPayment = () => {
         if (!product) return;
@@ -187,19 +195,6 @@ export default function PrintProductDetails({
             })
         );
     };
-
-    const merchandiseFee = useMemo(() => {
-        if (!product) return { merchandise: 0, merchandiseDiscounted: 0 };
-        const merchandise = (product.price / 100) * 1.2;
-        if (discountedBasisPoints > 0) {
-            const discount = (10_000 - discountedBasisPoints) / 10_000;
-            const merchandiseDiscounted = merchandise * discount;
-            return { merchandise, merchandiseDiscounted };
-        }
-        return { merchandise, merchandiseDiscounted: 0 };
-    }, [product, discountedBasisPoints]);
-    const platformFee = useMemo(() => artworkLicense * 0.02, [artworkLicense]);
-    const shipping = useMemo(() => (!product ? 0 : product.shipping / 100), [product]);
 
     if (loadingProduct || loadingProductAsset) {
         return (
@@ -255,13 +250,13 @@ export default function PrintProductDetails({
                                 <PriceInfo title="Artwork License:" price={artworkLicense} />
                                 <PriceInfo
                                     title="Merchandise Fee:"
-                                    price={merchandiseFee.merchandise}
+                                    price={merchandise}
                                     strikethrough={discountedBasisPoints > 0}
                                 />
                                 {discountedBasisPoints > 0 && (
                                     <PriceInfo
-                                        title={`Discounted Price(${discountedBasisPoints / 100}%):`}
-                                        price={merchandiseFee.merchandiseDiscounted}
+                                        title={`Discounted Price (${discountedBasisPoints / 100}%):`}
+                                        price={merchandiseWithDiscount}
                                     />
                                 )}
                                 <PriceInfo title="Platform Fee:" price={platformFee} />
@@ -272,9 +267,7 @@ export default function PrintProductDetails({
                                         artworkLicense +
                                         platformFee +
                                         shipping +
-                                        (discountedBasisPoints > 0
-                                            ? merchandiseFee.merchandiseDiscounted
-                                            : merchandiseFee.merchandise)
+                                        (discountedBasisPoints > 0 ? merchandiseWithDiscount : merchandise)
                                     }
                                     mb={4}
                                 />

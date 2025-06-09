@@ -147,20 +147,23 @@ export default function PrintProducts({ params, definition, discountedBasisPoint
                             }
 
                             if (params.categoryId === 'frames' || params.categoryId === 'posters') {
-                                const discount = asset.licenses.print.multiplier / 100;
-                                return item.area * asset.licenses.print.displayPrice * discount * comission;
+                                return item.area * asset.licenses.print.displayPrice * comission;
                             }
 
                             return 0;
                         };
 
-                        const merchandise = (item.price / 100) * 1.2;
-                        const discount = (10_000 - discountedBasisPoints) / 10_000;
-                        const merchandiseFee = discountedBasisPoints > 0 ? merchandise * discount : merchandise;
                         const platformFee = artworkLicense() * 0.02;
+                        const merchandise = (item.price / 100) * 1.2;
+                        const merchandiseWithDiscount =
+                            (item.price / 100) * ((10_000 - discountedBasisPoints) / 10_000) * 1.2;
                         const shipping = item.shipping / 100;
 
-                        const total = artworkLicense() + merchandiseFee + platformFee + shipping;
+                        const total =
+                            artworkLicense() +
+                            platformFee +
+                            shipping +
+                            (discountedBasisPoints > 0 ? merchandiseWithDiscount : merchandise);
 
                         return (
                             <Link
