@@ -21,9 +21,10 @@ const sizes = {
 interface Props {
     size?: 'regular' | 'large';
     rounded?: boolean;
+    showChain?: boolean;
 }
 
-export default function ConnectWallet({ size = 'regular', rounded = false }: Props) {
+export default function ConnectWallet({ size = 'regular', rounded = false, showChain = true }: Props) {
     const theme = useTheme();
 
     const buttonStyle = {
@@ -68,7 +69,7 @@ export default function ConnectWallet({ size = 'regular', rounded = false }: Pro
                         ) : (
                             <Box display={'flex'} gap={2} alignItems={'center'}>
                                 <Box onClick={openChainModal}>
-                                    {chain?.hasIcon && chain?.iconUrl && (
+                                    {showChain && chain?.hasIcon && chain?.iconUrl && (
                                         <Image
                                             src={chain.iconUrl}
                                             alt={chain.name || 'Chain icon'}

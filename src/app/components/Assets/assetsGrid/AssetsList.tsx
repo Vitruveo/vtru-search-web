@@ -834,7 +834,8 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                     !portfolioWallets &&
                                     !isBlockLoader &&
                                     tabNavigation.assets?.length <= 0 &&
-                                    tabNavigation.artists?.length <= 0 && (
+                                    tabNavigation.artists?.length <= 0 &&
+                                    hasIncludesGroup.active === 'no' && (
                                         <Box display={'flex'} justifyContent={'center'}>
                                             <AdditionalAssetsFilterCard />
                                         </Box>

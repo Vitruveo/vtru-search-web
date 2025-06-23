@@ -1,17 +1,23 @@
-import { FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import { FormControl, FormControlLabel, Checkbox } from '@mui/material';
 
 interface Props {
-    licenseChecked: string;
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    checkedItems: { nft: boolean; print: boolean };
 }
 
-export const LicenseItem = ({ handleChange, licenseChecked }: Props) => {
+export const LicenseItem = ({ checkedItems, handleChange }: Props) => {
     return (
         <FormControl>
-            <RadioGroup value={licenseChecked} onChange={handleChange}>
-                <FormControlLabel value="nft" control={<Radio />} label="NFT" />
-                <FormControlLabel value="nft auto" control={<Radio />} label="NFT – Auto-stake" />
-            </RadioGroup>
+            <FormControlLabel
+                value="nft"
+                control={<Checkbox checked={checkedItems.nft} onChange={handleChange} />}
+                label="Digital Collectible"
+            />
+            <FormControlLabel
+                value="print"
+                control={<Checkbox checked={checkedItems.print} onChange={handleChange} />}
+                label="Print"
+            />
         </FormControl>
     );
 };

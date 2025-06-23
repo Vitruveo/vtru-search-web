@@ -11,7 +11,7 @@ export const LoadingAvailableLincenses = ({ message, background }: Props) => {
     return (
         <Box
             sx={{
-                minHeight: 155,
+                minHeight: 180,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',

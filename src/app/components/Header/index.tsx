@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { AppBar, Box, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import { useTheme, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { IconMoon, IconSun, IconMenu2 } from '@tabler/icons-react';
+import { IconMoon, IconSun, IconMenu2, IconPlayerPlayFilled } from '@tabler/icons-react';
 import { customizerActionsCreators } from '@/features/customizer';
 import { useSelector } from '@/store/hooks';
 import AllProjectsMenu from '../AllProjectsMenu';
@@ -11,6 +11,7 @@ import { Language } from '../Language';
 import { Rss } from '../Rss';
 import Logo from '../Shared/Logo';
 import BuyVUSDModal from '../BuyVUSD/modalHOC';
+import { SEARCH_BASE_URL } from '@/constants/api';
 
 interface Props {
     rssOptions: {
@@ -87,6 +88,11 @@ const Header = ({
     //     dispatch(actions.getPack());
     // };
 
+    const handleClickPlay = () => {
+        const url = window.location.host.split('.')[0];
+        window.open(`${SEARCH_BASE_URL}/folio/${url}/play`);
+    };
+
     if (isHidden) return null;
 
     return (
@@ -134,10 +140,16 @@ const Header = ({
                         paddingInline: isMobile ? 0 : isStore ? 4.5 : 8,
                         color: themeStyle.palette.text.primary,
                         fontSize: isMobile ? 20 : 50,
-                        display: 'block',
+                        display: 'flex',
                         lineHeight: 1,
+                        alignItems: 'center',
                     }}
                 >
+                    {storesName && (
+                        <IconButton onClick={handleClickPlay}>
+                            <IconPlayerPlayFilled size={48} />
+                        </IconButton>
+                    )}{' '}
                     {storesName}
                 </Typography>
                 <Box flexGrow={1} display="flex" alignItems="center" justifyContent="center">

@@ -81,7 +81,10 @@ interface FiltersInitialState {
     portfolio: {
         wallets: string[];
     };
-    licenseChecked: string;
+    licenseChecked: {
+        nft: string[];
+        print: string[];
+    };
     exclude: {
         arts: string[];
         artists: string[];

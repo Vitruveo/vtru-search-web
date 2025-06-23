@@ -1,12 +1,10 @@
-import { Box, Button, Card, Typography, useMediaQuery } from '@mui/material';
-import { useRouter, useParams } from 'next/navigation';
+import { Box, Button, Card, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
 import BuyVUSDModalHOC from '@/app/components/BuyVUSD/modalHOC';
 import ModalMinted from '../ModalMinted';
 import MetadataAccordion from '../Metadata/MetadataAccordion';
-import LicenseModal from './licenseModal';
-import PrintLicenseModal from './PrintLicense/index';
+import DigitalLicenseModal from './DigitalLicenseModal';
 import { LastAssetsList } from '../LastAssetsList';
 import { LastAssets } from '@/features/store/types';
 import { LoadingAvailableLincenses } from '../LoadingAvailableLicenses';
@@ -25,6 +23,7 @@ export interface PanelMintProps {
         credits: number;
         walletCredits: number;
         available: boolean;
+        licenseAdded: { nft: boolean; print: boolean };
         address: `0x${string}` | undefined;
         isConnected: boolean;
         stateModalMinted: boolean;
@@ -60,6 +59,7 @@ export interface PanelMintProps {
             available: boolean;
             credits: number;
         } | null;
+        printIsBlocked: boolean;
     };
     actions: {
         handleMintNFT: () => void;
@@ -71,15 +71,13 @@ export interface PanelMintProps {
         handleOpenModalBuyVUSD: () => void;
         handleCloseModalBuyVUSD: () => void;
         handleAccordionChange: (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => void;
+        handleRedirectToPrint: () => void;
     };
 }
 
 export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actions }: PanelMintProps) => {
     const theme = useTheme();
-    const router = useRouter();
-    const params = useParams();
 
-    const isMobile = useMediaQuery('(max-width: 900px)');
     const {
         link,
         assetLicenses,
@@ -92,11 +90,13 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
         lastAssets,
         lastAssetsLoading,
         openModalBuyVUSD,
+        licenseAdded,
+        printIsBlocked,
     } = data;
     const {
         handleCloseModalMinted,
         handleOpenModalLicense,
-        handleOpenModalPrintLicense,
+        handleRedirectToPrint,
         handleAccordionChange,
         handleOpenModalBuyVUSD,
         handleCloseModalBuyVUSD,
@@ -106,15 +106,59 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
 
     if (!stateModalPrintLicense && !stateModalLicense && !openModalBuyVUSD && !stateModalMinted) {
         return (
-            <>
-                <Typography variant="h4" sx={{ color: '#ffff' }} marginBottom={2}>
-                    {available ? 'Available Licenses' : 'No Licenses Available'}
+            <Box display={'flex'} flexDirection="column" gap={1} padding={0}>
+                <Typography variant="h4" sx={{ color: '#ffff' }}>
+                    {available || licenseAdded.print ? 'Available Licenses' : 'No Licenses Available'}
                 </Typography>
-                {available ? (
-                    <Box>
+                <Box>
+                    {licenseAdded.print && (
+                        <MetadataAccordion
+                            title="Print"
+                            last={false}
+                            expanded={expandedAccordion === 'print'}
+                            onChange={handleAccordionChange('print')}
+                        >
+                            <Box display="flex" alignItems="center" height={140}>
+                                <Box
+                                    display="flex"
+                                    flexDirection="column"
+                                    height={140}
+                                    justifyContent="space-between"
+                                    padding={4}
+                                >
+                                    <Typography variant="h5" sx={{ color: theme.palette.text.primary }}>
+                                        Own this artwork as a physical collectible.
+                                    </Typography>
+                                    <Box display="flex" alignItems="center" gap={2}>
+                                        <Button
+                                            variant="contained"
+                                            onClick={handleRedirectToPrint}
+                                            sx={{
+                                                backgroundColor: theme.palette.primary.main,
+                                                color: '#ffff',
+                                                '&:hover': {
+                                                    backgroundColor: theme.palette.primary.main,
+                                                },
+                                                borderRadius: 0,
+                                            }}
+                                            disabled={printIsBlocked}
+                                        >
+                                            Choose Products
+                                        </Button>
+                                        {printIsBlocked && (
+                                            <Typography variant="h6" sx={{ color: theme.palette.error.main }}>
+                                                Print is unavailable for now
+                                            </Typography>
+                                        )}
+                                    </Box>
+                                </Box>
+                            </Box>
+                        </MetadataAccordion>
+                    )}
+                    {available && licenseAdded.nft && (
                         <MetadataAccordion
                             title="Digital Collectible"
-                            last={false}
+                            last
                             expanded={expandedAccordion === 'digitalCollectible'}
                             onChange={handleAccordionChange('digitalCollectible')}
                         >
@@ -123,16 +167,12 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                 flexDirection="column"
                                 height={140}
                                 justifyContent="space-between"
-                                marginLeft={isMobile ? 0 : 3}
+                                padding={4}
                             >
-                                <Typography
-                                    marginTop={isMobile ? 0 : 3}
-                                    variant="h5"
-                                    sx={{ color: theme.palette.text.primary }}
-                                >
+                                <Typography variant="h5" sx={{ color: theme.palette.text.primary }}>
                                     Own this artwork as a digital collectible.
                                 </Typography>
-                                <Box marginBottom={isMobile ? 0 : 3} display="flex" alignItems="center" gap={2}>
+                                <Box display="flex" alignItems="center" gap={2}>
                                     <Button
                                         variant="contained"
                                         onClick={handleOpenModalLicense}
@@ -143,6 +183,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                                 backgroundColor: theme.palette.primary.main,
                                             },
                                             borderRadius: 0,
+                                            whiteSpace: 'nowrap',
                                         }}
                                     >
                                         Buy with VUSD
@@ -164,37 +205,26 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                 </Box>
                             </Box>
                         </MetadataAccordion>
-                        <MetadataAccordion
-                            title="Print"
-                            last
-                            expanded={expandedAccordion === 'print'}
-                            onChange={handleAccordionChange('print')}
-                        >
-                            <Box display="flex" alignItems="center" height={140} marginLeft={3}>
-                                <Typography variant="h6" sx={{ color: theme.palette.text.primary }}>
-                                    Coming Soon!
-                                </Typography>
-                            </Box>
-                        </MetadataAccordion>
-                    </Box>
-                ) : (
-                    <Box>
-                        <LastAssetsList
-                            assets={lastAssets}
-                            loading={lastAssetsLoading}
-                            creatorName={creatorName}
-                            creatorId={asset.framework?.createdBy}
-                        />
-                    </Box>
-                )}
-            </>
+                    )}
+                    {!available && !licenseAdded.print && (
+                        <Box>
+                            <LastAssetsList
+                                assets={lastAssets}
+                                loading={lastAssetsLoading}
+                                creatorName={creatorName}
+                                creatorId={asset.framework?.createdBy}
+                            />
+                        </Box>
+                    )}
+                </Box>
+            </Box>
         );
     }
 
     return (
         <>
             <Card style={{ display: 'flex', flexDirection: 'column', borderRadius: 0 }}>
-                <LicenseModal
+                <DigitalLicenseModal
                     image={image}
                     size={size}
                     creatorAvatar={creatorAvatar}
@@ -202,16 +232,6 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                     data={data}
                     actions={actions}
                 />
-
-                <PrintLicenseModal
-                    image={image}
-                    size={size}
-                    creatorAvatar={creatorAvatar}
-                    creatorName={creatorName}
-                    data={data}
-                    actions={actions}
-                />
-
                 <ModalMinted open={stateModalMinted} handleClose={handleCloseModalMinted} link={link} />
                 <BuyVUSDModalHOC isOpen={openModalBuyVUSD} onClose={handleCloseModalBuyVUSD} />
             </Card>

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
-import { useSelector, useDispatch } from '@/store/hooks';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useDispatch } from '@/store/hooks';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 //Carousel slider for product
 import Slider from 'react-slick';
@@ -9,7 +9,6 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 //Carousel slider data
-import SliderData from './SliderData';
 import './Carousel.css';
 
 //fetch product
@@ -118,7 +117,7 @@ const ProductCarousel = ({ product }: ProductCarouselProps) => {
                     </Box>
                 ))}
             </Slider>
-            <Box sx={smUp ? { width: 600, marginTop: 2 } : {}}>
+            <Box sx={smUp ? { width: 600, marginTop: 4 } : {}}>
                 <Slider asNavFor={nav1} ref={(slider: any) => (slider2.current = slider)} {...settings}>
                     {sliderData.map((step) => (
                         <Box key={step.id} sx={slider2ContainerStyle}>

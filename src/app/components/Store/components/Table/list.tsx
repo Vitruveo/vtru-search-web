@@ -8,13 +8,7 @@ interface TableListProps {
     url?: boolean;
 }
 
-export default function TableList({
-    content,
-    displayColor,
-    tags,
-    url,
-    exhibition,
-}: TableListProps) {
+export default function TableList({ content, displayColor, tags, url, exhibition }: TableListProps) {
     return (
         <>
             {content.map((item, index) => {
@@ -38,7 +32,7 @@ export default function TableList({
                             {tags && (
                                 <Paper
                                     sx={{
-                                        padding: 1,
+                                        padding: 0.7,
                                         border: '1px solid #a1a1a1',
                                     }}
                                 >
@@ -49,8 +43,8 @@ export default function TableList({
                         {url && (
                             <a
                                 href={item}
-                                target='_blank'
-                                rel='noreferrer'
+                                target="_blank"
+                                rel="noreferrer"
                                 style={{
                                     textDecoration: 'underline',
                                     color: 'inherit',
@@ -60,11 +54,9 @@ export default function TableList({
                                 {item}
                             </a>
                         )}
-                        {exhibition && <Typography variant='body1'>{item}</Typography>}
+                        {exhibition && <Typography variant="body1">{item}</Typography>}
                         {!tags && !url && !exhibition && !displayColor && (
-                            <Typography variant='body1'>
-                                {index === content.length - 1 ? item : item + ', '}
-                            </Typography>
+                            <Typography variant="body1">{index === content.length - 1 ? item : item + ', '}</Typography>
                         )}
                     </Grid>
                 );

@@ -10,7 +10,7 @@ interface MetadataProvenanceProps {
 
 export default function MetadataProvenance({ content }: MetadataProvenanceProps) {
     return (
-        <Box display={'flex'} flexDirection={'column'} gap={1}>
+        <Box display={'flex'} flexDirection={'column'} gap={1} padding={2}>
             <Table title={'Category'} content={countryHashMap[content.country as unknown as string]} />
             <Table title={'Blockchain'} content={content.blockchain} />
             <ExternalLink

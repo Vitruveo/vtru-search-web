@@ -1,72 +1,10 @@
-'use client';
-import { useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Box, Button, Chip, CircularProgress, Grid, Typography } from '@mui/material';
+import axios from 'axios';
+import { cookies } from 'next/headers';
+import { API_BASE_URL } from '@/constants/api';
+import { Products } from '../../../../../types';
+import PrintProductDetails from './Component';
 
-// components
-import ProductCarousel from '@/app/components/Store/components/PanelMint/PrintLicense/ecommerce/productDetail/ProductCarousel';
-import { Breadcrumb } from '@/app/components/Breadcrumb';
-import { Catalog, ProductItem, Products } from '../../../../../types';
-import { API_BASE_URL, CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL, PRODUCTS_BASE_URL } from '@/constants/api';
-import { formatPrice } from '@/utils/assets';
-import { Asset } from '@/features/assets/types';
-import { getProductsImages, getProductsPlaceholders } from '../../../../../utils';
-import * as actionsAssets from '@/features/assets/slice';
-
-interface BreadCrumbIParams {
-    segment: string;
-    category: string;
-    product: string;
-}
-
-const breadcrumbItems = ({ segment, category, product }: BreadCrumbIParams) => [
-    {
-        label: 'Home',
-        href: '/{username}/{assetId}/print/sections',
-    },
-    {
-        label: segment,
-        href: '/{username}/{assetId}/print/sections/{sectionId}/categories',
-    },
-    {
-        label: category,
-        href: '/{username}/{assetId}/print/sections/{sectionId}/categories/{categoryId}/products',
-    },
-    {
-        label: product,
-    },
-];
-
-interface HTMLRendererProps {
-    html: string;
-}
-
-const HTMLRenderer = ({ html }: HTMLRendererProps) => {
-    return <div dangerouslySetInnerHTML={{ __html: html }} />;
-};
-
-interface PriceInfoProps {
-    title: string;
-    price: number;
-    mb?: number;
-}
-
-const PriceInfo = ({ title, price, mb = 1 }: PriceInfoProps) => (
-    <Box display="flex" alignItems="center" justifyContent="space-between" mb={mb}>
-        <Typography variant="h4" fontWeight={600}>
-            {title}
-        </Typography>
-        <Typography variant="h4" fontWeight={600}>
-            {formatPrice({
-                price: price,
-                withUS: true,
-                decimals: true,
-            })}
-        </Typography>
-    </Box>
-);
-
-interface PrintProductProps {
+interface ProductsLayoutProps {
     params: {
         username: string;
         assetId: string;
@@ -76,171 +14,52 @@ interface PrintProductProps {
     };
 }
 
-export default function PrintProductDetails({ params }: PrintProductProps) {
-    const dispatch = useDispatch();
+const definitions: Record<string, keyof Products> = {
+    portrait: 'vertical',
+    landscape: 'horizontal',
+    square: 'square',
+};
 
-    const [product, setProduct] = useState<ProductItem | null>(null);
-    const [catalog, setCatalog] = useState<Catalog | null>(null);
-    const [asset, setAsset] = useState<Asset | null>(null);
-    const [description, setDescription] = useState<string | null>(null);
+export default async function ProductsServer({ params }: ProductsLayoutProps) {
+    const assetRaw = await axios.get(`${API_BASE_URL}/assets/store/${params.assetId}`);
+    const asset = assetRaw.data;
 
-    const [loadingProduct, setLoadingProduct] = useState(true);
-    const [loadingProductAsset, setLoadingAsset] = useState(true);
+    const definition =
+        definitions[asset?.data?.formats?.original?.definition as keyof typeof definitions] || 'vertical';
 
-    const handleSetProduct = (products: ProductItem[]) => {
-        const newProducts = products.find((item: ProductItem) => item.productId === params.productId);
-        setProduct(newProducts || null);
-    };
+    let stackId = '';
+    let stackType = '';
 
-    useEffect(() => {
-        if (!product) return;
-
-        fetch(`${CATALOG_ASSETS_BASE_URL}/${product.productId}/intro.html`)
-            .then((response) => response.text())
-            .then((text) => {
-                setDescription(text);
-            });
-    }, [product]);
-
-    useEffect(() => {
-        const fetchProduct = async () => {
-            const [catalogResponse, productsResponse] = await Promise.all([
-                fetch(CATALOG_BASE_URL),
-                fetch(PRODUCTS_BASE_URL),
-            ]);
-
-            const catalogData: Catalog = await catalogResponse.json();
-            const products: Products = await productsResponse.json();
-
-            setCatalog(catalogData);
-
-            const imagesPlaceholders = getProductsPlaceholders({ products: products.vertical });
-
-            handleSetProduct(imagesPlaceholders);
-            setLoadingProduct(false);
-
-            const imgProducts = await getProductsImages({ assetId: params.assetId, products: products.vertical });
-
-            handleSetProduct(imgProducts);
-        };
-
-        const fetchAsset = async () => {
-            const assetRequest = await fetch(`${API_BASE_URL}/assets/store/${params.assetId}`);
-            const data: { data: Asset } = await assetRequest.json();
-            setLoadingAsset(false);
-            setAsset(data.data);
-        };
-        fetchAsset();
-        fetchProduct();
-    }, []);
-
-    const artworkLicense = useMemo(() => {
-        if (!asset || !product || !catalog) return 0;
-
-        const section = catalog.sections.find((item) => item.sectionId === params.sectionId);
-        if (!section) return 0;
-
-        if (params.categoryId === 'mugs') {
-            return asset.licenses.nft.single.editionPrice * section.priceMultiplier;
-        }
-
-        if (params.categoryId === 'frames' || params.categoryId === 'posters') {
-            return asset.licenses.nft.single.editionPrice * section.priceMultiplier * product.area;
-        }
-
-        return 0;
-    }, [asset, catalog]);
-
-    const handleSubmitPayment = () => {
-        if (!product) return;
-
-        dispatch(actionsAssets.actions.payment({ assetId: params.assetId, productId: product.productId }));
-    };
-
-    const merchandiseFee = useMemo(() => (!product ? 0 : (product.price / 100) * 1.2), [product]);
-    const platformFee = useMemo(() => (!asset ? 0 : asset.licenses.nft.single.editionPrice * 0.02), [asset]);
-    const shipping = useMemo(() => (!product ? 0 : product.shipping / 100), [product]);
-
-    if (loadingProduct || loadingProductAsset) {
-        return (
-            <Box display="flex" justifyContent="center" alignItems="center" mt={5}>
-                <CircularProgress />
-            </Box>
-        );
+    const grid = cookies().get('grid')?.value;
+    if (grid) {
+        stackId = grid;
+        stackType = 'grid';
     }
 
-    if (!product || !catalog || !asset) {
-        return (
-            <Box display="flex" justifyContent="center" alignItems="center" mt={5}>
-                <Typography variant="h4">Product not found</Typography>
-            </Box>
-        );
+    const video = cookies().get('video')?.value;
+    if (video) {
+        stackId = video;
+        stackType = 'video';
     }
+
+    const stackInfoRaw = await axios.post(`${API_BASE_URL}/creators/public/stacks`, {
+        stackId,
+        stackType,
+    });
+    const stackInfo = stackInfoRaw?.data;
+    const stackFees = stackInfo?.data?.search?.grid[0]?.fees || 0;
+
+    const setupPrintLicenseRaw = await axios.get(`${API_BASE_URL}/setup/print-license`);
+    const setupPrintLicense = setupPrintLicenseRaw.data;
+    const discountedBasisPoints = setupPrintLicense?.data?.discountedBasisPoints || 0;
 
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 4,
-            }}
-        >
-            <Breadcrumb
-                items={breadcrumbItems({
-                    segment: catalog.sections.find((item) => item.sectionId === params.sectionId)!.title || '',
-                    category: catalog.categories.find((item) => item.categoryId === params.categoryId)!.title || '',
-                    product: product.title || '',
-                })}
-                params={params}
-            />
-
-            <Box>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={12} lg={6}>
-                        <ProductCarousel product={product} />
-                    </Grid>
-
-                    <Grid item xs={12} sm={12} lg={6}>
-                        <Box display="flex" alignItems="center" mt={2}>
-                            <Chip label="In Stock" color="success" size="small" />
-                            <Typography color="textSecondary" variant="caption" ml={1} textTransform="capitalize">
-                                {product.categoryId}
-                            </Typography>
-                        </Box>
-
-                        <Typography fontWeight="600" variant="h4" mt={2}>
-                            {product.title}
-                        </Typography>
-
-                        <HTMLRenderer html={description || ''} />
-
-                        <Box bgcolor="rgba(0,0,0,0.6)" width="100%" maxWidth={700} p={3} mt={2}>
-                            <PriceInfo title="Artwork License:" price={artworkLicense} />
-                            <PriceInfo title="Merchandise Fee:" price={merchandiseFee} />
-                            <PriceInfo title="Platform Fee:" price={platformFee} />
-                            <PriceInfo title="Shipping:" price={shipping} mb={4} />
-                            <PriceInfo
-                                title="Total:"
-                                price={artworkLicense + merchandiseFee + platformFee + shipping}
-                            />
-                        </Box>
-
-                        <Grid container spacing={2} mt={3}>
-                            <Grid item xs={12} lg={4} md={6}>
-                                <Button
-                                    color="primary"
-                                    size="large"
-                                    fullWidth
-                                    variant="contained"
-                                    onClick={handleSubmitPayment}
-                                >
-                                    Buy Now
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Box>
-        </Box>
+        <PrintProductDetails
+            params={params}
+            definition={definition}
+            stackId={stackId}
+            stackFees={stackFees}
+            discountedBasisPoints={discountedBasisPoints}
+        />
     );
 }
