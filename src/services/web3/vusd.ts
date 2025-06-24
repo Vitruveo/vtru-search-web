@@ -3,6 +3,7 @@ import { BrowserProvider, Contract, JsonRpcSigner, parseUnits, formatEther, pars
 import type { Account, Chain, Client, Transport } from 'viem';
 import schema from './contracts.json';
 import { BuyVUSDWithUSDC, BuyVUSDWithVTRU, GetBalanceUSDC, GetBalanceVUSD, GetVtruConversion } from './types';
+import { BigNumber } from '@ethersproject/bignumber';
 
 const isTestNet = WEB3_NETWORK_TYPE === 'testnet';
 const network = isTestNet ? 'testnet' : 'mainnet';
@@ -295,9 +296,10 @@ export const getVtruConversion = async ({ client, vusdAmount }: GetVtruConversio
         const VUSD = new Contract(getContractAddress('VUSD'), schema.abi.VUSD, signer);
 
         const vusdAmountInBaseUnits = vusdAmount * 10 ** 6;
-        const result = await VUSD.getVtruConversion(vusdAmountInBaseUnits);
+        const result = await VUSD.convertVusdToVtru(vusdAmountInBaseUnits);
 
-        const resultInVtru = Number(result) / 10 ** 18;
+        const converted = result / BigInt(10 ** 18);
+        const resultInVtru = BigNumber.from(converted).toNumber();
         return Math.ceil(resultInVtru);
     } catch (error) {
         console.log('error getVtruConversion', error);

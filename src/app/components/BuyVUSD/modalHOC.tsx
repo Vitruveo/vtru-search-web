@@ -250,7 +250,8 @@ export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProp
                         });
                     });
                 })
-                .catch(() => {
+                .catch((error) => {
+                    console.log('buyVUSDWithVTRU error', error);
                     setLoading(false);
                 });
         }
