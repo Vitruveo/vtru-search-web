@@ -147,7 +147,13 @@ export default function PrintProducts({ params, definition, discountedBasisPoint
                             }
 
                             if (params.categoryId === 'frames' || params.categoryId === 'posters') {
-                                return item.area * asset.licenses.print.displayPrice * comission;
+                                return (
+                                    ((item.area *
+                                        asset.licenses.print.merchandisePrice *
+                                        (asset.licenses.print.multiplier * 100)) /
+                                        10_000) *
+                                    comission
+                                );
                             }
 
                             return 0;

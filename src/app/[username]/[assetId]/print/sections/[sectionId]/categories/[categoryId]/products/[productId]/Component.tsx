@@ -165,7 +165,11 @@ export default function PrintProductDetails({
         }
 
         if (params.categoryId === 'frames' || params.categoryId === 'posters') {
-            return product.area * asset.licenses.print.displayPrice * comission;
+            return (
+                ((product.area * asset.licenses.print.merchandisePrice * (asset.licenses.print.multiplier * 100)) /
+                    10_000) *
+                comission
+            );
         }
 
         return 0;

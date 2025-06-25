@@ -238,7 +238,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                                         </Typography>
                                     </Box>
                                 </Box>
-                                <Box
+                                {/* <Box
                                     display={!currentChain?.toLowerCase().includes('vitruveo') ? 'none' : 'flex'}
                                     justifyContent={'space-between'}
                                 >
@@ -263,7 +263,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                                             {vtruConverted}
                                         </Typography>
                                     </Box>
-                                </Box>
+                                </Box> */}
                             </RadioGroup>
                         </FormControl>
                     </Box>
