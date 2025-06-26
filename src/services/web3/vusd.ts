@@ -2,7 +2,14 @@ import { WEB3_NETWORK_TYPE } from '@/constants/web3';
 import { BrowserProvider, Contract, JsonRpcSigner, parseUnits, formatEther, parseEther } from 'ethers';
 import type { Account, Chain, Client, Transport } from 'viem';
 import schema from './contracts.json';
-import { BuyVUSDWithUSDC, BuyVUSDWithVTRU, GetBalanceUSDC, GetBalanceVUSD, GetVtruConversion } from './types';
+import {
+    BuyVUSDWithUSDC,
+    BuyVUSDWithVTRU,
+    GetBalanceUSDC,
+    GetBalanceUSDCPol,
+    GetBalanceVUSD,
+    GetVtruConversion,
+} from './types';
 import { BigNumber } from '@ethersproject/bignumber';
 
 const isTestNet = WEB3_NETWORK_TYPE === 'testnet';
@@ -323,7 +330,7 @@ export const getBalanceVUSD = async ({ client }: GetBalanceVUSD): Promise<number
     }
 };
 
-export const getBalanceUSDCPol = async ({ client }: GetBalanceUSDC): Promise<number> => {
+export const getBalanceUSDCPol = async ({ client }: GetBalanceUSDCPol): Promise<number> => {
     try {
         const signer = clientToSigner(client);
 

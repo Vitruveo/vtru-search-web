@@ -56,6 +56,10 @@ export interface GetBalanceUSDC {
     chainName: string;
 }
 
+export interface GetBalanceUSDCPol {
+    client: Client<Transport, Chain, Account>;
+}
+
 export interface BuyVUSDWithVTRU {
     client: Client<Transport, Chain, Account>;
     vusdAmount: number;

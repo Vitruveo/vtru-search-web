@@ -79,10 +79,14 @@ export async function GET(req: Request) {
     const buildedQueryParams = buildQueryParams(queryParams);
 
     const [assets, recentlySold, spotlight] = await Promise.all([
-        axios.get(`${API_BASE_URL}/assets/public/search`, {
-            params: buildedQueryParams,
+        axios.post(`${API_BASE_URL}/assets/public/search`, {
+            ...buildedQueryParams,
+            sort: {
+                order: 'latest',
+                isIncludeSold: false,
+            },
         }),
-        axios.get(`${API_BASE_URL}/assets/public/lastSold`),
+        axios.post(`${API_BASE_URL}/assets/public/lastSold`),
         axios.post(`${API_BASE_URL}/assets/public/spotlight`, {
             query: { 'assetMetadata.taxonomy.formData.nudity': { $in: ['no'] } },
         }),
@@ -111,8 +115,8 @@ export async function GET(req: Request) {
                 preview: item.formats.preview.path,
                 thumbnail: item.formats.preview.path.replace(/\.(\w+)$/, '_thumb.jpg'),
                 price: item.licenses.nft.single.editionPrice * 100,
-                username: item.username,
-                nudity: item.assetMetadata.taxonomy.formData.nudity,
+                username: item.creator.username,
+                nudity: item.assetMetadata?.taxonomy?.formData?.nudity,
             })),
         },
     };

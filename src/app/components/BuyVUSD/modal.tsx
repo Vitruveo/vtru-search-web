@@ -13,7 +13,7 @@ import {
 import { IconX } from '@tabler/icons-react';
 import ConnectWallet from '../ConnectWallet';
 import { defaultVusdAmount } from './modalHOC';
-import { formatPriceVUSD } from '@/utils/assets';
+import { formatPrice, formatPriceVUSD } from '@/utils/assets';
 import { useTheme } from '@mui/material/styles';
 
 interface Props {
@@ -101,7 +101,10 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                             fontSize={smUp ? '4vh' : '3vh'}
                             lineHeight={smUp ? '5vh' : '4vh'}
                         >
-                            USDC.pol: {isConnected ? `${balance.value}` : 'Connect Wallet'}
+                            USDC.pol:{' '}
+                            {isConnected
+                                ? `${formatPrice({ price: Number(balance.value), decimals: true, style: 'decimal' })}`
+                                : 'Connect Wallet'}
                         </Typography>
                         <Typography
                             variant="h2"
@@ -111,21 +114,25 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                         >
                             VUSD:{' '}
                             {isConnected
-                                ? `${formatPriceVUSD({
+                                ? `${formatPrice({
                                       price: balanceVUSD.value,
-                                      decimals: false,
+                                      decimals: true,
+                                      style: 'decimal',
                                   })} `
                                 : 'Connect Wallet'}
                         </Typography>
                         <Typography
                             variant="h2"
                             display={currentChain?.toLowerCase().includes('vitruveo') ? 'none' : 'block'}
+                            fontSize={smUp ? '4vh' : '3vh'}
+                            lineHeight={smUp ? '5vh' : '4vh'}
                         >
                             USDC Balance:{' '}
                             {isConnected
-                                ? `${formatPriceVUSD({
+                                ? `${formatPrice({
                                       price: Number(balance.value),
-                                      decimals: false,
+                                      decimals: true,
+                                      style: 'decimal',
                                   })} `
                                 : 'Connect Wallet'}
                         </Typography>
@@ -254,7 +261,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                             variant="contained"
                             sx={{
                                 fontSize: smUp ? '5vh' : '4vh',
-                                width: lgUp ? '25.5%' : mdUp ? '52%' : '100%',
+                                width: lgUp ? '27.5%' : mdUp ? '62%' : '100%',
                                 background: theme.palette.primary.main,
                                 '&:hover': {
                                     background: theme.palette.primary.main,

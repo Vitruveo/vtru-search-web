@@ -56,9 +56,11 @@ export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProp
         if (!isOpen || !client || !chain) return;
 
         if (chain.name.toLowerCase().includes('vitruveo')) {
-            setBalanceUSDC({
-                symbol: 'USDC',
-                value: 0,
+            getBalanceUSDCPol({ client: client! }).then((result) => {
+                setBalanceUSDC({
+                    symbol: 'USDC',
+                    value: result,
+                });
             });
 
             getBalanceVUSD({ client: client! }).then((result) => {
@@ -84,7 +86,7 @@ export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProp
                 value: 0,
             });
 
-            getBalanceUSDCPol({ client: client!, chainName: chain.name }).then((result) => {
+            getBalanceUSDCPol({ client: client! }).then((result) => {
                 setBalanceUSDC({
                     symbol: 'USDC',
                     value: result,
@@ -180,7 +182,7 @@ export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProp
                     } else {
                         new Promise((resolve) => {
                             const interval = setInterval(() => {
-                                getBalanceUSDCPol({ client: client!, chainName: chain!.name }).then((result) => {
+                                getBalanceUSDCPol({ client: client! }).then((result) => {
                                     if (result < balanceUSDC.value) {
                                         clearInterval(interval);
                                         setBalanceUSDC({
@@ -267,7 +269,7 @@ export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProp
             data={{
                 balance: {
                     symbol: currentChain?.includes('vitruveo') ? balance.data?.symbol : balanceUSDC.symbol,
-                    value: currentChain?.includes('vitruveo') ? value.toFixed(4) : valueUSDC.toFixed(4),
+                    value: valueUSDC.toFixed(4),
                 },
                 balanceVUSD: {
                     symbol: balanceVUSD.symbol,
@@ -283,9 +285,9 @@ export default function BuyVUSDModalHOC({ isOpen, onClose }: BuyVUSDModalHOCProp
                     !isConnected ||
                     loading ||
                     loadingConversion ||
-                    (currentChain?.includes('vitruveo') ? value < vtruConverted : valueUSDC < usdcConverted),
+                    (currentChain?.includes('vitruveo') ? valueUSDC < vtruConverted : valueUSDC < usdcConverted),
                 insufficientBalance: currentChain?.includes('vitruveo')
-                    ? value < vtruConverted
+                    ? valueUSDC < vtruConverted
                     : valueUSDC < usdcConverted,
                 loadingConversion: loadingConversion,
             }}

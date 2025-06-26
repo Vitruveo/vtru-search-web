@@ -7,15 +7,16 @@ interface FormatPriceProps {
     price: number;
     withUS?: boolean;
     decimals?: boolean;
+    style?: 'currency' | 'decimal';
 }
 
-export const formatPrice = ({ price = 0, withUS = false, decimals = false }: FormatPriceProps) => {
+export const formatPrice = ({ price = 0, withUS = false, decimals = false, style = 'currency' }: FormatPriceProps) => {
     let language = 'en-US';
     if (typeof navigator !== 'undefined' && navigator.language) {
         language = navigator.language;
     }
     const formatedPrice = price.toLocaleString(language, {
-        style: 'currency',
+        style,
         currency: 'USD',
         minimumFractionDigits: decimals ? 2 : 0,
         maximumFractionDigits: decimals ? 2 : 0,
