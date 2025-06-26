@@ -323,6 +323,23 @@ export const getBalanceVUSD = async ({ client }: GetBalanceVUSD): Promise<number
     }
 };
 
+export const getBalanceUSDCPol = async ({ client }: GetBalanceUSDC): Promise<number> => {
+    try {
+        const signer = clientToSigner(client);
+
+        const contract = getContractByNetwork('Vitruveo');
+        const USDC = new Contract(contract.usdc, erc20abi, signer);
+
+        const result = await USDC.balanceOf(signer.address);
+
+        return Number(result) / 10 ** contract.decimals;
+    } catch (error) {
+        console.log('error getBalanceUSDCPol', error);
+
+        return 0;
+    }
+};
+
 export const getBalanceUSDC = async ({ client, chainName }: GetBalanceUSDC): Promise<number> => {
     try {
         const signer = clientToSigner(client);
