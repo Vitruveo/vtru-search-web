@@ -2,10 +2,8 @@ import {
     Box,
     Button,
     FormControl,
-    FormControlLabel,
     IconButton,
     Modal,
-    Radio,
     RadioGroup,
     TextField,
     Theme,
@@ -57,7 +55,6 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
         isConnected,
         selectedValue,
         usdcConverted,
-        vtruConverted,
         insufficientBalance,
         disabled,
         loading,
@@ -104,7 +101,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                             fontSize={smUp ? '4vh' : '3vh'}
                             lineHeight={smUp ? '5vh' : '4vh'}
                         >
-                            VTRU Balance: {isConnected ? `${balance.value}` : 'Connect Wallet'}
+                            USDC.pol: {isConnected ? `${balance.value}` : 'Connect Wallet'}
                         </Typography>
                         <Typography
                             variant="h2"
@@ -112,7 +109,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                             fontSize={smUp ? '4vh' : '3vh'}
                             lineHeight={smUp ? '5vh' : '4vh'}
                         >
-                            VUSD Balance:{' '}
+                            VUSD:{' '}
                             {isConnected
                                 ? `${formatPriceVUSD({
                                       price: balanceVUSD.value,
@@ -209,24 +206,8 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                     <Box display={'flex'} marginBlock={6} width={'100%'} justifyContent={'center'}>
                         <FormControl sx={{ width: lgUp ? '25.5%' : mdUp ? '52%' : '100%' }}>
                             <RadioGroup sx={{ gap: 6 }} value={selectedValue} onChange={handleRadioChange}>
-                                <Box display={'flex'} justifyContent={'space-between'}>
-                                    <FormControlLabel
-                                        value="USDC"
-                                        control={
-                                            <Radio sx={{ '& .MuiSvgIcon-root': { fontSize: smUp ? '5vh' : '4vh' } }} />
-                                        }
-                                        label="USDC"
-                                        sx={{
-                                            width: smUp ? '52%' : '100%',
-                                            margin: currentChain?.toLowerCase().includes('vitruveo') ? '' : 0,
-                                            '& .MuiFormControlLabel-label': { fontSize: smUp ? '5vh' : '4vh' },
-                                            '& .MuiRadio-root': {
-                                                display: currentChain?.toLowerCase().includes('vitruveo')
-                                                    ? 'block'
-                                                    : 'none',
-                                            },
-                                        }}
-                                    />
+                                <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} gap={2}>
+                                    <Typography variant="h1">USDC</Typography>
                                     <Box bgcolor={'#1a1a1a'} width={'100%'}>
                                         <Typography
                                             variant="h1"
