@@ -2,7 +2,15 @@ import { WEB3_NETWORK_TYPE } from '@/constants/web3';
 import { BrowserProvider, Contract, JsonRpcSigner, parseUnits, formatEther, parseEther } from 'ethers';
 import type { Account, Chain, Client, Transport } from 'viem';
 import schema from './contracts.json';
-import { BuyVUSDWithUSDC, BuyVUSDWithVTRU, GetBalanceUSDC, GetBalanceVUSD, GetVtruConversion } from './types';
+import {
+    BuyVUSDWithUSDC,
+    BuyVUSDWithVTRU,
+    GetBalanceUSDC,
+    GetBalanceUSDCPol,
+    GetBalanceVUSD,
+    GetVtruConversion,
+} from './types';
+import { BigNumber } from '@ethersproject/bignumber';
 
 const isTestNet = WEB3_NETWORK_TYPE === 'testnet';
 const network = isTestNet ? 'testnet' : 'mainnet';
@@ -295,9 +303,10 @@ export const getVtruConversion = async ({ client, vusdAmount }: GetVtruConversio
         const VUSD = new Contract(getContractAddress('VUSD'), schema.abi.VUSD, signer);
 
         const vusdAmountInBaseUnits = vusdAmount * 10 ** 6;
-        const result = await VUSD.getVtruConversion(vusdAmountInBaseUnits);
+        const result = await VUSD.convertVusdToVtru(vusdAmountInBaseUnits);
 
-        const resultInVtru = Number(result) / 10 ** 18;
+        const converted = result / BigInt(10 ** 18);
+        const resultInVtru = BigNumber.from(converted).toNumber();
         return Math.ceil(resultInVtru);
     } catch (error) {
         console.log('error getVtruConversion', error);
@@ -316,6 +325,23 @@ export const getBalanceVUSD = async ({ client }: GetBalanceVUSD): Promise<number
         return Math.ceil(Number(result) / 10 ** 6);
     } catch (error) {
         console.log('error getBalanceVUSD', error);
+
+        return 0;
+    }
+};
+
+export const getBalanceUSDCPol = async ({ client }: GetBalanceUSDCPol): Promise<number> => {
+    try {
+        const signer = clientToSigner(client);
+
+        const contract = getContractByNetwork('Vitruveo');
+        const USDC = new Contract(contract.usdc, erc20abi, signer);
+
+        const result = await USDC.balanceOf(signer.address);
+
+        return Number(result) / 10 ** contract.decimals;
+    } catch (error) {
+        console.log('error getBalanceUSDCPol', error);
 
         return 0;
     }

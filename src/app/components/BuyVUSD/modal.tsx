@@ -2,10 +2,8 @@ import {
     Box,
     Button,
     FormControl,
-    FormControlLabel,
     IconButton,
     Modal,
-    Radio,
     RadioGroup,
     TextField,
     Theme,
@@ -15,7 +13,7 @@ import {
 import { IconX } from '@tabler/icons-react';
 import ConnectWallet from '../ConnectWallet';
 import { defaultVusdAmount } from './modalHOC';
-import { formatPriceVUSD } from '@/utils/assets';
+import { formatPrice, formatPriceVUSD } from '@/utils/assets';
 import { useTheme } from '@mui/material/styles';
 
 interface Props {
@@ -57,7 +55,6 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
         isConnected,
         selectedValue,
         usdcConverted,
-        vtruConverted,
         insufficientBalance,
         disabled,
         loading,
@@ -104,7 +101,10 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                             fontSize={smUp ? '4vh' : '3vh'}
                             lineHeight={smUp ? '5vh' : '4vh'}
                         >
-                            VTRU Balance: {isConnected ? `${balance.value}` : 'Connect Wallet'}
+                            USDC.pol:{' '}
+                            {isConnected
+                                ? `${formatPrice({ price: Number(balance.value), decimals: true, style: 'decimal' })}`
+                                : 'Connect Wallet'}
                         </Typography>
                         <Typography
                             variant="h2"
@@ -112,23 +112,27 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                             fontSize={smUp ? '4vh' : '3vh'}
                             lineHeight={smUp ? '5vh' : '4vh'}
                         >
-                            VUSD Balance:{' '}
+                            VUSD:{' '}
                             {isConnected
-                                ? `${formatPriceVUSD({
+                                ? `${formatPrice({
                                       price: balanceVUSD.value,
-                                      decimals: false,
+                                      decimals: true,
+                                      style: 'decimal',
                                   })} `
                                 : 'Connect Wallet'}
                         </Typography>
                         <Typography
                             variant="h2"
                             display={currentChain?.toLowerCase().includes('vitruveo') ? 'none' : 'block'}
+                            fontSize={smUp ? '4vh' : '3vh'}
+                            lineHeight={smUp ? '5vh' : '4vh'}
                         >
                             USDC Balance:{' '}
                             {isConnected
-                                ? `${formatPriceVUSD({
+                                ? `${formatPrice({
                                       price: Number(balance.value),
-                                      decimals: false,
+                                      decimals: true,
+                                      style: 'decimal',
                                   })} `
                                 : 'Connect Wallet'}
                         </Typography>
@@ -209,24 +213,8 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                     <Box display={'flex'} marginBlock={6} width={'100%'} justifyContent={'center'}>
                         <FormControl sx={{ width: lgUp ? '25.5%' : mdUp ? '52%' : '100%' }}>
                             <RadioGroup sx={{ gap: 6 }} value={selectedValue} onChange={handleRadioChange}>
-                                <Box display={'flex'} justifyContent={'space-between'}>
-                                    <FormControlLabel
-                                        value="USDC"
-                                        control={
-                                            <Radio sx={{ '& .MuiSvgIcon-root': { fontSize: smUp ? '5vh' : '4vh' } }} />
-                                        }
-                                        label="USDC"
-                                        sx={{
-                                            width: smUp ? '52%' : '100%',
-                                            margin: currentChain?.toLowerCase().includes('vitruveo') ? '' : 0,
-                                            '& .MuiFormControlLabel-label': { fontSize: smUp ? '5vh' : '4vh' },
-                                            '& .MuiRadio-root': {
-                                                display: currentChain?.toLowerCase().includes('vitruveo')
-                                                    ? 'block'
-                                                    : 'none',
-                                            },
-                                        }}
-                                    />
+                                <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} gap={2}>
+                                    <Typography variant="h1">USDC</Typography>
                                     <Box bgcolor={'#1a1a1a'} width={'100%'}>
                                         <Typography
                                             variant="h1"
@@ -238,7 +226,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                                         </Typography>
                                     </Box>
                                 </Box>
-                                <Box
+                                {/* <Box
                                     display={!currentChain?.toLowerCase().includes('vitruveo') ? 'none' : 'flex'}
                                     justifyContent={'space-between'}
                                 >
@@ -263,7 +251,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                                             {vtruConverted}
                                         </Typography>
                                     </Box>
-                                </Box>
+                                </Box> */}
                             </RadioGroup>
                         </FormControl>
                     </Box>
@@ -273,7 +261,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                             variant="contained"
                             sx={{
                                 fontSize: smUp ? '5vh' : '4vh',
-                                width: lgUp ? '25.5%' : mdUp ? '52%' : '100%',
+                                width: lgUp ? '27.5%' : mdUp ? '62%' : '100%',
                                 background: theme.palette.primary.main,
                                 '&:hover': {
                                     background: theme.palette.primary.main,
