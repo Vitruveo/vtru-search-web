@@ -113,6 +113,7 @@ export function PrintCategories({ params, definition, previewPath }: PrintCatego
                     assetId: params.assetId,
                     products: products,
                     onlyFirst: true,
+                    definition,
                 });
 
                 handleSetCategories({ catalog, products: images });

@@ -133,7 +133,7 @@ export default function PrintProductDetails({ params, definition, stackId, stack
             handleSetProduct(imagesPlaceholders);
             setLoadingProduct(false);
 
-            const imgProducts = await getProductsImages({ assetId: params.assetId, products });
+            const imgProducts = await getProductsImages({ assetId: params.assetId, products, definition });
 
             handleSetProduct(imgProducts);
         };

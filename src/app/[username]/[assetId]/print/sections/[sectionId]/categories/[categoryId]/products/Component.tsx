@@ -96,6 +96,7 @@ export default function PrintProducts({ params, definition, stackFees }: PrintPr
                 assetId: params.assetId,
                 products,
                 onlyFirst: true,
+                definition,
             });
             setProductsImgs(images);
         };

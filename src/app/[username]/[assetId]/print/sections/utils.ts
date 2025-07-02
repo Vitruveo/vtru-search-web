@@ -5,18 +5,28 @@ export const getProductsImages = async ({
     products,
     assetId,
     onlyFirst,
+    definition,
 }: {
     products: ProductItem[];
     assetId: string;
     onlyFirst?: boolean;
+    definition: keyof Omit<Products, 'any'>;
 }): Promise<ProductItem[]> => {
-    const requests = products.flatMap(({ productId, images }) =>
-        (onlyFirst ? images.slice(0, 1) : images).map((imgName) => ({
+    const requests = products.flatMap(({ productId, images, chroma }) => {
+        if (chroma && definition) {
+            const chromaImages = chroma[definition]?.images || [];
+            return chromaImages.map((imgName) => ({
+                productId,
+                imgName,
+                source: `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${productId}/${imgName.replace(/^~\//, '')}`,
+            }));
+        }
+        return (onlyFirst ? images.slice(0, 1) : images).map((imgName) => ({
             productId,
             imgName,
             source: `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${productId}/${imgName.replace(/^~\//, '')}`,
-        }))
-    );
+        }));
+    });
 
     const results = await Promise.allSettled(
         requests.map(async ({ productId, imgName, source }) => {
