@@ -5,7 +5,7 @@ import { Breadcrumb } from '@/app/components/Breadcrumb';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Catalog, ProductItem, Products } from '../../../../types';
+import { Catalog, Config, ProductItem, Products } from '../../../../types';
 import { API_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
 import { getProductsImages, getProductsPlaceholders } from '../../../../utils';
@@ -53,21 +53,22 @@ interface PrintProductsProps {
         categoryId: string;
     };
     definition: keyof Products;
-    discountedBasisPoints: number;
     stackFees?: number;
 }
 
-export default function PrintProducts({ params, definition, discountedBasisPoints, stackFees }: PrintProductsProps) {
+export default function PrintProducts({ params, definition, stackFees }: PrintProductsProps) {
     const { subdomain, isValidSubdomain } = useDomainContext();
     const { organization } = useSelector((state) => state.stores.currentDomain);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
     const [productsImgs, setProductsImgs] = useState<ProductItem[]>([]);
     const [asset, setAsset] = useState<Asset | null>(null);
+    const [config, setConfig] = useState<Config | null>(null);
 
     useEffect(() => {
         const fetchCatalog = async () => {
             const catalogResponse = await axios.get(CATALOG_BASE_URL);
             setCatalog(catalogResponse.data);
+            setConfig(catalogResponse.data.config);
         };
 
         const fetchAsset = async () => {
@@ -159,11 +160,14 @@ export default function PrintProducts({ params, definition, discountedBasisPoint
                             return 0;
                         };
 
+                        const discountedBasisPoints = config?.discount || 0;
                         const platformFee = artworkLicense() * 0.02;
-                        const merchandise = (item.price / 100) * 1.2;
+                        const merchandise = (item.price / 100) * (1 + (config?.markup || 0) / 10_000);
                         const merchandiseWithDiscount =
-                            (item.price / 100) * ((10_000 - discountedBasisPoints) / 10_000) * 1.2;
-                        const shipping = item.shipping / 100;
+                            (item.price / 100) *
+                            ((10_000 - discountedBasisPoints) / 10_000) *
+                            (1 + (config?.markup || 0) / 10_000);
+                        const shipping = (config?.shipping || 0) / 100;
 
                         const total =
                             artworkLicense() +

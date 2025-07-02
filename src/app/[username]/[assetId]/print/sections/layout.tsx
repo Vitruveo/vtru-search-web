@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { redirect } from 'next/navigation';
-import { API_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
+import { Config } from './types';
 
 interface SectionLayoutProps {
     children: React.ReactNode;
@@ -20,8 +21,8 @@ const getData = async (assetId: string) => {
 };
 const getSetupPrintLicense = async () => {
     try {
-        const setupPrintLicenseRaw = await axios.get(`${API_BASE_URL}/setup/print-license`);
-        return setupPrintLicenseRaw.data.data;
+        const setupPrintLicenseRaw = await axios.get(`${CATALOG_BASE_URL}`);
+        return setupPrintLicenseRaw.data.config as Config;
     } catch (error) {
         return null;
     }
@@ -36,9 +37,9 @@ export default async function SectionLayout({ children, params }: SectionLayoutP
     }
 
     const hasPrintAdded = asset?.licenses?.print?.added;
-    const isPrintBlocked = setupPrintLicense.isBlocked;
+    const isPrintActive = setupPrintLicense.active;
 
-    if (!hasPrintAdded || isPrintBlocked) {
+    if (!hasPrintAdded || !isPrintActive) {
         redirect(`/${username}/${assetId}`);
     }
 
