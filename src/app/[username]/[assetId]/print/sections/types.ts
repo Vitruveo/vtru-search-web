@@ -20,6 +20,7 @@ export interface Catalog {
     sections: Sections[];
     categories: Category[];
     products: Products;
+    config: Config;
 }
 
 export interface ProductItem {
@@ -38,4 +39,11 @@ export interface Products {
     vertical: ProductItem[];
     horizontal: ProductItem[];
     square: ProductItem[];
+}
+
+export interface Config {
+    active: boolean;
+    markup: number;
+    discount: number;
+    shipping: number;
 }

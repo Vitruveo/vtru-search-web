@@ -6,7 +6,7 @@ import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 // components
 import ProductCarousel from '@/app/components/Store/components/PanelMint/PrintLicense/ecommerce/productDetail/ProductCarousel';
 import { Breadcrumb } from '@/app/components/Breadcrumb';
-import { Catalog, ProductItem, Products } from '../../../../../types';
+import { Catalog, Config, ProductItem, Products } from '../../../../../types';
 import { API_BASE_URL, CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
 import { Asset } from '@/features/assets/types';
@@ -86,24 +86,18 @@ interface PrintProductProps {
         productId: string;
     };
     definition: keyof Products;
-    discountedBasisPoints: number;
     stackId?: string;
     stackFees?: number;
 }
 
-export default function PrintProductDetails({
-    params,
-    definition,
-    discountedBasisPoints,
-    stackId,
-    stackFees,
-}: PrintProductProps) {
+export default function PrintProductDetails({ params, definition, stackId, stackFees }: PrintProductProps) {
     const dispatch = useDispatch();
     const { subdomain, isValidSubdomain } = useDomainContext();
     const { _id: folioId, organization } = useSelector((state) => state.stores.currentDomain);
 
     const [product, setProduct] = useState<ProductItem | null>(null);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
+    const [config, setConfig] = useState<Config | null>(null);
     const [asset, setAsset] = useState<Asset | null>(null);
     const [description, setDescription] = useState<string | null>(null);
 
@@ -130,6 +124,7 @@ export default function PrintProductDetails({
             const catalogResponse = await fetch(CATALOG_BASE_URL);
             const catalogData: Catalog = await catalogResponse.json();
             setCatalog(catalogData);
+            setConfig(catalogData.config);
 
             const products = catalogData.products[definition] || {};
 
@@ -176,16 +171,19 @@ export default function PrintProductDetails({
     }, [asset, catalog, isValidSubdomain, organization?.markup, params.categoryId, product, subdomain, stackFees]);
 
     const platformFee = useMemo(() => artworkLicense * 0.02, [artworkLicense]);
-    const merchandise = useMemo(() => (!product ? 0 : (product.price / 100) * 1.2), [product]);
+    const merchandise = useMemo(
+        () => (!product ? 0 : (product.price / 100) * (1 + (config?.markup || 0) / 10_000)),
+        [product]
+    );
     const merchandiseWithDiscount = useMemo(() => {
         if (!product) return 0;
 
         const productPrice = product.price / 100;
-        const discounted = productPrice * ((10_000 - discountedBasisPoints) / 10_000);
+        const discounted = productPrice * ((10_000 - (config?.discount || 0)) / 10_000);
 
         return discounted * 1.2;
-    }, [product, discountedBasisPoints]);
-    const shipping = useMemo(() => (!product ? 0 : product.shipping / 100), [product]);
+    }, [product, config?.discount]);
+    const shipping = useMemo(() => (!product ? 0 : (config?.shipping || 0) / 100), [product]);
 
     const handleSubmitPayment = () => {
         if (!product) return;
@@ -255,11 +253,11 @@ export default function PrintProductDetails({
                                 <PriceInfo
                                     title="Merchandise Fee:"
                                     price={merchandise}
-                                    strikethrough={discountedBasisPoints > 0}
+                                    strikethrough={config?.discount ? config.discount > 0 : false}
                                 />
-                                {discountedBasisPoints > 0 && (
+                                {config?.discount && config.discount > 0 && (
                                     <PriceInfo
-                                        title={`Discounted Price (${discountedBasisPoints / 100}%):`}
+                                        title={`Discounted Price (${config.discount / 100}%):`}
                                         price={merchandiseWithDiscount}
                                     />
                                 )}
@@ -271,7 +269,9 @@ export default function PrintProductDetails({
                                         artworkLicense +
                                         platformFee +
                                         shipping +
-                                        (discountedBasisPoints > 0 ? merchandiseWithDiscount : merchandise)
+                                        (config?.discount && config.discount > 0
+                                            ? merchandiseWithDiscount
+                                            : merchandise)
                                     }
                                     mb={4}
                                 />
