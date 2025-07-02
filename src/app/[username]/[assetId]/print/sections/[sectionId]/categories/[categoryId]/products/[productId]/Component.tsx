@@ -85,7 +85,7 @@ interface PrintProductProps {
         categoryId: string;
         productId: string;
     };
-    definition: keyof Products;
+    definition: keyof Omit<Products, 'any'>;
     stackId?: string;
     stackFees?: number;
 }
@@ -126,9 +126,9 @@ export default function PrintProductDetails({ params, definition, stackId, stack
             setCatalog(catalogData);
             setConfig(catalogData.config);
 
-            const products = catalogData.products[definition] || {};
+            const products = [...catalogData.products[definition], ...catalogData.products.any];
 
-            const imagesPlaceholders = getProductsPlaceholders({ products: products });
+            const imagesPlaceholders = getProductsPlaceholders({ products, definition });
 
             handleSetProduct(imagesPlaceholders);
             setLoadingProduct(false);

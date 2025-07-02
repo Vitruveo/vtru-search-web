@@ -65,7 +65,7 @@ interface PrintCategoriesProps {
         assetId: string;
         sectionId: string;
     };
-    definition: keyof Products;
+    definition: keyof Omit<Products, 'any'>;
     previewPath: string;
 }
 
@@ -95,7 +95,7 @@ export function PrintCategories({ params, definition, previewPath }: PrintCatego
             try {
                 const catalogResponse = await fetch(CATALOG_BASE_URL);
                 const catalog: Catalog = await catalogResponse.json();
-                const products = catalog.products[definition] || [];
+                const products = [...(catalog.products.any || []), ...(catalog.products[definition] || [])];
 
                 const productsQuantityPerCategory = products.reduce((acc, product) => {
                     acc[product.categoryId] = (acc[product.categoryId] || 0) + 1;
@@ -106,7 +106,7 @@ export function PrintCategories({ params, definition, previewPath }: PrintCatego
                 const catalogSection = catalog.sections.find((item) => item.sectionId === params.sectionId)!;
                 setSection(catalogSection);
 
-                const imagesPlaceholders = getProductsPlaceholders({ products: products });
+                const imagesPlaceholders = getProductsPlaceholders({ products, definition });
                 handleSetCategories({ catalog, products: imagesPlaceholders });
 
                 const images = await getProductsImages({
