@@ -1,12 +1,13 @@
 'use client';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
+import axios from 'axios';
 
 // components
 import ProductCarousel from '@/app/components/Store/components/PanelMint/PrintLicense/ecommerce/productDetail/ProductCarousel';
 import { Breadcrumb } from '@/app/components/Breadcrumb';
-import { Catalog, Config, ProductItem, Products } from '../../../../../types';
+import { Catalog, ProductItem, Products } from '../../../../../types';
 import { API_BASE_URL, CATALOG_ASSETS_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
 import { Asset } from '@/features/assets/types';
@@ -87,19 +88,38 @@ interface PrintProductProps {
     };
     definition: keyof Omit<Products, 'any'>;
     stackId?: string;
-    stackFees?: number;
 }
 
-export default function PrintProductDetails({ params, definition, stackId, stackFees }: PrintProductProps) {
+interface PrintPrice {
+    comission: number;
+    artworkLicense: number;
+    platfromFee: number;
+    merchandiseFee: number;
+    merchandiseWithDiscount: number;
+    shipping: number;
+    total: number;
+    discountBasisPoints: number;
+}
+
+export default function PrintProductDetails({ params, definition, stackId }: PrintProductProps) {
     const dispatch = useDispatch();
     const { subdomain, isValidSubdomain } = useDomainContext();
-    const { _id: folioId, organization } = useSelector((state) => state.stores.currentDomain);
+    const { _id: folioId } = useSelector((state) => state.stores.currentDomain);
 
     const [product, setProduct] = useState<ProductItem | null>(null);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
-    const [config, setConfig] = useState<Config | null>(null);
     const [asset, setAsset] = useState<Asset | null>(null);
     const [description, setDescription] = useState<string | null>(null);
+    const [printPrices, setPrintPrices] = useState<PrintPrice>({
+        comission: 0,
+        artworkLicense: 0,
+        platfromFee: 0,
+        merchandiseFee: 0,
+        merchandiseWithDiscount: 0,
+        shipping: 0,
+        total: 0,
+        discountBasisPoints: 0,
+    });
 
     const [loadingProduct, setLoadingProduct] = useState(true);
     const [loadingProductAsset, setLoadingAsset] = useState(true);
@@ -108,6 +128,34 @@ export default function PrintProductDetails({ params, definition, stackId, stack
         const newProducts = products.find((item: ProductItem) => item.productId === params.productId);
         setProduct(newProducts || null);
     };
+
+    useEffect(() => {
+        const fetchPrices = async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/assets/public/print/price/${params.assetId}`, {
+                    params: {
+                        categoryId: params.categoryId,
+                        productId: params.productId,
+                        ...(isValidSubdomain && subdomain && folioId && { folioId }),
+                        ...(stackId && { stackId }),
+                    },
+                });
+                setPrintPrices(response.data.data);
+            } catch (error) {
+                setPrintPrices({
+                    comission: 0,
+                    artworkLicense: 0,
+                    platfromFee: 0,
+                    merchandiseFee: 0,
+                    merchandiseWithDiscount: 0,
+                    shipping: 0,
+                    total: 0,
+                    discountBasisPoints: 0,
+                });
+            }
+        };
+        fetchPrices();
+    }, [params.assetId, params.categoryId, params.productId, stackId, folioId]);
 
     useEffect(() => {
         if (!product) return;
@@ -124,7 +172,6 @@ export default function PrintProductDetails({ params, definition, stackId, stack
             const catalogResponse = await fetch(CATALOG_BASE_URL);
             const catalogData: Catalog = await catalogResponse.json();
             setCatalog(catalogData);
-            setConfig(catalogData.config);
 
             const products = [...catalogData.products[definition], ...catalogData.products.any];
 
@@ -147,43 +194,6 @@ export default function PrintProductDetails({ params, definition, stackId, stack
         fetchAsset();
         fetchProduct();
     }, []);
-
-    const artworkLicense = useMemo(() => {
-        if (!asset || !product || !catalog) return 0;
-
-        const folioMarkup = subdomain && isValidSubdomain ? organization?.markup / 100 || 0 : 0;
-        const stackMarkup = stackFees ? stackFees / 100 : 0;
-        const comission = 1 + (folioMarkup + stackMarkup);
-
-        if (params.categoryId === 'mugs') {
-            return asset.licenses.print.merchandisePrice * comission;
-        }
-
-        if (params.categoryId === 'frames' || params.categoryId === 'posters') {
-            return (
-                ((product.area * asset.licenses.print.merchandisePrice * (asset.licenses.print.multiplier * 100)) /
-                    10_000) *
-                comission
-            );
-        }
-
-        return 0;
-    }, [asset, catalog, isValidSubdomain, organization?.markup, params.categoryId, product, subdomain, stackFees]);
-
-    const platformFee = useMemo(() => artworkLicense * 0.02, [artworkLicense]);
-    const merchandise = useMemo(
-        () => (!product ? 0 : (product.price / 100) * (1 + (config?.markup || 0) / 10_000)),
-        [product]
-    );
-    const merchandiseWithDiscount = useMemo(() => {
-        if (!product) return 0;
-
-        const productPrice = product.price / 100;
-        const discounted = productPrice * ((10_000 - (config?.discount || 0)) / 10_000);
-
-        return discounted * 1.2;
-    }, [product, config?.discount]);
-    const shipping = useMemo(() => (!product ? 0 : (config?.shipping || 0) / 100), [product]);
 
     const handleSubmitPayment = () => {
         if (!product) return;
@@ -249,32 +259,21 @@ export default function PrintProductDetails({ params, definition, stackId, stack
                             maxWidth={700}
                         >
                             <Box bgcolor="rgba(0,0,0,0.6)" width="100%" p={3} mt={4}>
-                                <PriceInfo title="Artwork License:" price={artworkLicense} />
+                                <PriceInfo title="Artwork License:" price={printPrices.artworkLicense} />
                                 <PriceInfo
                                     title="Merchandise Fee:"
-                                    price={merchandise}
-                                    strikethrough={config?.discount ? config.discount > 0 : false}
+                                    price={printPrices.merchandiseFee}
+                                    strikethrough={printPrices.discountBasisPoints > 0}
                                 />
-                                {config?.discount && config.discount > 0 && (
+                                {printPrices.discountBasisPoints > 0 && (
                                     <PriceInfo
-                                        title={`Discounted Price (${config.discount / 100}%):`}
-                                        price={merchandiseWithDiscount}
+                                        title={`Discounted Price (${printPrices.discountBasisPoints / 100}%):`}
+                                        price={printPrices.merchandiseWithDiscount}
                                     />
                                 )}
-                                <PriceInfo title="Platform Fee:" price={platformFee} />
-                                <PriceInfo title="Shipping:" price={shipping} mb={4} />
-                                <PriceInfo
-                                    title="Total:"
-                                    price={
-                                        artworkLicense +
-                                        platformFee +
-                                        shipping +
-                                        (config?.discount && config.discount > 0
-                                            ? merchandiseWithDiscount
-                                            : merchandise)
-                                    }
-                                    mb={4}
-                                />
+                                <PriceInfo title="Platform Fee:" price={printPrices.platfromFee} />
+                                <PriceInfo title="Shipping:" price={printPrices.shipping} mb={4} />
+                                <PriceInfo title="Total:" price={printPrices.total} mb={4} />
                                 <Typography variant="h4">*Store credit will be applied at checkout.</Typography>
                             </Box>
 
