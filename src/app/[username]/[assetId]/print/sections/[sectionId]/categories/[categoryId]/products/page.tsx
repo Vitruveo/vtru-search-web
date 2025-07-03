@@ -13,7 +13,7 @@ interface ProductsLayoutProps {
     };
 }
 
-const definitions: Record<string, keyof Products> = {
+const definitions: Record<string, keyof Omit<Products, 'any'>> = {
     portrait: 'vertical',
     landscape: 'horizontal',
     square: 'square',

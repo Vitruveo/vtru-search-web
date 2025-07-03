@@ -30,6 +30,20 @@ export interface ProductItem {
     description: string;
     html: string;
     images: string[];
+    chroma?: {
+        vertical: {
+            preview: string;
+            images: string[];
+        };
+        horizontal: {
+            preview: string;
+            images: string[];
+        };
+        square: {
+            preview: string;
+            images: string[];
+        };
+    };
     price: number;
     shipping: number;
     area: number;
@@ -39,6 +53,7 @@ export interface Products {
     vertical: ProductItem[];
     horizontal: ProductItem[];
     square: ProductItem[];
+    any: ProductItem[];
 }
 
 export interface Config {

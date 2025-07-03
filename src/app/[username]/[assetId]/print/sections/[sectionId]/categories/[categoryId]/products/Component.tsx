@@ -52,7 +52,7 @@ interface PrintProductsProps {
         sectionId: string;
         categoryId: string;
     };
-    definition: keyof Products;
+    definition: keyof Omit<Products, 'any'>;
     stackFees?: number;
 }
 
@@ -85,17 +85,18 @@ export default function PrintProducts({ params, definition, stackFees }: PrintPr
         if (!catalog) return;
 
         const fetchProductImages = async () => {
-            const products: ProductItem[] = (catalog.products[definition] || []).filter(
+            const products: ProductItem[] = [...catalog.products[definition], ...catalog.products.any].filter(
                 (item: ProductItem) => item.categoryId === params.categoryId
             );
 
-            const imagesPlaceholders = getProductsPlaceholders({ products });
+            const imagesPlaceholders = getProductsPlaceholders({ products, definition });
             setProductsImgs(imagesPlaceholders);
 
             const images = await getProductsImages({
                 assetId: params.assetId,
                 products,
                 onlyFirst: true,
+                definition,
             });
             setProductsImgs(images);
         };
