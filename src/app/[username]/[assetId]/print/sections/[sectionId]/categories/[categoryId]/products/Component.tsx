@@ -1,16 +1,16 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Image from 'next/image';
+import axios from 'axios';
+import Link from 'next/link';
 import { Breadcrumb } from '@/app/components/Breadcrumb';
 import { Box, CircularProgress, Typography } from '@mui/material';
-import Image from 'next/image';
-import Link from 'next/link';
 import { Catalog, ProductItem, Products } from '../../../../types';
 import { API_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
 import { formatPrice } from '@/utils/assets';
 import { getProductsImages, getProductsPlaceholders } from '../../../../utils';
 import { Asset } from '@/features/assets/types';
-import axios from 'axios';
 import { useDomainContext } from '@/app/context/domain';
 import { useSelector } from '@/store/hooks';
 
@@ -52,17 +52,17 @@ interface PrintProductsProps {
         sectionId: string;
         categoryId: string;
     };
-    definition: keyof Products;
-    discountedBasisPoints: number;
-    stackFees?: number;
+    definition: keyof Omit<Products, 'any'>;
+    stackId?: string;
 }
 
-export default function PrintProducts({ params, definition, discountedBasisPoints, stackFees }: PrintProductsProps) {
+export default function PrintProducts({ params, definition, stackId }: PrintProductsProps) {
     const { subdomain, isValidSubdomain } = useDomainContext();
-    const { organization } = useSelector((state) => state.stores.currentDomain);
+    const { _id: folioId } = useSelector((state) => state.stores.currentDomain);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
     const [productsImgs, setProductsImgs] = useState<ProductItem[]>([]);
     const [asset, setAsset] = useState<Asset | null>(null);
+    const [prices, setPrices] = useState<{ [key: string]: number }>({});
 
     useEffect(() => {
         const fetchCatalog = async () => {
@@ -81,20 +81,50 @@ export default function PrintProducts({ params, definition, discountedBasisPoint
     }, [params]);
 
     useEffect(() => {
+        const fetchPrices = async () => {
+            if (productsImgs.length === 0) return;
+            const newPrices: { [key: string]: number } = {};
+            await Promise.all(
+                productsImgs.map(async (item) => {
+                    try {
+                        const response = await axios.get(
+                            `${API_BASE_URL}/assets/public/print/price/${params.assetId}`,
+                            {
+                                params: {
+                                    categoryId: params.categoryId,
+                                    productId: item.productId,
+                                    ...(isValidSubdomain && subdomain && folioId && { folioId }),
+                                    ...(stackId && { stackId }),
+                                },
+                            }
+                        );
+                        newPrices[item.productId] = response.data.data.total;
+                    } catch (error) {
+                        newPrices[item.productId] = 0;
+                    }
+                })
+            );
+            setPrices(newPrices);
+        };
+        fetchPrices();
+    }, [productsImgs, params.assetId, params.categoryId, folioId, stackId]);
+
+    useEffect(() => {
         if (!catalog) return;
 
         const fetchProductImages = async () => {
-            const products: ProductItem[] = (catalog.products[definition] || []).filter(
+            const products: ProductItem[] = [...catalog.products[definition], ...catalog.products.any].filter(
                 (item: ProductItem) => item.categoryId === params.categoryId
             );
 
-            const imagesPlaceholders = getProductsPlaceholders({ products });
+            const imagesPlaceholders = getProductsPlaceholders({ products, definition });
             setProductsImgs(imagesPlaceholders);
 
             const images = await getProductsImages({
                 assetId: params.assetId,
                 products,
                 onlyFirst: true,
+                definition,
             });
             setProductsImgs(images);
         };
@@ -136,50 +166,14 @@ export default function PrintProducts({ params, definition, discountedBasisPoint
 
             <Box display="flex" flexWrap="wrap" justifyContent="center" gap={4} width="100%">
                 {productsImgs.length && asset && section ? (
-                    productsImgs.map((item) => {
-                        const artworkLicense = () => {
-                            const folioMarkup = subdomain && isValidSubdomain ? organization?.markup / 100 || 0 : 0;
-                            const stackMarkup = stackFees ? stackFees / 100 : 0;
-                            const comission = 1 + (folioMarkup + stackMarkup);
-
-                            if (params.categoryId === 'mugs') {
-                                return asset.licenses.print.merchandisePrice * comission;
-                            }
-
-                            if (params.categoryId === 'frames' || params.categoryId === 'posters') {
-                                return (
-                                    ((item.area *
-                                        asset.licenses.print.merchandisePrice *
-                                        (asset.licenses.print.multiplier * 100)) /
-                                        10_000) *
-                                    comission
-                                );
-                            }
-
-                            return 0;
-                        };
-
-                        const platformFee = artworkLicense() * 0.02;
-                        const merchandise = (item.price / 100) * 1.2;
-                        const merchandiseWithDiscount =
-                            (item.price / 100) * ((10_000 - discountedBasisPoints) / 10_000) * 1.2;
-                        const shipping = item.shipping / 100;
-
-                        const total =
-                            artworkLicense() +
-                            platformFee +
-                            shipping +
-                            (discountedBasisPoints > 0 ? merchandiseWithDiscount : merchandise);
-
-                        return (
-                            <Link
-                                key={item.productId}
-                                href={`/${params.username}/${params.assetId}/print/sections/${params.sectionId}/categories/${params.categoryId}/products/${item.productId}`}
-                            >
-                                <CardItem img={item.images[0]} title={item.title} price={total} />
-                            </Link>
-                        );
-                    })
+                    productsImgs.map((item) => (
+                        <Link
+                            key={item.productId}
+                            href={`/${params.username}/${params.assetId}/print/sections/${params.sectionId}/categories/${params.categoryId}/products/${item.productId}`}
+                        >
+                            <CardItem img={item.images[0]} title={item.title} price={prices[item.productId] || 0} />
+                        </Link>
+                    ))
                 ) : (
                     <Box display="flex" justifyContent="center" alignItems="center" mt={5}>
                         <CircularProgress />

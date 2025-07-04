@@ -25,7 +25,7 @@ export default async function PrintSections({ params }: PrintSectionsProps) {
     const definition = definitions[asset?.data?.formats?.original?.definition] || 'vertical';
 
     const sections = catalog.sections;
-    const products = catalog.products[definition] || [];
+    const products = [...(catalog.products.any || []), ...(catalog.products[definition] || [])];
 
     const productsBySection = sections.reduce((acc: Record<string, any>, section) => {
         acc[section.sectionId] = section.categories.reduce((catAcc: Record<string, any>, category) => {

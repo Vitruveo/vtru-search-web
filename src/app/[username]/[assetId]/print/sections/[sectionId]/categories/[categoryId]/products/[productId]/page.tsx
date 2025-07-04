@@ -14,7 +14,7 @@ interface ProductsLayoutProps {
     };
 }
 
-const definitions: Record<string, keyof Products> = {
+const definitions: Record<string, keyof Omit<Products, 'any'>> = {
     portrait: 'vertical',
     landscape: 'horizontal',
     square: 'square',
@@ -28,38 +28,16 @@ export default async function ProductsServer({ params }: ProductsLayoutProps) {
         definitions[asset?.data?.formats?.original?.definition as keyof typeof definitions] || 'vertical';
 
     let stackId = '';
-    let stackType = '';
 
     const grid = cookies().get('grid')?.value;
     if (grid) {
         stackId = grid;
-        stackType = 'grid';
     }
 
     const video = cookies().get('video')?.value;
     if (video) {
         stackId = video;
-        stackType = 'video';
     }
 
-    const stackInfoRaw = await axios.post(`${API_BASE_URL}/creators/public/stacks`, {
-        stackId,
-        stackType,
-    });
-    const stackInfo = stackInfoRaw?.data;
-    const stackFees = stackInfo?.data?.search?.grid[0]?.fees || 0;
-
-    const setupPrintLicenseRaw = await axios.get(`${API_BASE_URL}/setup/print-license`);
-    const setupPrintLicense = setupPrintLicenseRaw.data;
-    const discountedBasisPoints = setupPrintLicense?.data?.discountedBasisPoints || 0;
-
-    return (
-        <PrintProductDetails
-            params={params}
-            definition={definition}
-            stackId={stackId}
-            stackFees={stackFees}
-            discountedBasisPoints={discountedBasisPoints}
-        />
-    );
+    return <PrintProductDetails params={params} definition={definition} stackId={stackId} />;
 }

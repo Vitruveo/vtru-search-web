@@ -1,22 +1,32 @@
 import { api } from '@/services/api';
-import { ProductItem } from './types';
+import { ProductItem, Products } from './types';
 
 export const getProductsImages = async ({
     products,
     assetId,
     onlyFirst,
+    definition,
 }: {
     products: ProductItem[];
     assetId: string;
     onlyFirst?: boolean;
+    definition: keyof Omit<Products, 'any'>;
 }): Promise<ProductItem[]> => {
-    const requests = products.flatMap(({ productId, images }) =>
-        (onlyFirst ? images.slice(0, 1) : images).map((imgName) => ({
+    const requests = products.flatMap(({ productId, images, chroma }) => {
+        if (chroma && definition) {
+            const chromaImages = chroma[definition]?.images || [];
+            return chromaImages.map((imgName) => ({
+                productId,
+                imgName,
+                source: `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${productId}/${imgName.replace(/^~\//, '')}`,
+            }));
+        }
+        return (onlyFirst ? images.slice(0, 1) : images).map((imgName) => ({
             productId,
             imgName,
             source: `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${productId}/${imgName.replace(/^~\//, '')}`,
-        }))
-    );
+        }));
+    });
 
     const results = await Promise.allSettled(
         requests.map(async ({ productId, imgName, source }) => {
@@ -59,12 +69,30 @@ const removeFinalS = (word: string) => {
     return word.endsWith('s') ? word.slice(0, -1) : word;
 };
 
-export const getProductsPlaceholders = ({ products }: { products: ProductItem[] }) =>
-    products.map((prod) => ({
-        ...prod,
-        images: prod.images.map((imgName, imgIndex) =>
-            imgName.includes('chroma')
-                ? `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${prod.productId}/placeholder_${removeFinalS(prod.categoryId)}-${imgIndex + 1}.png`
-                : `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${prod.productId}/${imgName.replace(/^~\//, '')}`
-        ),
-    }));
+export const getProductsPlaceholders = ({
+    products,
+    definition,
+}: {
+    products: ProductItem[];
+    definition: keyof Omit<Products, 'any'>;
+}) =>
+    products.map((prod) => {
+        if ('chroma' in prod) {
+            return {
+                ...prod,
+                images: prod.chroma![definition]?.images?.map((imgName: string, imgIndex: number) =>
+                    imgName.includes('chroma')
+                        ? `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${prod.productId}/placeholder_${removeFinalS(prod.categoryId)}-${imgIndex + 1}.png`
+                        : `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${prod.productId}/${imgName.replace(/^~\//, '')}`
+                ),
+            };
+        }
+        return {
+            ...prod,
+            images: prod.images.map((imgName, imgIndex) =>
+                imgName.includes('chroma')
+                    ? `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${prod.productId}/placeholder_${removeFinalS(prod.categoryId)}-${imgIndex + 1}.png`
+                    : `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${prod.productId}/${imgName.replace(/^~\//, '')}`
+            ),
+        };
+    });

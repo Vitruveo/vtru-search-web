@@ -20,6 +20,7 @@ export interface Catalog {
     sections: Sections[];
     categories: Category[];
     products: Products;
+    config: Config;
 }
 
 export interface ProductItem {
@@ -29,6 +30,20 @@ export interface ProductItem {
     description: string;
     html: string;
     images: string[];
+    chroma?: {
+        vertical: {
+            preview: string;
+            images: string[];
+        };
+        horizontal: {
+            preview: string;
+            images: string[];
+        };
+        square: {
+            preview: string;
+            images: string[];
+        };
+    };
     price: number;
     shipping: number;
     area: number;
@@ -38,4 +53,12 @@ export interface Products {
     vertical: ProductItem[];
     horizontal: ProductItem[];
     square: ProductItem[];
+    any: ProductItem[];
+}
+
+export interface Config {
+    active: boolean;
+    markup: number;
+    discount: number;
+    shipping: number;
 }
