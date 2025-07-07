@@ -2,6 +2,7 @@ import axios from 'axios';
 import { redirect } from 'next/navigation';
 import { API_BASE_URL, CATALOG_BASE_URL } from '@/constants/api';
 import { Config } from './types';
+import { videoExtension } from '@/utils/videoExtensions';
 
 interface SectionLayoutProps {
     children: React.ReactNode;
@@ -38,8 +39,10 @@ export default async function SectionLayout({ children, params }: SectionLayoutP
 
     const hasPrintAdded = asset?.licenses?.print?.added;
     const isPrintActive = setupPrintLicense.active;
+    const assetPrintPath = asset?.formats.print.path;
+    const printIsVideo = videoExtension.some((ext) => assetPrintPath?.endsWith(ext));
 
-    if (!hasPrintAdded || !isPrintActive) {
+    if (!hasPrintAdded || !isPrintActive || printIsVideo) {
         redirect(`/${username}/${assetId}`);
     }
 

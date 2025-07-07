@@ -14,7 +14,7 @@ import { TypeActions, initialState, reducer } from './slice';
 import cookie from 'cookiejs';
 import { Asset } from '@/features/assets/types';
 import { EXPLORER_URL } from '@/constants/web3';
-import { API_BASE_URL, NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
+import { CATALOG_BASE_URL, NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
 import { useSelector } from '@/store/hooks';
 import { useAssetLicenses } from '@/app/hooks/useAssetLicenses';
 import { useDomainContext } from '@/app/context/domain';
@@ -62,8 +62,8 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
 
     useEffect(() => {
         const getSetupPrintLicense = async () => {
-            const result = await axios.get(`${API_BASE_URL}/setup/print-license`);
-            setPrintIsBlocked(result.data.data.isBlocked);
+            const result = await axios.get(`${CATALOG_BASE_URL}`);
+            setPrintIsBlocked(result.data.config.active);
         };
         getSetupPrintLicense();
     }, []);
