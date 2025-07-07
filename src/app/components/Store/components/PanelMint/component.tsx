@@ -147,7 +147,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                                         </Button>
                                         {printIsBlocked && (
                                             <Typography variant="h6" sx={{ color: theme.palette.error.main }}>
-                                                Print is unavailable for now
+                                                Print-on-Demand currently unavailable
                                             </Typography>
                                         )}
                                     </Box>
