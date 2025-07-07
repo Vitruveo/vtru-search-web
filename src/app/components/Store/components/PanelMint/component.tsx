@@ -8,6 +8,7 @@ import DigitalLicenseModal from './DigitalLicenseModal';
 import { LastAssetsList } from '../LastAssetsList';
 import { LastAssets } from '@/features/store/types';
 import { LoadingAvailableLincenses } from '../LoadingAvailableLicenses';
+import { videoExtension } from '@/utils/videoExtensions';
 
 export interface PanelMintProps {
     image: string;
@@ -102,6 +103,9 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
         handleCloseModalBuyVUSD,
     } = actions;
 
+    const originalPath = asset?.formats?.original?.path;
+    const isVideo = videoExtension.some((ext) => originalPath?.endsWith(ext));
+
     if (!assetLicenses) return <LoadingAvailableLincenses message="Checking Licenses..." background="#000000" />;
 
     if (!stateModalPrintLicense && !stateModalLicense && !openModalBuyVUSD && !stateModalMinted) {
@@ -111,7 +115,7 @@ export const PanelMint = ({ image, size, creatorAvatar, creatorName, data, actio
                     {available || licenseAdded.print ? 'Available Licenses' : 'No Licenses Available'}
                 </Typography>
                 <Box>
-                    {licenseAdded.print && (
+                    {licenseAdded.print && !isVideo && (
                         <MetadataAccordion
                             title="Print"
                             last={false}
