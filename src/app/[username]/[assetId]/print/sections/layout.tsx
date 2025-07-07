@@ -42,7 +42,7 @@ export default async function SectionLayout({ children, params }: SectionLayoutP
     const assetOriginalPath = asset?.formats.original.path;
     const printIsVideo = videoExtension.some((ext) => assetOriginalPath?.endsWith(ext));
 
-    if (!hasPrintAdded || !isPrintActive || printIsVideo) {
+    if (!isPrintActive || !hasPrintAdded || printIsVideo) {
         redirect(`/${username}/${assetId}`);
     }
 
