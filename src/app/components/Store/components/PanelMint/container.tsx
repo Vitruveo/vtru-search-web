@@ -63,7 +63,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     useEffect(() => {
         const getSetupPrintLicense = async () => {
             const result = await axios.get(CATALOG_BASE_URL);
-            setPrintIsBlocked(result.data.config.active);
+            setPrintIsBlocked(!result.data.config.active);
         };
         getSetupPrintLicense();
     }, []);
