@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useDispatch } from 'react-redux';
-import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Grid, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Select from 'react-select';
 import axios from 'axios';
@@ -91,6 +91,7 @@ interface VariantSelectProps {
 
 const VariantSelect = ({ title, variants, onChange, mb = 1 }: VariantSelectProps) => {
     const theme = useTheme();
+    const isMobile = useMediaQuery('(max-width: 900px)');
     const [imageValidity, setImageValidity] = useState<{ [key: string]: boolean }>({});
 
     const options = variants.map((variant) => ({
@@ -112,7 +113,13 @@ const VariantSelect = ({ title, variants, onChange, mb = 1 }: VariantSelectProps
     }));
 
     return (
-        <Box display="flex" alignItems="center" justifyContent="space-between" mb={mb}>
+        <Box
+            display="flex"
+            alignItems={isMobile ? 'inherit' : 'center'}
+            justifyContent="space-between"
+            mb={mb}
+            flexDirection={isMobile ? 'column' : 'row'}
+        >
             <Typography variant="h4" fontWeight={600} fontSize={22}>
                 {title}:
             </Typography>
