@@ -44,6 +44,12 @@ export interface ProductItem {
             images: string[];
         };
     };
+    variants?: {
+        productId: string;
+        vendorProductId: string;
+        title: string;
+        image: string;
+    }[];
     price: number;
     shipping: number;
     area: number;

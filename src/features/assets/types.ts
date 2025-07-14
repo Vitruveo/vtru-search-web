@@ -340,4 +340,5 @@ export interface PaymentParams {
     productId: string;
     folioId?: string | null;
     stackId?: string | null;
+    variant?: string | null;
 }
