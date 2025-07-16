@@ -34,6 +34,7 @@ export interface Stores {
     artworks: {
         general: any;
         context: any;
+        licenseChecked: any;
         taxonomy: any;
         artists: any;
         portfolio: any;
