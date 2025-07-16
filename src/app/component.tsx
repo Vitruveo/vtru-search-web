@@ -161,6 +161,11 @@ const Search = () => {
             initialFilters[`include_${key}`] = value.map((v) => v.value).join(',');
         });
 
+        Object.entries(storeFilters?.licenseChecked || {}).forEach((item) => {
+            const [key, value] = item as [string, { added: boolean }];
+            initialFilters[`licenseChecked_${key}`] = value.added ? 'yes' : 'no';
+        });
+
         dispatch(actions.initialParams({ initialParams: initialFilters, persistStoresFilters: true }));
         dispatch(
             actionsAssets.initialSort({
