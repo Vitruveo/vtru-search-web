@@ -258,18 +258,20 @@ export default function PrintProductDetails({ params, definition, stackId }: Pri
 
             const products = [...catalogData.products[definition], ...catalogData.products.any];
 
-            setVariants(
-                products.flatMap((item) =>
-                    (item.variants || []).map((variant) => ({
+            const productSelected = products.find((item) => item.productId === params.productId);
+
+            if (productSelected?.variants) {
+                setVariants(
+                    productSelected?.variants.map((item) => ({
                         label: {
-                            label: variant.title,
-                            image: `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${variant.productId}/${variant.image.replace(/^~\//, '')}`,
+                            label: item.title,
+                            image: `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${item.productId}/${item.image.replace(/^~\//, '')}`,
                         },
-                        value: variant.vendorProductId,
+                        value: item.vendorProductId,
                     }))
-                )
-            );
-            setSelectedVariant(products[0]?.variants?.[0]?.productId || null);
+                );
+                setSelectedVariant(productSelected?.variants?.[0]?.productId || null);
+            }
 
             const imagesPlaceholders = getProductsPlaceholders({ products, definition });
 
