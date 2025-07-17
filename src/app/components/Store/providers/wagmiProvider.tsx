@@ -11,7 +11,7 @@ import {
 } from 'wagmi/chains';
 import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { WAGMI_APP_NAME, WAGMI_PROJECT_ID } from '@/constants/web3';
+import { EXPLORER_URL, WAGMI_APP_NAME, WAGMI_PROJECT_ID, WEB3_NETWORK_RPC_ADDRESS } from '@/constants/web3';
 import { NODE_ENV } from '@/constants/api';
 
 export const vitruveoMainnet = {
@@ -26,12 +26,12 @@ export const vitruveoMainnet = {
         symbol: 'VTRU',
     },
     rpcUrls: {
-        public: { http: ['https://rpc.vitruveo.xyz/'] },
-        default: { http: ['https://rpc.vitruveo.xyz/'] },
+        public: { http: [WEB3_NETWORK_RPC_ADDRESS] },
+        default: { http: [WEB3_NETWORK_RPC_ADDRESS] },
     },
     blockExplorers: {
-        default: { name: 'VitruveoScan', url: 'https://explorer.vitruveo.xyz' },
-        etherscan: { name: 'VitruveoScan', url: 'https://explorer.vitruveo.xyz' },
+        default: { name: 'VitruveoScan', url: EXPLORER_URL },
+        etherscan: { name: 'VitruveoScan', url: EXPLORER_URL },
     },
     testnet: false,
 };
@@ -48,12 +48,12 @@ export const vitruveoTestnet = {
         symbol: 'tVTRU',
     },
     rpcUrls: {
-        public: { http: ['https://test-rpc.vitruveo.xyz/'] },
-        default: { http: ['https://test-rpc.vitruveo.xyz/'] },
+        public: { http: [WEB3_NETWORK_RPC_ADDRESS] },
+        default: { http: [WEB3_NETWORK_RPC_ADDRESS] },
     },
     blockExplorers: {
-        default: { name: 'VitruveoScan', url: 'https://test-explorer.vitruveo.xyz' },
-        etherscan: { name: 'VitruveoScan', url: 'https://test-explorer.vitruveo.xyz' },
+        default: { name: 'VitruveoScan', url: EXPLORER_URL },
+        etherscan: { name: 'VitruveoScan', url: EXPLORER_URL },
     },
     testnet: true,
 };

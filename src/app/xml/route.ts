@@ -4,6 +4,7 @@ import { XMLBuilder } from 'fast-xml-parser';
 
 import { API_BASE_URL, STORE_BASE_URL } from '@/constants/api';
 import { ASSET_STORAGE_URL, GENERAL_STORAGE_URL } from '@/constants/aws';
+import { BASE_URL_VITRUVEO } from '@/constants/vitruveo';
 
 function parseQueryParams(searchParams: URLSearchParams) {
     const params: any = {};
@@ -125,7 +126,7 @@ export async function GET(req: Request) {
         rss: {
             channel: {
                 title: 'VITRUVEO - Search',
-                link: 'https://vitruveo.xyz/',
+                link: BASE_URL_VITRUVEO,
                 description: 'VITRUVEO is a platform for creators to share their work with the world.',
                 language: 'en-US',
             },
