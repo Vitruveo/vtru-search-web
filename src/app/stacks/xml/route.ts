@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import { API_BASE_URL, SLIDESHOW_BASE_URL } from '@/constants/api';
 import { GENERAL_STORAGE_URL } from '@/constants/aws';
 import { XMLBuilder } from 'fast-xml-parser';
-import { BASE_URL_VITRUVEO } from '@/constants/vitruveo';
+import { VITRUVEO_URL } from '@/constants/vitruveo';
 
 export async function GET() {
     try {
@@ -30,7 +30,7 @@ export async function GET() {
             rss: {
                 channel: {
                     title: 'VITRUVEO - Search',
-                    link: BASE_URL_VITRUVEO,
+                    link: VITRUVEO_URL,
                     description: 'VITRUVEO is a platform for creators to share their work with the world.',
                     language: 'en-US',
                 },

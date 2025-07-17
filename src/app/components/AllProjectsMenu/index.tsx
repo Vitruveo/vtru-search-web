@@ -3,7 +3,7 @@ import { Box, Drawer, IconButton, List, ListItem, ListItemText, Theme, Typograph
 import { IconMenu2 } from '@tabler/icons-react';
 import { useSelector } from '@/store/hooks';
 import { NODE_ENV, SEARCH_BASE_URL, STUDIO_BASE_URL } from '@/constants/api';
-import { BASE_URL_VITRUVEO } from '@/constants/vitruveo';
+import { VITRUVEO_URL } from '@/constants/vitruveo';
 
 const projects = [
     { title: 'SEARCH', url: `${SEARCH_BASE_URL}` },
@@ -12,7 +12,7 @@ const projects = [
     // { title: 'STACKS', url: `${SEARCH_BASE_URL}/stacks` },
     // { title: 'STREAMS', url: '' },
     { title: 'ABOUT XIBIT', url: 'https://about.xibit.app', onlyMobile: true },
-    { title: 'ABOUT VITRUVEO', url: BASE_URL_VITRUVEO, onlyMobile: true },
+    { title: 'ABOUT VITRUVEO', url: VITRUVEO_URL, onlyMobile: true },
 ];
 
 const AllProjectsMenu = () => {
