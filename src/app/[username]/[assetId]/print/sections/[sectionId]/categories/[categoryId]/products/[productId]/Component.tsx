@@ -1,10 +1,7 @@
 'use client';
-import { useCallback, useEffect, useState } from 'react';
-import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Box, Button, CircularProgress, Grid, Typography, useMediaQuery } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import Select from 'react-select';
+import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 import axios from 'axios';
 
 // components
@@ -18,7 +15,6 @@ import { getProductsImages, getProductsPlaceholders } from '../../../../../utils
 import * as actionsAssets from '@/features/assets/slice';
 import { useSelector } from '@/store/hooks';
 import { useDomainContext } from '@/app/context/domain';
-import { NO_IMAGE_ASSET } from '@/constants/asset';
 
 interface BreadCrumbIParams {
     segment: string;
@@ -82,86 +78,6 @@ const PriceInfo = ({ title, price, mb = 1, strikethrough = false }: PriceInfoPro
     </Box>
 );
 
-interface VariantSelectProps {
-    title: string;
-    variants: { label: { label: string; image: string }; value: string }[];
-    mb?: number;
-    onChange: (selectedOption: string) => void;
-}
-
-const VariantSelect = ({ title, variants, onChange, mb = 1 }: VariantSelectProps) => {
-    const theme = useTheme();
-    const isMobile = useMediaQuery('(max-width: 900px)');
-    const [imageValidity, setImageValidity] = useState<{ [key: string]: boolean }>({});
-
-    const options = variants.map((variant) => ({
-        value: variant.value,
-        label: (
-            <Box display="flex" alignItems="center">
-                <Image
-                    src={imageValidity[variant.value] ? variant.label.image : NO_IMAGE_ASSET}
-                    alt={variant.label.label}
-                    width={28}
-                    height={28}
-                    style={{ marginRight: 10 }}
-                    onLoad={() => setImageValidity((prev) => ({ ...prev, [variant.value]: false }))}
-                    onError={() => setImageValidity((prev) => ({ ...prev, [variant.value]: false }))}
-                />
-                <Typography>{variant.label.label}</Typography>
-            </Box>
-        ),
-    }));
-
-    return (
-        <Box
-            display="flex"
-            alignItems={isMobile ? 'inherit' : 'center'}
-            justifyContent="space-between"
-            mb={mb}
-            flexDirection={isMobile ? 'column' : 'row'}
-        >
-            <Typography variant="h4" fontWeight={600} fontSize={22}>
-                {title}:
-            </Typography>
-            <Select
-                options={options}
-                defaultValue={options[0]}
-                onChange={(selectedOption) => onChange(selectedOption!.value)}
-                isSearchable={false}
-                styles={{
-                    control: (base, state) => ({
-                        ...base,
-                        borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
-                        backgroundColor: theme.palette.background.paper,
-                        boxShadow: '#FF0066',
-                        '&:hover': { borderColor: '#FF0066' },
-                    }),
-                    menu: (base) => ({
-                        ...base,
-                        zIndex: 1000,
-                        color: theme.palette.text.primary,
-                        backgroundColor: theme.palette.background.paper,
-                    }),
-                    singleValue: (base) => ({
-                        ...base,
-                        color: theme.palette.text.primary,
-                    }),
-                    option: (base, state) => ({
-                        ...base,
-                        color: theme.palette.text.primary,
-                        backgroundColor: state.isFocused ? theme.palette.action.hover : 'transparent',
-                        '&:hover': { backgroundColor: theme.palette.action.hover },
-                    }),
-                    input: (base) => ({
-                        ...base,
-                        color: theme.palette.text.primary,
-                    }),
-                }}
-            />
-        </Box>
-    );
-};
-
 interface PrintProductProps {
     params: {
         username: string;
@@ -194,8 +110,6 @@ export default function PrintProductDetails({ params, definition, stackId }: Pri
     const [catalog, setCatalog] = useState<Catalog | null>(null);
     const [asset, setAsset] = useState<Asset | null>(null);
     const [description, setDescription] = useState<string | null>(null);
-    const [variants, setVariants] = useState<{ label: { label: string; image: string }; value: string }[]>([]);
-    const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
     const [printPrices, setPrintPrices] = useState<PrintPrice>({
         comission: 0,
         artworkLicense: 0,
@@ -214,10 +128,6 @@ export default function PrintProductDetails({ params, definition, stackId }: Pri
         const newProducts = products.find((item: ProductItem) => item.productId === params.productId);
         setProduct(newProducts || null);
     };
-
-    const handleVariantChange = useCallback((selectedOption: string) => {
-        setSelectedVariant(selectedOption);
-    }, []);
 
     useEffect(() => {
         const fetchPrices = async () => {
@@ -265,21 +175,6 @@ export default function PrintProductDetails({ params, definition, stackId }: Pri
 
             const products = [...catalogData.products[definition], ...catalogData.products.any];
 
-            const productSelected = products.find((item) => item.productId === params.productId);
-
-            if (productSelected?.variants) {
-                setVariants(
-                    productSelected?.variants.map((item) => ({
-                        label: {
-                            label: item.title,
-                            image: `https://vitruveo-projects.s3.amazonaws.com/Xibit/assets/${item.productId}/${item.image.replace(/^~\//, '')}`,
-                        },
-                        value: item.vendorProductId,
-                    }))
-                );
-                setSelectedVariant(productSelected?.variants?.[0]?.productId || null);
-            }
-
             const imagesPlaceholders = getProductsPlaceholders({ products, definition });
 
             handleSetProduct(imagesPlaceholders);
@@ -309,7 +204,6 @@ export default function PrintProductDetails({ params, definition, stackId }: Pri
                 productId: product.productId,
                 folioId: !!isValidSubdomain && !!subdomain ? folioId : null,
                 stackId,
-                variant: selectedVariant,
             })
         );
     };
@@ -376,9 +270,6 @@ export default function PrintProductDetails({ params, definition, stackId }: Pri
                                         title={`Discounted Price (${printPrices.discountBasisPoints / 100}%):`}
                                         price={printPrices.merchandiseWithDiscount}
                                     />
-                                )}
-                                {variants && variants.length > 0 && (
-                                    <VariantSelect title="Variant" variants={variants} onChange={handleVariantChange} />
                                 )}
                                 <PriceInfo title="Platform Fee:" price={printPrices.platfromFee} />
                                 <PriceInfo title="Shipping:" price={printPrices.shipping} mb={4} />
