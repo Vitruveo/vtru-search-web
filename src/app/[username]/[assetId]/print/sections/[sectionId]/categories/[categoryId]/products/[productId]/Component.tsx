@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useDispatch } from 'react-redux';
-import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Grid, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Select from 'react-select';
 import axios from 'axios';
@@ -91,24 +91,12 @@ interface VariantSelectProps {
 
 const VariantSelect = ({ title, variants, onChange, mb = 1 }: VariantSelectProps) => {
     const theme = useTheme();
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
     const [imageValidity, setImageValidity] = useState<{ [key: string]: boolean }>({});
 
     const options = variants.map((variant) => ({
         value: variant.value,
-        label: (
-            <Box display="flex" alignItems="center">
-                <Image
-                    src={imageValidity[variant.value] ? variant.label.image : NO_IMAGE_ASSET}
-                    alt={variant.label.label}
-                    width={28}
-                    height={28}
-                    style={{ marginRight: 10 }}
-                    onLoad={() => setImageValidity((prev) => ({ ...prev, [variant.value]: false }))}
-                    onError={() => setImageValidity((prev) => ({ ...prev, [variant.value]: false }))}
-                />
-                <Typography>{variant.label.label}</Typography>
-            </Box>
-        ),
+        label: variant.label,
     }));
 
     return (
@@ -119,6 +107,24 @@ const VariantSelect = ({ title, variants, onChange, mb = 1 }: VariantSelectProps
             <Select
                 options={options}
                 defaultValue={options[0]}
+                formatOptionLabel={(option, { context }) =>
+                    context === 'menu' ? (
+                        <Box display="flex" alignItems="center">
+                            <Image
+                                src={imageValidity[option.value] ? option.label.image : NO_IMAGE_ASSET}
+                                alt={option.label.label}
+                                width={smUp ? 92 : 72}
+                                height={smUp ? 92 : 72}
+                                style={{ marginRight: 10 }}
+                                onLoad={() => setImageValidity((prev) => ({ ...prev, [option.value]: false }))}
+                                onError={() => setImageValidity((prev) => ({ ...prev, [option.value]: false }))}
+                            />
+                            <Typography>{option.label.label}</Typography>
+                        </Box>
+                    ) : (
+                        <Typography>{option.label.label}</Typography>
+                    )
+                }
                 onChange={(selectedOption) => onChange(selectedOption!.value)}
                 isSearchable={false}
                 styles={{
@@ -376,7 +382,6 @@ export default function PrintProductDetails({ params, definition, stackId }: Pri
                                 <PriceInfo title="Platform Fee:" price={printPrices.platfromFee} />
                                 <PriceInfo title="Shipping:" price={printPrices.shipping} mb={4} />
                                 <PriceInfo title="Total:" price={printPrices.total} mb={4} />
-                                <Typography variant="h4">*Store credit will be applied at checkout.</Typography>
                             </Box>
 
                             <Box width="50%" mt={4} mb={2}>

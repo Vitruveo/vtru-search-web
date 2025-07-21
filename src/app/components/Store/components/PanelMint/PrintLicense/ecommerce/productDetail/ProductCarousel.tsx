@@ -15,7 +15,7 @@ import './Carousel.css';
 
 import Image from 'next/image';
 
-import { Theme, useMediaQuery } from '@mui/material';
+import { Theme, Typography, useMediaQuery } from '@mui/material';
 import { ProductItem } from '@/app/[username]/[assetId]/print/sections/types';
 
 interface ProductCarouselProps {
@@ -117,7 +117,7 @@ const ProductCarousel = ({ product }: ProductCarouselProps) => {
                     </Box>
                 ))}
             </Slider>
-            <Box sx={smUp ? { width: 600, marginTop: 4 } : {}}>
+            <Box sx={smUp ? { width: 600, marginTop: 4, marginBottom: 4 } : {}}>
                 <Slider asNavFor={nav1} ref={(slider: any) => (slider2.current = slider)} {...settings}>
                     {sliderData.map((step) => (
                         <Box key={step.id} sx={slider2ContainerStyle}>
@@ -132,6 +132,16 @@ const ProductCarousel = ({ product }: ProductCarouselProps) => {
                     ))}
                 </Slider>
             </Box>
+            <Typography
+                variant="h6"
+                sx={{
+                    textAlign: 'left',
+                    color: 'text.secondary',
+                }}
+            >
+                Disclamer: Product mockups are for illustrative purposes only and do not represent exact final
+                appearance. Actual product may vary in color, layout and proportion.
+            </Typography>
         </Box>
     );
 };
