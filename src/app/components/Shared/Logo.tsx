@@ -7,6 +7,7 @@ import { actions } from '@/features/assets';
 import { actions as actionsFilters } from '@/features/filters/slice';
 import { actions as actionsStores } from '@/features/stores/slice';
 import { STORES_STORAGE_URL } from '@/constants/aws';
+import { VITRUVEO_URL } from '@/constants/vitruveo';
 
 const LogoLtrDark = () => {
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
@@ -34,7 +35,7 @@ const LogoLtrDark = () => {
                         color: '#e0e0e0',
                     },
                 }}
-                onClick={() => window.open('https://vitruveo.xyz', '_blank', 'noopener,noreferrer')}
+                onClick={() => window.open(VITRUVEO_URL, '_blank', 'noopener,noreferrer')}
             >
                 BY VITRUVEO
             </Typography>
@@ -68,7 +69,7 @@ const LogoLtrLight = () => {
                         color: '#333',
                     },
                 }}
-                onClick={() => window.open('https://vitruveo.xyz', '_blank', 'noopener,noreferrer')}
+                onClick={() => window.open(VITRUVEO_URL, '_blank', 'noopener,noreferrer')}
             >
                 BY VITRUVEO
             </Typography>
