@@ -267,7 +267,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                                     background: theme.palette.primary.main,
                                 },
                             }}
-                            disabled={disabled}
+                            disabled={true} // disabled
                             onClick={handleBuy}
                         >
                             {buttonMessage()}
