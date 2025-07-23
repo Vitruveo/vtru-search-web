@@ -86,10 +86,11 @@ interface VariantSelectProps {
     title: string;
     variants: { label: { label: string; image: string }; value: string }[];
     mb?: number;
+    mt?: number;
     onChange: (selectedOption: string) => void;
 }
 
-const VariantSelect = ({ title, variants, onChange, mb = 1 }: VariantSelectProps) => {
+const VariantSelect = ({ title, variants, onChange, mb = 1, mt = 1 }: VariantSelectProps) => {
     const theme = useTheme();
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
     const [imageValidity, setImageValidity] = useState<{ [key: string]: boolean }>({});
@@ -100,7 +101,7 @@ const VariantSelect = ({ title, variants, onChange, mb = 1 }: VariantSelectProps
     }));
 
     return (
-        <Box display="flex" alignItems="center" justifyContent="space-between" mb={mb}>
+        <Box display="flex" alignItems="center" justifyContent="space-between" mb={mb} mt={mt}>
             <Typography variant="h4" fontWeight={600} fontSize={22}>
                 {title}:
             </Typography>
@@ -377,7 +378,13 @@ export default function PrintProductDetails({ params, definition, stackId }: Pri
                                     />
                                 )}
                                 {variants && variants.length > 0 && (
-                                    <VariantSelect title="Variant" variants={variants} onChange={handleVariantChange} />
+                                    <VariantSelect
+                                        title="Variant"
+                                        variants={variants}
+                                        onChange={handleVariantChange}
+                                        mb={2}
+                                        mt={2}
+                                    />
                                 )}
                                 <PriceInfo title="Platform Fee:" price={printPrices.platfromFee} />
                                 <PriceInfo title="Shipping:" price={printPrices.shipping} mb={4} />
