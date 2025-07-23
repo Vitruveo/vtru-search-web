@@ -333,11 +333,6 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     </IconButton>
                 </Box>
             )}
-            <Typography variant="h3" bgcolor={'red'} color={'white'} p={2} m={3}>
-                We are currently experiencing an issue with Digital Collectible prices and are working to resolve the
-                issue. Until it is resolved this banner will be visible and Digital Collectible &quot;Buy&quot; buttons
-                will be disabled.
-            </Typography>
 
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
 
