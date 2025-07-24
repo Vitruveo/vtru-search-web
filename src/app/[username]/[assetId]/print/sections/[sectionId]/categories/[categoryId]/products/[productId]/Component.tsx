@@ -85,12 +85,10 @@ const PriceInfo = ({ title, price, mb = 1, strikethrough = false }: PriceInfoPro
 interface VariantSelectProps {
     title: string;
     variants: { label: { label: string; image: string }; value: string }[];
-    mb?: number;
-    mt?: number;
     onChange: (selectedOption: string) => void;
 }
 
-const VariantSelect = ({ title, variants, onChange, mb = 1, mt = 1 }: VariantSelectProps) => {
+const VariantSelect = ({ title, variants, onChange }: VariantSelectProps) => {
     const theme = useTheme();
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
     const [imageValidity, setImageValidity] = useState<{ [key: string]: boolean }>({});
@@ -101,8 +99,8 @@ const VariantSelect = ({ title, variants, onChange, mb = 1, mt = 1 }: VariantSel
     }));
 
     return (
-        <Box display="flex" alignItems="center" justifyContent="space-between" mb={mb} mt={mt}>
-            <Typography variant="h4" fontWeight={600} fontSize={22}>
+        <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" maxWidth={700} mt={4}>
+            <Typography variant="h4" fontWeight={600} fontSize={26}>
                 {title}:
             </Typography>
             <Select
@@ -123,7 +121,7 @@ const VariantSelect = ({ title, variants, onChange, mb = 1, mt = 1 }: VariantSel
                             <Typography>{option.label.label}</Typography>
                         </Box>
                     ) : (
-                        <Typography>{option.label.label}</Typography>
+                        <Typography fontSize={'1.1rem'}>{option.label.label}</Typography>
                     )
                 }
                 onChange={(selectedOption) => onChange(selectedOption!.value)}
@@ -141,10 +139,12 @@ const VariantSelect = ({ title, variants, onChange, mb = 1, mt = 1 }: VariantSel
                         zIndex: 1000,
                         color: theme.palette.text.primary,
                         backgroundColor: theme.palette.background.paper,
+                        width: 560,
                     }),
                     singleValue: (base) => ({
                         ...base,
                         color: theme.palette.text.primary,
+                        width: 500,
                     }),
                     option: (base, state) => ({
                         ...base,
@@ -357,6 +357,9 @@ export default function PrintProductDetails({ params, definition, stackId }: Pri
                         <Typography fontWeight="600" variant="h2">
                             {product.title}
                         </Typography>
+                        {variants && variants.length > 0 && (
+                            <VariantSelect title="Options" variants={variants} onChange={handleVariantChange} />
+                        )}
                         <Box
                             display={'flex'}
                             flexDirection={'column'}
@@ -375,15 +378,6 @@ export default function PrintProductDetails({ params, definition, stackId }: Pri
                                     <PriceInfo
                                         title={`Discounted Price (${printPrices.discountBasisPoints / 100}%):`}
                                         price={printPrices.merchandiseWithDiscount}
-                                    />
-                                )}
-                                {variants && variants.length > 0 && (
-                                    <VariantSelect
-                                        title="Variant"
-                                        variants={variants}
-                                        onChange={handleVariantChange}
-                                        mb={2}
-                                        mt={2}
                                     />
                                 )}
                                 <PriceInfo title="Platform Fee:" price={printPrices.platfromFee} />
