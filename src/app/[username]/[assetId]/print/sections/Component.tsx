@@ -113,7 +113,7 @@ export const PrintSectionComponent = ({ data }: Props) => {
                     <Image
                         src={`${ASSET_STORAGE_URL}/${assetPreviewPath}`}
                         height={lgUp || smUp ? 355 : 300}
-                        width={lgUp || smUp ? 450 : 300}
+                        width={lgUp || smUp ? 355 : 300}
                         alt={`asset ${assetTitle}`}
                     />
                 </Box>

@@ -196,7 +196,7 @@ export function PrintCategories({ params, definition, previewPath }: PrintCatego
                     <Image
                         src={`${ASSET_STORAGE_URL}/${previewPath}`}
                         height={lgUp || smUp ? 355 : 300}
-                        width={lgUp || smUp ? 450 : 300}
+                        width={lgUp || smUp ? 355 : 300}
                         alt={`asset ${params.assetId}`}
                     />
                 </Box>
