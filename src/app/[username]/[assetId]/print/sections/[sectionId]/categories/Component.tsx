@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Breadcrumb } from '@/app/components/Breadcrumb';
-import { Box, CircularProgress, Typography, useMediaQuery } from '@mui/material';
+import { Box, CircularProgress, Theme, Typography, useMediaQuery } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Catalog, ProductItem, Products, Sections } from '../../types';
@@ -70,10 +70,22 @@ interface PrintCategoriesProps {
 }
 
 export function PrintCategories({ params, definition, previewPath }: PrintCategoriesProps) {
-    const isMobile = useMediaQuery('(max-width: 900px)');
+    const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
     const [categories, setCategories] = useState<{ src?: string; categoryId: string; title: string }[]>([]);
     const [section, setSection] = useState<Sections | null>(null);
     const [productsQuantity, setProductsQuantity] = useState<{ [key: string]: number }>({});
+    const [widthLessThanHeight, setWidthLessThanHeight] = useState(
+        typeof window !== 'undefined' ? window.innerWidth < window.innerHeight : false
+    );
+
+    useEffect(() => {
+        function handleResize() {
+            setWidthLessThanHeight(window.innerWidth < window.innerHeight);
+        }
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const handleSetCategories = ({ catalog, products }: { catalog: Catalog; products: ProductItem[] }) => {
         const catalogSection = catalog.sections.find((item) => item.sectionId === params.sectionId)!;
@@ -153,19 +165,10 @@ export function PrintCategories({ params, definition, previewPath }: PrintCatego
 
             <Box
                 display="flex"
-                flexWrap="wrap"
-                justifyContent={isMobile ? 'center' : 'start'}
-                gap={isMobile ? 4 : 16}
-                marginInline={isMobile ? 0 : 15}
+                flexWrap={widthLessThanHeight ? 'wrap' : 'nowrap'}
+                justifyContent={lgUp ? 'center' : smUp ? 'start' : 'center'}
+                gap={lgUp ? 12 : smUp ? 8 : 4}
             >
-                <Box display={'flex'} flexDirection={'column'} gap={4} alignItems={'center'}>
-                    <Image
-                        src={`${ASSET_STORAGE_URL}/${previewPath}`}
-                        height={isMobile ? 310 : 450}
-                        width={isMobile ? 310 : 450}
-                        alt={`asset ${params.assetId}`}
-                    />
-                </Box>
                 {categories.length ? (
                     categories.map((item) => {
                         return (
@@ -188,6 +191,15 @@ export function PrintCategories({ params, definition, previewPath }: PrintCatego
                         <CircularProgress />
                     </Box>
                 )}
+
+                <Box display={'flex'} flexDirection={'column'} gap={4} alignItems={'center'}>
+                    <Image
+                        src={`${ASSET_STORAGE_URL}/${previewPath}`}
+                        height={lgUp || smUp ? 355 : 300}
+                        width={lgUp || smUp ? 450 : 300}
+                        alt={`asset ${params.assetId}`}
+                    />
+                </Box>
             </Box>
         </Box>
     );
