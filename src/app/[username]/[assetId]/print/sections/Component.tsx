@@ -1,11 +1,12 @@
 'use client';
 import { CATALOG_ASSETS_BASE_URL, STUDIO_BASE_URL } from '@/constants/api';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
-import { Box, Typography, useMediaQuery } from '@mui/material';
+import { Box, Theme, Typography, useMediaQuery } from '@mui/material';
 import { IconLink } from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Sections } from './types';
+import { useEffect, useState } from 'react';
 
 const mainColor = '#ffffff';
 
@@ -52,7 +53,19 @@ interface Props {
 
 export const PrintSectionComponent = ({ data }: Props) => {
     const { assetId, assetTitle, assetPreviewPath, username, sections, productsBySection } = data;
-    const isMobile = useMediaQuery('(max-width: 900px)');
+    const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
+    const [widthLessThanHeight, setWidthLessThanHeight] = useState(
+        typeof window !== 'undefined' ? window.innerWidth < window.innerHeight : false
+    );
+
+    useEffect(() => {
+        function handleResize() {
+            setWidthLessThanHeight(window.innerWidth < window.innerHeight);
+        }
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return (
         <Box
@@ -75,20 +88,10 @@ export const PrintSectionComponent = ({ data }: Props) => {
 
             <Box
                 display="flex"
-                flexWrap="wrap"
-                justifyContent={isMobile ? 'center' : 'start'}
-                gap={isMobile ? 4 : 16}
-                marginInline={isMobile ? 0 : 15}
+                flexWrap={widthLessThanHeight ? 'wrap' : 'nowrap'}
+                justifyContent={lgUp ? 'center' : smUp ? 'start' : 'center'}
+                gap={lgUp ? 12 : smUp ? 8 : 4}
             >
-                <Box display={'flex'} flexDirection={'column'} gap={4} alignItems={'center'}>
-                    <Image
-                        src={`${ASSET_STORAGE_URL}/${assetPreviewPath}`}
-                        height={isMobile ? 310 : 450}
-                        width={isMobile ? 310 : 450}
-                        alt={`asset ${assetTitle}`}
-                    />
-                </Box>
-
                 {sections.map((item) => {
                     return (
                         productsBySection[item.sectionId].countAll > 0 && (
@@ -105,6 +108,15 @@ export const PrintSectionComponent = ({ data }: Props) => {
                         )
                     );
                 })}
+
+                <Box display={'flex'} flexDirection={'column'} gap={4} alignItems={'center'}>
+                    <Image
+                        src={`${ASSET_STORAGE_URL}/${assetPreviewPath}`}
+                        height={lgUp || smUp ? 355 : 300}
+                        width={lgUp || smUp ? 355 : 300}
+                        alt={`asset ${assetTitle}`}
+                    />
+                </Box>
             </Box>
             <Box sx={{ flexGrow: 1 }} />
             <footer>
