@@ -1,5 +1,7 @@
+import { useAccount } from 'wagmi';
+import { useSelector } from '@/store/hooks';
 import { formatDate } from '@/utils/assets';
-import { Box, Card, Typography } from '@mui/material';
+import { Box, Button, Card, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 export interface ActivityProps {
@@ -15,10 +17,19 @@ export interface ActivityProps {
             text: string;
         };
     }[];
+    downloadMedia: () => void;
+    mintAdress?: string;
 }
 
-export default function Activity({ listing }: ActivityProps) {
+export default function Activity({ listing, downloadMedia, mintAdress }: ActivityProps) {
     const theme = useTheme();
+    const isLogged = useSelector((state) => state.creator.token !== '');
+    const loggedWallets = useSelector((state) => state.creator.wallets);
+    const isMintAddressInLoggedWallets = loggedWallets.some((item) => item.address === mintAdress);
+
+    const { isConnected, address } = useAccount();
+    const isMintAddessEqualConnectedAddress = isConnected && address?.toLowerCase() === mintAdress?.toLowerCase();
+
     const formattedDate = (date: string | Date) => {
         const parsedDate = new Date(date);
         const day = parsedDate.getUTCDate();
@@ -95,6 +106,22 @@ export default function Activity({ listing }: ActivityProps) {
                         ))
                 ) : (
                     <></>
+                )}
+                {isLogged && (isMintAddressInLoggedWallets || isMintAddessEqualConnectedAddress) && (
+                    <Button
+                        variant="contained"
+                        onClick={downloadMedia}
+                        sx={{
+                            backgroundColor: theme.palette.primary.main,
+                            color: '#ffff',
+                            '&:hover': {
+                                backgroundColor: theme.palette.primary.main,
+                            },
+                            borderRadius: 0,
+                        }}
+                    >
+                        Download original media
+                    </Button>
                 )}
             </Card>
         </div>

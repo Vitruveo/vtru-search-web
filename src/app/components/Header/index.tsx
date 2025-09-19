@@ -58,7 +58,7 @@ const Header = ({
         const fetchData = async () => {
             const rowData = await axios.get(REDIRECTS_JSON);
             setRedirects({
-                about: rowData.data[NODE_ENV].common.xibit.about_url,
+                about: rowData.data.common.xibit.about_url,
                 search: rowData.data[NODE_ENV].xibit.search_url,
             });
         };

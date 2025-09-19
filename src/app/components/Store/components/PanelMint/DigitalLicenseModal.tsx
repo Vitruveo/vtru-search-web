@@ -36,7 +36,6 @@ const LicenseModal = ({ image, creatorAvatar, creatorName, data, actions }: Lice
         totalFee,
     } = data;
 
-    const isMobile = useMediaQuery('(max-width: 900px)');
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.down('sm'));
 
     const { state, message } = loading;

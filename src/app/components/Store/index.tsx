@@ -65,6 +65,25 @@ const Store = ({ data }: StoreProps) => {
         setExpandedAccordion(isExpanded ? panel : false);
     };
 
+    const handleDownloadMedia = async () => {
+        const url = `${ASSET_STORAGE_URL}/${asset.formats?.original?.path}`;
+        const fileName = asset.assetMetadata?.context?.formData?.title || Date.now().toString();
+
+        try {
+            const response = await axios.get(url, { responseType: 'blob' });
+            const blob = response.data;
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(link.href);
+        } catch (error) {
+            console.error('Error downloading the file', error);
+        }
+    };
+
     useEffect(() => {
         if (asset.formats?.preview.path) setImage(`${ASSET_STORAGE_URL}/${asset.formats?.preview.path}`);
     }, [asset?.formats]);
@@ -190,6 +209,8 @@ const Store = ({ data }: StoreProps) => {
                                         },
                                     },
                                 ]}
+                                downloadMedia={handleDownloadMedia}
+                                mintAdress={asset?.mintExplorer?.address}
                             />
                         )}
                     </Grid>
