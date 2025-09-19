@@ -1,10 +1,13 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { LastAssets } from '@/features/store/types';
-import { SEARCH_BASE_URL } from '@/constants/api';
+import { NODE_ENV } from '@/constants/api';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { videoExtension } from '@/utils/videoExtensions';
-import Image from 'next/image';
 
 interface Props {
     assets: LastAssets[];
@@ -14,12 +17,22 @@ interface Props {
 }
 
 export const LastAssetsList = ({ assets, loading, creatorName, creatorId }: Props) => {
+    const [searchUrl, setSearchUrl] = useState('');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setSearchUrl(rowData.data[NODE_ENV].xibit.search_url);
+        };
+        fetchData();
+    }, []);
+
     return (
         <Box>
             {!loading && assets.length > 0 && (
                 <Box sx={{ display: 'flex', marginBlock: 1, alignItems: 'center', gap: 1 }}>
                     <Typography variant="h5">Other works by this artist</Typography>
-                    <Link href={`${SEARCH_BASE_URL}/?creatorId=${creatorId}`}>
+                    <Link href={`${searchUrl}/?creatorId=${creatorId}`}>
                         <Typography variant="h5" sx={{ color: 'white', textDecoration: 'underline' }}>
                             View all
                         </Typography>
@@ -46,7 +59,7 @@ export const LastAssetsList = ({ assets, loading, creatorName, creatorId }: Prop
                     assets.map((asset) => {
                         const isVideo = videoExtension.some((ext) => asset.path?.endsWith(ext));
                         return (
-                            <Link key={asset._id} href={`${SEARCH_BASE_URL}/${creatorName}/${asset._id}`}>
+                            <Link key={asset._id} href={`${searchUrl}/${creatorName}/${asset._id}`}>
                                 <Box width={100} height={100}>
                                     {isVideo ? (
                                         <video

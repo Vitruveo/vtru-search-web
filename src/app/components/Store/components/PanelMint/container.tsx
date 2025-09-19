@@ -13,8 +13,8 @@ import { getFeesFromGrid, getFeesFromVideo } from '@/services/assets';
 import { TypeActions, initialState, reducer } from './slice';
 import cookie from 'cookiejs';
 import { Asset } from '@/features/assets/types';
-import { EXPLORER_URL } from '@/constants/web3';
-import { CATALOG_BASE_URL, NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
+import { CATALOG_BASE_URL, NODE_ENV } from '@/constants/api';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { useSelector } from '@/store/hooks';
 import { useAssetLicenses } from '@/app/hooks/useAssetLicenses';
 import { useDomainContext } from '@/app/context/domain';
@@ -59,6 +59,23 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     const assetLicenses = useAssetLicenses(asset._id);
     const stores = useSelector((stateRx) => stateRx.stores.currentDomain);
     const [printIsBlocked, setPrintIsBlocked] = useState(true);
+    const [redirects, setRedirects] = useState({
+        search: '',
+        stores: '',
+        explorer: '',
+    });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setRedirects({
+                search: rowData.data[NODE_ENV].xibit.search_url,
+                stores: rowData.data[NODE_ENV].xibit.stores_url,
+                explorer: rowData.data[NODE_ENV].vitruveo.explorer_url,
+            });
+        };
+        fetchData();
+    }, []);
 
     useEffect(() => {
         const getSetupPrintLicense = async () => {
@@ -288,7 +305,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
 
                 dispatchAction({
                     type: TypeActions.SET_LINK,
-                    payload: `${EXPLORER_URL}/tx/${response.data.hash}`,
+                    payload: `${redirects.explorer}/tx/${response.data.hash}`,
                 });
                 dispatchAction({ type: TypeActions.SET_OPEN_MODAL_MINTED, payload: true });
             })
@@ -348,7 +365,7 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     };
 
     const handleRedirectToPrint = () => {
-        const url = new URL(subdomain && NODE_ENV === 'production' ? 'https://xibit.live' : SEARCH_BASE_URL);
+        const url = new URL(subdomain ? redirects.stores : redirects.search);
         if (subdomain) {
             url.hostname = `${subdomain}.${url.hostname}`;
         }

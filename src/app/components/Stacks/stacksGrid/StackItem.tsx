@@ -1,16 +1,18 @@
+import React, { useEffect, useState } from 'react';
 import { ShowAnimation } from '@/animations';
-import { SEARCH_BASE_URL, SLIDESHOW_BASE_URL } from '@/constants/api';
 import { GENERAL_STORAGE_URL } from '@/constants/aws';
+import { NO_IMAGE_ASSET } from '@/constants/asset';
+import { NODE_ENV } from '@/constants/api';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { Stack } from '@/features/stacks/types';
 import { Box, CardContent, Grid, IconButton, Modal, Stack as MuiStack, Tooltip, Typography } from '@mui/material';
 import { MediaRenderer } from '../../Assets/components/MediaRenderer';
 import BlankCard from '../../Shared/BlankCard';
 import { useTheme } from '@mui/material/styles';
 import { IconInfoCircle, IconPlayerPlayFilled, IconX } from '@tabler/icons-react';
-import React, { useState } from 'react';
 import { useI18n } from '@/app/hooks/useI18n';
 import Username from '../../Username';
-import { NO_IMAGE_ASSET } from '@/constants/asset';
+import axios from 'axios';
 
 interface Props {
     stack: Stack;
@@ -20,6 +22,21 @@ const StackItemMain = ({ stack }: Props) => {
     const theme = useTheme();
     const { language } = useI18n();
     const [isOpenModal, setIsOpenModal] = useState(false);
+    const [redirects, setRedirects] = useState({
+        search: '',
+        slideshow: '',
+    });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setRedirects({
+                search: rowData.data[NODE_ENV].xibit.search_url,
+                slideshow: rowData.data[NODE_ENV].xibit.slideshow_url,
+            });
+        };
+        fetchData();
+    }, []);
 
     const handleModalOpen = (event: React.MouseEvent) => {
         event.stopPropagation();
@@ -33,11 +50,11 @@ const StackItemMain = ({ stack }: Props) => {
     const handleImage = () => {
         if (stack.stacks.type === 'grid') return `${GENERAL_STORAGE_URL}/${stack.stacks.path}`;
         if (stack.stacks.type === 'video') return `${stack.stacks.url}`;
-        return `${SLIDESHOW_BASE_URL}/?slideshow=${stack.stacks.id}&stack=true`;
+        return `${redirects.slideshow}/?slideshow=${stack.stacks.id}&stack=true`;
     };
 
     const handleCardClick = () => {
-        window.open(`${SEARCH_BASE_URL}?${stack.stacks.type}=${stack.stacks.id}`, '_blank');
+        window.open(`${redirects.search}?${stack.stacks.type}=${stack.stacks.id}`, '_blank');
     };
 
     return (

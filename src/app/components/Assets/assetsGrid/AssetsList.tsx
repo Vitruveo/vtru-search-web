@@ -1,6 +1,10 @@
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import Image from 'next/image';
+import cookie from 'cookiejs';
+import axios from 'axios';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useToggle } from '@/app/hooks/useToggle';
-import { SEARCH_BASE_URL, STORE_BASE_URL } from '@/constants/api';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { actions } from '@/features/assets';
 import { Asset } from '@/features/assets/types';
 import { actions as actionsFilters } from '@/features/filters/slice';
@@ -9,8 +13,6 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { getAssetPrice, isAssetAvailableLicenses } from '@/utils/assets';
 import generateQueryParam from '@/utils/generateQueryParam';
 import { hasAssetsInURL } from '@/utils/url-assets';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import cookie from 'cookiejs';
 import {
     Badge,
     Box,
@@ -25,7 +27,6 @@ import {
 } from '@mui/material';
 import { Theme, useTheme } from '@mui/material/styles';
 import { IconArrowBarToLeft, IconArrowBarToRight, IconCopy, IconFilter } from '@tabler/icons-react';
-import Image from 'next/image';
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
 import Select, { SingleValue } from 'react-select';
 import TabSliders from '../../Sliders/TabSliders';
@@ -37,6 +38,7 @@ import { AssetItem } from './AssetItem';
 import './AssetScroll.css';
 import Banner from '../../Banner';
 import CreatorSection from '../components/CreatorSection';
+import { NODE_ENV } from '@/constants/api';
 
 interface Props {
     isBlockLoader: boolean;
@@ -76,6 +78,10 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
     const [sortOrder, setSortOrder] = useState<string>('latest');
     const [groupByCreator, setGroupByCreator] = useState<string>('no');
+    const [redirects, setRedirects] = useState({
+        store: '',
+        search: '',
+    });
     const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
@@ -187,6 +193,17 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
         setGroupByCreator(hasIncludesGroup.active);
     }, [hasIncludesGroup.active]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setRedirects({
+                store: rowData.data[NODE_ENV].xibit.store_url,
+                search: rowData.data[NODE_ENV].xibit.search_url,
+            });
+        };
+        fetchData();
+    }, []);
 
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
@@ -416,7 +433,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                             color={theme.palette.primary.main}
                                             sx={{ cursor: 'pointer' }}
                                             onClick={() => {
-                                                window.open(`${SEARCH_BASE_URL}/stacks`, '_blank');
+                                                window.open(`${redirects.search}/stacks`, '_blank');
                                             }}
                                         >
                                             View Stacks
@@ -784,7 +801,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                         handleClickImage={() => {
                                             if (isInIframe) {
                                                 window.open(
-                                                    `${STORE_BASE_URL}/${asset.creator?.username}/${asset._id}`
+                                                    `${redirects.store}/${asset.creator?.username}/${asset._id}`
                                                 );
 
                                                 return;
@@ -857,7 +874,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                             handleClickImage={() => {
                                                 if (isInIframe) {
                                                     window.open(
-                                                        `${STORE_BASE_URL}/${asset.creator?.username}/${asset._id}`
+                                                        `${redirects.store}/${asset.creator?.username}/${asset._id}`
                                                     );
 
                                                     return;

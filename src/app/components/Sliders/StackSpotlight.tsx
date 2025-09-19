@@ -1,8 +1,11 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Box, CardContent, Stack as StackMui, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Marquee from 'react-fast-marquee';
 
-import { SEARCH_BASE_URL, SLIDESHOW_BASE_URL } from '@/constants/api';
+import { NODE_ENV } from '@/constants/api';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { GENERAL_STORAGE_URL } from '@/constants/aws';
 import { Stack } from '@/features/stacks/types';
 import { useSelector } from '@/store/hooks';
@@ -12,17 +15,32 @@ import { NO_IMAGE_ASSET } from '@/constants/asset';
 
 function StackSpotlightSlider() {
     const stacks = useSelector((state) => state.stacks.spotlight);
+    const [redirects, setRedirects] = useState({
+        search: '',
+        slideshow: '',
+    });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setRedirects({
+                search: rowData.data[NODE_ENV].xibit.search_url,
+                slideshow: rowData.data[NODE_ENV].xibit.slideshow_url,
+            });
+        };
+        fetchData();
+    }, []);
 
     const theme = useTheme();
 
     const handleClickItem = (stack: Stack) => {
-        window.open(`${SEARCH_BASE_URL}?${stack.stacks.type}=${stack.stacks.id}`, '_blank');
+        window.open(`${redirects.search}?${stack.stacks.type}=${stack.stacks.id}`, '_blank');
     };
 
     const handleImage = (stack: Stack) => {
         if (stack.stacks.type === 'grid') return `${GENERAL_STORAGE_URL}/${stack.stacks.path}`;
         if (stack.stacks.type === 'video') return `${stack.stacks.url}`;
-        return `${SLIDESHOW_BASE_URL}/?slideshow=${stack.stacks.id}&stack=true`;
+        return `${redirects.slideshow}/?slideshow=${stack.stacks.id}&stack=true`;
     };
 
     return (

@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Box, CardContent, IconButton, Tooltip, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Marquee from 'react-fast-marquee';
@@ -7,7 +9,8 @@ import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import { StoresSpotlight } from '@/features/stores/types';
 import { STORES_STORAGE_URL } from '@/constants/aws';
 import { IconInfoCircle } from '@tabler/icons-react';
-import { NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
+import { NODE_ENV } from '@/constants/api';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { NO_IMAGE_ASSET } from '@/constants/asset';
 
 interface Props {
@@ -16,6 +19,15 @@ interface Props {
 
 function StoresSpotlightSlider({ stores }: Props) {
     const theme = useTheme();
+    const [searchUrl, setSearchUrl] = useState('');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setSearchUrl(rowData.data[NODE_ENV].xibit.search_url);
+        };
+        fetchData();
+    }, []);
 
     const handleClickItem = (store: StoresSpotlight) => {
         if (NODE_ENV === 'production') {
@@ -23,7 +35,7 @@ function StoresSpotlightSlider({ stores }: Props) {
             return;
         }
 
-        const parts = SEARCH_BASE_URL.split('//');
+        const parts = searchUrl.split('//');
         window.open(`${parts[0]}//${store.url}.${parts[1]}`, '_blank');
     };
 

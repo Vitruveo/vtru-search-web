@@ -11,7 +11,8 @@ import { VerticalLayout } from '@/app/components/Folio/Layout/Vertical';
 import { ArtInterface, DisplayOptions, WindowOrientation } from '@/app/components/Folio/types';
 import { buildAssetURL } from '@/app/components/Folio/utils';
 // constants
-import { API_BASE_URL, SEARCH_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, NODE_ENV } from '@/constants/api';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 
 import './index.css';
 
@@ -28,6 +29,7 @@ export default function Page() {
         horizontal: 0,
         vertical: 0,
     });
+    const [searchUrl, setSearchUrl] = useState('');
 
     const checkOrientation = () => {
         if (window.innerWidth > window.innerHeight) {
@@ -36,6 +38,14 @@ export default function Page() {
             setWindowOrientation('vertical');
         }
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setSearchUrl(rowData.data[NODE_ENV].xibit.search_url);
+        };
+        fetchData();
+    }, []);
 
     useEffect(() => {
         checkOrientation();
@@ -230,7 +240,7 @@ export default function Page() {
         _id: '',
         username: '',
     };
-    const QRCodeValue = `${SEARCH_BASE_URL}/${currentArt.username}/${currentArt._id}`;
+    const QRCodeValue = `${searchUrl}/${currentArt.username}/${currentArt._id}`;
 
     const nextArtIndex = currentArtIndex === arts.length - 1 ? 0 : currentArtIndex + 1;
 

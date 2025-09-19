@@ -1,10 +1,13 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { useI18n } from '@/app/hooks/useI18n';
 import { Box, Button, Typography, Drawer, useMediaQuery } from '@mui/material';
 import cookie from 'cookiejs';
 import { Theme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
 import { ASSET_STORAGE_URL, GENERAL_STORAGE_URL } from '@/constants/aws';
-import { NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
+import { NODE_ENV } from '@/constants/api';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { useSelector } from '@/store/hooks';
 import { MediaRenderer } from './MediaRenderer';
 import Avatar from './Avatar';
@@ -28,6 +31,22 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
     const creator = useSelector((state) => state.assets.creator);
     const paused = useSelector((state) => state.assets.paused);
 
+    const [redirects, setRedirects] = useState({
+        search: '',
+        stores: '',
+    });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setRedirects({
+                search: rowData.data[NODE_ENV].xibit.search_url,
+                stores: rowData.data[NODE_ENV].xibit.stores_url,
+            });
+        };
+        fetchData();
+    }, []);
+
     const { subdomain } = useDomainContext();
 
     const handleClickView = () => {
@@ -47,7 +66,7 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
             cookie.remove('video');
             document.cookie = 'video=; path=/; domain=' + domain + '; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         }
-        const url = new URL(subdomain && NODE_ENV === 'production' ? 'https://xibit.live' : SEARCH_BASE_URL);
+        const url = new URL(subdomain ? redirects.stores : redirects.search);
         if (subdomain) {
             url.hostname = `${subdomain}.${url.hostname}`;
         }

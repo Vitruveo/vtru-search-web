@@ -1,11 +1,13 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 
 import { Asset } from '@/features/assets/types';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/assets';
-import { useState } from 'react';
 import { ShareButton } from './ShareButton';
-import { SLIDESHOW_BASE_URL } from '@/constants/api';
+import { NODE_ENV } from '@/constants/api';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { createTwitterIntent } from '@/utils/twitter';
 import { useI18n } from '@/app/hooks/useI18n';
 
@@ -23,8 +25,17 @@ export default function Slideshow({ selectedAssets, title, description, fees }: 
 
     const [display, setDisplay] = useState('Alternate');
     const [interval, setInterval] = useState(10);
+    const [slideshowUrl, setSlideshowUrl] = useState('');
 
-    const url = `${SLIDESHOW_BASE_URL}?slideshow=${slideshow}`;
+    useEffect(() => {
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setSlideshowUrl(rowData.data[NODE_ENV].xibit.slideshow_url);
+        };
+        fetchData();
+    }, []);
+
+    const url = `${slideshowUrl}?slideshow=${slideshow}`;
     const twitterShareURL = createTwitterIntent({
         url,
         hashtags: 'Vitruveo,VTRUSuite',

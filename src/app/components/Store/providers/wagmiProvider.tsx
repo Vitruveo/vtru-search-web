@@ -1,4 +1,5 @@
 import { WagmiProvider } from 'wagmi';
+import axios from 'axios';
 import {
     mainnet as ethereum,
     sepolia as etheriumTestnet,
@@ -11,8 +12,9 @@ import {
 } from 'wagmi/chains';
 import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { EXPLORER_URL, WAGMI_APP_NAME, WAGMI_PROJECT_ID, WEB3_NETWORK_RPC_ADDRESS } from '@/constants/web3';
+import { WAGMI_APP_NAME, WAGMI_PROJECT_ID } from '@/constants/web3';
 import { NODE_ENV } from '@/constants/api';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 
 export const vitruveoMainnet = {
     id: 1490,
@@ -26,12 +28,12 @@ export const vitruveoMainnet = {
         symbol: 'VTRU',
     },
     rpcUrls: {
-        public: { http: [WEB3_NETWORK_RPC_ADDRESS] },
-        default: { http: [WEB3_NETWORK_RPC_ADDRESS] },
+        public: { http: [''] },
+        default: { http: [''] },
     },
     blockExplorers: {
-        default: { name: 'VitruveoScan', url: EXPLORER_URL },
-        etherscan: { name: 'VitruveoScan', url: EXPLORER_URL },
+        default: { name: 'VitruveoScan', url: '' },
+        etherscan: { name: 'VitruveoScan', url: '' },
     },
     testnet: false,
 };
@@ -48,12 +50,12 @@ export const vitruveoTestnet = {
         symbol: 'tVTRU',
     },
     rpcUrls: {
-        public: { http: [WEB3_NETWORK_RPC_ADDRESS] },
-        default: { http: [WEB3_NETWORK_RPC_ADDRESS] },
+        public: { http: [''] },
+        default: { http: [''] },
     },
     blockExplorers: {
-        default: { name: 'VitruveoScan', url: EXPLORER_URL },
-        etherscan: { name: 'VitruveoScan', url: EXPLORER_URL },
+        default: { name: 'VitruveoScan', url: '' },
+        etherscan: { name: 'VitruveoScan', url: '' },
     },
     testnet: true,
 };
@@ -61,6 +63,21 @@ export const vitruveoTestnet = {
 interface Web3WagmiProviderProps {
     children: React.ReactNode;
 }
+
+const fetchRedirects = async () => {
+    const rowData = await axios.get(REDIRECTS_JSON);
+    return rowData.data;
+};
+fetchRedirects().then((data) => {
+    const updateNetwork = (network: any, env: string) => {
+        network.blockExplorers.default.url = data[env].vitruveo.explorer_url;
+        network.blockExplorers.etherscan.url = data[env].vitruveo.explorer_url;
+        network.rpcUrls.public.http[0] = data[env].vitruveo.web3_network_rpc;
+        network.rpcUrls.default.http[0] = data[env].vitruveo.web3_network_rpc;
+    };
+    updateNetwork(vitruveoMainnet, 'production');
+    updateNetwork(vitruveoTestnet, 'development');
+});
 
 export default function Web3WagmiProvider({ children }: Web3WagmiProviderProps) {
     const config = getDefaultConfig({

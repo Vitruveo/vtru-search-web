@@ -1,10 +1,12 @@
+import { useEffect, useState } from 'react';
 import { useHasStakes } from '@/app/hooks/useHasStakes';
-import { SEARCH_BASE_URL } from '@/constants/api';
+import { NODE_ENV } from '@/constants/api';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { actions as actionsFilters } from '@/features/filters/slice';
 import { useDispatch } from '@/store/hooks';
 import { Box, Link, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 interface Props {
     username: string;
@@ -24,6 +26,7 @@ const Username = ({ username, vaultAdress, size, openInNewTab = false, iconSpaci
     const theme = useTheme();
     const dispatch = useDispatch();
     const [hasStakes, setHasStakes] = useState(false);
+    const [searchUrl, setSearchUrl] = useState('');
     const vaultStake = useHasStakes(vaultAdress);
 
     const onClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -48,6 +51,14 @@ const Username = ({ username, vaultAdress, size, openInNewTab = false, iconSpaci
         }
     }, [vaultStake]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setSearchUrl(rowData.data[NODE_ENV].xibit.search_url);
+        };
+        fetchData();
+    }, []);
+
     return (
         <Box width={'100%'}>
             <Link
@@ -56,7 +67,7 @@ const Username = ({ username, vaultAdress, size, openInNewTab = false, iconSpaci
                 overflow="hidden"
                 whiteSpace="nowrap"
                 textOverflow="ellipsis"
-                href={openInNewTab ? `${SEARCH_BASE_URL}?name=${username}` : '#'}
+                href={openInNewTab ? `${searchUrl}?name=${username}` : '#'}
                 underline="none"
                 onClick={onClick}
                 fontSize={fontSizes[size]}

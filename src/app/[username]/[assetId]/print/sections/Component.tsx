@@ -1,5 +1,6 @@
 'use client';
-import { CATALOG_ASSETS_BASE_URL, STUDIO_BASE_URL } from '@/constants/api';
+import { CATALOG_ASSETS_BASE_URL, NODE_ENV } from '@/constants/api';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { Box, Theme, Typography, useMediaQuery } from '@mui/material';
 import { IconLink } from '@tabler/icons-react';
@@ -7,6 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Sections } from './types';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const mainColor = '#ffffff';
 
@@ -58,6 +60,7 @@ export const PrintSectionComponent = ({ data }: Props) => {
     const [widthLessThanHeight, setWidthLessThanHeight] = useState(
         typeof window !== 'undefined' ? window.innerWidth < window.innerHeight : false
     );
+    const [studioUrl, setStudioUrl] = useState('');
 
     useEffect(() => {
         function handleResize() {
@@ -65,6 +68,14 @@ export const PrintSectionComponent = ({ data }: Props) => {
         }
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setStudioUrl(rowData.data[NODE_ENV].xibit.studio_url);
+        };
+        fetchData();
     }, []);
 
     return (
@@ -134,7 +145,7 @@ export const PrintSectionComponent = ({ data }: Props) => {
                             </Typography>
                         </Box>
                     </Link>
-                    <Link href={`${STUDIO_BASE_URL}/home`}>
+                    <Link href={`${studioUrl}/home`}>
                         <Box display={'flex'} alignItems="center" gap={1}>
                             <IconLink color={mainColor} size={20} />
                             <Typography variant="subtitle1" color={mainColor}>

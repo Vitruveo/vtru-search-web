@@ -1,9 +1,21 @@
 import { JsonRpcProvider, Contract, Wallet } from 'ethers';
 
-import { WEB3_NETWORK_RPC_ADDRESS, WEB3_PRIVATE_KEY } from '@/constants/web3';
+import { WEB3_PRIVATE_KEY } from '@/constants/web3';
+import { NODE_ENV } from '@/constants/api';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import schema from '../../services/web3/contracts.json';
+import axios from 'axios';
 
-const provider = new JsonRpcProvider(WEB3_NETWORK_RPC_ADDRESS);
+let web3_network_rpc_adress = '';
+const fetchData = async () => {
+    const rowData = await axios.get(REDIRECTS_JSON);
+    return rowData.data[NODE_ENV].vitruveo.web3_network_rpc;
+};
+fetchData().then((address) => {
+    web3_network_rpc_adress = address;
+});
+
+const provider = new JsonRpcProvider(web3_network_rpc_adress);
 const signer = new Wallet(WEB3_PRIVATE_KEY, provider);
 
 const getCreatorVaultByAddress = (vaultAddress: string) => new Contract(vaultAddress, schema.abi.CreatorVault, signer);

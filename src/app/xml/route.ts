@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 import axios from 'axios';
 import { XMLBuilder } from 'fast-xml-parser';
 
-import { API_BASE_URL, STORE_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, NODE_ENV } from '@/constants/api';
 import { ASSET_STORAGE_URL, GENERAL_STORAGE_URL } from '@/constants/aws';
-import { VITRUVEO_URL } from '@/constants/vitruveo';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 
 function parseQueryParams(searchParams: URLSearchParams) {
     const params: any = {};
@@ -93,6 +93,12 @@ export async function GET(req: Request) {
         }),
     ]);
 
+    const fetchData = async () => {
+        const rowData = await axios.get(REDIRECTS_JSON);
+        return { store: rowData.data[NODE_ENV].xibit.store_url, vitruveo: rowData.data.common.vitruveo.base_url };
+    };
+    const STORE_BASE_URL = (await fetchData()).store;
+
     const data = {
         recentlySold: recentlySold.data.data.map(multiplyPriceBy100),
         spotlight: spotlight.data.data.map(multiplyPriceBy100),
@@ -122,6 +128,7 @@ export async function GET(req: Request) {
         },
     };
 
+    const VITRUVEO_URL = (await fetchData()).vitruveo;
     const jsonData = {
         rss: {
             channel: {

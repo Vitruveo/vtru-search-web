@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { AppBar, Box, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import { useTheme, Theme } from '@mui/material/styles';
@@ -11,7 +12,8 @@ import { Language } from '../Language';
 import { Rss } from '../Rss';
 import Logo from '../Shared/Logo';
 import BuyVUSDModal from '../BuyVUSD/modalHOC';
-import { SEARCH_BASE_URL } from '@/constants/api';
+import { NODE_ENV } from '@/constants/api';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 
 interface Props {
     rssOptions: {
@@ -33,6 +35,10 @@ const Header = ({
 }: Props) => {
     const dispatch = useDispatch();
     const isMobile = useMediaQuery('(max-width: 900px)');
+    const [redirects, setRedirects] = useState({
+        about: '',
+        search: '',
+    });
 
     const themeStyle = useTheme();
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
@@ -48,6 +54,16 @@ const Header = ({
     const storesName = useSelector((state) => state.stores.currentDomain?.organization?.name);
     // const packIsLoading = useSelector((state) => state.assets.packLoading);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setRedirects({
+                about: rowData.data[NODE_ENV].common.xibit.about_url,
+                search: rowData.data[NODE_ENV].xibit.search_url,
+            });
+        };
+        fetchData();
+    }, []);
     const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -61,7 +77,7 @@ const Header = ({
     };
 
     const handleClick = () => {
-        window.open('https://about.xibit.app', '_blank');
+        window.open(redirects.about, '_blank');
     };
 
     const handleOpenModal = () => {
@@ -90,7 +106,7 @@ const Header = ({
 
     const handleClickPlay = () => {
         const url = window.location.host.split('.')[0];
-        window.open(`${SEARCH_BASE_URL}/folio/${url}/play`);
+        window.open(`${redirects.search}/folio/${url}/play`);
     };
 
     if (isHidden) return null;

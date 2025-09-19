@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import Image from 'next/image';
 import { Box, Theme, Typography, useMediaQuery } from '@mui/material';
 
@@ -7,10 +9,20 @@ import { actions } from '@/features/assets';
 import { actions as actionsFilters } from '@/features/filters/slice';
 import { actions as actionsStores } from '@/features/stores/slice';
 import { STORES_STORAGE_URL } from '@/constants/aws';
-import { VITRUVEO_URL } from '@/constants/vitruveo';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 
 const LogoLtrDark = () => {
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
+    const [vitruveoUrl, setVitruveoUrl] = useState('');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setVitruveoUrl(rowData.data.common.vitruveo.base_url);
+        };
+        fetchData();
+    }, []);
+
     return (
         <Box display="flex" alignItems="end">
             <Image
@@ -35,7 +47,7 @@ const LogoLtrDark = () => {
                         color: '#e0e0e0',
                     },
                 }}
-                onClick={() => window.open(VITRUVEO_URL, '_blank', 'noopener,noreferrer')}
+                onClick={() => window.open(vitruveoUrl, '_blank', 'noopener,noreferrer')}
             >
                 BY VITRUVEO
             </Typography>
@@ -45,6 +57,16 @@ const LogoLtrDark = () => {
 
 const LogoLtrLight = () => {
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
+    const [vitruveoUrl, setVitruveoUrl] = useState('');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setVitruveoUrl(rowData.data.common.vitruveo.base_url);
+        };
+        fetchData();
+    }, []);
+
     return (
         <Box display="flex" alignItems="end">
             <Image
@@ -69,7 +91,7 @@ const LogoLtrLight = () => {
                         color: '#333',
                     },
                 }}
-                onClick={() => window.open(VITRUVEO_URL, '_blank', 'noopener,noreferrer')}
+                onClick={() => window.open(vitruveoUrl, '_blank', 'noopener,noreferrer')}
             >
                 BY VITRUVEO
             </Typography>
