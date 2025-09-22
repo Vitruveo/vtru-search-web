@@ -105,7 +105,7 @@ export const issueLicenseUsingCredits = async ({
     const domain = {
         name: 'Vitruveo Store',
         version: '1',
-        chainId: Number((await provider.getNetwork()).chainId),
+        chainId: Number(await provider().then((p) => p.getNetwork().then((n) => n.chainId))),
     };
 
     const types = {

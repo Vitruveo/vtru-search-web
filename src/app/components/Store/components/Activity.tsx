@@ -3,6 +3,7 @@ import { useSelector } from '@/store/hooks';
 import { formatDate } from '@/utils/assets';
 import { Box, Button, Card, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { IconDownload } from '@tabler/icons-react';
 
 export interface ActivityProps {
     listing: {
@@ -108,20 +109,25 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
                     <></>
                 )}
                 {isLogged && (isMintAddressInLoggedWallets || isMintAddessEqualConnectedAddress) && (
-                    <Button
-                        variant="contained"
-                        onClick={downloadMedia}
-                        sx={{
-                            backgroundColor: theme.palette.primary.main,
-                            color: '#ffff',
-                            '&:hover': {
+                    <Box display="flex" alignItems="center" paddingTop={2} gap={2}>
+                        <Button
+                            variant="contained"
+                            onClick={downloadMedia}
+                            sx={{
                                 backgroundColor: theme.palette.primary.main,
-                            },
-                            borderRadius: 0,
-                        }}
-                    >
-                        Download original media
-                    </Button>
+                                color: '#ffff',
+                                '&:hover': {
+                                    backgroundColor: theme.palette.primary.main,
+                                },
+                                borderRadius: 0,
+                            }}
+                        >
+                            <IconDownload fontSize="small" />
+                        </Button>
+                        <Typography variant="h6" component="span" marginLeft={1}>
+                            Download original media
+                        </Typography>
+                    </Box>
                 )}
             </Card>
         </div>
