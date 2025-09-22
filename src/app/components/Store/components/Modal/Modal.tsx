@@ -75,7 +75,7 @@ export default function Modal({ open, handleClose, content, baseUrl, path }: Mod
                             borderRadius: 8,
                         }}
                     >
-                        View Original Media
+                        View Full-Size Media
                     </a>
                 )}
             </div>
