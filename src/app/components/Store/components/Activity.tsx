@@ -109,35 +109,34 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
                 ) : (
                     <></>
                 )}
-                {(isLogged && (isMintAddressInLoggedWallets || isMintAddessEqualConnectedAddress)) ||
-                    (true && (
-                        <Box display="grid" gridTemplateColumns="1fr 1fr 1fr" alignItems={'center'}>
-                            <Typography
-                                variant="body1"
-                                fontWeight="bold"
-                                style={{ whiteSpace: 'nowrap', wordBreak: 'break-all' }}
-                            >
-                                Download original media
-                            </Typography>
-                            <Box></Box>
-                            <Button
-                                variant="contained"
-                                onClick={downloadMedia}
-                                sx={{
+                {isLogged && (isMintAddressInLoggedWallets || isMintAddessEqualConnectedAddress) && (
+                    <Box display="grid" gridTemplateColumns="1fr 1fr 1fr" alignItems={'center'}>
+                        <Typography
+                            variant="body1"
+                            fontWeight="bold"
+                            style={{ whiteSpace: 'nowrap', wordBreak: 'break-all' }}
+                        >
+                            Download original media
+                        </Typography>
+                        <Box></Box>
+                        <Button
+                            variant="contained"
+                            onClick={downloadMedia}
+                            sx={{
+                                backgroundColor: theme.palette.primary.main,
+                                color: '#ffff',
+                                '&:hover': {
                                     backgroundColor: theme.palette.primary.main,
-                                    color: '#ffff',
-                                    '&:hover': {
-                                        backgroundColor: theme.palette.primary.main,
-                                    },
-                                    borderRadius: 0,
-                                    width: '39%',
-                                    height: '75%',
-                                }}
-                            >
-                                <IconDownload />
-                            </Button>
-                        </Box>
-                    ))}
+                                },
+                                borderRadius: 0,
+                                width: '39%',
+                                height: '75%',
+                            }}
+                        >
+                            <IconDownload />
+                        </Button>
+                    </Box>
+                )}
             </Card>
         </div>
     );
