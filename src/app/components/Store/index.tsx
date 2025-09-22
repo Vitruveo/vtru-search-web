@@ -192,7 +192,6 @@ const Store = ({ data }: StoreProps) => {
                                             url: `${redirects.explorer}/tx/${asset?.mintExplorer?.transactionHash}`,
                                         },
                                         extra: {
-                                            text: 'Portfolio',
                                             url: `${redirects.search}?portfolio_wallets=${asset?.mintExplorer?.address}`,
                                         },
                                     },

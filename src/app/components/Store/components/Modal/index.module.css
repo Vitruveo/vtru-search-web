@@ -9,7 +9,6 @@
     object-fit: contain;
     max-height: 80vh;
     max-width: 80vw;
-    cursor: none;
 }
 
 .video {
@@ -19,6 +18,7 @@
 
 .magnify {
     position: absolute;
+    z-index: 10;
     width: 15%;
     padding-bottom: 15%;
     height: 0;

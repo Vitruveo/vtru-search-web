@@ -15,7 +15,6 @@ export interface ActivityProps {
         };
         extra?: {
             url: string;
-            text: string;
         };
     }[];
     downloadMedia: () => void;
@@ -39,6 +38,9 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
         return formatDate({ day, month, year });
     };
 
+    const downloadable = (title: string) =>
+        isLogged && title === 'Licensed' && (isMintAddressInLoggedWallets || isMintAddessEqualConnectedAddress);
+
     return (
         <div style={{ marginTop: '1px' }}>
             <Typography
@@ -59,14 +61,28 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
                     listing
                         .filter((item) => item.date)
                         .map((item, index) => (
-                            <Box key={index} display="grid" gridTemplateColumns="1fr 1fr 1fr">
-                                <Typography
-                                    variant="body1"
-                                    fontWeight="bold"
-                                    style={{ whiteSpace: 'nowrap', wordBreak: 'break-all' }}
-                                >
-                                    {item.title}
-                                </Typography>
+                            <Box key={index} display="grid" gridTemplateColumns="1fr 1fr 1fr 1fr">
+                                {item.extra?.url ? (
+                                    <a
+                                        href={item.extra.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        style={{
+                                            textDecoration: 'underline',
+                                            color: theme.palette.primary.main,
+                                        }}
+                                    >
+                                        {item.title}
+                                    </a>
+                                ) : (
+                                    <Typography
+                                        variant="body1"
+                                        fontWeight="bold"
+                                        style={{ whiteSpace: 'nowrap', wordBreak: 'break-all' }}
+                                    >
+                                        {item.title}
+                                    </Typography>
+                                )}
                                 <Typography
                                     variant="body1"
                                     style={{
@@ -75,67 +91,40 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
                                 >
                                     {formattedDate(item.date)}
                                 </Typography>
-                                <Box display="flex" gap={3}>
-                                    {item.link?.text && item.link?.url && (
-                                        <a
-                                            href={item.link.url}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            style={{
-                                                textDecoration: 'underline',
-                                                color: theme.palette.primary.main,
-                                            }}
-                                        >
-                                            {item.link.text}
-                                        </a>
-                                    )}
-                                    {item.extra?.text && item.extra?.url && (
-                                        <a
-                                            href={item.extra.url}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            style={{
-                                                textDecoration: 'underline',
-                                                color: theme.palette.primary.main,
-                                                width: '39%',
-                                            }}
-                                        >
-                                            {item.extra.text}
-                                        </a>
-                                    )}
-                                </Box>
+                                {item.link?.text && item.link?.url && (
+                                    <a
+                                        href={item.link.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        style={{
+                                            textDecoration: 'underline',
+                                            color: theme.palette.primary.main,
+                                        }}
+                                    >
+                                        {item.link.text}
+                                    </a>
+                                )}
+                                {downloadable(item.title) && (
+                                    <Button
+                                        variant="contained"
+                                        onClick={downloadMedia}
+                                        sx={{
+                                            backgroundColor: theme.palette.primary.main,
+                                            color: '#ffff',
+                                            '&:hover': {
+                                                backgroundColor: theme.palette.primary.main,
+                                            },
+                                            borderRadius: 0,
+                                            height: 25,
+                                        }}
+                                    >
+                                        <IconDownload size={20} />
+                                    </Button>
+                                )}
                             </Box>
                         ))
                 ) : (
                     <></>
-                )}
-                {isLogged && (isMintAddressInLoggedWallets || isMintAddessEqualConnectedAddress) && (
-                    <Box display="grid" gridTemplateColumns="1fr 1fr 1fr" alignItems={'center'}>
-                        <Typography
-                            variant="body1"
-                            fontWeight="bold"
-                            style={{ whiteSpace: 'nowrap', wordBreak: 'break-all' }}
-                        >
-                            Download original media
-                        </Typography>
-                        <Box></Box>
-                        <Button
-                            variant="contained"
-                            onClick={downloadMedia}
-                            sx={{
-                                backgroundColor: theme.palette.primary.main,
-                                color: '#ffff',
-                                '&:hover': {
-                                    backgroundColor: theme.palette.primary.main,
-                                },
-                                borderRadius: 0,
-                                width: '39%',
-                                height: '75%',
-                            }}
-                        >
-                            <IconDownload />
-                        </Button>
-                    </Box>
                 )}
             </Card>
         </div>
