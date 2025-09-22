@@ -201,7 +201,7 @@ const Store = ({ data }: StoreProps) => {
                                         date: asset.consignArtwork.listing,
                                         link: {
                                             text: asset?.vault?.vaultAddress
-                                                ? `${asset?.vault?.vaultAddress.slice(0, 6)}...${asset?.vault?.vaultAddress.slice(-6)}`
+                                                ? `${asset?.vault?.vaultAddress.slice(0, 4)}...${asset?.vault?.vaultAddress.slice(-4)}`
                                                 : '',
                                             url: asset?.vault?.vaultAddress
                                                 ? `${redirects.explorer}/address/${asset?.vault?.vaultAddress}`
