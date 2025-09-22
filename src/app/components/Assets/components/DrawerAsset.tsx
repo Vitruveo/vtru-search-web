@@ -70,6 +70,13 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
         if (subdomain) {
             url.hostname = `${subdomain}.${url.hostname}`;
         }
+
+        console.log(searchParams);
+        console.log(url);
+        console.log(url.toString());
+        console.log(creator.username);
+        console.log(assetView?._id);
+
         window.open(`${url.toString()}/${creator.username}/${assetView?._id}`);
     };
 
