@@ -50,7 +50,12 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
     const { subdomain } = useDomainContext();
 
     const handleClickView = () => {
+        console.log('handleClickView');
+
         const searchParams = new URLSearchParams(window.location.search);
+        console.log(searchParams);
+        console.log(creator.username);
+        console.log(assetView?._id);
         const grid = searchParams.get('grid');
         const video = searchParams.get('video');
 
@@ -71,11 +76,8 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
             url.hostname = `${subdomain}.${url.hostname}`;
         }
 
-        console.log(searchParams);
         console.log(url);
         console.log(url.toString());
-        console.log(creator.username);
-        console.log(assetView?._id);
 
         window.open(`${url.toString()}/${creator.username}/${assetView?._id}`);
     };
