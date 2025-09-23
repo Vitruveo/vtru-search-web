@@ -61,9 +61,9 @@ export default function Modal({ open, handleClose, content, baseUrl, path }: Mod
                 {!isMobile ? (
                     <div className={styled.magnify} style={{ backgroundImage: `url(${content})`, ...magnifyStyle }} />
                 ) : null}
-                {baseUrl && path && (
+                {path && (
                     <a
-                        href={`${baseUrl}/${path}`}
+                        href={baseUrl ? `${baseUrl}/${path}` : path}
                         target="_blank"
                         rel="noreferrer"
                         style={{

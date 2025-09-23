@@ -27,3 +27,8 @@ export const clearAssetsFromURL = () => {
     url.searchParams.delete('assets');
     window.history.pushState({}, '', url.toString());
 };
+
+export const getThumbnailFromPath = (path: string) => {
+    if (!path) return '';
+    return path.replace(/\.[^.]+$/, '_thumb.jpg');
+};
