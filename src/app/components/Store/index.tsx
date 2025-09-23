@@ -101,6 +101,9 @@ const Store = ({ data }: StoreProps) => {
                             const blob = new Blob([watermarkBuffer], { type: 'image/jpeg' });
                             const imageUrl = URL.createObjectURL(blob);
 
+                            const img = new window.Image();
+                            img.src = imageUrl;
+
                             return [formatKey, imageUrl];
                         } catch (error) {
                             return null;
@@ -304,13 +307,7 @@ const Store = ({ data }: StoreProps) => {
                         </Typography>
                     </Grid>
                 </Grid>
-                <Background
-                    path={
-                        watermarkFormats
-                            ? watermarkFormats['preview']
-                            : getThumbnailFromPath(asset?.formats?.preview?.path)
-                    }
-                />
+                <Background path={getThumbnailFromPath(asset?.formats?.preview?.path)} />
                 <Modal
                     open={open}
                     handleClose={handleClose}
@@ -322,7 +319,24 @@ const Store = ({ data }: StoreProps) => {
                             : getThumbnailFromPath(asset.formats?.original?.path)
                     }
                 />
-                {!!modalLoading && <CircularProgress sx={{ position: 'fixed', top: '50%', left: '50%' }} />}
+                {!!modalLoading && (
+                    <Box
+                        sx={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            width: '100vw',
+                            height: '100vh',
+                            bgcolor: 'rgba(0,0,0,0.3)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            zIndex: 1300,
+                        }}
+                    >
+                        <CircularProgress />
+                    </Box>
+                )}
             </Box>
         </LazyLoad>
     );
