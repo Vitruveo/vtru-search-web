@@ -67,7 +67,7 @@ export default function Modal({ open, handleClose, content, baseUrl, path }: Mod
                         <source src={content} type="video/mp4" />
                     </video>
                 )}
-                {!isMobile ? (
+                {!isMobile && isMagnifyingGlassOn ? (
                     <div className={styled.magnify} style={{ backgroundImage: `url(${content})`, ...magnifyStyle }} />
                 ) : null}
                 <Box display="flex" gap={2}>
