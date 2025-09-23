@@ -37,7 +37,15 @@ const MediaRenderStoreMain = ({
                 controls={false}
                 onClick={onClick}
                 key={key}
-                style={{ display: 'block', margin: removeMargin ? '0' : '0 auto', borderRadius: 10, cursor: 'pointer' }}
+                style={{
+                    display: 'block',
+                    margin: removeMargin ? '0' : '0 auto',
+                    borderRadius: 10,
+                    cursor: 'pointer',
+                    objectFit: 'contain',
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                }}
             >
                 <source src={media} type="video/mp4" />
             </video>
@@ -45,7 +53,20 @@ const MediaRenderStoreMain = ({
     }
 
     return (
-        <div style={{ width, height, position: 'relative', cursor: 'pointer' }}>
+        <div
+            style={{
+                maxWidth: width,
+                maxHeight: height,
+                position: 'relative',
+                cursor: 'pointer',
+                width: '100%',
+                height: '100%',
+                minHeight: '500px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}
+        >
             <Image src={media} alt={alt} onClick={onClick} draggable={false} unoptimized fill objectFit="contain" />
         </div>
     );

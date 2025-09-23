@@ -13,7 +13,7 @@ import {
 import { IconX } from '@tabler/icons-react';
 import ConnectWallet from '../ConnectWallet';
 import { defaultVusdAmount } from './modalHOC';
-import { formatPrice, formatPriceVUSD } from '@/utils/assets';
+import { formatPrice } from '@/utils/assets';
 import { useTheme } from '@mui/material/styles';
 
 interface Props {
