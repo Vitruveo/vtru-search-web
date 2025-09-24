@@ -33,7 +33,8 @@ export default function ActionButtons({
         <Box display="flex" justifyContent="space-around">
             <ActionButton
                 title="Preview"
-                media={getThumbnailFromPath(`${ASSET_STORAGE_URL}/${asset?.formats?.preview?.path}`)}
+                formatMedia={getThumbnailFromPath}
+                media={`${ASSET_STORAGE_URL}/${asset?.formats?.preview?.path}`}
                 onClick={() => {
                     setImage(`${ASSET_STORAGE_URL}/${asset?.formats?.preview?.path}`);
                     handleSelect('preview');
@@ -42,7 +43,8 @@ export default function ActionButtons({
             />
             <ActionButton
                 title="Display (4K)"
-                media={getThumbnailFromPath(`${ASSET_STORAGE_URL}/${asset?.formats?.display?.path}`)}
+                formatMedia={getThumbnailFromPath}
+                media={`${ASSET_STORAGE_URL}/${asset?.formats?.display?.path}`}
                 onClick={() => {
                     setImage(`${ASSET_STORAGE_URL}/${asset?.formats?.display?.path}`);
                     handleSelect('display');
@@ -53,7 +55,8 @@ export default function ActionButtons({
             />
             <ActionButton
                 title="Original"
-                media={getThumbnailFromPath(`${ASSET_STORAGE_URL}/${asset?.formats?.original?.path}`)}
+                formatMedia={getThumbnailFromPath}
+                media={`${ASSET_STORAGE_URL}/${asset?.formats?.original?.path}`}
                 onClick={() => {
                     setImage(`${ASSET_STORAGE_URL}/${asset?.formats?.original?.path}`);
                     handleSelect('original');

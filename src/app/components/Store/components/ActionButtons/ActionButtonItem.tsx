@@ -9,6 +9,7 @@ type ActionButtonProps = {
     onClick?: () => void;
     handleLoad?: () => void;
     handleSelect?: (button: string) => void;
+    formatMedia?: (media: string) => string;
     media: string;
     selected?: string | false;
 };
@@ -18,11 +19,14 @@ export default function ActionButton({
     onClick,
     handleLoad,
     handleSelect,
+    formatMedia,
     media,
     selected,
 }: ActionButtonProps): React.JSX.Element {
     const theme = useTheme();
     const isVideo = media.match(/\.(mp4|webm|ogg)$/) != null;
+
+    const mediaCheck = formatMedia && !isVideo ? formatMedia(media) : media;
     const isMobile = useMediaQuery('(max-width: 900px)');
 
     if (isVideo) {
@@ -55,7 +59,7 @@ export default function ActionButton({
                         }
                     }}
                 >
-                    <source src={media} type="video/mp4" />
+                    <source src={mediaCheck} type="video/mp4" />
                 </video>
                 <div className={styles.highlight} style={{ position: 'absolute' }}>
                     {title}
@@ -72,7 +76,7 @@ export default function ActionButton({
             onClick={onClick}
         >
             <img
-                src={media}
+                src={mediaCheck}
                 alt={title}
                 onLoad={() => {
                     if (handleLoad && handleSelect) {
