@@ -63,7 +63,8 @@ const Store = ({ data }: StoreProps) => {
     };
 
     const handleChangeImage = (newImage: string, isThumbnail: boolean = true) => {
-        if (isThumbnail) setImage(getThumbnailFromPath(newImage));
+        const isVideo = newImage.match(/\.(mp4|webm|ogg)$/) != null;
+        if (isThumbnail && !isVideo) setImage(getThumbnailFromPath(newImage));
         else setImage(newImage);
     };
 
