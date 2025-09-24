@@ -61,7 +61,11 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
                     listing
                         .filter((item) => item.date)
                         .map((item, index) => (
-                            <Box key={index} display="grid" gridTemplateColumns="1fr 0.8fr 0.8fr 1fr">
+                            <Box
+                                key={index}
+                                display="grid"
+                                gridTemplateColumns={downloadable(item.title) ? '1fr 0.8fr 0.8fr 1fr' : '1fr 1fr 1fr'}
+                            >
                                 {item.extra?.url ? (
                                     <a
                                         href={item.extra.url}
