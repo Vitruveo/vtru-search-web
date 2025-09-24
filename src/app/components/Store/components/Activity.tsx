@@ -64,7 +64,9 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
                             <Box
                                 key={index}
                                 display="grid"
-                                gridTemplateColumns={downloadable(item.title) ? '1fr 0.8fr 0.8fr 1fr' : '1fr 1fr 1fr'}
+                                gridTemplateColumns={
+                                    downloadable(listing[0].title) ? '1fr 0.8fr 0.8fr 1fr' : '1fr 1fr 1fr'
+                                }
                             >
                                 {item.extra?.url ? (
                                     <a
