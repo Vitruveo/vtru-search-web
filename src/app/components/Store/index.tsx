@@ -50,6 +50,12 @@ const Store = ({ data }: StoreProps) => {
 
     const handleClose = () => setOpen(false);
     const handleOpen = (content: string) => {
+        const isVideo = content.match(/\.(mp4|webm|ogg)$/) != null;
+        if (isVideo) {
+            setContents(content);
+            setOpen(true);
+            return;
+        }
         if (watermarkFormats) {
             if (watermarkFormats[format] && format !== 'exhibition') {
                 setContents(watermarkFormats[format]);
