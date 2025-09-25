@@ -10,15 +10,16 @@ const initialState: InitialState = {
     loading: false,
     id: '',
     avatar: '',
+    wallets: [],
 };
 
 export const creatorSlice = createSlice({
     name: 'creator',
     initialState,
     reducers: {
-        sendCode: () => {},
-        resendCode: () => {},
-        verifyCode: () => {},
+        sendCode: () => { },
+        resendCode: () => { },
+        verifyCode: () => { },
         logout: (state) => {
             state.token = '';
             state.email = '';
@@ -38,12 +39,14 @@ export const creatorSlice = createSlice({
                 username: string;
                 id: string;
                 avatar: string;
+                wallets: { address: string }[];
             }>
         ) => {
             state.token = action.payload.token;
             state.username = action.payload.username;
             state.id = action.payload.id;
             state.avatar = action.payload.avatar;
+            state.wallets = action.payload.wallets;
         },
         wasSended: (state) => {
             state.wasSended = true;

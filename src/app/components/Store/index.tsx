@@ -22,6 +22,7 @@ import { MediaRenderStore } from './components/MediaRenderStore';
 import { LastAssetsList } from './components/LastAssetsList';
 import { getThumbnailFromPath } from '@/utils/url-assets';
 import { getAssetWatermark } from '@/features/assets/requests';
+import axios from 'axios';
 
 interface StoreProps {
     data: {
@@ -126,6 +127,25 @@ const Store = ({ data }: StoreProps) => {
                     .map((result) => (result as PromiseFulfilledResult<[string, string]>).value)
             );
             setWatermarkFormats(successfulWatermarks);
+        }
+    };
+
+    const handleDownloadMedia = async () => {
+        const url = `${ASSET_STORAGE_URL}/${asset.formats?.original?.path}`;
+        const fileName = asset.assetMetadata?.context?.formData?.title || Date.now().toString();
+
+        try {
+            const response = await axios.get(url, { responseType: 'blob' });
+            const blob = response.data;
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(link.href);
+        } catch (error) {
+            console.error('Error downloading the file', error);
         }
     };
 
@@ -250,7 +270,6 @@ const Store = ({ data }: StoreProps) => {
                                             url: `${EXPLORER_URL}/tx/${asset?.mintExplorer?.transactionHash}`,
                                         },
                                         extra: {
-                                            text: 'Portfolio',
                                             url: `${SEARCH_BASE_URL}?portfolio_wallets=${asset?.mintExplorer?.address}`,
                                         },
                                     },
@@ -267,6 +286,8 @@ const Store = ({ data }: StoreProps) => {
                                         },
                                     },
                                 ]}
+                                downloadMedia={handleDownloadMedia}
+                                mintAdress={asset?.mintExplorer?.address}
                             />
                         )}
                     </Grid>
