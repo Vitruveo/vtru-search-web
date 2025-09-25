@@ -19,10 +19,6 @@ export const useAssetLicenses = (assetKey: string | null) => {
             const wallet = await signer();
             setSignerInstance(wallet);
         };
-        fetchSigner();
-    }, []);
-
-    useEffect(() => {
         if (assetKey) {
             licenseRegistry
                 .getAvailableLicense(assetKey, 1, 1)
@@ -49,7 +45,8 @@ export const useAssetLicenses = (assetKey: string | null) => {
                     });
                 });
         }
-    }, [assetKey]);
+        fetchSigner();
+    }, [assetKey, signerInstance]);
 
     return licenses;
 };
