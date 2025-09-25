@@ -50,9 +50,10 @@ export default function Modal({ open, handleClose, content, baseUrl, path }: Mod
                             src={content}
                             alt="original-image"
                             className={styled.imageModal}
+                            style={{ cursor: !isMobile && isMagnifyingGlassOn ? 'none' : 'default' }}
                             draggable={false}
-                            onMouseMove={!isMobile ? handleMouseMove : () => {}}
-                            onMouseLeave={!isMobile ? handleMouseLeave : () => {}}
+                            onMouseMove={!isMobile && isMagnifyingGlassOn ? handleMouseMove : () => {}}
+                            onMouseLeave={!isMobile && isMagnifyingGlassOn ? handleMouseLeave : () => {}}
                         />
                     </>
                 ) : (
@@ -60,7 +61,7 @@ export default function Modal({ open, handleClose, content, baseUrl, path }: Mod
                         <source src={content} type="video/mp4" />
                     </video>
                 )}
-                {!isMobile ? (
+                {!isMobile && isMagnifyingGlassOn ? (
                     <div className={styled.magnify} style={{ backgroundImage: `url(${content})`, ...magnifyStyle }} />
                 ) : null}
 

@@ -41,7 +41,6 @@ import PortfolioItem from '../components/PortfolioItem';
 import { ContextItem } from '../components/ContextItem';
 import { TaxonomyItem } from '../components/TaxonomyItem';
 import { CreatorsItem } from '../components/CreatorsItem';
-import { LicenseItem } from '../components/LicenseItem';
 import Range from '../components/Range';
 import { Wallets } from '../components/Wallets';
 import { AssetFilterAccordion } from './AssetFilterAccordion';
@@ -321,12 +320,25 @@ const Filters = () => {
 
                 <FormGroup sx={{ display: 'flex', flexDirection: 'column', marginLeft: '5.5%' }}>
                     <Typography variant="h4">Filters</Typography>
+                    <Box display={'flex'}>
+                        <FormControlLabel
+                            value="nft"
+                            control={<Checkbox checked={checkedLicenseType.nft} onChange={handleChangeLicenseType} />}
+                            label="Digital Assets"
+                        />
+                        <FormControlLabel
+                            value="print"
+                            control={<Checkbox checked={checkedLicenseType.print} onChange={handleChangeLicenseType} />}
+                            label="Printed Art"
+                        />
+                    </Box>
                     <Box display="flex">
                         <FormControlLabel
                             control={<Checkbox onChange={handleChangeNudity} checked={isHideNuditychecked} />}
                             label={language['search.assetFilter.shortcut.nudity'] as string}
                             sx={{
                                 width: '50%',
+                                mr: '10%',
                             }}
                         />
                         <FormControlLabel
@@ -349,6 +361,7 @@ const Filters = () => {
                             label={language['search.assetFilter.shortcut.photography'] as string}
                             sx={{
                                 width: '50%',
+                                mr: '7%',
                             }}
                         />
                         <FormControlLabel
@@ -375,6 +388,7 @@ const Filters = () => {
                             label={language['search.assetFilter.shortcut.physicalArt'] as string}
                             sx={{
                                 width: '50%',
+                                mr: '10%',
                             }}
                         />
                         <FormControlLabel
@@ -395,7 +409,9 @@ const Filters = () => {
                             control={<Checkbox onChange={handleChangeIsIncludeSold} checked={isIncludeSold} />}
                             label={language['search.assetFilter.shortcut.includeSold'] as string}
                             sx={{
+                                whiteSpace: 'nowrap',
                                 width: '50%',
+                                mr: '9%',
                             }}
                         />
                         <FormControlLabel
@@ -417,12 +433,6 @@ const Filters = () => {
                             <Range afterChange={afterPriceChange} />
                         </Box>
                     </Box>
-                </AssetFilterAccordion>
-
-                <Divider />
-
-                <AssetFilterAccordion title={'Licenses'}>
-                    <LicenseItem handleChange={handleChangeLicenseType} checkedItems={checkedLicenseType} />
                 </AssetFilterAccordion>
 
                 <Divider />
