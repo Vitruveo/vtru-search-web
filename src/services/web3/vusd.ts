@@ -12,7 +12,7 @@ import {
 } from './types';
 import { BigNumber } from '@ethersproject/bignumber';
 
-const isTestNet = WEB3_NETWORK_TYPE === 'testnet';
+const isTestNet = false;
 const network = isTestNet ? 'testnet' : 'mainnet';
 
 type MainnetKeys = keyof (typeof schema)['mainnet'];
