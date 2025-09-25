@@ -20,6 +20,9 @@ import { Background } from './components/Background';
 import Modal from './components/Modal/Modal';
 import { MediaRenderStore } from './components/MediaRenderStore';
 import { LastAssetsList } from './components/LastAssetsList';
+import { getThumbnailFromPath } from '@/utils/url-assets';
+import { getAssetWatermark } from '@/features/assets/requests';
+import axios from 'axios';
 
 interface StoreProps {
     data: {
@@ -37,20 +40,43 @@ const Store = ({ data }: StoreProps) => {
     const { asset, loading, creatorAvatar, username, creatorLoading, lastAssets, lastAssetsLoading } = data;
     const [size, setSize] = useState({ width: 300, height: 300 });
     const [image, setImage] = useState<string>('');
+    const [format, setFormat] = useState<string>('preview');
+    const [watermarkFormats, setWatermarkFormats] = useState<{ [key: string]: string } | null>(null);
     const [expandedAccordion, setExpandedAccordion] = useState<string | false>(false);
     const [open, setOpen] = useState(false);
     const [contents, setContents] = useState<string>('');
+    const [modalLoading, setModalLoading] = useState<string | null>(null);
 
     const isMobile = useMediaQuery('(max-width: 900px)');
 
     const handleClose = () => setOpen(false);
     const handleOpen = (content: string) => {
-        setContents(content);
-        setOpen(true);
+        const isVideo = content.match(/\.(mp4|webm|ogg)$/) != null;
+        if (isVideo) {
+            setContents(content);
+            setOpen(true);
+            return;
+        }
+        if (watermarkFormats) {
+            if (watermarkFormats[format] && format !== 'exhibition') {
+                setContents(watermarkFormats[format]);
+            } else {
+                setContents(content);
+            }
+            setOpen(true);
+        } else {
+            setModalLoading(content);
+        }
+    };
+
+    const handleChangeImage = (newImage: string, isThumbnail: boolean = true) => {
+        const isVideo = newImage.match(/\.(mp4|webm|ogg)$/) != null;
+        if (isThumbnail && !isVideo) setImage(getThumbnailFromPath(newImage));
+        else setImage(newImage);
     };
 
     const handleLoad = () => {
-        setImage(`${ASSET_STORAGE_URL}/${asset.formats?.display?.path}`);
+        handleChangeImage(`${ASSET_STORAGE_URL}/${asset.formats?.display?.path}`);
         if (asset.formats?.display?.definition === 'portrait') {
             setSize({ width: 430, height: 630 });
         }
@@ -63,9 +89,82 @@ const Store = ({ data }: StoreProps) => {
         setExpandedAccordion(isExpanded ? panel : false);
     };
 
+    const handleClenupWatermarks = () => {
+        if (watermarkFormats)
+            Object.values(watermarkFormats).forEach((url) => {
+                if (url.startsWith('blob:')) {
+                    URL.revokeObjectURL(url);
+                }
+            });
+    };
+
+    const handleGetAssetWatermarks = async () => {
+        handleClenupWatermarks();
+        if (asset.formats) {
+            const watermarkResults = await Promise.allSettled(
+                Object.keys(asset.formats).map(async (formatKey) => {
+                    if (asset.formats && asset._id) {
+                        try {
+                            const watermarkBuffer = await getAssetWatermark({ assetId: asset._id, format: formatKey });
+                            const blob = new Blob([watermarkBuffer], { type: 'image/jpeg' });
+                            const imageUrl = URL.createObjectURL(blob);
+
+                            const img = new window.Image();
+                            img.src = imageUrl;
+
+                            return [formatKey, imageUrl];
+                        } catch (error) {
+                            return null;
+                        }
+                    }
+                    return null;
+                })
+            );
+
+            const successfulWatermarks = Object.fromEntries(
+                watermarkResults
+                    .filter((result) => result.status === 'fulfilled' && result.value !== null)
+                    .map((result) => (result as PromiseFulfilledResult<[string, string]>).value)
+            );
+            setWatermarkFormats(successfulWatermarks);
+        }
+    };
+
+    const handleDownloadMedia = async () => {
+        const url = `${ASSET_STORAGE_URL}/${asset.formats?.original?.path}`;
+        const fileName = asset.assetMetadata?.context?.formData?.title || Date.now().toString();
+
+        try {
+            const response = await axios.get(url, { responseType: 'blob' });
+            const blob = response.data;
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(link.href);
+        } catch (error) {
+            console.error('Error downloading the file', error);
+        }
+    };
+
     useEffect(() => {
-        if (asset.formats?.preview.path) setImage(`${ASSET_STORAGE_URL}/${asset.formats?.preview.path}`);
+        if (asset.formats) {
+            handleGetAssetWatermarks();
+        }
+        if (asset.formats?.preview.path) handleChangeImage(`${ASSET_STORAGE_URL}/${asset.formats?.preview.path}`);
     }, [asset?.formats]);
+
+    useEffect(() => {
+        if (watermarkFormats && modalLoading) {
+            handleOpen(modalLoading);
+            setModalLoading(null);
+        }
+        return () => {
+            handleClenupWatermarks();
+        };
+    }, [watermarkFormats]);
 
     if (loading)
         return (
@@ -74,18 +173,14 @@ const Store = ({ data }: StoreProps) => {
             </Grid>
         );
 
-    const previewPath = `${ASSET_STORAGE_URL}/${asset.formats?.preview.path}`;
-
     const getWidth = () => {
-        if (image === previewPath && isMobile) return 300;
-        if (isMobile) return '100%';
-        if (image === previewPath) return 500;
-        return size.width;
+        if (isMobile) return 300;
+        return 500;
     };
+
     const getHeight = () => {
-        if (image === previewPath && isMobile) return 300;
-        if (image === previewPath) return 500;
-        return size.height;
+        if (isMobile) return 300;
+        return 500;
     };
 
     return (
@@ -110,6 +205,9 @@ const Store = ({ data }: StoreProps) => {
                         justifyContent={'center'}
                         height="100%"
                         minHeight={'600px'}
+                        sx={{
+                            position: 'relative',
+                        }}
                     >
                         <MediaRenderStore
                             media={image}
@@ -121,7 +219,13 @@ const Store = ({ data }: StoreProps) => {
                     </Grid>
                     {isMobile && (
                         <Grid item xs={12}>
-                            <ActionButtons asset={asset} setImage={setImage} handleLoad={handleLoad} />
+                            <ActionButtons
+                                asset={asset}
+                                format={format}
+                                setImage={handleChangeImage}
+                                handleLoad={handleLoad}
+                                setFormat={setFormat}
+                            />
                         </Grid>
                     )}
                     <Grid item md={6} width="100%" display={'flex'} flexDirection={'column'} gap={4}>
@@ -145,7 +249,13 @@ const Store = ({ data }: StoreProps) => {
                 <Grid container spacing={2}>
                     {!isMobile && (
                         <Grid item md={6} width="100%">
-                            <ActionButtons asset={asset} setImage={setImage} handleLoad={handleLoad} />
+                            <ActionButtons
+                                asset={asset}
+                                format={format}
+                                setImage={handleChangeImage}
+                                handleLoad={handleLoad}
+                                setFormat={setFormat}
+                            />
                         </Grid>
                     )}
                     <Grid item md={6} width="100%">
@@ -160,7 +270,6 @@ const Store = ({ data }: StoreProps) => {
                                             url: `${EXPLORER_URL}/tx/${asset?.mintExplorer?.transactionHash}`,
                                         },
                                         extra: {
-                                            text: 'Portfolio',
                                             url: `${SEARCH_BASE_URL}?portfolio_wallets=${asset?.mintExplorer?.address}`,
                                         },
                                     },
@@ -177,6 +286,8 @@ const Store = ({ data }: StoreProps) => {
                                         },
                                     },
                                 ]}
+                                downloadMedia={handleDownloadMedia}
+                                mintAdress={asset?.mintExplorer?.address}
                             />
                         )}
                     </Grid>
@@ -224,14 +335,36 @@ const Store = ({ data }: StoreProps) => {
                         </Typography>
                     </Grid>
                 </Grid>
-                <Background path={asset?.formats?.preview?.path} />
+                <Background path={getThumbnailFromPath(asset?.formats?.preview?.path)} />
                 <Modal
                     open={open}
                     handleClose={handleClose}
                     content={contents}
-                    baseUrl={ASSET_STORAGE_URL}
-                    path={asset.formats?.original?.path}
+                    baseUrl={watermarkFormats && watermarkFormats['original'] ? '' : ASSET_STORAGE_URL}
+                    path={
+                        watermarkFormats
+                            ? watermarkFormats['original']
+                            : getThumbnailFromPath(asset.formats?.original?.path)
+                    }
                 />
+                {!!modalLoading && (
+                    <Box
+                        sx={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            width: '100vw',
+                            height: '100vh',
+                            bgcolor: 'rgba(0,0,0,0.3)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            zIndex: 1300,
+                        }}
+                    >
+                        <CircularProgress />
+                    </Box>
+                )}
             </Box>
         </LazyLoad>
     );

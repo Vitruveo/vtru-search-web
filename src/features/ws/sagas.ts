@@ -63,6 +63,7 @@ function* reconnect() {
                 username: string;
                 emails: { email: string }[];
                 profile: { avatar: string };
+                wallets: { address: string }[];
             }>
         > = yield call(axios.get, `${API_BASE_URL}/creators/me`, {
             headers: {
@@ -77,6 +78,7 @@ function* reconnect() {
                     token: token,
                     id: me.data.data._id,
                     avatar: me.data.data.profile.avatar,
+                    wallets: me.data.data.wallets,
                 })
             );
 

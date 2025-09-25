@@ -21,7 +21,7 @@ export interface UploadPayload {
 
 export interface GridUploadParams {
     assetsId: string[];
-    assets: string[];
+    assets: { path: string; creatorName: string }[];
     fees: number;
     size: number;
     title: string;
