@@ -36,26 +36,48 @@ export const vitruveoMainnet = {
     testnet: false,
 };
 
+// export const vitruveoTestnet = {
+//     id: 14333,
+//     name: 'Vitruveo Testnet',
+//     network: 'vitruveo-testnet',
+//     iconUrl: '/images/icons/v-icon.png',
+//     iconBackground: '#000',
+//     nativeCurrency: {
+//         decimals: 18,
+//         name: 'Vitruveo Testnet',
+//         symbol: 'tVTRU',
+//     },
+//     rpcUrls: {
+//         public: { http: ['https://test-rpc.vitruveo.xyz/'] },
+//         default: { http: ['https://test-rpc.vitruveo.xyz/'] },
+//     },
+//     blockExplorers: {
+//         default: { name: 'VitruveoScan', url: 'https://test-explorer.vitruveo.xyz' },
+//         etherscan: { name: 'VitruveoScan', url: 'https://test-explorer.vitruveo.xyz' },
+//     },
+//     testnet: true,
+// };
+
 export const vitruveoTestnet = {
-    id: 14333,
-    name: 'Vitruveo Testnet',
-    network: 'vitruveo-testnet',
+    id: 1490,
+    name: 'Vitruveo',
+    network: 'vitruveo',
     iconUrl: '/images/icons/v-icon.png',
     iconBackground: '#000',
     nativeCurrency: {
         decimals: 18,
-        name: 'Vitruveo Testnet',
-        symbol: 'tVTRU',
+        name: 'Vitruveo',
+        symbol: 'VTRU',
     },
     rpcUrls: {
-        public: { http: ['https://test-rpc.vitruveo.xyz/'] },
-        default: { http: ['https://test-rpc.vitruveo.xyz/'] },
+        public: { http: ['https://rpc.vitruveo.xyz/'] },
+        default: { http: ['https://rpc.vitruveo.xyz/'] },
     },
     blockExplorers: {
-        default: { name: 'VitruveoScan', url: 'https://test-explorer.vitruveo.xyz' },
-        etherscan: { name: 'VitruveoScan', url: 'https://test-explorer.vitruveo.xyz' },
+        default: { name: 'VitruveoScan', url: 'https://explorer.vitruveo.xyz' },
+        etherscan: { name: 'VitruveoScan', url: 'https://explorer.vitruveo.xyz' },
     },
-    testnet: true,
+    testnet: false,
 };
 
 interface Web3WagmiProviderProps {
