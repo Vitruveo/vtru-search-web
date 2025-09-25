@@ -80,12 +80,12 @@ export default function Modal({ open, handleClose, content, baseUrl, path }: Mod
                             {isMagnifyingGlassOn ? (
                                 <Box display={'flex'} flex={1} sx={{ minWidth: '11.5ch' }}>
                                     <IconZoomCancel />
-                                    <Typography variant="subtitle2">Disable Zoom</Typography>
+                                    <Typography variant="subtitle2">Disable Loupe</Typography>
                                 </Box>
                             ) : (
                                 <Box display={'flex'} flex={1} sx={{ minWidth: '11.5ch' }}>
                                     <IconZoomCheck />
-                                    <Typography variant="subtitle2">Enable Zoom</Typography>
+                                    <Typography variant="subtitle2">Enable Loupe</Typography>
                                 </Box>
                             )}
                         </Button>
