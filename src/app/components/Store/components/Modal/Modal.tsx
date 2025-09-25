@@ -1,7 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import { Modal as MuiModal, useMediaQuery } from '@mui/material';
+import { Modal as MuiModal, useMediaQuery, Box, Button, Typography } from '@mui/material';
 import { useState } from 'react';
 import styled from './index.module.css';
+import { IconZoomCancel, IconZoomCheck } from '@tabler/icons-react';
 
 interface ModalProps {
     open: boolean;
@@ -14,6 +15,7 @@ interface ModalProps {
 export default function Modal({ open, handleClose, content, baseUrl, path }: ModalProps) {
     const isVideo = content.match(/\.(mp4|webm|ogg)$/) != null;
     const [magnifyStyle, setMagnifyStyle] = useState({});
+    const [isMagnifyingGlassOn, setIsMagnifyingGlassOn] = useState(false);
     const isMobile = useMediaQuery('(max-width: 900px)');
 
     const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
@@ -49,8 +51,8 @@ export default function Modal({ open, handleClose, content, baseUrl, path }: Mod
                             alt="original-image"
                             className={styled.imageModal}
                             draggable={false}
-                            onMouseMove={!isMobile ? handleMouseMove : () => {}}
-                            onMouseLeave={!isMobile ? handleMouseLeave : () => {}}
+                            onMouseMove={!isMobile ? handleMouseMove : () => { }}
+                            onMouseLeave={!isMobile ? handleMouseLeave : () => { }}
                         />
                     </>
                 ) : (
@@ -61,23 +63,46 @@ export default function Modal({ open, handleClose, content, baseUrl, path }: Mod
                 {!isMobile ? (
                     <div className={styled.magnify} style={{ backgroundImage: `url(${content})`, ...magnifyStyle }} />
                 ) : null}
-                {baseUrl && path && (
-                    <a
-                        href={`${baseUrl}/${path}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{
-                            textDecoration: 'none',
-                            padding: 4,
-                            border: '2px solid white',
-                            color: 'white',
-                            backgroundColor: '#FF0066',
-                            borderRadius: 8,
-                        }}
-                    >
-                        View Original Media
-                    </a>
-                )}
+
+                <Box display="flex" gap={2}>
+                    {!isMobile ? (
+                        <Button
+                            onClick={() => setIsMagnifyingGlassOn((prev) => !prev)}
+                            variant="contained"
+                            sx={{ border: '2px solid white' }}
+                        >
+                            {isMagnifyingGlassOn ? (
+                                <Box display={'flex'} flex={1} sx={{ minWidth: '11.5ch' }}>
+                                    <IconZoomCancel />
+                                    <Typography variant="subtitle2">Disable Loupe</Typography>
+                                </Box>
+                            ) : (
+                                <Box display={'flex'} flex={1} sx={{ minWidth: '11.5ch' }}>
+                                    <IconZoomCheck />
+                                    <Typography variant="subtitle2">Enable Loupe</Typography>
+                                </Box>
+                            )}
+                        </Button>
+                    ) : null}
+                    {path && (
+                        <a
+                            href={baseUrl ? `${baseUrl}/${path}` : path}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                                textDecoration: 'none',
+                                padding: 4,
+                                paddingTop: 8,
+                                border: '2px solid white',
+                                color: 'white',
+                                backgroundColor: '#FF0066',
+                                borderRadius: 8,
+                            }}
+                        >
+                            View Full-Size Media
+                        </a>
+                    )}
+                </Box>
             </div>
         </MuiModal>
     );
