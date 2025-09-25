@@ -7,6 +7,7 @@ export interface InitialState {
     loading: boolean;
     id: string;
     avatar: string | null;
+    wallets: { address: string }[];
 }
 
 export interface OptConfirmResponse {
@@ -17,5 +18,6 @@ export interface OptConfirmResponse {
         profile: {
             avatar: string;
         };
+        wallets: { address: string }[];
     };
 }

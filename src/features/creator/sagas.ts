@@ -52,6 +52,7 @@ function* verifyCode() {
                 token: response.data.data.token,
                 id: response.data.data.creator._id,
                 avatar: response.data.data.creator.profile.avatar,
+                wallets: response.data.data.creator.wallets || [],
             })
         );
         yield call(connectWebSocket);
