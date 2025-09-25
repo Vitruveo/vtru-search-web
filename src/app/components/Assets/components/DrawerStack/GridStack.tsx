@@ -62,7 +62,9 @@ export default function GridStack({ selectedAssets, title, description, fees }: 
         dispatch(
             actions.gridUpload({
                 assetsId: selectedAssets.map((item) => item._id.toLowerCase()).slice(0, size ** 2),
-                assets: selectedAssets.map((item) => item.formats.preview.path).slice(0, size ** 2),
+                assets: selectedAssets
+                    .map((item) => ({ path: item.formats.preview.path, creatorName: item.creator.username }))
+                    .slice(0, size ** 2),
                 fees,
                 size,
                 title,
