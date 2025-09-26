@@ -7,11 +7,7 @@ import { REDIRECTS_JSON } from '@/constants/vitruveo';
 function* getRedirects() {
     yield put(actions.startLoading());
     try {
-        console.log(REDIRECTS_JSON);
-
         const response: AxiosResponse<RedirectType> = yield call(axios.get, REDIRECTS_JSON);
-        console.log(response.data);
-
         yield put(actions.setData(response.data));
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {

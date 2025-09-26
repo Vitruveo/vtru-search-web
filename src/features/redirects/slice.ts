@@ -2,7 +2,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RedirectsState, RedirectType } from './types';
 
 export const initialState: RedirectsState = {
-    data: {} as RedirectType,
+    data: {
+        common: { xibit: {}, vitruveo: {} } as RedirectType['common'],
+        production: { xibit: {}, vitruveo: {} } as RedirectType['production'],
+        qa: { xibit: {}, vitruveo: {} } as RedirectType['qa'],
+    },
     error: null,
     loading: false,
 };

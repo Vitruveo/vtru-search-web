@@ -1,5 +1,8 @@
 export interface RedirectType {
-    [key: string]: CommonType & RedirectsPathsType;
+    [key: string]: {
+        xibit: CommonType['xibit'] & RedirectsPathsType['xibit'];
+        vitruveo: CommonType['vitruveo'] & RedirectsPathsType['vitruveo'];
+    };
 }
 
 export interface CommonType {
