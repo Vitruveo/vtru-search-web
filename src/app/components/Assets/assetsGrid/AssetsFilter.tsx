@@ -332,6 +332,7 @@ const Filters = () => {
                             label="Printed Art"
                         />
                     </Box>
+                    <Divider sx={{ width: '90%' }} />
                     <Box display="flex">
                         <FormControlLabel
                             control={<Checkbox onChange={handleChangeNudity} checked={isHideNuditychecked} />}
