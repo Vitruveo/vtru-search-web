@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RedirectsState, RedirectType } from './types';
 
 export const initialState: RedirectsState = {
-    redirects: {} as RedirectType,
+    data: {} as RedirectType,
     error: null,
     loading: false,
 };
@@ -18,8 +18,8 @@ export const redirectsSlice = createSlice({
         finishLoading: (state) => {
             state.loading = false;
         },
-        setRedirects: (state, action: PayloadAction<RedirectType>) => {
-            state.redirects = action.payload;
+        setData: (state, action: PayloadAction<RedirectType>) => {
+            state.data = action.payload;
         },
         setError: (state, action: PayloadAction<string>) => {
             state.error = action.payload;

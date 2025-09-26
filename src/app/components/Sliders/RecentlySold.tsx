@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 import Marquee from 'react-fast-marquee';
 import { Box, CardContent, Paper, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -9,7 +8,6 @@ import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import { LastSoldAsset } from '@/features/assets/types';
 import { NODE_ENV } from '@/constants/api';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { formatPrice, getPriceWithMarkup } from '@/utils/assets';
 import Username from '../Username';
 import { useDomainContext } from '@/app/context/domain';
@@ -19,19 +17,12 @@ function RecentlySoldSlider() {
     const { subdomain } = useDomainContext();
     const stores = useSelector((state) => state.stores.currentDomain);
     const assets = useSelector((state) => state.assets.lastSold);
+    const redirectState = useSelector((state) => state.redirects.data);
     const theme = useTheme();
-    const [redirects, setRedirects] = useState({ search: '', stores: '' });
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setRedirects({
-                search: rowData.data[NODE_ENV].xibit.search_url,
-                stores: rowData.data[NODE_ENV].xibit.stores_url,
-            });
-        };
-        fetchData();
-    }, []);
+    const redirects = {
+        search: redirectState[NODE_ENV].xibit.search_url,
+        stores: redirectState[NODE_ENV].xibit.stores_url,
+    };
 
     const handleClickItem = (asset: LastSoldAsset) => {
         const url = new URL(subdomain ? redirects.stores : redirects.search);

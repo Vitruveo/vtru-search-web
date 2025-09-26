@@ -1,13 +1,11 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { LastAssets } from '@/features/store/types';
 import { NODE_ENV } from '@/constants/api';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { videoExtension } from '@/utils/videoExtensions';
+import { useSelector } from '@/store/hooks';
 
 interface Props {
     assets: LastAssets[];
@@ -17,15 +15,7 @@ interface Props {
 }
 
 export const LastAssetsList = ({ assets, loading, creatorName, creatorId }: Props) => {
-    const [searchUrl, setSearchUrl] = useState('');
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setSearchUrl(rowData.data[NODE_ENV].xibit.search_url);
-        };
-        fetchData();
-    }, []);
+    const searchUrl = useSelector((state) => state.redirects.data[NODE_ENV].xibit.search_url);
 
     return (
         <Box>

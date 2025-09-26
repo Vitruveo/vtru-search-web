@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 import Image from 'next/image';
 import { Box, Theme, Typography, useMediaQuery } from '@mui/material';
 
@@ -9,19 +7,10 @@ import { actions } from '@/features/assets';
 import { actions as actionsFilters } from '@/features/filters/slice';
 import { actions as actionsStores } from '@/features/stores/slice';
 import { STORES_STORAGE_URL } from '@/constants/aws';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 
 const LogoLtrDark = () => {
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
-    const [vitruveoUrl, setVitruveoUrl] = useState('');
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setVitruveoUrl(rowData.data.common.vitruveo.base_url);
-        };
-        fetchData();
-    }, []);
+    const vitruveoUrl = useSelector((state) => state.redirects.data.common.vitruveo.base_url);
 
     return (
         <Box display="flex" alignItems="end">
@@ -57,15 +46,7 @@ const LogoLtrDark = () => {
 
 const LogoLtrLight = () => {
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
-    const [vitruveoUrl, setVitruveoUrl] = useState('');
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setVitruveoUrl(rowData.data.common.vitruveo.base_url);
-        };
-        fetchData();
-    }, []);
+    const vitruveoUrl = useSelector((state) => state.redirects.data.common.vitruveo.base_url);
 
     return (
         <Box display="flex" alignItems="end">

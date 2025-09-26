@@ -1,7 +1,5 @@
 export interface RedirectType {
-    common: CommonType;
-    qa: RedirectsPathsType;
-    production: RedirectsPathsType;
+    [key: string]: CommonType & RedirectsPathsType;
 }
 
 export interface CommonType {
@@ -33,7 +31,7 @@ export interface RedirectsPathsType {
 }
 
 export interface RedirectsState {
-    redirects: RedirectType;
+    data: RedirectType;
     loading: boolean;
     error: string | null;
 }

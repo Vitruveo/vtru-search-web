@@ -1,10 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import cookie from 'cookiejs';
-import axios from 'axios';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useToggle } from '@/app/hooks/useToggle';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { actions } from '@/features/assets';
 import { Asset } from '@/features/assets/types';
 import { actions as actionsFilters } from '@/features/filters/slice';
@@ -46,6 +44,11 @@ interface Props {
 
 const AssetsList = ({ isBlockLoader }: Props) => {
     const { language } = useI18n();
+    const redirectsState = useSelector((state) => state.redirects.data);
+    const redirects = {
+        store: redirectsState[NODE_ENV].xibit.store_url,
+        search: redirectsState[NODE_ENV].xibit.search_url,
+    };
     const optionsForSelectSort = [
         { value: 'latest', label: language['search.select.sort.option.latest'] as string },
         { value: 'priceHighToLow', label: language['search.select.sort.option.priceHighToLow'] as string },
@@ -78,10 +81,6 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
     const [sortOrder, setSortOrder] = useState<string>('latest');
     const [groupByCreator, setGroupByCreator] = useState<string>('no');
-    const [redirects, setRedirects] = useState({
-        store: '',
-        search: '',
-    });
     const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
@@ -193,17 +192,6 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
         setGroupByCreator(hasIncludesGroup.active);
     }, [hasIncludesGroup.active]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setRedirects({
-                store: rowData.data[NODE_ENV].xibit.store_url,
-                search: rowData.data[NODE_ENV].xibit.search_url,
-            });
-        };
-        fetchData();
-    }, []);
 
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);

@@ -1,38 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import { Box, Drawer, IconButton, List, ListItem, ListItemText, Theme, Typography, useMediaQuery } from '@mui/material';
 import { IconMenu2 } from '@tabler/icons-react';
 import { useSelector } from '@/store/hooks';
 import { NODE_ENV } from '@/constants/api';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 
 const AllProjectsMenu = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [redirects, setRedirects] = useState({
-        search: '',
-        stores: '',
-        studio: '',
-        about: '',
-        vitruveo: '',
-    });
+    const redirectState = useSelector((state) => state.redirects.data);
+    const redirects = {
+        search: redirectState[NODE_ENV].xibit.search_url,
+        stores: redirectState[NODE_ENV].xibit.stores_url,
+        studio: redirectState[NODE_ENV].xibit.studio_url,
+        about: redirectState.common.xibit.about_url,
+        vitruveo: redirectState.common.vitruveo.base_url,
+    };
 
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const customizer = useSelector((state) => state.customizer);
     const isDark = customizer.activeMode === 'dark';
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setRedirects({
-                search: rowData.data[NODE_ENV].xibit.search_url,
-                stores: rowData.data[NODE_ENV].xibit.stores_url,
-                studio: rowData.data[NODE_ENV].xibit.studio_url,
-                about: rowData.data.common.xibit.about_url,
-                vitruveo: rowData.data.common.vitruveo.base_url,
-            });
-        };
-        fetchData();
-    }, []);
 
     const projects = [
         { title: 'SEARCH', url: redirects.search },
