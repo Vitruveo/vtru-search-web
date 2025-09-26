@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import { ShowAnimation } from '@/animations';
 import { Asset } from '@/features/assets/types';
 import { Box, CardContent, Grid, Typography } from '@mui/material';
@@ -9,8 +8,8 @@ import { useTheme } from '@mui/material/styles';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
 import '../../Assets/assetsGrid/AssetScroll.css';
 import { NODE_ENV } from '@/constants/api';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { NO_IMAGE_ASSET } from '@/constants/asset';
+import { useSelector } from '@/store/hooks';
 
 interface Props {
     asset: Asset;
@@ -19,15 +18,7 @@ interface Props {
 
 const AssetItemMain = ({ asset, username }: Props) => {
     const theme = useTheme();
-    const [searchUrl, setSearchUrl] = useState('');
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setSearchUrl(rowData.data[NODE_ENV].xibit.search_url);
-        };
-        fetchData();
-    }, []);
+    const searchUrl = useSelector((state) => state.redirects.data[NODE_ENV].xibit.search_url);
 
     const handleClick = () => {
         window.open(`${searchUrl}/${username}/${asset._id}`, '_blank');

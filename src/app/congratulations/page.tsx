@@ -1,22 +1,12 @@
 'use client';
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Box, Link, Typography, useMediaQuery } from '@mui/material';
 import { NODE_ENV } from '@/constants/api';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
-import axios from 'axios';
+import { useSelector } from '@/store/hooks';
 
 export default function Congratulations() {
     const isMobile = useMediaQuery('(max-width: 900px)');
-    const [searchUrl, setSearchUrl] = useState('');
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setSearchUrl(rowData.data[NODE_ENV].xibit.search_url);
-        };
-        fetchData();
-    }, []);
+    const searchUrl = useSelector((state) => state.redirects.data[NODE_ENV].xibit.search_url);
 
     return (
         <Box

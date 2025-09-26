@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ShowAnimation } from '@/animations';
 import { NODE_ENV } from '@/constants/api';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { STORES_STORAGE_URL } from '@/constants/aws';
 import { Box, CardContent, Grid, IconButton, Stack as MuiStack, Tooltip, Typography } from '@mui/material';
 import { MediaRenderer } from '../../Assets/components/MediaRenderer';
@@ -10,7 +9,7 @@ import { useTheme } from '@mui/material/styles';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { Stores } from '@/features/stores/types';
 import { NO_IMAGE_ASSET } from '@/constants/asset';
-import axios from 'axios';
+import { useSelector } from '@/store/hooks';
 
 interface Props {
     store: Stores;
@@ -18,15 +17,7 @@ interface Props {
 
 const StoresItemMain = ({ store }: Props) => {
     const theme = useTheme();
-    const [searchUrl, setSearchUrl] = useState('');
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setSearchUrl(rowData.data[NODE_ENV].xibit.search_url);
-        };
-        fetchData();
-    }, []);
+    const searchUrl = useSelector((state) => state.redirects.data[NODE_ENV].xibit.search_url);
 
     const handleCardClick = () => {
         if (NODE_ENV === 'production') {

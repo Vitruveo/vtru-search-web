@@ -1,11 +1,8 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Box, CardContent, Stack as StackMui, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Marquee from 'react-fast-marquee';
 
 import { NODE_ENV } from '@/constants/api';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { GENERAL_STORAGE_URL } from '@/constants/aws';
 import { Stack } from '@/features/stacks/types';
 import { useSelector } from '@/store/hooks';
@@ -15,21 +12,11 @@ import { NO_IMAGE_ASSET } from '@/constants/asset';
 
 function StackSpotlightSlider() {
     const stacks = useSelector((state) => state.stacks.spotlight);
-    const [redirects, setRedirects] = useState({
-        search: '',
-        slideshow: '',
-    });
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setRedirects({
-                search: rowData.data[NODE_ENV].xibit.search_url,
-                slideshow: rowData.data[NODE_ENV].xibit.slideshow_url,
-            });
-        };
-        fetchData();
-    }, []);
+    const redirectState = useSelector((state) => state.redirects.data);
+    const redirects = {
+        search: redirectState[NODE_ENV].xibit.search_url,
+        slideshow: redirectState[NODE_ENV].xibit.slideshow_url,
+    };
 
     const theme = useTheme();
 

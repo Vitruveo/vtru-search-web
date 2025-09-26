@@ -8,8 +8,6 @@ import { Asset } from '@/features/assets/types';
 import { LastAssets } from '@/features/store/types';
 import { Creators } from '../Assets/types';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
-import { NODE_ENV } from '@/constants/api';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { User } from './components/User';
 import ActionButtons from './components/ActionButtons/ActionButtonList';
 import PanelMint from './components/PanelMint';
@@ -23,6 +21,8 @@ import { MediaRenderStore } from './components/MediaRenderStore';
 import { LastAssetsList } from './components/LastAssetsList';
 import { getThumbnailFromPath } from '@/utils/url-assets';
 import { getAssetWatermark } from '@/features/assets/requests';
+import { useSelector } from '@/store/hooks';
+import { NODE_ENV } from '@/constants/api';
 
 interface StoreProps {
     data: {
@@ -45,8 +45,12 @@ const Store = ({ data }: StoreProps) => {
     const [expandedAccordion, setExpandedAccordion] = useState<string | false>(false);
     const [open, setOpen] = useState(false);
     const [contents, setContents] = useState<string>('');
-    const [redirects, setRedirects] = useState({ search: '', explorer: '' });
     const [modalLoading, setModalLoading] = useState<string | null>(null);
+    const redirectState = useSelector((state) => state.redirects.data);
+    const redirects = {
+        search: redirectState[NODE_ENV].xibit.search_url,
+        explorer: redirectState[NODE_ENV].vitruveo.explorer_url,
+    };
 
     const isMobile = useMediaQuery('(max-width: 900px)');
 
@@ -156,17 +160,6 @@ const Store = ({ data }: StoreProps) => {
         }
         if (asset.formats?.preview.path) handleChangeImage(`${ASSET_STORAGE_URL}/${asset.formats?.preview.path}`);
     }, [asset?.formats]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setRedirects({
-                search: rowData.data[NODE_ENV].xibit.search_url,
-                explorer: rowData.data[NODE_ENV].vitruveo.explorer_url,
-            });
-        };
-        fetchData();
-    }, []);
 
     useEffect(() => {
         if (watermarkFormats && modalLoading) {

@@ -10,14 +10,15 @@ import { HorizontalLayout } from '@/app/components/Folio/Layout/Horizontal';
 import { VerticalLayout } from '@/app/components/Folio/Layout/Vertical';
 import { ArtInterface, DisplayOptions, WindowOrientation } from '@/app/components/Folio/types';
 import { buildAssetURL } from '@/app/components/Folio/utils';
+import { useSelector } from '@/store/hooks';
 // constants
 import { API_BASE_URL, NODE_ENV } from '@/constants/api';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 
 import './index.css';
 
 export default function Page() {
     const params = useParams();
+    const searchUrl = useSelector((state) => state.redirects.data[NODE_ENV].xibit.search_url);
 
     const [arts, setArts] = useState<ArtInterface[]>([]);
     const [time, setTime] = useState<number>(0);
@@ -29,7 +30,6 @@ export default function Page() {
         horizontal: 0,
         vertical: 0,
     });
-    const [searchUrl, setSearchUrl] = useState('');
 
     const checkOrientation = () => {
         if (window.innerWidth > window.innerHeight) {
@@ -38,14 +38,6 @@ export default function Page() {
             setWindowOrientation('vertical');
         }
     };
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setSearchUrl(rowData.data[NODE_ENV].xibit.search_url);
-        };
-        fetchData();
-    }, []);
 
     useEffect(() => {
         checkOrientation();

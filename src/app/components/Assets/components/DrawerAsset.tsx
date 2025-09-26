@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useI18n } from '@/app/hooks/useI18n';
 import { Box, Button, Typography, Drawer, useMediaQuery } from '@mui/material';
 import cookie from 'cookiejs';
@@ -7,7 +5,6 @@ import { Theme } from '@mui/material/styles';
 import { Asset } from '@/features/assets/types';
 import { ASSET_STORAGE_URL, GENERAL_STORAGE_URL } from '@/constants/aws';
 import { NODE_ENV } from '@/constants/api';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { useSelector } from '@/store/hooks';
 import { MediaRenderer } from './MediaRenderer';
 import Avatar from './Avatar';
@@ -30,22 +27,12 @@ export function DrawerAsset({ drawerOpen, assetView, onClose }: Props) {
 
     const creator = useSelector((state) => state.assets.creator);
     const paused = useSelector((state) => state.assets.paused);
+    const redirectsState = useSelector((state) => state.redirects.data);
 
-    const [redirects, setRedirects] = useState({
-        search: '',
-        stores: '',
-    });
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setRedirects({
-                search: rowData.data[NODE_ENV].xibit.search_url,
-                stores: rowData.data[NODE_ENV].xibit.stores_url,
-            });
-        };
-        fetchData();
-    }, []);
+    const redirects = {
+        search: redirectsState[NODE_ENV].xibit.search_url,
+        stores: redirectsState[NODE_ENV].xibit.stores_url,
+    };
 
     const { subdomain } = useDomainContext();
 

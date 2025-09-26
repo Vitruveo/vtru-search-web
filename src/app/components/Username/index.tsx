@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useHasStakes } from '@/app/hooks/useHasStakes';
 import { NODE_ENV } from '@/constants/api';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { actions as actionsFilters } from '@/features/filters/slice';
-import { useDispatch } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { Box, Link, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import axios from 'axios';
 
 interface Props {
     username: string;
@@ -26,7 +24,7 @@ const Username = ({ username, vaultAdress, size, openInNewTab = false, iconSpaci
     const theme = useTheme();
     const dispatch = useDispatch();
     const [hasStakes, setHasStakes] = useState(false);
-    const [searchUrl, setSearchUrl] = useState('');
+    const searchUrl = useSelector((state) => state.redirects.data[NODE_ENV].xibit.search_url);
     const vaultStake = useHasStakes(vaultAdress);
 
     const onClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -50,14 +48,6 @@ const Username = ({ username, vaultAdress, size, openInNewTab = false, iconSpaci
             setHasStakes(vaultStake);
         }
     }, [vaultStake]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setSearchUrl(rowData.data[NODE_ENV].xibit.search_url);
-        };
-        fetchData();
-    }, []);
 
     return (
         <Box width={'100%'}>

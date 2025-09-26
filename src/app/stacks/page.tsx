@@ -5,7 +5,6 @@ import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/stacks';
 import { NODE_ENV } from '@/constants/api';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import PageContainer from '../components/Container/PageContainer';
 import { useI18n } from '../hooks/useI18n';
 import StyleElements from '../components/Stacks/components/StyleElements';
@@ -13,7 +12,6 @@ import { Box, Theme, useMediaQuery } from '@mui/material';
 import Header from '../components/Header';
 import { useTheme } from '@mui/material/styles';
 import { STORES_STORAGE_URL } from '@/constants/aws';
-import axios from 'axios';
 
 const Stacks = () => {
     const { language } = useI18n();
@@ -21,10 +19,11 @@ const Stacks = () => {
     const theme = useTheme();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
-    const logo = useSelector((state) => state.stores.currentDomain?.organization?.formats?.logo?.square?.path);
 
+    const logo = useSelector((state) => state.stores.currentDomain?.organization?.formats?.logo?.square?.path);
     const stacks = useSelector((state) => state.stacks.data);
     const hiddenElement = useSelector((state) => state.customizer.hiddenStack);
+    const searchUrl = useSelector((state) => state.redirects.data[NODE_ENV].xibit.search_url);
 
     const [selectValues, setSelectValues] = useState({
         search: '',
@@ -32,19 +31,10 @@ const Stacks = () => {
         page: { value: '1', label: '1' },
         sort: { value: 'latest', label: language['search.select.sort.option.latest'] as string },
     });
-    const [searchUrl, setSearchUrl] = useState('');
 
     useEffect(() => {
         dispatch(actions.loadStacks());
         dispatch(actions.loadStacksSpotlight());
-    }, []);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setSearchUrl(rowData.data[NODE_ENV].xibit.search_url);
-        };
-        fetchData();
     }, []);
 
     const optionsForSelectPage = useMemo(() => {

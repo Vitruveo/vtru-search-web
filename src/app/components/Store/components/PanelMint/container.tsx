@@ -14,7 +14,6 @@ import { TypeActions, initialState, reducer } from './slice';
 import cookie from 'cookiejs';
 import { Asset } from '@/features/assets/types';
 import { CATALOG_BASE_URL, NODE_ENV } from '@/constants/api';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { useSelector } from '@/store/hooks';
 import { useAssetLicenses } from '@/app/hooks/useAssetLicenses';
 import { useDomainContext } from '@/app/context/domain';
@@ -59,23 +58,12 @@ export const Container = ({ asset, image, size, creatorAvatar, creatorName }: Pr
     const assetLicenses = useAssetLicenses(asset._id);
     const stores = useSelector((stateRx) => stateRx.stores.currentDomain);
     const [printIsBlocked, setPrintIsBlocked] = useState(true);
-    const [redirects, setRedirects] = useState({
-        search: '',
-        stores: '',
-        explorer: '',
-    });
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setRedirects({
-                search: rowData.data[NODE_ENV].xibit.search_url,
-                stores: rowData.data[NODE_ENV].xibit.stores_url,
-                explorer: rowData.data[NODE_ENV].vitruveo.explorer_url,
-            });
-        };
-        fetchData();
-    }, []);
+    const redirectState = useSelector((stateR) => stateR.redirects.data);
+    const redirects = {
+        search: redirectState[NODE_ENV].xibit.search_url,
+        stores: redirectState[NODE_ENV].xibit.stores_url,
+        explorer: redirectState[NODE_ENV].vitruveo.explorer_url,
+    };
 
     useEffect(() => {
         const getSetupPrintLicense = async () => {

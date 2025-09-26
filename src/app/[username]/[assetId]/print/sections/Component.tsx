@@ -1,14 +1,13 @@
 'use client';
+import { useEffect, useState } from 'react';
 import { CATALOG_ASSETS_BASE_URL, NODE_ENV } from '@/constants/api';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { Box, Theme, Typography, useMediaQuery } from '@mui/material';
 import { IconLink } from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Sections } from './types';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useSelector } from '@/store/hooks';
 
 const mainColor = '#ffffff';
 
@@ -60,7 +59,7 @@ export const PrintSectionComponent = ({ data }: Props) => {
     const [widthLessThanHeight, setWidthLessThanHeight] = useState(
         typeof window !== 'undefined' ? window.innerWidth < window.innerHeight : false
     );
-    const [studioUrl, setStudioUrl] = useState('');
+    const studioUrl = useSelector((state) => state.redirects.data[NODE_ENV].xibit.studio_url);
 
     useEffect(() => {
         function handleResize() {
@@ -68,14 +67,6 @@ export const PrintSectionComponent = ({ data }: Props) => {
         }
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setStudioUrl(rowData.data[NODE_ENV].xibit.studio_url);
-        };
-        fetchData();
     }, []);
 
     return (

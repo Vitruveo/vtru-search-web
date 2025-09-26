@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppBar, Box, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import { useTheme, Theme } from '@mui/material/styles';
@@ -13,7 +12,6 @@ import { Rss } from '../Rss';
 import Logo from '../Shared/Logo';
 import BuyVUSDModal from '../BuyVUSD/modalHOC';
 import { NODE_ENV } from '@/constants/api';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 
 interface Props {
     rssOptions: {
@@ -35,10 +33,6 @@ const Header = ({
 }: Props) => {
     const dispatch = useDispatch();
     const isMobile = useMediaQuery('(max-width: 900px)');
-    const [redirects, setRedirects] = useState({
-        about: '',
-        search: '',
-    });
 
     const themeStyle = useTheme();
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
@@ -52,18 +46,13 @@ const Header = ({
     const paused = useSelector((state) => state.assets.paused);
     const isHidden = useSelector((state) => state.customizer.hidden?.header);
     const storesName = useSelector((state) => state.stores.currentDomain?.organization?.name);
+    const redirectState = useSelector((state) => state.redirects.data);
+    const redirects = {
+        about: redirectState.common.xibit.about_url,
+        search: redirectState[NODE_ENV].xibit.search_url,
+    };
     // const packIsLoading = useSelector((state) => state.assets.packLoading);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setRedirects({
-                about: rowData.data.common.xibit.about_url,
-                search: rowData.data[NODE_ENV].xibit.search_url,
-            });
-        };
-        fetchData();
-    }, []);
     const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };

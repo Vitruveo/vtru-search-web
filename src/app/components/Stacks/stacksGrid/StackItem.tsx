@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ShowAnimation } from '@/animations';
 import { GENERAL_STORAGE_URL } from '@/constants/aws';
 import { NO_IMAGE_ASSET } from '@/constants/asset';
 import { NODE_ENV } from '@/constants/api';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { Stack } from '@/features/stacks/types';
 import { Box, CardContent, Grid, IconButton, Modal, Stack as MuiStack, Tooltip, Typography } from '@mui/material';
 import { MediaRenderer } from '../../Assets/components/MediaRenderer';
@@ -12,7 +11,7 @@ import { useTheme } from '@mui/material/styles';
 import { IconInfoCircle, IconPlayerPlayFilled, IconX } from '@tabler/icons-react';
 import { useI18n } from '@/app/hooks/useI18n';
 import Username from '../../Username';
-import axios from 'axios';
+import { useSelector } from '@/store/hooks';
 
 interface Props {
     stack: Stack;
@@ -22,21 +21,11 @@ const StackItemMain = ({ stack }: Props) => {
     const theme = useTheme();
     const { language } = useI18n();
     const [isOpenModal, setIsOpenModal] = useState(false);
-    const [redirects, setRedirects] = useState({
-        search: '',
-        slideshow: '',
-    });
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setRedirects({
-                search: rowData.data[NODE_ENV].xibit.search_url,
-                slideshow: rowData.data[NODE_ENV].xibit.slideshow_url,
-            });
-        };
-        fetchData();
-    }, []);
+    const redirectsState = useSelector((state) => state.redirects.data[NODE_ENV].xibit);
+    const redirects = {
+        search: redirectsState.search_url,
+        slideshow: redirectsState.slideshow_url,
+    };
 
     const handleModalOpen = (event: React.MouseEvent) => {
         event.stopPropagation();
