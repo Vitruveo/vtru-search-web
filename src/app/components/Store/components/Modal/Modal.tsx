@@ -89,9 +89,9 @@ export default function Modal({ open, handleClose, content, baseUrl, path }: Mod
                             )}
                         </Button>
                     ) : null}
-                    {path && (
+                    {content && (
                         <a
-                            href={baseUrl ? `${baseUrl}/${path}` : path}
+                            href={content}
                             target="_blank"
                             rel="noreferrer"
                             style={{

@@ -5,28 +5,28 @@ import { useTheme } from '@mui/material/styles';
 import styles from './index.module.css';
 
 type ActionButtonProps = {
+    media: string;
+    selected?: string | false;
+    thumbPath?: string;
     title: string;
     onClick?: () => void;
     handleLoad?: () => void;
     handleSelect?: (button: string) => void;
-    formatMedia?: (media: string) => string;
-    media: string;
-    selected?: string | false;
 };
 
 export default function ActionButton({
     title,
+    media,
+    selected,
+    thumbPath,
     onClick,
     handleLoad,
     handleSelect,
-    formatMedia,
-    media,
-    selected,
 }: ActionButtonProps): React.JSX.Element {
     const theme = useTheme();
     const isVideo = media.match(/\.(mp4|webm|ogg)$/) != null;
 
-    const mediaCheck = formatMedia && !isVideo ? formatMedia(media) : media;
+    const mediaCheck = isVideo || !thumbPath ? media : thumbPath;
     const isMobile = useMediaQuery('(max-width: 900px)');
 
     if (isVideo) {
