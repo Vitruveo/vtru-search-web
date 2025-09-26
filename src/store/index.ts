@@ -8,6 +8,7 @@ import { PERSIST_KEY, PERSIST_VERSION } from '@/constants/store';
 // sagas
 import { assetsSagas } from '@/features/assets';
 import { creatorSagas } from '@/features/creator';
+import { redirectsSagas } from '@/features/redirects';
 import { storesSagas } from '@/features/stores/sagas';
 import stacksSaga from '@/features/stacks/sagas';
 import wsSagas from '@/features/ws/sagas';
@@ -20,6 +21,7 @@ import { filterSlice } from '@/features/filters';
 import { customizerSlice } from '@/features/customizer';
 import { assetsSlice } from '@/features/assets/slice';
 import { creatorSlice } from '@/features/creator';
+import { redirectsSlice } from '@/features/redirects';
 import { layoutSlice } from '@/features/layout';
 import { toastrSlice } from '@/features/toastr';
 import { wsSlice } from '@/features/ws/slice';
@@ -74,6 +76,7 @@ const rootReducer = combineReducers({
     profileAssets: profileAssetsSlice.reducer,
     stores: storesSlice.reducer,
     ecommerce: EcommerceSlice.reducer,
+    redirects: redirectsSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -100,6 +103,7 @@ function* rootSaga() {
         spawn(profileCreatorSaga),
         spawn(profileAssetsSaga),
         spawn(storesSagas),
+        spawn(redirectsSagas),
     ]);
 }
 
