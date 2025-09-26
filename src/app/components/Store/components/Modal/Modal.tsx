@@ -38,7 +38,11 @@ export default function Modal({ open, handleClose, content, baseUrl, path }: Mod
     };
 
     return (
-        <MuiModal open={open} onClose={handleClose}>
+        <MuiModal
+            open={open}
+            onClose={handleClose}
+            slotProps={{ backdrop: { style: { backgroundColor: 'rgba(0,0,0,0.85)' } } }}
+        >
             <div
                 className={styled.main}
                 onClick={(e) => (e.target === e.currentTarget || isMobile) && handleClose()}
