@@ -16,10 +16,15 @@ const sizes = {
         width: 260,
         height: 60,
     },
+    small: {
+        fontSize: 'unset',
+        width: 'unset',
+        height: 25,
+    },
 };
 
 interface Props {
-    size?: 'regular' | 'large';
+    size?: 'regular' | 'large' | 'small';
     rounded?: boolean;
     showChain?: boolean;
 }
