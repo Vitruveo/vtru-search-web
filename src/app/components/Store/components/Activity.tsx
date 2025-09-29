@@ -45,8 +45,8 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
 
     const generateGridColumns = (title: string, date?: string | Date) => {
         if (!date) return '1fr 1fr 1fr';
-        if (downloadable(title)) return '1.4fr 1fr 1fr 1.4fr 0.6fr';
-        return '1.2fr 1fr 1fr 1fr';
+        if (downloadable(title)) return '1.4fr 1fr 1fr 0.9fr 0.9fr';
+        return '1.3fr 1fr 1fr 0.8fr';
     };
 
     return (
@@ -117,7 +117,6 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
                                         {item.link.text}
                                     </a>
                                 )}
-                                {item.title === 'Licensed' && <ConnectWallet showChain={false} size="small" />}
                                 {downloadable(item.title) && (
                                     <Tooltip
                                         title="Download Original"
@@ -144,6 +143,9 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
                                             <IconDownload size={18} />
                                         </Button>
                                     </Tooltip>
+                                )}
+                                {item.title === 'Licensed' && (
+                                    <ConnectWallet showChain={false} size="small" showWallet={false} />
                                 )}
                             </Box>
                         ))
