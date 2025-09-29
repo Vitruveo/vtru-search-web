@@ -24,12 +24,11 @@ export interface ActivityProps {
 
 export default function Activity({ listing, downloadMedia, mintAdress }: ActivityProps) {
     const theme = useTheme();
-    const isLogged = useSelector((state) => state.creator.token !== '');
-    const loggedWallets = useSelector((state) => state.creator.wallets);
+    const loggedWallets = useSelector((state) => state.creator?.wallets || []);
     const isMintAddressInLoggedWallets = loggedWallets.some((item) => item.address === mintAdress);
 
     const { isConnected, address } = useAccount();
-    const isMintAddessEqualConnectedAddress = isConnected && address?.toLowerCase() === mintAdress?.toLowerCase();
+    const isMintAddressEqualConnectedAddress = isConnected && address?.toLowerCase() === mintAdress?.toLowerCase();
 
     const formattedDate = (date: string | Date) => {
         const parsedDate = new Date(date);
@@ -40,7 +39,7 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
     };
 
     const downloadable = (title: string) => {
-        return isLogged && title === 'Licensed' && (isMintAddressInLoggedWallets || isMintAddessEqualConnectedAddress);
+        return title === 'Licensed' && (isMintAddressInLoggedWallets || isMintAddressEqualConnectedAddress);
     };
 
     const generateGridColumns = (title: string, date?: string | Date) => {
