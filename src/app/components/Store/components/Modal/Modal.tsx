@@ -43,7 +43,7 @@ export default function Modal({ open, handleClose, content, baseUrl, path }: Mod
         <MuiModal
             open={open}
             onClose={handleClose}
-            slotProps={{ backdrop: { style: { backgroundColor: 'rgba(0,0,0,0.85' } } }}
+            slotProps={{ backdrop: { style: { backgroundColor: 'rgba(0,0,0,0.85)' } } }}
         >
             <div
                 className={styled.main}
