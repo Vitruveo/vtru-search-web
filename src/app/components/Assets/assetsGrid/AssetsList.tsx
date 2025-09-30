@@ -20,6 +20,8 @@ import {
     Pagination,
     Skeleton,
     Switch,
+    Tab,
+    Tabs,
     Typography,
     useMediaQuery,
 } from '@mui/material';
@@ -81,6 +83,11 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
     const [sortOrder, setSortOrder] = useState<string>('latest');
     const [groupByCreator, setGroupByCreator] = useState<string>('no');
+    const [checkedLicenseType, setCheckedLicenseType] = useState<{ nft: boolean; print: boolean }>({
+        nft: false,
+        print: false,
+    });
+    const [selectedTab, setSelectedTab] = useState<string>('nft');
     const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
@@ -324,167 +331,65 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     const isInIframe = window.self !== window.top;
     const hasIncludesGroupActive = hasIncludesGroup.active === 'all' || hasIncludesGroup.active === 'noSales';
 
+    const handleChangeLicenseType = (_event: React.SyntheticEvent, newValue: string) => {
+        const checked = !checkedLicenseType[newValue as 'nft' | 'print'];
+        setSelectedTab(newValue);
+        setCheckedLicenseType({
+            nft: newValue === 'nft',
+            print: newValue === 'print',
+        });
+
+        generateQueryParam('licenseChecked_nft', '');
+        generateQueryParam('licenseChecked_print', '');
+        generateQueryParam(`licenseChecked_${newValue}`, checked ? 'yes' : '');
+
+        dispatch(
+            actionsFilters.changeLicenseChecked({
+                nft: newValue === 'nft' ? ['yes'] : [''],
+                print: newValue === 'print' ? ['yes'] : [''],
+            })
+        );
+    };
+
     return (
         <Box>
-            {!isHiddenFilter && (
-                <Box>
-                    <IconButton
-                        size="small"
-                        sx={{ padding: 0, color: theme.palette.grey[300], paddingLeft: '18.5px' }}
-                        aria-label="menu"
-                        onClick={onMenuClick}
-                    >
-                        {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
-                    </IconButton>
-                </Box>
-            )}
+            <Box display={'flex'} alignItems={'center'}>
+                {!isHiddenFilter && (
+                    <Box>
+                        <IconButton
+                            size="small"
+                            sx={{ padding: 0, color: theme.palette.grey[300], paddingLeft: '18.5px' }}
+                            aria-label="menu"
+                            onClick={onMenuClick}
+                        >
+                            {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
+                        </IconButton>
+                    </Box>
+                )}
+
+                <Tabs
+                    value={selectedTab}
+                    onChange={handleChangeLicenseType}
+                    variant="fullWidth"
+                    sx={{ width: '94%', marginInline: 'auto' }}
+                >
+                    <Tab label="Digital Collectible Art" value="nft" sx={{ fontSize: '1.5rem' }} />
+                    <Tab label="Print-on-Demand Art" value="print" sx={{ fontSize: '1.5rem' }} />
+                </Tabs>
+            </Box>
 
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
 
             <DrawerStack drawerStackOpen={drawerStack.isActive} onClose={drawerStack.deactivate} />
 
-            {!isHidden?.order && (
-                <Box
-                    display={'flex'}
-                    flexDirection={smUp ? 'row' : 'column'}
-                    alignItems={smUp ? 'center' : 'flex-end'}
-                    justifyContent={'space-between'}
-                    mb={3}
-                    mt={2}
-                    paddingInline={3}
-                >
-                    {!isBlockLoader && (
-                        <CreatorSection
-                            hasCurated={hasCurated}
-                            creatorId={creatorId}
-                            returnToPageOne={returnToPageOne}
-                        />
-                    )}
-                    <Box
-                        display={'flex'}
-                        alignItems={smUp ? 'center' : 'flex-end'}
-                        flexDirection={!smUp ? 'column-reverse' : 'row'}
-                        gap={smUp ? 'unset' : 2}
-                    >
-                        {curateStack.isActive && (
-                            <Box display="flex" alignItems="center" gap={1}>
-                                <Button variant="contained" onClick={handleUnselectAll}>
-                                    {language['search.assetList.curateStack.deselectAll'] as string}
-                                </Button>
-                                <Button variant="contained" onClick={handleSelectAll}>
-                                    {language['search.assetList.curateStack.selectAll'] as string}
-                                </Button>
-                                <Box sx={{ cursor: 'pointer' }} onClick={drawerStack.activate}>
-                                    {lgUp && (
-                                        <Box display="flex" alignItems="center" gap={2}>
-                                            <Button variant="contained" fullWidth>
-                                                {curateStacks.length}{' '}
-                                                {language['search.assetList.curateStack.selected'] as string}
-                                            </Button>
-                                        </Box>
-                                    )}
-                                    {!lgUp && (
-                                        <Badge
-                                            badgeContent={curateStacks.length}
-                                            color="primary"
-                                            style={{ marginLeft: 2 }}
-                                        >
-                                            <IconCopy width={20} color={iconColor} />
-                                        </Badge>
-                                    )}
-                                </Box>
-                            </Box>
-                        )}
-
-                        <Box display="flex" alignItems="center">
-                            {!lgUp && (
-                                <IconButton
-                                    sx={{ marginLeft: 0, paddingLeft: 0 }}
-                                    size="small"
-                                    aria-label="menu"
-                                    onClick={onMenuClick}
-                                >
-                                    <IconFilter />
-                                </IconButton>
-                            )}
-                            {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
-                            {!isBlockLoader && (
-                                <>
-                                    <Switch onChange={handleChangeCurateStack} checked={curateStack.isActive} />
-                                    <Box display={'flex'} gap={3}>
-                                        <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
-                                            {language['search.assetList.curateStack'] as string}
-                                        </Typography>
-                                        <Typography
-                                            variant={lgUp ? 'h5' : 'inherit'}
-                                            noWrap
-                                            color={theme.palette.primary.main}
-                                            sx={{ cursor: 'pointer' }}
-                                            onClick={() => {
-                                                window.open(`${redirects.search}/stacks`, '_blank');
-                                            }}
-                                        >
-                                            View Stacks
-                                        </Typography>
-                                    </Box>
-                                </>
-                            )}
-                        </Box>
-                    </Box>
-                </Box>
-            )}
-
-            <Grid
-                container
-                spacing={3}
-                padding={3}
-                pt={2}
-                sx={{
-                    overflow: 'auto',
-                    maxHeight:
-                        isHidden?.order && isHidden?.header
-                            ? '105vh'
-                            : isHidden?.order || isHidden?.header
-                              ? '95vh'
-                              : '85vh',
-                    justifyContent: 'flex-end',
-                }}
-            >
-                {isBlockLoader && (
-                    <Grid item xs={12}>
-                        <Banner
-                            data={{
-                                path: stores?.organization?.formats?.banner?.path,
-                                description: stores?.organization?.description,
-                                name: stores?.organization?.name,
-                            }}
-                        />
-                    </Grid>
-                )}
-                <Grid
-                    item
-                    xs={12}
-                    style={{
-                        paddingTop: 0,
-                    }}
-                >
-                    {(currentPage === 1 || currentPage === 0) &&
-                        !grid &&
-                        !video &&
-                        !slideshow &&
-                        !creatorId &&
-                        !portfolioWallets &&
-                        tabNavigation.assets?.length <= 0 &&
-                        tabNavigation.artists?.length <= 0 && <TabSliders />}
-                </Grid>
-
+            <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} mt={6} mb={2}>
                 <Grid item xs={12} paddingInline={3}>
                     {!isHidden?.pageNavigation && (
                         <Box
                             display={'flex'}
-                            gap={1}
-                            flexDirection={lgUp ? 'row' : 'column'}
                             justifyContent={'space-between'}
+                            width={!curateStack.isActive ? '140%' : '110%'}
+                            flexDirection={lgUp ? 'row' : 'column'}
                             flexWrap={'wrap'}
                         >
                             {!isHidden?.order ? (
@@ -715,6 +620,142 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                             </Box>
                         </Box>
                     )}
+                </Grid>
+
+                {!isHidden?.order && (
+                    <Box
+                        display={'flex'}
+                        flexDirection={smUp ? 'row' : 'column'}
+                        alignItems={smUp ? 'center' : 'flex-end'}
+                        justifyContent={'space-between'}
+                        mb={3}
+                        mt={2}
+                        paddingInline={3}
+                    >
+                        {!isBlockLoader && (
+                            <CreatorSection
+                                hasCurated={hasCurated}
+                                creatorId={creatorId}
+                                returnToPageOne={returnToPageOne}
+                            />
+                        )}
+                        <Box
+                            display={'flex'}
+                            alignItems={smUp ? 'center' : 'flex-end'}
+                            flexDirection={!smUp ? 'column-reverse' : 'row'}
+                            gap={smUp ? 'unset' : 2}
+                        >
+                            {curateStack.isActive && (
+                                <Box display="flex" alignItems="center" gap={1}>
+                                    <Button variant="contained" onClick={handleUnselectAll}>
+                                        {language['search.assetList.curateStack.deselectAll'] as string}
+                                    </Button>
+                                    <Button variant="contained" onClick={handleSelectAll}>
+                                        {language['search.assetList.curateStack.selectAll'] as string}
+                                    </Button>
+                                    <Box sx={{ cursor: 'pointer' }} onClick={drawerStack.activate}>
+                                        {lgUp && (
+                                            <Box display="flex" alignItems="center" gap={2}>
+                                                <Button variant="contained" fullWidth>
+                                                    {curateStacks.length}{' '}
+                                                    {language['search.assetList.curateStack.selected'] as string}
+                                                </Button>
+                                            </Box>
+                                        )}
+                                        {!lgUp && (
+                                            <Badge
+                                                badgeContent={curateStacks.length}
+                                                color="primary"
+                                                style={{ marginLeft: 2 }}
+                                            >
+                                                <IconCopy width={20} color={iconColor} />
+                                            </Badge>
+                                        )}
+                                    </Box>
+                                </Box>
+                            )}
+
+                            <Box display="flex" alignItems="center">
+                                {!lgUp && (
+                                    <IconButton
+                                        sx={{ marginLeft: 0, paddingLeft: 0 }}
+                                        size="small"
+                                        aria-label="menu"
+                                        onClick={onMenuClick}
+                                    >
+                                        <IconFilter />
+                                    </IconButton>
+                                )}
+                                {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
+                                {!isBlockLoader && (
+                                    <>
+                                        <Switch onChange={handleChangeCurateStack} checked={curateStack.isActive} />
+                                        <Box display={'flex'} gap={3}>
+                                            <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
+                                                {language['search.assetList.curateStack'] as string}
+                                            </Typography>
+                                            <Typography
+                                                variant={lgUp ? 'h5' : 'inherit'}
+                                                noWrap
+                                                color={theme.palette.primary.main}
+                                                sx={{ cursor: 'pointer' }}
+                                                onClick={() => {
+                                                    window.open(`${redirects.search}/stacks`, '_blank');
+                                                }}
+                                            >
+                                                View Stacks
+                                            </Typography>
+                                        </Box>
+                                    </>
+                                )}
+                            </Box>
+                        </Box>
+                    </Box>
+                )}
+            </Box>
+
+            <Grid
+                container
+                spacing={3}
+                padding={3}
+                pt={2}
+                sx={{
+                    overflow: 'auto',
+                    maxHeight:
+                        isHidden?.order && isHidden?.header
+                            ? '105vh'
+                            : isHidden?.order || isHidden?.header
+                              ? '95vh'
+                              : '85vh',
+                    justifyContent: 'flex-end',
+                }}
+            >
+                {isBlockLoader && (
+                    <Grid item xs={12}>
+                        <Banner
+                            data={{
+                                path: stores?.organization?.formats?.banner?.path,
+                                description: stores?.organization?.description,
+                                name: stores?.organization?.name,
+                            }}
+                        />
+                    </Grid>
+                )}
+                <Grid
+                    item
+                    xs={12}
+                    style={{
+                        paddingTop: 0,
+                    }}
+                >
+                    {(currentPage === 1 || currentPage === 0) &&
+                        !grid &&
+                        !video &&
+                        !slideshow &&
+                        !creatorId &&
+                        !portfolioWallets &&
+                        tabNavigation.assets?.length <= 0 &&
+                        tabNavigation.artists?.length <= 0 && <TabSliders />}
                 </Grid>
 
                 {isBlockLoader && (
@@ -964,7 +1005,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                             justifyContent="flex-end"
                             width="100%"
                             mr={4}
-                            mb={lgUp ? 4 : 12}
+                            mb={12}
                         >
                             <Button
                                 variant="contained"

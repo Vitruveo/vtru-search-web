@@ -9,9 +9,6 @@ import { actions as actionsStores } from '@/features/stores/slice';
 import { STORES_STORAGE_URL } from '@/constants/aws';
 
 const LogoLtrDark = () => {
-    const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
-    const vitruveoUrl = useSelector((state) => state.redirects.data.common.vitruveo.base_url);
-
     return (
         <Box display="flex" alignItems="end">
             <Image
@@ -22,32 +19,11 @@ const LogoLtrDark = () => {
                 width={120}
                 priority
             />
-            <Typography
-                sx={{
-                    fontSize: 9,
-                    marginLeft: 1,
-                    display: lgDown ? 'none' : 'block',
-                    textDecoration: 'none',
-                    cursor: 'pointer',
-                    letterSpacing: '3px',
-                    color: 'white',
-                    fontWeight: 500,
-                    '&:hover': {
-                        color: '#e0e0e0',
-                    },
-                }}
-                onClick={() => window.open(vitruveoUrl, '_blank', 'noopener,noreferrer')}
-            >
-                BY VITRUVEO
-            </Typography>
         </Box>
     );
 };
 
 const LogoLtrLight = () => {
-    const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
-    const vitruveoUrl = useSelector((state) => state.redirects.data.common.vitruveo.base_url);
-
     return (
         <Box display="flex" alignItems="end">
             <Image
@@ -58,24 +34,6 @@ const LogoLtrLight = () => {
                 width={120}
                 priority
             />
-            <Typography
-                sx={{
-                    fontSize: 9,
-                    marginLeft: 1,
-                    display: lgDown ? 'none' : 'block',
-                    textDecoration: 'none',
-                    cursor: 'pointer',
-                    letterSpacing: '3px',
-                    color: 'black',
-                    fontWeight: 500,
-                    '&:hover': {
-                        color: '#333',
-                    },
-                }}
-                onClick={() => window.open(vitruveoUrl, '_blank', 'noopener,noreferrer')}
-            >
-                BY VITRUVEO
-            </Typography>
         </Box>
     );
 };

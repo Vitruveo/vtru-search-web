@@ -41,7 +41,6 @@ import PortfolioItem from '../components/PortfolioItem';
 import { ContextItem } from '../components/ContextItem';
 import { TaxonomyItem } from '../components/TaxonomyItem';
 import { CreatorsItem } from '../components/CreatorsItem';
-import { LicenseItem } from '../components/LicenseItem';
 import Range from '../components/Range';
 import { Wallets } from '../components/Wallets';
 import { AssetFilterAccordion } from './AssetFilterAccordion';
@@ -65,10 +64,6 @@ const Filters = () => {
     const [taxonomyFilters, setTaxonomyFilters] = useState<number>();
     const [creatorsFilters, setCreatorsFilters] = useState<number>();
     const [isIncludeSold, setIsIncludeSold] = useState<boolean>(false);
-    const [checkedLicenseType, setCheckedLicenseType] = useState<{ nft: boolean; print: boolean }>({
-        nft: false,
-        print: false,
-    });
     const [hasBts, setHasBts] = useState<boolean>(false);
 
     const theme = useTheme();
@@ -80,7 +75,6 @@ const Filters = () => {
     const values = useSelector((state) => state.filters);
     const { tags, maxPrice, sort } = useSelector((state) => state.assets);
     const { wallets } = useSelector((state) => state.filters.portfolio);
-    const licensedChecked = useSelector((state) => state.filters.licenseChecked);
     const { artworks: storesFilters, organization } = useSelector((state) => state.stores.currentDomain || {});
     const path = organization?.formats.logo.horizontal?.path;
 
@@ -128,10 +122,6 @@ const Filters = () => {
                 values.taxonomy.objectType.includes('digitalart') && 'digitalart',
             ].filter(Boolean) as string[]
         );
-        setCheckedLicenseType({
-            nft: values.licenseChecked.nft.includes('yes'),
-            print: values.licenseChecked.print.includes('yes'),
-        });
     }, [values.context, values.taxonomy, values.creators, values.shortCuts, values.licenseChecked]);
 
     useEffect(() => {
@@ -255,16 +245,6 @@ const Filters = () => {
         if (value) {
             dispatch(actions.changePortfolioWallets({ wallets: [...wallets, value] }));
         }
-    };
-
-    const handleChangeLicenseType = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { checked, value } = event.target;
-        setCheckedLicenseType({
-            ...checkedLicenseType,
-            [value]: checked,
-        });
-        generateQueryParam(`licenseChecked_${value}`, checked ? 'yes' : '');
-        dispatch(actions.changeLicenseChecked({ ...licensedChecked, [value]: checked ? ['yes'] : [''] }));
     };
 
     const onCloseClick = () => {
@@ -417,12 +397,6 @@ const Filters = () => {
                             <Range afterChange={afterPriceChange} />
                         </Box>
                     </Box>
-                </AssetFilterAccordion>
-
-                <Divider />
-
-                <AssetFilterAccordion title={'Licenses'}>
-                    <LicenseItem handleChange={handleChangeLicenseType} checkedItems={checkedLicenseType} />
                 </AssetFilterAccordion>
 
                 <Divider />
