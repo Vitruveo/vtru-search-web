@@ -28,7 +28,7 @@ import {
 import { Theme, useTheme } from '@mui/material/styles';
 import { IconArrowBarToLeft, IconArrowBarToRight, IconCopy, IconFilter } from '@tabler/icons-react';
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
-import Select, { SingleValue } from 'react-select';
+import Select, { SingleValue, MultiValue } from 'react-select';
 import TabSliders from '../../Sliders/TabSliders';
 import { DrawerAsset } from '../components/DrawerAsset';
 import DrawerStack from '../components/DrawerStack/DrawerStack';
@@ -52,20 +52,39 @@ const AssetsList = ({ isBlockLoader }: Props) => {
         search: redirectsState[NODE_ENV].xibit.search_url,
     };
     const optionsForSelectSort = [
-        { value: 'latest', label: language['search.select.sort.option.latest'] as string },
-        { value: 'priceHighToLow', label: language['search.select.sort.option.priceHighToLow'] as string },
-        { value: 'priceLowToHigh', label: language['search.select.sort.option.priceLowToHigh'] as string },
-        { value: 'creatorAZ', label: language['search.select.sort.option.creatorAZ'] as string },
-        { value: 'creatorZA', label: language['search.select.sort.option.creatorZA'] as string },
-        { value: 'consignNewToOld', label: language['search.select.sort.option.consignDateNewToOld'] as string },
-        { value: 'consignOldToNew', label: language['search.select.sort.option.consignDateOldToNew'] as string },
+        {
+            label: 'Artists',
+            options: [
+                { value: 'no', label: language['search.select.grouped.option.ungrouped'] as string },
+                { value: 'all', label: language['search.select.grouped.option.grouped'] as string },
+                { value: 'noSales', label: language['search.select.grouped.option.groupedNoSales'] as string },
+            ],
+        },
+        {
+            label: 'Sort',
+            options: [
+                { value: 'latest', label: language['search.select.sort.option.latest'] as string },
+                { value: 'priceHighToLow', label: language['search.select.sort.option.priceHighToLow'] as string },
+                { value: 'priceLowToHigh', label: language['search.select.sort.option.priceLowToHigh'] as string },
+                { value: 'creatorAZ', label: language['search.select.sort.option.creatorAZ'] as string },
+                { value: 'creatorZA', label: language['search.select.sort.option.creatorZA'] as string },
+                {
+                    value: 'consignNewToOld',
+                    label: language['search.select.sort.option.consignDateNewToOld'] as string,
+                },
+                {
+                    value: 'consignOldToNew',
+                    label: language['search.select.sort.option.consignDateOldToNew'] as string,
+                },
+            ],
+        },
     ];
-
-    const optionsForSelectGrouped = [
-        { value: 'no', label: language['search.select.grouped.option.ungrouped'] as string },
-        { value: 'all', label: language['search.select.grouped.option.grouped'] as string },
-        { value: 'noSales', label: language['search.select.grouped.option.groupedNoSales'] as string },
-    ];
+    const valueToGroupAux: Record<string, string> = {};
+    optionsForSelectSort.forEach((group) => {
+        group.options.forEach((option) => {
+            valueToGroupAux[option.value] = group.label;
+        });
+    });
 
     const dispatch = useDispatch();
     const theme = useTheme();
@@ -81,8 +100,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
     const [assetView, setAssetView] = useState<any>();
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
-    const [sortOrder, setSortOrder] = useState<string>('latest');
-    const [groupByCreator, setGroupByCreator] = useState<string>('no');
+    const [selectedOptions, setSelectedOptions] = useState<MultiValue<{ value: string; label: string }>>([]);
     const [checkedLicenseType, setCheckedLicenseType] = useState<{ nft: boolean; print: boolean }>({
         nft: false,
         print: false,
@@ -174,10 +192,6 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     }, [grid, video, slideshow]);
 
     useEffect(() => {
-        if (grid || video || slideshow) setGroupByCreator('no');
-    }, []);
-
-    useEffect(() => {
         handleScrollToTop();
     }, [currentPage]);
 
@@ -187,18 +201,6 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
         if (currentPage > totalPage) dispatch(actions.setCurrentPage(totalPage));
     }, [totalPage]);
-
-    useEffect(() => {
-        if (grid || video || slideshow) return;
-
-        setSortOrder(sort.order);
-    }, [sort]);
-
-    useEffect(() => {
-        if (grid || video || slideshow) return;
-
-        setGroupByCreator(hasIncludesGroup.active);
-    }, [hasIncludesGroup.active]);
 
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
@@ -252,13 +254,37 @@ const AssetsList = ({ isBlockLoader }: Props) => {
         dispatch(actionsFilters.reset({ maxPrice }));
     };
 
+    const handleChangeSelect = (
+        e: MultiValue<{
+            value: string;
+            label: string;
+        }>
+    ) => {
+        const groupMap = new Map<string, { value: string; label: string }>();
+        e.forEach((selected) => {
+            const groupLabel = valueToGroupAux[selected.value];
+            groupMap.set(groupLabel, selected);
+        });
+
+        const newSelected = Array.from(groupMap.values());
+        setSelectedOptions(newSelected);
+
+        groupMap.forEach((selected, groupLabel) => {
+            if (groupLabel === optionsForSelectSort[0].label) {
+                handleChangeSelectGroupByCreator(selected);
+            }
+            if (groupLabel === optionsForSelectSort[1].label) {
+                handleChangeSelectSortOrder(selected);
+            }
+        });
+    };
+
     const handleChangeSelectSortOrder = (
         e: SingleValue<{
             value: string;
             label: string;
         }>
     ) => {
-        setSortOrder(e?.value || '');
         generateQueryParam('sort_order', e?.value || '');
         dispatch(actions.setSort({ order: e?.value || '', sold: sort.sold === 'yes' ? 'yes' : 'no' }));
     };
@@ -272,7 +298,6 @@ const AssetsList = ({ isBlockLoader }: Props) => {
         const value = e?.value || '';
 
         dispatch(actionsFilters.clearTabNavigation());
-        setGroupByCreator(value);
         generateQueryParam('groupByCreator', value);
 
         if (e?.value !== 'no') {
@@ -388,7 +413,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                         <Box
                             display={'flex'}
                             justifyContent={'space-between'}
-                            width={!curateStack.isActive ? '155%' : '118%'}
+                            gap={4}
                             flexDirection={lgUp ? 'row' : 'column'}
                             flexWrap={'wrap'}
                         >
@@ -402,69 +427,15 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                 >
                                     <Box maxWidth={350} display="flex" flexDirection="row" alignItems="center" gap={1}>
                                         <Typography variant="h5">{language['search.order.sort'] as string}:</Typography>
-                                        <Select
-                                            placeholder="Sort"
+                                        <Select<{ label: string; value: string }, true>
+                                            isMulti
                                             options={optionsForSelectSort}
-                                            value={optionsForSelectSort.find((option) => option.value === sortOrder)}
-                                            onChange={(e) => handleChangeSelectSortOrder(e)}
+                                            onChange={handleChangeSelect}
+                                            value={selectedOptions}
                                             styles={{
                                                 control: (base, state) => ({
                                                     ...base,
                                                     width: '230px',
-                                                    borderColor: state.isFocused
-                                                        ? theme.palette.primary.main
-                                                        : theme.palette.grey[200],
-                                                    backgroundColor: theme.palette.background.paper,
-                                                    boxShadow: theme.palette.primary.main,
-                                                    '&:hover': { borderColor: theme.palette.primary.main },
-                                                }),
-                                                menu: (base) => ({
-                                                    ...base,
-                                                    zIndex: 1000,
-                                                    color: theme.palette.text.primary,
-                                                    backgroundColor: theme.palette.background.paper,
-                                                }),
-                                                menuList: (base) => ({
-                                                    ...base,
-                                                    '::-webkit-scrollbar-thumb': {
-                                                        backgroundColor: theme.palette.primary.main,
-                                                        borderRadius: '4px',
-                                                    },
-                                                }),
-                                                singleValue: (base) => ({
-                                                    ...base,
-                                                    color: theme.palette.text.primary,
-                                                }),
-                                                option: (base, state) => ({
-                                                    ...base,
-                                                    color: theme.palette.text.primary,
-                                                    backgroundColor: state.isFocused
-                                                        ? theme.palette.action.hover
-                                                        : 'transparent',
-                                                    '&:hover': { backgroundColor: theme.palette.action.hover },
-                                                }),
-                                                input: (base) => ({
-                                                    ...base,
-                                                    color: theme.palette.text.primary,
-                                                }),
-                                            }}
-                                        />
-                                    </Box>
-                                    <Box display="flex" flexDirection="row" maxWidth={350} alignItems="center" gap={1}>
-                                        <Typography variant="h5">
-                                            {language['search.order.artists'] as string}:
-                                        </Typography>
-                                        <Select
-                                            placeholder="Artists"
-                                            options={optionsForSelectGrouped}
-                                            value={optionsForSelectGrouped.find(
-                                                (option) => option.value === groupByCreator
-                                            )}
-                                            onChange={(e) => handleChangeSelectGroupByCreator(e)}
-                                            styles={{
-                                                control: (base, state) => ({
-                                                    ...base,
-                                                    width: '180px',
                                                     borderColor: state.isFocused
                                                         ? theme.palette.primary.main
                                                         : theme.palette.grey[200],

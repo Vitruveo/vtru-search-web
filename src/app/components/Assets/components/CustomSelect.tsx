@@ -28,7 +28,6 @@ export function CustomSelect({ value, options, onChange, fixed, ...props }: Prop
             styles={{
                 control: (base, state) => ({
                     ...base,
-
                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                     backgroundColor: theme.palette.background.paper,
                     boxShadow: theme.palette.primary.main,
