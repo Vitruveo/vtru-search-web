@@ -1,6 +1,6 @@
 {
     "name": "search-web",
-    "version": "0.0.778",
+    "version": "0.0.781",
     "private": true,
     "scripts": {
         "dev": "next dev",
