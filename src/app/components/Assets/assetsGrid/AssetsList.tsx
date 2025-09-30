@@ -388,7 +388,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                         <Box
                             display={'flex'}
                             justifyContent={'space-between'}
-                            width={!curateStack.isActive ? '140%' : '110%'}
+                            width={!curateStack.isActive ? '155%' : '118%'}
                             flexDirection={lgUp ? 'row' : 'column'}
                             flexWrap={'wrap'}
                         >
@@ -641,22 +641,26 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                         )}
                         <Box
                             display={'flex'}
-                            alignItems={smUp ? 'center' : 'flex-end'}
                             flexDirection={!smUp ? 'column-reverse' : 'row'}
                             gap={smUp ? 'unset' : 2}
+                            mt={1}
                         >
                             {curateStack.isActive && (
-                                <Box display="flex" alignItems="center" gap={1}>
-                                    <Button variant="contained" onClick={handleUnselectAll}>
+                                <Box display="flex" gap={1}>
+                                    <Button
+                                        variant="outlined"
+                                        onClick={handleUnselectAll}
+                                        sx={{ whiteSpace: 'nowrap' }}
+                                    >
                                         {language['search.assetList.curateStack.deselectAll'] as string}
                                     </Button>
-                                    <Button variant="contained" onClick={handleSelectAll}>
+                                    <Button variant="outlined" onClick={handleSelectAll} sx={{ whiteSpace: 'nowrap' }}>
                                         {language['search.assetList.curateStack.selectAll'] as string}
                                     </Button>
                                     <Box sx={{ cursor: 'pointer' }} onClick={drawerStack.activate}>
                                         {lgUp && (
                                             <Box display="flex" alignItems="center" gap={2}>
-                                                <Button variant="contained" fullWidth>
+                                                <Button variant="outlined" fullWidth sx={{ whiteSpace: 'nowrap' }}>
                                                     {curateStacks.length}{' '}
                                                     {language['search.assetList.curateStack.selected'] as string}
                                                 </Button>
@@ -690,22 +694,9 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                 {!isBlockLoader && (
                                     <>
                                         <Switch onChange={handleChangeCurateStack} checked={curateStack.isActive} />
-                                        <Box display={'flex'} gap={3}>
-                                            <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
-                                                {language['search.assetList.curateStack'] as string}
-                                            </Typography>
-                                            <Typography
-                                                variant={lgUp ? 'h5' : 'inherit'}
-                                                noWrap
-                                                color={theme.palette.primary.main}
-                                                sx={{ cursor: 'pointer' }}
-                                                onClick={() => {
-                                                    window.open(`${redirects.search}/stacks`, '_blank');
-                                                }}
-                                            >
-                                                View Stacks
-                                            </Typography>
-                                        </Box>
+                                        <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
+                                            {language['search.assetList.curateStack'] as string}
+                                        </Typography>
                                     </>
                                 )}
                             </Box>

@@ -23,6 +23,7 @@ const AllProjectsMenu = () => {
         { title: 'SEARCH', url: redirects.search },
         { title: 'FOLIO', url: redirects.stores },
         { title: 'STUDIO', url: `${redirects.studio}/login` },
+        { title: 'STACKS', url: `${redirects.search}/stacks` },
         // { title: 'STACKS', url: `${SEARCH_BASE_URL}/stacks` },
         // { title: 'STREAMS', url: '' },
         { title: 'ABOUT XIBIT', url: redirects.about, onlyMobile: true },
@@ -37,6 +38,7 @@ const AllProjectsMenu = () => {
         const actualUrl = window.location.href;
         if (actualUrl.includes('stores') || actualUrl.includes('xibit.live')) return projects[1];
         if (actualUrl.includes('studio')) return projects[2];
+        if (actualUrl.includes('stacks')) return projects[3];
 
         return projects[0];
     };
