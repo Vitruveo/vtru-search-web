@@ -20,6 +20,8 @@ import {
     Pagination,
     Skeleton,
     Switch,
+    Tab,
+    Tabs,
     Typography,
     useMediaQuery,
 } from '@mui/material';
@@ -81,6 +83,11 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
     const [sortOrder, setSortOrder] = useState<string>('latest');
     const [groupByCreator, setGroupByCreator] = useState<string>('no');
+    const [checkedLicenseType, setCheckedLicenseType] = useState<{ nft: boolean; print: boolean }>({
+        nft: false,
+        print: false,
+    });
+    const [selectedTab, setSelectedTab] = useState<string>('nft');
     const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
@@ -104,6 +111,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     const isHidden = useSelector((state) => state.customizer.hidden);
     const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
     const isHiddenFilter = useSelector((state) => state.customizer.hidden?.filter);
+    const licensedChecked = useSelector((state) => state.filters.licenseChecked);
 
     const optionsForSelect = useMemo(() => {
         const options: { value: number; label: number }[] = [];
@@ -324,6 +332,26 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     const isInIframe = window.self !== window.top;
     const hasIncludesGroupActive = hasIncludesGroup.active === 'all' || hasIncludesGroup.active === 'noSales';
 
+    const handleChangeLicenseType = (_event: React.SyntheticEvent, newValue: string) => {
+        const checked = !checkedLicenseType[newValue as 'nft' | 'print'];
+        setSelectedTab(newValue);
+        setCheckedLicenseType({
+            nft: newValue === 'nft',
+            print: newValue === 'print',
+        });
+
+        generateQueryParam('licenseChecked_nft', '');
+        generateQueryParam('licenseChecked_print', '');
+        generateQueryParam(`licenseChecked_${newValue}`, checked ? 'yes' : '');
+
+        dispatch(
+            actionsFilters.changeLicenseChecked({
+                nft: newValue === 'nft' ? ['yes'] : [''],
+                print: newValue === 'print' ? ['yes'] : [''],
+            })
+        );
+    };
+
     return (
         <Box>
             {!isHiddenFilter && (
@@ -338,6 +366,13 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     </IconButton>
                 </Box>
             )}
+
+            <Box>
+                <Tabs value={selectedTab} onChange={handleChangeLicenseType} aria-label="asset tabs">
+                    <Tab label="Digital Collectible Art" value="nft" />
+                    <Tab label="Print-on-Demand Art" value="print" />
+                </Tabs>
+            </Box>
 
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
 
