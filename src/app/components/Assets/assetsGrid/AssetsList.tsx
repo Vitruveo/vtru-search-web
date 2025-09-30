@@ -111,7 +111,6 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     const isHidden = useSelector((state) => state.customizer.hidden);
     const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
     const isHiddenFilter = useSelector((state) => state.customizer.hidden?.filter);
-    const licensedChecked = useSelector((state) => state.filters.licenseChecked);
 
     const optionsForSelect = useMemo(() => {
         const options: { value: number; label: number }[] = [];
@@ -354,21 +353,26 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
     return (
         <Box>
-            {!isHiddenFilter && (
-                <Box>
-                    <IconButton
-                        size="small"
-                        sx={{ padding: 0, color: theme.palette.grey[300], paddingLeft: '18.5px' }}
-                        aria-label="menu"
-                        onClick={onMenuClick}
-                    >
-                        {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
-                    </IconButton>
-                </Box>
-            )}
+            <Box display={'flex'} alignItems={'center'}>
+                {!isHiddenFilter && (
+                    <Box>
+                        <IconButton
+                            size="small"
+                            sx={{ padding: 0, color: theme.palette.grey[300], paddingLeft: '18.5px' }}
+                            aria-label="menu"
+                            onClick={onMenuClick}
+                        >
+                            {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
+                        </IconButton>
+                    </Box>
+                )}
 
-            <Box sx={{ width: '100%' }}>
-                <Tabs value={selectedTab} onChange={handleChangeLicenseType} variant="fullWidth">
+                <Tabs
+                    value={selectedTab}
+                    onChange={handleChangeLicenseType}
+                    variant="fullWidth"
+                    sx={{ width: '94%', marginInline: 'auto' }}
+                >
                     <Tab label="Digital Collectible Art" value="nft" sx={{ fontSize: '1.5rem' }} />
                     <Tab label="Print-on-Demand Art" value="print" sx={{ fontSize: '1.5rem' }} />
                 </Tabs>
@@ -1001,7 +1005,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                             justifyContent="flex-end"
                             width="100%"
                             mr={4}
-                            mb={lgUp ? 4 : 12}
+                            mb={12}
                         >
                             <Button
                                 variant="contained"
