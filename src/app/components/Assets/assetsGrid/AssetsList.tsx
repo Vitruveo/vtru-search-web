@@ -51,15 +51,8 @@ const AssetsList = ({ isBlockLoader }: Props) => {
         store: redirectsState[NODE_ENV].xibit.store_url,
         search: redirectsState[NODE_ENV].xibit.search_url,
     };
+
     const optionsForSelectSort = [
-        {
-            label: 'Artists',
-            options: [
-                { value: 'no', label: language['search.select.grouped.option.ungrouped'] as string },
-                { value: 'all', label: language['search.select.grouped.option.grouped'] as string },
-                { value: 'noSales', label: language['search.select.grouped.option.groupedNoSales'] as string },
-            ],
-        },
         {
             label: 'Sort',
             options: [
@@ -76,6 +69,14 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     value: 'consignOldToNew',
                     label: language['search.select.sort.option.consignDateOldToNew'] as string,
                 },
+            ],
+        },
+        {
+            label: 'Artists',
+            options: [
+                { value: 'no', label: language['search.select.grouped.option.ungrouped'] as string },
+                { value: 'all', label: language['search.select.grouped.option.grouped'] as string },
+                { value: 'noSales', label: language['search.select.grouped.option.groupedNoSales'] as string },
             ],
         },
     ];
@@ -271,10 +272,10 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
         groupMap.forEach((selected, groupLabel) => {
             if (groupLabel === optionsForSelectSort[0].label) {
-                handleChangeSelectGroupByCreator(selected);
+                handleChangeSelectSortOrder(selected);
             }
             if (groupLabel === optionsForSelectSort[1].label) {
-                handleChangeSelectSortOrder(selected);
+                handleChangeSelectGroupByCreator(selected);
             }
         });
     };
@@ -429,9 +430,12 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                         <Typography variant="h5">{language['search.order.sort'] as string}:</Typography>
                                         <Select<{ label: string; value: string }, true>
                                             isMulti
+                                            controlShouldRenderValue
                                             options={optionsForSelectSort}
                                             onChange={handleChangeSelect}
+                                            hideSelectedOptions={false}
                                             value={selectedOptions}
+                                            isSearchable={false}
                                             styles={{
                                                 control: (base, state) => ({
                                                     ...base,
@@ -451,22 +455,58 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                                     color: theme.palette.text.primary,
                                                     backgroundColor: theme.palette.background.paper,
                                                 }),
-                                                multiValue: (base) => ({
-                                                    ...base,
-                                                    backgroundColor: theme.palette.action.selected,
-                                                }),
-                                                multiValueLabel: (base) => ({
-                                                    ...base,
-                                                    color: theme.palette.text.primary,
-                                                }),
-                                                option: (base, state) => ({
-                                                    ...base,
-                                                    color: theme.palette.text.primary,
-                                                    backgroundColor: state.isFocused
-                                                        ? theme.palette.action.hover
-                                                        : 'transparent',
-                                                    '&:hover': { backgroundColor: theme.palette.action.hover },
-                                                }),
+                                                multiValue: (base, { data }) => {
+                                                    const artistsValues = optionsForSelectSort[1].options.map(
+                                                        (option) => option.value
+                                                    );
+                                                    if (artistsValues.includes(data?.value || '')) {
+                                                        return {
+                                                            ...base,
+                                                            display: 'none',
+                                                        };
+                                                    }
+                                                    return { ...base, backgroundColor: theme.palette.action.selected };
+                                                },
+                                                multiValueLabel: (base, { data }) => {
+                                                    const artistsValues = optionsForSelectSort[1].options.map(
+                                                        (option) => option.value
+                                                    );
+                                                    if (artistsValues.includes(data?.value || '')) {
+                                                        return {
+                                                            ...base,
+                                                            display: 'none',
+                                                        };
+                                                    }
+                                                    return {
+                                                        ...base,
+                                                        color: theme.palette.text.primary,
+                                                    };
+                                                },
+                                                option: (base, state) => {
+                                                    const artistsValues = optionsForSelectSort[1].options.map(
+                                                        (option) => option.value
+                                                    );
+                                                    const isArtistOption = artistsValues.includes(
+                                                        state.data?.value || ''
+                                                    );
+                                                    const isArtistsSelected =
+                                                        isArtistOption &&
+                                                        selectedOptions?.some((opt) => opt.value === state.data?.value);
+                                                    return {
+                                                        ...base,
+                                                        color: theme.palette.text.primary,
+                                                        backgroundColor: isArtistsSelected
+                                                            ? theme.palette.primary.main
+                                                            : state.isFocused
+                                                              ? theme.palette.action.hover
+                                                              : 'transparent',
+                                                        '&:hover': {
+                                                            backgroundColor: isArtistsSelected
+                                                                ? theme.palette.primary.main
+                                                                : theme.palette.action.hover,
+                                                        },
+                                                    };
+                                                },
                                                 input: (base) => ({
                                                     ...base,
                                                     color: theme.palette.text.primary,
@@ -496,6 +536,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                         { value: 150, label: 150 },
                                         { value: 200, label: 200 },
                                     ]}
+                                    isSearchable={false}
                                     value={{ value: limit, label: limit }}
                                     onChange={(e) => dispatch(actions.setLimit(e?.value || 25))}
                                     styles={{
@@ -545,6 +586,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                     options={optionsForSelect}
                                     value={currentPage > 1 ? { value: currentPage, label: currentPage } : null}
                                     onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
+                                    isSearchable={false}
                                     styles={{
                                         control: (base, state) => ({
                                             ...base,

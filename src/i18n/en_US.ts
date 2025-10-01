@@ -119,7 +119,7 @@ const language: Translation = {
 
     // Paginations and order
     'search.pagination': 'Pagination',
-    'search.order.sort': 'Sort',
+    'search.order.sort': 'View',
     'search.order.artists': 'Artists',
 
     // options for select
