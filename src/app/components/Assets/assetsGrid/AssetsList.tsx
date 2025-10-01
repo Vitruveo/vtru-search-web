@@ -435,7 +435,9 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                             styles={{
                                                 control: (base, state) => ({
                                                     ...base,
-                                                    width: '230px',
+                                                    minWidth: '240px',
+                                                    maxHeight: '200px',
+                                                    overflow: 'auto',
                                                     borderColor: state.isFocused
                                                         ? theme.palette.primary.main
                                                         : theme.palette.grey[200],
@@ -449,14 +451,11 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                                     color: theme.palette.text.primary,
                                                     backgroundColor: theme.palette.background.paper,
                                                 }),
-                                                menuList: (base) => ({
+                                                multiValue: (base) => ({
                                                     ...base,
-                                                    '::-webkit-scrollbar-thumb': {
-                                                        backgroundColor: theme.palette.primary.main,
-                                                        borderRadius: '4px',
-                                                    },
+                                                    backgroundColor: theme.palette.action.selected,
                                                 }),
-                                                singleValue: (base) => ({
+                                                multiValueLabel: (base) => ({
                                                     ...base,
                                                     color: theme.palette.text.primary,
                                                 }),
