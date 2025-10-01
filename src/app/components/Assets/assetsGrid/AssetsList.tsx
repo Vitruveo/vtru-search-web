@@ -771,8 +771,6 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     </Box>
                 )}
 
-                {!isBlockLoader && <Grid item xs={12} mr={4} mb={4}></Grid>}
-
                 {!isHidden?.assets && (
                     <Grid
                         container
@@ -816,7 +814,6 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                     gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
                                     gap: hasIncludesGroupActive ? '90px' : 30,
                                     paddingTop: hasIncludesGroupActive ? '24px' : '0',
-                                    paddingBottom: 40,
                                 }}
                             >
                                 {activeAssets.map((asset) => (
@@ -1008,7 +1005,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                             justifyContent="flex-end"
                             width="100%"
                             mr={4}
-                            mb={12}
+                            mb={16}
                         >
                             <Button
                                 variant="contained"
