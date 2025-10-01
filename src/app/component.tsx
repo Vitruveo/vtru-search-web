@@ -13,6 +13,7 @@ import AssetsList from './components/Assets/assetsGrid/AssetsList';
 import PageContainer from './components/Container/PageContainer';
 import AppCard from './components/Shared/AppCard';
 import Header from './components/Header';
+import BannerSystemStatus from './components/Banner/systemStatusSearch';
 import { actions, initialState } from '@/features/filters/slice';
 import { actions as actionsAssets } from '@/features/assets/slice';
 import { actions as actionsRedirects } from '@/features/redirects/slice';
@@ -208,6 +209,7 @@ const Search = () => {
                 <AppCard>
                     <AssetsSidebar />
                     <Box flexGrow={1}>
+                        <BannerSystemStatus />
                         <AssetsList isBlockLoader={!!isValidSubdomain && !!subdomain} />
                     </Box>
                 </AppCard>
