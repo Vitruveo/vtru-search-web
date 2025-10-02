@@ -39,6 +39,7 @@ const BannerSystemStatus = ({ systemStatus }: Props) => {
                 <Box key={index} paddingBlock={1}>
                     {issue.level === 'warn' && <BannerWarning message={issue.message} />}
                     {issue.level === 'error' && <BannerError message={issue.message} />}
+                    {issue.level === 'info' && <BannerInfo message={issue.message} />}
                 </Box>
             ))}
         </Box>
@@ -63,6 +64,15 @@ const BannerError = ({ message }: { message: string }) => {
             <IconXboxX size={30} />
             <Typography variant="h5">{message}</Typography>
             <IconXboxX size={30} />
+        </Box>
+    );
+};
+
+const BannerInfo = ({ message }: { message: string }) => {
+    const theme = useTheme();
+    return (
+        <Box bgcolor={theme.palette.error.main} p={2} display="flex" justifyContent="space-between">
+            <Typography variant="h5">{message}</Typography>
         </Box>
     );
 };
