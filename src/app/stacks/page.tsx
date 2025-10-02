@@ -1,16 +1,18 @@
 'use client';
-import { SingleValue } from 'react-select';
-import StackList from '../components/Stacks/stacksGrid/StacksList';
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { SingleValue } from 'react-select';
+import { useTheme } from '@mui/material/styles';
+import { Box, Theme, useMediaQuery } from '@mui/material';
+import StackList from '../components/Stacks/stacksGrid/StacksList';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/stacks';
+import { actions as actionSystemStatus } from '@/features/system-status';
 import { NODE_ENV } from '@/constants/api';
 import PageContainer from '../components/Container/PageContainer';
 import { useI18n } from '../hooks/useI18n';
 import StyleElements from '../components/Stacks/components/StyleElements';
-import { Box, Theme, useMediaQuery } from '@mui/material';
 import Header from '../components/Header';
-import { useTheme } from '@mui/material/styles';
+import BannerSystemStatus from '../components/Banner/systemStatusStacks';
 import { STORES_STORAGE_URL } from '@/constants/aws';
 
 const Stacks = () => {
@@ -35,6 +37,7 @@ const Stacks = () => {
     useEffect(() => {
         dispatch(actions.loadStacks());
         dispatch(actions.loadStacksSpotlight());
+        dispatch(actionSystemStatus.loadSystemStatus());
     }, []);
 
     const optionsForSelectPage = useMemo(() => {
@@ -80,6 +83,7 @@ const Stacks = () => {
                         ]}
                     />
                 )}
+                <BannerSystemStatus />
                 <StackList
                     data={{ stacks, selectValues, optionsForSelectPage, hiddenElement }}
                     actions={{ onChangeSort, onChangePage, onChangeLimit, handleCurateStack, onChangeSearch }}

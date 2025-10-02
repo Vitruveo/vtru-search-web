@@ -1,5 +1,5 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Box, Button, Tab, Theme, Typography, useMediaQuery } from '@mui/material';
+import { Box, Tab, Theme, Typography, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import RecentlySoldSlider from './RecentlySold';
 import SpotlightSlider from './Spotlight';
@@ -69,7 +69,7 @@ export default function TabSliders() {
                     sx={{
                         width: lgUp && !isFilterHidden && isSidebarOpen ? 'calc(100vw - 350px)' : 'calc(100vw - 40px)',
                     }}
-                    minHeight={500}
+                    minHeight={388}
                 >
                     <TabContext value={tabValue}>
                         <Box
