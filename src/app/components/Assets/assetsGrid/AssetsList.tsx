@@ -482,31 +482,20 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                                         color: theme.palette.text.primary,
                                                     };
                                                 },
-                                                option: (base, state) => {
-                                                    const artistsValues = optionsForSelectSort[1].options.map(
-                                                        (option) => option.value
-                                                    );
-                                                    const isArtistOption = artistsValues.includes(
-                                                        state.data?.value || ''
-                                                    );
-                                                    const isArtistsSelected =
-                                                        isArtistOption &&
-                                                        selectedOptions?.some((opt) => opt.value === state.data?.value);
-                                                    return {
-                                                        ...base,
-                                                        color: theme.palette.text.primary,
-                                                        backgroundColor: isArtistsSelected
+                                                option: (base, state) => ({
+                                                    ...base,
+                                                    color: theme.palette.text.primary,
+                                                    backgroundColor: state.isSelected
+                                                        ? theme.palette.primary.main
+                                                        : state.isFocused
+                                                          ? theme.palette.action.hover
+                                                          : 'transparent',
+                                                    '&:hover': {
+                                                        backgroundColor: state.isSelected
                                                             ? theme.palette.primary.main
-                                                            : state.isFocused
-                                                              ? theme.palette.action.hover
-                                                              : 'transparent',
-                                                        '&:hover': {
-                                                            backgroundColor: isArtistsSelected
-                                                                ? theme.palette.primary.main
-                                                                : theme.palette.action.hover,
-                                                        },
-                                                    };
-                                                },
+                                                            : theme.palette.action.hover,
+                                                    },
+                                                }),
                                                 input: (base) => ({
                                                     ...base,
                                                     color: theme.palette.text.primary,
@@ -671,10 +660,12 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                     </Button>
                                     <Box sx={{ cursor: 'pointer' }} onClick={drawerStack.activate}>
                                         {lgUp && (
-                                            <Box display="flex" alignItems="center" gap={2}>
-                                                <Button variant="outlined" fullWidth sx={{ whiteSpace: 'nowrap' }}>
-                                                    {curateStacks.length}{' '}
-                                                    {language['search.assetList.curateStack.selected'] as string}
+                                            <Box>
+                                                <Button variant="contained" fullWidth sx={{ whiteSpace: 'nowrap' }}>
+                                                    <span>{curateStacks.length}</span>
+                                                    <span style={{ marginLeft: 8 }}>
+                                                        {language['search.assetList.curateStack.selected'] as string}
+                                                    </span>
                                                 </Button>
                                             </Box>
                                         )}

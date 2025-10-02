@@ -7,6 +7,7 @@ import StackList from '../components/Stacks/stacksGrid/StacksList';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/stacks';
 import { actions as actionSystemStatus } from '@/features/system-status';
+import { actions as actionRedirects } from '@/features/redirects';
 import { NODE_ENV } from '@/constants/api';
 import PageContainer from '../components/Container/PageContainer';
 import { useI18n } from '../hooks/useI18n';
@@ -38,6 +39,7 @@ const Stacks = () => {
         dispatch(actions.loadStacks());
         dispatch(actions.loadStacksSpotlight());
         dispatch(actionSystemStatus.loadSystemStatus());
+        dispatch(actionRedirects.loadRedirects());
     }, []);
 
     const optionsForSelectPage = useMemo(() => {
