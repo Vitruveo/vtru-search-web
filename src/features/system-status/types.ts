@@ -1,5 +1,6 @@
 export interface SystemStatusType {
     [key: string]: {
+        info: CommonType['info'];
         warn: CommonType['warn'];
         error: CommonType['error'];
         maintenance: CommonType['maintenance'];
@@ -7,6 +8,9 @@ export interface SystemStatusType {
 }
 
 export interface CommonType {
+    info: {
+        message: string;
+    }[];
     warn: {
         message: string;
     }[];

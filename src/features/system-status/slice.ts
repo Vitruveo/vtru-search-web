@@ -3,9 +3,9 @@ import { SystemStatusState, SystemStatusType } from './types';
 
 export const initialState: SystemStatusState = {
     data: {
-        search: { warn: [], error: [], maintenance: [] },
-        stacks: { warn: [], error: [], maintenance: [] },
-        stores: { warn: [], error: [], maintenance: [] },
+        search: { info: [], warn: [], error: [], maintenance: [] },
+        stacks: { info: [], warn: [], error: [], maintenance: [] },
+        stores: { info: [], warn: [], error: [], maintenance: [] },
     },
     error: null,
     loading: false,
