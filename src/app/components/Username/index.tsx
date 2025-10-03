@@ -57,7 +57,7 @@ const Username = ({ username, vaultAdress, size, openInNewTab = false, iconSpaci
                 overflow="hidden"
                 whiteSpace="nowrap"
                 textOverflow="ellipsis"
-                href={openInNewTab ? `${searchUrl}?name=${username}` : '#'}
+                href={openInNewTab ? `${searchUrl}?name=${username}` : ''}
                 underline="none"
                 onClick={onClick}
                 fontSize={fontSizes[size]}
