@@ -626,6 +626,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                 {!isHidden?.order && (
                     <Box
                         display={'flex'}
+                        gap={4}
                         flexDirection={smUp ? 'row' : 'column'}
                         alignItems={smUp ? 'center' : 'flex-end'}
                         justifyContent={'space-between'}
