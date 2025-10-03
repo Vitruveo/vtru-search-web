@@ -1,7 +1,7 @@
 import { useAccount } from 'wagmi';
 import { useSelector } from '@/store/hooks';
 import { formatDate } from '@/utils/assets';
-import { Box, Button, Card, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Card, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { IconDownload } from '@tabler/icons-react';
 import ConnectWallet from '../../ConnectWallet';
@@ -24,6 +24,7 @@ export interface ActivityProps {
 
 export default function Activity({ listing, downloadMedia, mintAdress }: ActivityProps) {
     const theme = useTheme();
+    const smUp = useMediaQuery(theme.breakpoints.down('sm'));
     const loggedWallets = useSelector((state) => state.creator?.wallets || []);
     const isMintAddressInLoggedWallets = loggedWallets.some((item) => item.address === mintAdress);
 
@@ -39,11 +40,12 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
     };
 
     const downloadable = (title: string) => {
-        return title === 'Licensed' && (isMintAddressInLoggedWallets || isMintAddressEqualConnectedAddress);
+        return title === 'Licensed' && (true || isMintAddressEqualConnectedAddress);
     };
 
     const generateGridColumns = (title: string, date?: string | Date) => {
         if (!date) return '1fr 1fr 1fr';
+        if (smUp) return '0.8fr 1fr 1fr 0fr';
         if (downloadable(title)) return '1.4fr 1fr 1fr 0.9fr 0.9fr';
         return '1.3fr 1fr 1fr 0.8fr';
     };
@@ -91,6 +93,7 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
                                         variant="body1"
                                         fontWeight="bold"
                                         style={{ whiteSpace: 'nowrap', wordBreak: 'break-all' }}
+                                        paddingRight={smUp ? 3.5 : 0}
                                     >
                                         {item.title}
                                     </Typography>
