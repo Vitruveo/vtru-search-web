@@ -7,6 +7,10 @@ export const initialState: RedirectsState = {
         production: { xibit: {}, vitruveo: {} } as RedirectType['production'],
         qa: { xibit: {}, vitruveo: {} } as RedirectType['qa'],
     },
+    cacheHeaders: {
+        lastModified: '',
+        fetchedAt: 0,
+    },
     error: null,
     loading: false,
 };
@@ -27,6 +31,9 @@ export const redirectsSlice = createSlice({
         },
         setError: (state, action: PayloadAction<string>) => {
             state.error = action.payload;
+        },
+        setCacheHeaders: (state, action: PayloadAction<RedirectsState['cacheHeaders']>) => {
+            state.cacheHeaders = action.payload;
         },
     },
 });

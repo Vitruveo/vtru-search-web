@@ -384,7 +384,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     <Box>
                         <IconButton
                             size="small"
-                            sx={{ padding: 0, color: theme.palette.grey[300], paddingLeft: '18.5px' }}
+                            sx={{ padding: 0, color: theme.palette.grey[300], paddingLeft: '18.5px', paddingTop: 0.5 }}
                             aria-label="menu"
                             onClick={onMenuClick}
                         >
@@ -408,7 +408,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
             <DrawerStack drawerStackOpen={drawerStack.isActive} onClose={drawerStack.deactivate} />
 
-            <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} mt={6} mb={2}>
+            <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} mt={2.8} mb={2}>
                 <Grid item xs={12} paddingInline={3}>
                     {!isHidden?.pageNavigation && (
                         <Box
@@ -771,7 +771,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                         overflow={'hidden'}
                         display={'flex'}
                         justifyContent={'center'}
-                        margin={'0 1.5%'}
+                        margin={'0.5% 1.5%'}
                     >
                         {isLoading ? (
                             <div

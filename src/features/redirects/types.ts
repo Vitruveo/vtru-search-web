@@ -35,6 +35,10 @@ export interface RedirectsPathsType {
 
 export interface RedirectsState {
     data: RedirectType;
+    cacheHeaders: {
+        lastModified: string;
+        fetchedAt: number;
+    };
     loading: boolean;
     error: string | null;
 }
