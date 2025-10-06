@@ -7,6 +7,10 @@ export const initialState: SystemStatusState = {
         stacks: { info: [], warn: [], error: [], maintenance: [] },
         stores: { info: [], warn: [], error: [], maintenance: [] },
     },
+    cacheHeaders: {
+        lastModified: '',
+        fetchedAt: 0,
+    },
     error: null,
     loading: false,
 };
@@ -27,6 +31,9 @@ export const systemStatusSlice = createSlice({
         },
         setError: (state, action: PayloadAction<string>) => {
             state.error = action.payload;
+        },
+        setCacheHeaders: (state, action: PayloadAction<SystemStatusState['cacheHeaders']>) => {
+            state.cacheHeaders = action.payload;
         },
     },
 });

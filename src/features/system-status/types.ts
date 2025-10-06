@@ -24,6 +24,10 @@ export interface CommonType {
 
 export interface SystemStatusState {
     data: SystemStatusType;
+    cacheHeaders: {
+        lastModified: string;
+        fetchedAt: number;
+    };
     loading: boolean;
     error: string | null;
 }
