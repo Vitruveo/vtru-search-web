@@ -45,6 +45,8 @@ interface Props {
 }
 
 const AssetsList = ({ isBlockLoader }: Props) => {
+    const dispatch = useDispatch();
+    const theme = useTheme();
     const { language } = useI18n();
     const redirectsState = useSelector((state) => state.redirects.data);
     const redirects = {
@@ -87,8 +89,6 @@ const AssetsList = ({ isBlockLoader }: Props) => {
         });
     });
 
-    const dispatch = useDispatch();
-    const theme = useTheme();
     const params = new URLSearchParams(window.location.search);
 
     const grid = params.get('grid');
@@ -398,6 +398,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     onChange={handleChangeLicenseType}
                     variant="fullWidth"
                     sx={{ width: '94%', marginInline: 'auto' }}
+                    orientation={smUp ? 'horizontal' : 'vertical'}
                 >
                     <Tab label="Digital Collectible Art" value="nft" sx={{ fontSize: '1.5rem' }} />
                     <Tab label="Print-on-Demand Art" value="print" sx={{ fontSize: '1.5rem' }} />
@@ -408,7 +409,14 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
             <DrawerStack drawerStackOpen={drawerStack.isActive} onClose={drawerStack.deactivate} />
 
-            <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} mt={2.8} mb={2}>
+            <Box
+                display={'flex'}
+                flexDirection={smUp ? 'row' : 'column'}
+                alignItems={'center'}
+                justifyContent={'space-between'}
+                mt={2.8}
+                mb={2}
+            >
                 <Grid item xs={12} paddingInline={3}>
                     {!isHidden?.pageNavigation && (
                         <Box
@@ -997,7 +1005,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                             justifyContent="flex-end"
                             width="100%"
                             mr={4}
-                            mb={16}
+                            mb={smUp ? 16 : 21}
                         >
                             <Button
                                 variant="contained"

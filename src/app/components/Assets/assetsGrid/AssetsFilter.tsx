@@ -271,7 +271,7 @@ const Filters = () => {
                 p={1}
                 pb={2}
                 mt={1}
-                height="81vh"
+                height="92vh"
                 overflow="auto"
                 sx={{
                     '::-webkit-scrollbar-thumb': {
