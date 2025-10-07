@@ -40,7 +40,7 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
     };
 
     const downloadable = (title: string) => {
-        return title === 'Licensed' && (true || isMintAddressEqualConnectedAddress);
+        return title === 'Licensed' && (isMintAddressInLoggedWallets || isMintAddressEqualConnectedAddress);
     };
 
     const generateGridColumns = (title: string, date?: string | Date) => {
