@@ -278,10 +278,21 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                 handleChangeSelectGroupByCreator(selected);
             }
         });
+
+        if (newSelected.length === 0) {
+            handleChangeSelectSortOrder({
+                value: 'latest',
+                label: language['search.select.sort.option.latest'] as string,
+            });
+            handleChangeSelectGroupByCreator({
+                value: 'all',
+                label: language['search.select.grouped.option.grouped'] as string,
+            });
+        }
     };
 
     const handleChangeSelectSortOrder = (
-        e: SingleValue<{
+        e?: SingleValue<{
             value: string;
             label: string;
         }>
@@ -291,7 +302,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     };
 
     const handleChangeSelectGroupByCreator = (
-        e: SingleValue<{
+        e?: SingleValue<{
             value: string;
             label: string;
         }>
@@ -772,15 +783,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                 )}
 
                 {!isHidden?.assets && (
-                    <Grid
-                        container
-                        rowGap={hasIncludesGroupActive ? 2 : 2.85}
-                        columnGap={hasIncludesGroupActive ? 6 : 3}
-                        overflow={'hidden'}
-                        display={'flex'}
-                        justifyContent={'center'}
-                        margin={'0.5% 1.5%'}
-                    >
+                    <Grid container overflow={'hidden'} display={'flex'} justifyContent={'center'} margin={'0.5% 1.5%'}>
                         {isLoading ? (
                             <div
                                 style={{
@@ -814,6 +817,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                     gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
                                     gap: hasIncludesGroupActive ? '90px' : 30,
                                     paddingTop: hasIncludesGroupActive ? '24px' : '0',
+                                    paddingBottom: '40px',
                                 }}
                             >
                                 {activeAssets.map((asset) => (
