@@ -1,10 +1,11 @@
 'use client';
+import { useEffect } from 'react';
 import PageContainer from '@/app/components/Container/PageContainer';
 import { useParams } from 'next/navigation';
 import StoreItem from '@/app/components/Store';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { useEffect } from 'react';
 import { actions } from '@/features/store';
+import { actions as actionsRedirects } from '@/features/redirects';
 import Header from '@/app/components/Header';
 import { Box } from '@mui/material';
 import { useDomainContext } from '@/app/context/domain';
@@ -20,6 +21,10 @@ const Store = () => {
         (state) => state.store
     );
     const logo = useSelector((state) => state.stores.currentDomain?.organization?.formats?.logo?.square?.path);
+
+    useEffect(() => {
+        dispatch(actionsRedirects.loadRedirects());
+    }, []);
 
     useEffect(() => {
         const getAsset = () => {
