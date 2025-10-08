@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useAccount } from 'wagmi';
 import { useSelector } from '@/store/hooks';
 import { formatDate } from '@/utils/assets';
@@ -5,6 +6,7 @@ import { Box, Button, Card, Tooltip, Typography, useMediaQuery } from '@mui/mate
 import { useTheme } from '@mui/material/styles';
 import { IconDownload } from '@tabler/icons-react';
 import ConnectWallet from '../../ConnectWallet';
+import ModalTermDownload from './ModalTermDownload';
 
 export interface ActivityProps {
     listing: {
@@ -25,6 +27,7 @@ export interface ActivityProps {
 export default function Activity({ listing, downloadMedia, mintAdress }: ActivityProps) {
     const theme = useTheme();
     const smUp = useMediaQuery(theme.breakpoints.down('sm'));
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const loggedWallets = useSelector((state) => state.creator?.wallets || []);
     const isMintAddressInLoggedWallets = loggedWallets.some((item) => item.address === mintAdress);
 
@@ -40,7 +43,7 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
     };
 
     const downloadable = (title: string) => {
-        return title === 'Licensed' && (isMintAddressInLoggedWallets || isMintAddressEqualConnectedAddress);
+        return title === 'Licensed' && (true || isMintAddressEqualConnectedAddress);
     };
 
     const generateGridColumns = (title: string, date?: string | Date) => {
@@ -48,6 +51,13 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
         if (smUp) return '0.8fr 1fr 1fr 0fr';
         if (downloadable(title)) return '1.4fr 1fr 1fr 0.9fr 0.9fr';
         return '1.3fr 1fr 1fr 0.8fr';
+    };
+
+    const handleModalOpen = () => {
+        setIsModalOpen(true);
+    };
+    const handleModalClose = () => {
+        setIsModalOpen(false);
     };
 
     return (
@@ -130,7 +140,7 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
                                         }}
                                     >
                                         <Button
-                                            onClick={downloadMedia}
+                                            onClick={handleModalOpen}
                                             sx={{
                                                 backgroundColor: theme.palette.primary.main,
                                                 color: '#ffff',
@@ -155,6 +165,7 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
                     <></>
                 )}
             </Card>
+            <ModalTermDownload isOpen={isModalOpen} onClose={handleModalClose} actions={{ downloadMedia }} />
         </div>
     );
 }
