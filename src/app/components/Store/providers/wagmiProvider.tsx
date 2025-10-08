@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { WagmiProvider } from 'wagmi';
 import axios from 'axios';
 import {
@@ -39,15 +40,15 @@ export const vitruveoMainnet = {
 };
 
 export const vitruveoTestnet = {
-    id: 14333,
-    name: 'Vitruveo Testnet',
-    network: 'vitruveo-testnet',
+    id: 1490,
+    name: 'Vitruveo',
+    network: 'vitruveo',
     iconUrl: '/images/icons/v-icon.png',
     iconBackground: '#000',
     nativeCurrency: {
         decimals: 18,
-        name: 'Vitruveo Testnet',
-        symbol: 'tVTRU',
+        name: 'Vitruveo',
+        symbol: 'VTRU',
     },
     rpcUrls: {
         public: { http: [''] },
@@ -57,7 +58,7 @@ export const vitruveoTestnet = {
         default: { name: 'VitruveoScan', url: '' },
         etherscan: { name: 'VitruveoScan', url: '' },
     },
-    testnet: true,
+    testnet: false,
 };
 
 interface Web3WagmiProviderProps {
@@ -68,18 +69,27 @@ const fetchRedirects = async () => {
     const rowData = await axios.get(REDIRECTS_JSON);
     return rowData.data;
 };
-fetchRedirects().then((data) => {
-    const updateNetwork = (network: any, env: string) => {
-        network.blockExplorers.default.url = data[env].vitruveo.explorer_url;
-        network.blockExplorers.etherscan.url = data[env].vitruveo.explorer_url;
-        network.rpcUrls.public.http[0] = data[env].vitruveo.web3_network_rpc;
-        network.rpcUrls.default.http[0] = data[env].vitruveo.web3_network_rpc;
-    };
-    updateNetwork(vitruveoMainnet, 'production');
-    updateNetwork(vitruveoTestnet, 'qa');
-});
 
 export default function Web3WagmiProvider({ children }: Web3WagmiProviderProps) {
+    const [isReady, setIsReady] = useState(false);
+
+    useEffect(() => {
+        fetchRedirects().then((data) => {
+            const updateNetwork = (network: any, env: string) => {
+                network.blockExplorers.default.url = data[env].vitruveo.explorer_url;
+                network.blockExplorers.etherscan.url = data[env].vitruveo.explorer_url;
+                network.rpcUrls.public.http[0] = data[env].vitruveo.web3_network_rpc;
+                network.rpcUrls.default.http[0] = data[env].vitruveo.web3_network_rpc;
+            };
+            updateNetwork(vitruveoMainnet, 'production');
+            updateNetwork(vitruveoTestnet, 'qa');
+
+            setIsReady(true);
+        });
+    }, []);
+
+    if (!isReady) return <></>;
+
     const config = getDefaultConfig({
         appName: WAGMI_APP_NAME,
         projectId: WAGMI_PROJECT_ID,

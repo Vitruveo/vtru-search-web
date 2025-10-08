@@ -1,20 +1,29 @@
 import { Box } from '@mui/material';
-import { useState } from 'react';
 import { Asset } from '@/features/assets/types';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
 import ActionButton from './ActionButtonItem';
-import { getThumbnailFromPath } from '@/utils/url-assets';
+import { ThumbPathType } from '../..';
 
 interface ActionButtonsProps {
     asset: Asset;
     format: string;
-    setImage: (value: string, isThumbnail?: boolean) => void;
+    thumbPaths: ThumbPathType;
+    setImage: ({
+        newImage,
+        isThumbnail,
+        assetFormat,
+    }: {
+        newImage: string;
+        isThumbnail?: boolean;
+        assetFormat: string;
+    }) => void;
     setFormat: (value: string) => void;
     handleLoad: () => void;
 }
 
 export default function ActionButtons({
     asset,
+    thumbPaths,
     format = 'preview',
     setImage,
     handleLoad,
@@ -33,20 +42,26 @@ export default function ActionButtons({
         <Box display="flex" justifyContent="space-around">
             <ActionButton
                 title="Preview"
-                formatMedia={getThumbnailFromPath}
+                thumbPath={thumbPaths.preview}
                 media={`${ASSET_STORAGE_URL}/${asset?.formats?.preview?.path}`}
                 onClick={() => {
-                    setImage(`${ASSET_STORAGE_URL}/${asset?.formats?.preview?.path}`);
+                    setImage({
+                        newImage: `${ASSET_STORAGE_URL}/${asset?.formats?.preview?.path}`,
+                        assetFormat: 'preview',
+                    });
                     handleSelect('preview');
                 }}
                 selected={format === 'preview' ? 'preview' : false}
             />
             <ActionButton
                 title="Display (4K)"
-                formatMedia={getThumbnailFromPath}
+                thumbPath={thumbPaths.display}
                 media={`${ASSET_STORAGE_URL}/${asset?.formats?.display?.path}`}
                 onClick={() => {
-                    setImage(`${ASSET_STORAGE_URL}/${asset?.formats?.display?.path}`);
+                    setImage({
+                        newImage: `${ASSET_STORAGE_URL}/${asset?.formats?.display?.path}`,
+                        assetFormat: 'display',
+                    });
                     handleSelect('display');
                 }}
                 handleLoad={handleLoad}
@@ -55,10 +70,13 @@ export default function ActionButtons({
             />
             <ActionButton
                 title="Original"
-                formatMedia={getThumbnailFromPath}
+                thumbPath={thumbPaths.original}
                 media={`${ASSET_STORAGE_URL}/${asset?.formats?.original?.path}`}
                 onClick={() => {
-                    setImage(`${ASSET_STORAGE_URL}/${asset?.formats?.original?.path}`);
+                    setImage({
+                        newImage: `${ASSET_STORAGE_URL}/${asset?.formats?.original?.path}`,
+                        assetFormat: 'original',
+                    });
                     handleSelect('original');
                 }}
                 selected={format === 'original' ? 'original' : false}
@@ -69,7 +87,11 @@ export default function ActionButtons({
                     title={btsVideoPath ? 'BTS Video' : btsImagePath ? 'BTS Image' : ''}
                     media={`${ASSET_STORAGE_URL}/${mediaPath}`}
                     onClick={() => {
-                        setImage(`${ASSET_STORAGE_URL}/${mediaPath}`, false);
+                        setImage({
+                            newImage: `${ASSET_STORAGE_URL}/${mediaPath}`,
+                            assetFormat: 'exhibition',
+                            isThumbnail: false,
+                        });
                         handleSelect('exhibition');
                     }}
                     selected={format === 'exhibition' ? 'exhibition' : false}

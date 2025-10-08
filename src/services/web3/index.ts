@@ -5,7 +5,9 @@ import axios from 'axios';
 import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { NODE_ENV } from '@/constants/api';
 
-export const isTestNet = WEB3_NETWORK_TYPE === 'testnet';
+console.log(WEB3_NETWORK_RPC_ADDRESS);
+
+export const isTestNet = false;
 export const network = isTestNet ? 'testnet' : 'mainnet';
 
 let web3_netowrk_rpc = '';

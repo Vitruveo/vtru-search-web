@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
+import { Modal as MuiModal, useMediaQuery, Box, Button, Typography } from '@mui/material';
 import { useState } from 'react';
-import { Modal as MuiModal, useMediaQuery, Button, Typography, Box } from '@mui/material';
-import { IconZoomCancel, IconZoomCheck } from '@tabler/icons-react';
+
 import styled from './index.module.css';
+import { IconZoomCancel, IconZoomCheck } from '@tabler/icons-react';
 
 interface ModalProps {
     open: boolean;
@@ -17,7 +18,6 @@ export default function Modal({ open, handleClose, content, baseUrl, path }: Mod
 
     const [magnifyStyle, setMagnifyStyle] = useState({});
     const [isMagnifyingGlassOn, setIsMagnifyingGlassOn] = useState(false);
-
     const isMobile = useMediaQuery('(max-width: 900px)');
 
     const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
@@ -90,9 +90,9 @@ export default function Modal({ open, handleClose, content, baseUrl, path }: Mod
                             )}
                         </Button>
                     ) : null}
-                    {path && (
+                    {content && (
                         <a
-                            href={baseUrl ? `${baseUrl}/${path}` : path}
+                            href={content}
                             target="_blank"
                             rel="noreferrer"
                             style={{

@@ -17,9 +17,9 @@ export const creatorSlice = createSlice({
     name: 'creator',
     initialState,
     reducers: {
-        sendCode: () => {},
-        resendCode: () => {},
-        verifyCode: () => {},
+        sendCode: () => { },
+        resendCode: () => { },
+        verifyCode: () => { },
         logout: (state) => {
             state.token = '';
             state.email = '';

@@ -1,3 +1,4 @@
+import { ASSET_STORAGE_URL } from '@/constants/aws';
 import { Asset } from '@/features/assets/types';
 
 export const addAssetsToURL = (assets: Asset[]) => {
@@ -28,7 +29,13 @@ export const clearAssetsFromURL = () => {
     window.history.pushState({}, '', url.toString());
 };
 
-export const getThumbnailFromPath = (path: string) => {
-    if (!path) return '';
-    return path.replace(/\.[^.]+$/, '_thumb.jpg');
-};
+export function getThumbnailFromPath(path: string): Promise<string> {
+    if (!path) return Promise.resolve('');
+    const thumbPath = path.replace(/\.[^.]+$/, '_thumb.jpg');
+    return new Promise((resolve) => {
+        const img = new window.Image();
+        img.onload = () => resolve(thumbPath);
+        img.onerror = () => resolve(path);
+        img.src = thumbPath;
+    });
+}

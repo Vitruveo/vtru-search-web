@@ -36,11 +36,21 @@ interface StoreProps {
     };
 }
 
+export type ThumbPathType = { [key in keyof Asset['formats']]: string };
+const validThumbAndWatermarkFormats = ['preview', 'display', 'original'];
+
 const Store = ({ data }: StoreProps) => {
     const { asset, loading, creatorAvatar, username, creatorLoading, lastAssets, lastAssetsLoading } = data;
     const [size, setSize] = useState({ width: 300, height: 300 });
     const [image, setImage] = useState<string>('');
     const [format, setFormat] = useState<string>('preview');
+    const [thumbPaths, setThumbPaths] = useState<ThumbPathType>({
+        original: '',
+        display: '',
+        preview: '',
+        exhibition: '',
+        print: '',
+    });
     const [watermarkFormats, setWatermarkFormats] = useState<{ [key: string]: string } | null>(null);
     const [expandedAccordion, setExpandedAccordion] = useState<string | false>(false);
     const [open, setOpen] = useState(false);
@@ -74,14 +84,25 @@ const Store = ({ data }: StoreProps) => {
         }
     };
 
-    const handleChangeImage = (newImage: string, isThumbnail: boolean = true) => {
+    const handleChangeImage = ({
+        newImage,
+        isThumbnail = true,
+        assetFormat,
+    }: {
+        newImage: string;
+        isThumbnail?: boolean;
+        assetFormat: string;
+    }) => {
         const isVideo = newImage.match(/\.(mp4|webm|ogg)$/) != null;
-        if (isThumbnail && !isVideo) setImage(getThumbnailFromPath(newImage));
+        if (isThumbnail && !isVideo) setImage(thumbPaths[assetFormat as keyof ThumbPathType] || newImage);
         else setImage(newImage);
     };
 
     const handleLoad = () => {
-        handleChangeImage(`${ASSET_STORAGE_URL}/${asset.formats?.display?.path}`);
+        handleChangeImage({
+            newImage: `${ASSET_STORAGE_URL}/${asset.formats?.display?.path}`,
+            assetFormat: 'display',
+        });
         if (asset.formats?.display?.definition === 'portrait') {
             setSize({ width: 430, height: 630 });
         }
@@ -92,6 +113,52 @@ const Store = ({ data }: StoreProps) => {
 
     const handleAccordionChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
         setExpandedAccordion(isExpanded ? panel : false);
+    };
+
+    const handleClenupWatermarks = () => {
+        if (watermarkFormats)
+            Object.values(watermarkFormats).forEach((url) => {
+                if (url.startsWith('blob:')) {
+                    URL.revokeObjectURL(url);
+                }
+            });
+    };
+
+    const handleGetAssetWatermarks = async () => {
+        handleClenupWatermarks();
+        if (asset.formats) {
+            const watermarkResults = await Promise.allSettled(
+                Object.keys(asset.formats)
+                    .filter((v) => validThumbAndWatermarkFormats.includes(v))
+                    .map(async (formatKey) => {
+                        if (asset.formats && asset._id) {
+                            try {
+                                const watermarkBuffer = await getAssetWatermark({
+                                    assetId: asset._id,
+                                    format: formatKey,
+                                });
+                                const blob = new Blob([watermarkBuffer], { type: 'image/jpeg' });
+                                const imageUrl = URL.createObjectURL(blob);
+
+                                const img = new window.Image();
+                                img.src = imageUrl;
+
+                                return [formatKey, imageUrl];
+                            } catch (error) {
+                                return null;
+                            }
+                        }
+                        return null;
+                    })
+            );
+
+            const successfulWatermarks = Object.fromEntries(
+                watermarkResults
+                    .filter((result) => result.status === 'fulfilled' && result.value !== null)
+                    .map((result) => (result as PromiseFulfilledResult<[string, string]>).value)
+            );
+            setWatermarkFormats(successfulWatermarks);
+        }
     };
 
     const handleDownloadMedia = async () => {
@@ -113,52 +180,15 @@ const Store = ({ data }: StoreProps) => {
         }
     };
 
-    const handleClenupWatermarks = () => {
-        if (watermarkFormats)
-            Object.values(watermarkFormats).forEach((url) => {
-                if (url.startsWith('blob:')) {
-                    URL.revokeObjectURL(url);
-                }
-            });
-    };
-
-    const handleGetAssetWatermarks = async () => {
-        handleClenupWatermarks();
-        if (asset.formats) {
-            const watermarkResults = await Promise.allSettled(
-                Object.keys(asset.formats).map(async (formatKey) => {
-                    if (asset.formats && asset._id) {
-                        try {
-                            const watermarkBuffer = await getAssetWatermark({ assetId: asset._id, format: formatKey });
-                            const blob = new Blob([watermarkBuffer], { type: 'image/jpeg' });
-                            const imageUrl = URL.createObjectURL(blob);
-
-                            const img = new window.Image();
-                            img.src = imageUrl;
-
-                            return [formatKey, imageUrl];
-                        } catch (error) {
-                            return null;
-                        }
-                    }
-                    return null;
-                })
-            );
-
-            const successfulWatermarks = Object.fromEntries(
-                watermarkResults
-                    .filter((result) => result.status === 'fulfilled' && result.value !== null)
-                    .map((result) => (result as PromiseFulfilledResult<[string, string]>).value)
-            );
-            setWatermarkFormats(successfulWatermarks);
-        }
-    };
-
     useEffect(() => {
         if (asset.formats) {
             handleGetAssetWatermarks();
         }
-        if (asset.formats?.preview.path) handleChangeImage(`${ASSET_STORAGE_URL}/${asset.formats?.preview.path}`);
+        if (asset.formats?.preview.path)
+            handleChangeImage({
+                newImage: `${ASSET_STORAGE_URL}/${asset.formats?.preview.path}`,
+                assetFormat: 'preview',
+            });
     }, [asset?.formats]);
 
     useEffect(() => {
@@ -170,6 +200,38 @@ const Store = ({ data }: StoreProps) => {
             handleClenupWatermarks();
         };
     }, [watermarkFormats]);
+
+    useEffect(() => {
+        async function resolveThumbs() {
+            if (!asset.formats) {
+                return;
+            }
+
+            const settledResults = await Promise.allSettled(
+                Object.keys(asset.formats)
+                    .filter((key) => validThumbAndWatermarkFormats.includes(key))
+                    .map(async (key) => {
+                        const path = asset.formats?.[key as keyof typeof asset.formats]?.path;
+                        const isVideo = path?.match(/\.(mp4|webm|ogg)$/) != null;
+                        if (path && !isVideo) {
+                            const thumb = await getThumbnailFromPath(`${ASSET_STORAGE_URL}/${path}`);
+                            return { key, thumb };
+                        }
+                        return null;
+                    })
+            );
+
+            const results: { [key: string]: string } = {};
+            settledResults.forEach((result) => {
+                if (result.status === 'fulfilled' && result.value && result.value.thumb) {
+                    results[result.value.key] = result.value.thumb;
+                }
+            });
+
+            setThumbPaths(results as ThumbPathType);
+        }
+        resolveThumbs();
+    }, [asset?.formats]);
 
     if (loading)
         return (
@@ -227,6 +289,7 @@ const Store = ({ data }: StoreProps) => {
                             <ActionButtons
                                 asset={asset}
                                 format={format}
+                                thumbPaths={thumbPaths}
                                 setImage={handleChangeImage}
                                 handleLoad={handleLoad}
                                 setFormat={setFormat}
@@ -256,6 +319,7 @@ const Store = ({ data }: StoreProps) => {
                         <Grid item md={6} width="100%">
                             <ActionButtons
                                 asset={asset}
+                                thumbPaths={thumbPaths}
                                 format={format}
                                 setImage={handleChangeImage}
                                 handleLoad={handleLoad}
@@ -340,17 +404,15 @@ const Store = ({ data }: StoreProps) => {
                         </Typography>
                     </Grid>
                 </Grid>
-                <Background path={getThumbnailFromPath(asset?.formats?.preview?.path)} />
+                <Background
+                    withBaseUrl={false}
+                    path={thumbPaths.preview || `${ASSET_STORAGE_URL}/${asset.formats?.preview.path}`}
+                />
                 <Modal
                     open={open}
                     handleClose={handleClose}
                     content={contents}
                     baseUrl={watermarkFormats && watermarkFormats['original'] ? '' : ASSET_STORAGE_URL}
-                    path={
-                        watermarkFormats
-                            ? watermarkFormats['original']
-                            : getThumbnailFromPath(asset.formats?.original?.path)
-                    }
                 />
                 {!!modalLoading && (
                     <Box

@@ -301,12 +301,14 @@ const Filters = () => {
 
                 <FormGroup sx={{ display: 'flex', flexDirection: 'column', marginLeft: '5.5%' }}>
                     <Typography variant="h4">Filters</Typography>
+
                     <Box display="flex">
                         <FormControlLabel
                             control={<Checkbox onChange={handleChangeNudity} checked={isHideNuditychecked} />}
                             label={language['search.assetFilter.shortcut.nudity'] as string}
                             sx={{
                                 width: '50%',
+                                mr: '10%',
                             }}
                         />
                         <FormControlLabel
@@ -329,6 +331,7 @@ const Filters = () => {
                             label={language['search.assetFilter.shortcut.photography'] as string}
                             sx={{
                                 width: '50%',
+                                mr: '7%',
                             }}
                         />
                         <FormControlLabel
@@ -355,6 +358,7 @@ const Filters = () => {
                             label={language['search.assetFilter.shortcut.physicalArt'] as string}
                             sx={{
                                 width: '50%',
+                                mr: '10%',
                             }}
                         />
                         <FormControlLabel
@@ -375,7 +379,9 @@ const Filters = () => {
                             control={<Checkbox onChange={handleChangeIsIncludeSold} checked={isIncludeSold} />}
                             label={language['search.assetFilter.shortcut.includeSold'] as string}
                             sx={{
+                                whiteSpace: 'nowrap',
                                 width: '50%',
+                                mr: '9%',
                             }}
                         />
                         <FormControlLabel
