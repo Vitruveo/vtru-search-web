@@ -1,11 +1,9 @@
 import { JsonRpcProvider, Wallet } from 'ethers';
 import schema from './contracts.json';
-import { WEB3_NETWORK_TYPE, WEB3_PRIVATE_KEY } from '@/constants/web3';
+import { WEB3_PRIVATE_KEY } from '@/constants/web3';
 import axios from 'axios';
 import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { NODE_ENV } from '@/constants/api';
-
-console.log(WEB3_NETWORK_RPC_ADDRESS);
 
 export const isTestNet = false;
 export const network = isTestNet ? 'testnet' : 'mainnet';
