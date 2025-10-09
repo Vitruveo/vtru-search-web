@@ -140,6 +140,12 @@ export interface Asset {
         transactionhash: string | null;
         vaultAddress: string | null;
     };
+    digitalCollectibleDownload?: {
+        wallet: string;
+        date: string;
+        isTermAccepted: boolean;
+        licenseType: string;
+    }[];
 }
 
 export interface Tags {
