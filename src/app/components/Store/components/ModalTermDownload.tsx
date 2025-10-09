@@ -29,6 +29,36 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
             >
                 <Typography variant="h2">Terms of use to Download</Typography>
                 <Box
+                    display={'flex'}
+                    justifyContent={'space-between'}
+                    alignItems={'center'}
+                    width={'100%'}
+                    mt={2}
+                    mb={2}
+                    pl={2}
+                    pr={3}
+                >
+                    <Typography variant="h6">
+                        Canonical URL:{' '}
+                        <Link
+                            href="https://creativecommons.org/licenses/by-nc-nd/4.0/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            https://creativecommons.org/licenses/by-nc-nd/4.0/
+                        </Link>
+                    </Typography>
+                    <Typography variant="h6">
+                        <Link
+                            href="https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode.en"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            See the legal code
+                        </Link>
+                    </Typography>
+                </Box>
+                <Box
                     sx={{
                         overflowY: 'auto',
                         '&::-webkit-scrollbar': {
