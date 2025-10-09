@@ -52,7 +52,6 @@ function* getStoreLastAssets({ payload }: PayloadAction<{ id: string }>) {
 function* updateDigitalCollectibleDownload(
     action: PayloadAction<{ assetId: string; digital: Asset['digitalCollectibleDownload'] }>
 ) {
-    yield put(actions.startLoadingDigitalCollectibleDownload());
     try {
         const { assetId, digital } = action.payload;
         yield call(axios.post, `${API_BASE_URL}/assets/store/${assetId}/digitalCollectibleDownload`, {
@@ -63,8 +62,6 @@ function* updateDigitalCollectibleDownload(
         });
     } catch (error) {
         // Handle error
-    } finally {
-        yield put(actions.finishLoadingDigitalCollectibleDownload());
     }
 }
 

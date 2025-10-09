@@ -65,6 +65,7 @@ export default function Activity({ listing, mintAdress }: ActivityProps) {
     };
 
     const handleDownloadMedia = async () => {
+        dispatch(actions.startLoadingDigitalCollectibleDownload());
         const url = `${ASSET_STORAGE_URL}/${asset.formats?.original?.path}`;
         const fileName = asset.assetMetadata?.context?.formData?.title || Date.now().toString();
 
@@ -91,8 +92,9 @@ export default function Activity({ listing, mintAdress }: ActivityProps) {
             link.click();
             document.body.removeChild(link);
             window.URL.revokeObjectURL(link.href);
-        } catch (error) {
-            console.error('Error downloading the file', error);
+        } finally {
+            handleModalClose();
+            dispatch(actions.finishLoadingDigitalCollectibleDownload());
         }
     };
 
