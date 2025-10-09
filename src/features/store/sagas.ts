@@ -55,7 +55,12 @@ function* updateDigitalCollectibleDownload(
     yield put(actions.startLoadingDigitalCollectibleDownload());
     try {
         const { assetId, digital } = action.payload;
-        // request to API
+        yield call(axios.post, `${API_BASE_URL}/assets/store/${assetId}/digitalCollectibleDownload`, {
+            wallet: digital?.[0]?.wallet,
+            date: digital?.[0]?.date,
+            isTermAccepted: digital?.[0]?.isTermAccepted,
+            licenseType: digital?.[0]?.licenseType,
+        });
     } catch (error) {
         // Handle error
     } finally {
