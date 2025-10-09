@@ -1,4 +1,4 @@
-import { Box, Button, Link, Modal, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Link, Modal, Typography } from '@mui/material';
 import { IconCreativeCommonsBy, IconCreativeCommonsNc, IconCreativeCommonsNd } from '@tabler/icons-react';
 
 interface Props {
@@ -7,10 +7,14 @@ interface Props {
     actions: {
         downloadMedia: () => void;
     };
+    data: {
+        loading: boolean;
+    };
 }
 
-export default function ModalTermDownload({ isOpen, onClose, actions }: Props) {
+export default function ModalTermDownload({ isOpen, onClose, actions, data }: Props) {
     const { downloadMedia } = actions;
+    const { loading } = data;
 
     return (
         <Modal open={isOpen} onClose={onClose} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -163,8 +167,14 @@ export default function ModalTermDownload({ isOpen, onClose, actions }: Props) {
                     <Button variant="outlined" color="primary" onClick={onClose}>
                         Cancel
                     </Button>
-                    <Button variant="contained" color="primary" onClick={downloadMedia}>
-                        Accept terms and Download Media
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={downloadMedia}
+                        disabled={loading}
+                        sx={{ minWidth: 260 }}
+                    >
+                        {!loading ? 'Accept terms and Download Media' : <CircularProgress size={20} />}
                     </Button>
                 </Box>
             </Box>

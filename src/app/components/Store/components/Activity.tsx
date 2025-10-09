@@ -1,12 +1,15 @@
 import { useState } from 'react';
+import axios from 'axios';
 import { useAccount } from 'wagmi';
-import { useSelector } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { actions } from '@/features/store';
 import { formatDate } from '@/utils/assets';
 import { Box, Button, Card, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { IconDownload } from '@tabler/icons-react';
 import ConnectWallet from '../../ConnectWallet';
 import ModalTermDownload from './ModalTermDownload';
+import { ASSET_STORAGE_URL } from '@/constants/aws';
 
 export interface ActivityProps {
     listing: {
@@ -20,14 +23,15 @@ export interface ActivityProps {
             url: string;
         };
     }[];
-    downloadMedia: () => void;
     mintAdress?: string;
 }
 
-export default function Activity({ listing, downloadMedia, mintAdress }: ActivityProps) {
+export default function Activity({ listing, mintAdress }: ActivityProps) {
+    const dispatch = useDispatch();
     const theme = useTheme();
     const smUp = useMediaQuery(theme.breakpoints.down('sm'));
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { asset, loadingDigitalCollectibleDownload } = useSelector((state) => state.store);
     const loggedWallets = useSelector((state) => state.creator?.wallets || []);
     const isMintAddressInLoggedWallets = loggedWallets.some((item) => item.address === mintAdress);
 
@@ -43,7 +47,7 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
     };
 
     const downloadable = (title: string) => {
-        return title === 'Licensed' && (true || isMintAddressEqualConnectedAddress);
+        return title === 'Licensed' && (isMintAddressInLoggedWallets || isMintAddressEqualConnectedAddress);
     };
 
     const generateGridColumns = (title: string, date?: string | Date) => {
@@ -58,6 +62,38 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
     };
     const handleModalClose = () => {
         setIsModalOpen(false);
+    };
+
+    const handleDownloadMedia = async () => {
+        const url = `${ASSET_STORAGE_URL}/${asset.formats?.original?.path}`;
+        const fileName = asset.assetMetadata?.context?.formData?.title || Date.now().toString();
+
+        try {
+            dispatch(
+                actions.setDigitalCollectibleDownload({
+                    assetId: asset._id,
+                    digital: [
+                        {
+                            wallet: mintAdress || '',
+                            isTermAccepted: true,
+                            date: new Date().toISOString(),
+                            licenseType: 'CC BY-NC-ND',
+                        },
+                    ],
+                })
+            );
+            const response = await axios.get(url, { responseType: 'blob' });
+            const blob = response.data;
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(link.href);
+        } catch (error) {
+            console.error('Error downloading the file', error);
+        }
     };
 
     return (
@@ -165,7 +201,12 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
                     <></>
                 )}
             </Card>
-            <ModalTermDownload isOpen={isModalOpen} onClose={handleModalClose} actions={{ downloadMedia }} />
+            <ModalTermDownload
+                isOpen={isModalOpen}
+                onClose={handleModalClose}
+                actions={{ downloadMedia: handleDownloadMedia }}
+                data={{ loading: loadingDigitalCollectibleDownload }}
+            />
         </div>
     );
 }

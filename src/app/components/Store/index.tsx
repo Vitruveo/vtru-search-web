@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Box, CircularProgress, Grid, Typography, useMediaQuery } from '@mui/material';
 import LazyLoad from 'react-lazyload';
 import '../Assets/assetsGrid/AssetScroll.css';
@@ -92,25 +91,6 @@ const Store = ({ data }: StoreProps) => {
 
     const handleAccordionChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
         setExpandedAccordion(isExpanded ? panel : false);
-    };
-
-    const handleDownloadMedia = async () => {
-        const url = `${ASSET_STORAGE_URL}/${asset.formats?.original?.path}`;
-        const fileName = asset.assetMetadata?.context?.formData?.title || Date.now().toString();
-
-        try {
-            const response = await axios.get(url, { responseType: 'blob' });
-            const blob = response.data;
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = fileName;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(link.href);
-        } catch (error) {
-            console.error('Error downloading the file', error);
-        }
     };
 
     const handleClenupWatermarks = () => {
@@ -291,7 +271,6 @@ const Store = ({ data }: StoreProps) => {
                                         },
                                     },
                                 ]}
-                                downloadMedia={handleDownloadMedia}
                                 mintAdress={asset?.mintExplorer?.address}
                             />
                         )}

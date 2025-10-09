@@ -49,10 +49,26 @@ function* getStoreLastAssets({ payload }: PayloadAction<{ id: string }>) {
     yield put(actions.finishLastAssetsLoading());
 }
 
+function* updateDigitalCollectibleDownload(
+    action: PayloadAction<{ assetId: string; digital: Asset['digitalCollectibleDownload'] }>
+) {
+    yield put(actions.startLoadingDigitalCollectibleDownload());
+    try {
+        const { assetId, digital } = action.payload;
+        // request to API
+    } catch (error) {
+        // Handle error
+    } finally {
+        yield put(actions.finishLoadingDigitalCollectibleDownload());
+    }
+}
+
 export default function* storeSagas() {
     yield all([
         takeEvery(actions.getAssetRequest.type, getStoreAsset),
         takeEvery(actions.getCreatorRequest.type, getStoreCreator),
         takeEvery(actions.getLastAssetsRequest.type, getStoreLastAssets),
+
+        takeEvery(actions.setDigitalCollectibleDownload.type, updateDigitalCollectibleDownload),
     ]);
 }
