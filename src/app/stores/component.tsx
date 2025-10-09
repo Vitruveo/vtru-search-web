@@ -1,11 +1,12 @@
+import { ChangeEvent, useCallback, useMemo, useState } from 'react';
+import { SingleValue } from 'react-select';
 import { useDispatch, useSelector } from '@/store/hooks';
 import PageContainer from '../components/Container/PageContainer';
 import Header from '../components/Header';
 import Stores from '../components/Stores/storesGrid/storesList';
-import { ChangeEvent, useCallback, useMemo, useState } from 'react';
-import { SingleValue } from 'react-select';
 import { actions } from '@/features/stores';
 import { STORES_STORAGE_URL } from '@/constants/aws';
+import BannerSystemStatus from '../components/Banner/systemStatusStores';
 
 const Component = () => {
     const dispatch = useDispatch();
@@ -51,6 +52,7 @@ const Component = () => {
         <PageContainer title="Stores" icon={logo ? `${STORES_STORAGE_URL}/${logo}` : null}>
             <>
                 <Header rssOptions={[]} />
+                <BannerSystemStatus />
                 <Stores
                     data={{
                         stores: {

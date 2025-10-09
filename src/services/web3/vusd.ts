@@ -1,5 +1,5 @@
 import { WEB3_NETWORK_TYPE } from '@/constants/web3';
-import { BrowserProvider, Contract, JsonRpcSigner, parseUnits, formatEther, parseEther } from 'ethers';
+import { BrowserProvider, Contract, JsonRpcSigner, parseUnits } from 'ethers';
 import type { Account, Chain, Client, Transport } from 'viem';
 import schema from './contracts.json';
 import {

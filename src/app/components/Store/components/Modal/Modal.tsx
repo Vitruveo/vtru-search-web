@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { Modal as MuiModal, useMediaQuery, Box, Button, Typography } from '@mui/material';
 import { useState } from 'react';
+
 import styled from './index.module.css';
 import { IconZoomCancel, IconZoomCheck } from '@tabler/icons-react';
 
@@ -14,6 +15,7 @@ interface ModalProps {
 
 export default function Modal({ open, handleClose, content, baseUrl, path }: ModalProps) {
     const isVideo = content.match(/\.(mp4|webm|ogg)$/) != null;
+
     const [magnifyStyle, setMagnifyStyle] = useState({});
     const [isMagnifyingGlassOn, setIsMagnifyingGlassOn] = useState(false);
     const isMobile = useMediaQuery('(max-width: 900px)');
@@ -68,7 +70,6 @@ export default function Modal({ open, handleClose, content, baseUrl, path }: Mod
                 {!isMobile && isMagnifyingGlassOn ? (
                     <div className={styled.magnify} style={{ backgroundImage: `url(${content})`, ...magnifyStyle }} />
                 ) : null}
-
                 <Box display="flex" gap={2}>
                     {!isMobile ? (
                         <Button

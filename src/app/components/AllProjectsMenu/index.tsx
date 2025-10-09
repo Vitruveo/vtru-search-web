@@ -2,24 +2,33 @@ import React, { useState } from 'react';
 import { Box, Drawer, IconButton, List, ListItem, ListItemText, Theme, Typography, useMediaQuery } from '@mui/material';
 import { IconMenu2 } from '@tabler/icons-react';
 import { useSelector } from '@/store/hooks';
-import { NODE_ENV, SEARCH_BASE_URL, STUDIO_BASE_URL } from '@/constants/api';
-
-const projects = [
-    { title: 'SEARCH', url: `${SEARCH_BASE_URL}` },
-    { title: 'FOLIO', url: NODE_ENV === 'production' ? 'https://xibit.live' : `${SEARCH_BASE_URL}/stores` },
-    { title: 'STUDIO', url: `${STUDIO_BASE_URL}/login` },
-    // { title: 'STACKS', url: `${SEARCH_BASE_URL}/stacks` },
-    // { title: 'STREAMS', url: '' },
-    { title: 'ABOUT XIBIT', url: 'https://about.xibit.app', onlyMobile: true },
-    { title: 'ABOUT VITRUVEO', url: 'https://vitruveo.xyz', onlyMobile: true },
-];
+import { NODE_ENV } from '@/constants/api';
 
 const AllProjectsMenu = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const redirectState = useSelector((state) => state.redirects.data);
+    const redirects = {
+        search: redirectState[NODE_ENV].xibit.search_url,
+        stores: redirectState[NODE_ENV].xibit.stores_url,
+        studio: redirectState[NODE_ENV].xibit.studio_url,
+        about: redirectState.common.xibit.about_url,
+        vitruveo: redirectState.common.vitruveo.base_url,
+    };
 
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const customizer = useSelector((state) => state.customizer);
     const isDark = customizer.activeMode === 'dark';
+
+    const projects = [
+        { title: 'SEARCH', url: redirects.search },
+        { title: 'FOLIO', url: redirects.stores },
+        { title: 'STUDIO', url: `${redirects.studio}/login` },
+        { title: 'STACKS', url: `${redirects.search}/stacks` },
+        // { title: 'STACKS', url: `${SEARCH_BASE_URL}/stacks` },
+        // { title: 'STREAMS', url: '' },
+        { title: 'ABOUT XIBIT', url: redirects.about, onlyMobile: true },
+        { title: 'ABOUT VITRUVEO', url: redirects.vitruveo, onlyMobile: true },
+    ];
 
     const toggleDrawer = (open: boolean) => () => {
         setDrawerOpen(open);
@@ -29,6 +38,7 @@ const AllProjectsMenu = () => {
         const actualUrl = window.location.href;
         if (actualUrl.includes('stores') || actualUrl.includes('xibit.live')) return projects[1];
         if (actualUrl.includes('studio')) return projects[2];
+        if (actualUrl.includes('stacks')) return projects[3];
 
         return projects[0];
     };

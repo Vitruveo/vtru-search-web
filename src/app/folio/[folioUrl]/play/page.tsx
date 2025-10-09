@@ -10,13 +10,15 @@ import { HorizontalLayout } from '@/app/components/Folio/Layout/Horizontal';
 import { VerticalLayout } from '@/app/components/Folio/Layout/Vertical';
 import { ArtInterface, DisplayOptions, WindowOrientation } from '@/app/components/Folio/types';
 import { buildAssetURL } from '@/app/components/Folio/utils';
+import { useSelector } from '@/store/hooks';
 // constants
-import { API_BASE_URL, SEARCH_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, NODE_ENV } from '@/constants/api';
 
 import './index.css';
 
 export default function Page() {
     const params = useParams();
+    const searchUrl = useSelector((state) => state.redirects.data[NODE_ENV].xibit.search_url);
 
     const [arts, setArts] = useState<ArtInterface[]>([]);
     const [time, setTime] = useState<number>(0);
@@ -230,7 +232,7 @@ export default function Page() {
         _id: '',
         username: '',
     };
-    const QRCodeValue = `${SEARCH_BASE_URL}/${currentArt.username}/${currentArt._id}`;
+    const QRCodeValue = `${searchUrl}/${currentArt.username}/${currentArt._id}`;
 
     const nextArtIndex = currentArtIndex === arts.length - 1 ? 0 : currentArtIndex + 1;
 

@@ -1,9 +1,10 @@
 import { useAccount } from 'wagmi';
 import { useSelector } from '@/store/hooks';
 import { formatDate } from '@/utils/assets';
-import { Box, Button, Card, Typography } from '@mui/material';
+import { Box, Button, Card, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { IconDownload } from '@tabler/icons-react';
+import ConnectWallet from '../../ConnectWallet';
 
 export interface ActivityProps {
     listing: {
@@ -23,12 +24,12 @@ export interface ActivityProps {
 
 export default function Activity({ listing, downloadMedia, mintAdress }: ActivityProps) {
     const theme = useTheme();
-    const isLogged = useSelector((state) => state.creator.token !== '');
-    const loggedWallets = useSelector((state) => state.creator.wallets);
+    const smUp = useMediaQuery(theme.breakpoints.down('sm'));
+    const loggedWallets = useSelector((state) => state.creator?.wallets || []);
     const isMintAddressInLoggedWallets = loggedWallets.some((item) => item.address === mintAdress);
 
     const { isConnected, address } = useAccount();
-    const isMintAddessEqualConnectedAddress = isConnected && address?.toLowerCase() === mintAdress?.toLowerCase();
+    const isMintAddressEqualConnectedAddress = isConnected && address?.toLowerCase() === mintAdress?.toLowerCase();
 
     const formattedDate = (date: string | Date) => {
         const parsedDate = new Date(date);
@@ -38,8 +39,16 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
         return formatDate({ day, month, year });
     };
 
-    const downloadable = (title: string) =>
-        isLogged && title === 'Licensed' && (isMintAddressInLoggedWallets || isMintAddessEqualConnectedAddress);
+    const downloadable = (title: string) => {
+        return title === 'Licensed' && (isMintAddressInLoggedWallets || isMintAddressEqualConnectedAddress);
+    };
+
+    const generateGridColumns = (title: string, date?: string | Date) => {
+        if (!date) return '1fr 1fr 1fr';
+        if (smUp) return '0.8fr 1fr 1fr 0fr';
+        if (downloadable(title)) return '1.4fr 1fr 1fr 0.9fr 0.9fr';
+        return '1.3fr 1fr 1fr 0.8fr';
+    };
 
     return (
         <div style={{ marginTop: '1px' }}>
@@ -64,9 +73,8 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
                             <Box
                                 key={index}
                                 display="grid"
-                                gridTemplateColumns={
-                                    downloadable(listing[0].title) ? '1fr 0.8fr 0.8fr 1fr' : '1fr 1fr 1fr'
-                                }
+                                alignItems={'center'}
+                                gridTemplateColumns={generateGridColumns(listing[0].title, listing[0].date)}
                             >
                                 {item.extra?.url ? (
                                     <a
@@ -85,6 +93,7 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
                                         variant="body1"
                                         fontWeight="bold"
                                         style={{ whiteSpace: 'nowrap', wordBreak: 'break-all' }}
+                                        paddingRight={smUp ? 3.5 : 0}
                                     >
                                         {item.title}
                                     </Typography>
@@ -111,32 +120,34 @@ export default function Activity({ listing, downloadMedia, mintAdress }: Activit
                                     </a>
                                 )}
                                 {downloadable(item.title) && (
-                                    <Button
-                                        variant="contained"
-                                        onClick={downloadMedia}
-                                        sx={{
-                                            backgroundColor: theme.palette.primary.main,
-                                            color: '#ffff',
-                                            '&:hover': {
-                                                backgroundColor: theme.palette.primary.main,
+                                    <Tooltip
+                                        title="Download Original"
+                                        arrow
+                                        componentsProps={{
+                                            tooltip: {
+                                                sx: { fontSize: '0.8rem' },
                                             },
-                                            borderRadius: 0,
-                                            height: 25,
                                         }}
                                     >
-                                        <IconDownload size={18} />
-                                        <Typography
-                                            fontSize={13}
-                                            style={{
-                                                textTransform: 'none',
-                                                marginLeft: 5,
-                                                whiteSpace: 'nowrap',
-                                                textOverflow: 'clip',
+                                        <Button
+                                            onClick={downloadMedia}
+                                            sx={{
+                                                backgroundColor: theme.palette.primary.main,
+                                                color: '#ffff',
+                                                '&:hover': {
+                                                    backgroundColor: theme.palette.primary.main,
+                                                },
+                                                borderRadius: 0,
+                                                height: 25,
+                                                width: 25,
                                             }}
                                         >
-                                            Download Original
-                                        </Typography>
-                                    </Button>
+                                            <IconDownload size={18} />
+                                        </Button>
+                                    </Tooltip>
+                                )}
+                                {item.title === 'Licensed' && (
+                                    <ConnectWallet showChain={false} size="small" showWallet={false} />
                                 )}
                             </Box>
                         ))

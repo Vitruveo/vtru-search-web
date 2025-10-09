@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Box, CircularProgress, Grid, Typography, useMediaQuery } from '@mui/material';
 import LazyLoad from 'react-lazyload';
 import '../Assets/assetsGrid/AssetScroll.css';
@@ -7,8 +8,6 @@ import { Asset } from '@/features/assets/types';
 import { LastAssets } from '@/features/store/types';
 import { Creators } from '../Assets/types';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
-import { EXPLORER_URL } from '@/constants/web3';
-import { SEARCH_BASE_URL } from '@/constants/api';
 import { User } from './components/User';
 import ActionButtons from './components/ActionButtons/ActionButtonList';
 import PanelMint from './components/PanelMint';
@@ -22,7 +21,8 @@ import { MediaRenderStore } from './components/MediaRenderStore';
 import { LastAssetsList } from './components/LastAssetsList';
 import { getThumbnailFromPath } from '@/utils/url-assets';
 import { getAssetWatermark } from '@/features/assets/requests';
-import axios from 'axios';
+import { useSelector } from '@/store/hooks';
+import { NODE_ENV } from '@/constants/api';
 
 interface StoreProps {
     data: {
@@ -56,6 +56,11 @@ const Store = ({ data }: StoreProps) => {
     const [open, setOpen] = useState(false);
     const [contents, setContents] = useState<string>('');
     const [modalLoading, setModalLoading] = useState<string | null>(null);
+    const redirectState = useSelector((state) => state.redirects.data);
+    const redirects = {
+        search: redirectState[NODE_ENV].xibit.search_url,
+        explorer: redirectState[NODE_ENV].vitruveo.explorer_url,
+    };
 
     const isMobile = useMediaQuery('(max-width: 900px)');
 
@@ -331,10 +336,10 @@ const Store = ({ data }: StoreProps) => {
                                         date: asset?.mintExplorer?.createdAt,
                                         link: {
                                             text: 'Transaction',
-                                            url: `${EXPLORER_URL}/tx/${asset?.mintExplorer?.transactionHash}`,
+                                            url: `${redirects.explorer}/tx/${asset?.mintExplorer?.transactionHash}`,
                                         },
                                         extra: {
-                                            url: `${SEARCH_BASE_URL}?portfolio_wallets=${asset?.mintExplorer?.address}`,
+                                            url: `${redirects.search}?portfolio_wallets=${asset?.mintExplorer?.address}`,
                                         },
                                     },
                                     {
@@ -342,10 +347,10 @@ const Store = ({ data }: StoreProps) => {
                                         date: asset.consignArtwork.listing,
                                         link: {
                                             text: asset?.vault?.vaultAddress
-                                                ? `${asset?.vault?.vaultAddress.slice(0, 6)}...${asset?.vault?.vaultAddress.slice(-6)}`
+                                                ? `${asset?.vault?.vaultAddress.slice(0, 4)}...${asset?.vault?.vaultAddress.slice(-4)}`
                                                 : '',
                                             url: asset?.vault?.vaultAddress
-                                                ? `${EXPLORER_URL}/address/${asset?.vault?.vaultAddress}`
+                                                ? `${redirects.explorer}/address/${asset?.vault?.vaultAddress}`
                                                 : '',
                                         },
                                     },

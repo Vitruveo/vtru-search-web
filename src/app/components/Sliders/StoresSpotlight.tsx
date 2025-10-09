@@ -7,7 +7,7 @@ import { MediaRenderer } from '../Assets/components/MediaRenderer';
 import { StoresSpotlight } from '@/features/stores/types';
 import { STORES_STORAGE_URL } from '@/constants/aws';
 import { IconInfoCircle } from '@tabler/icons-react';
-import { NODE_ENV, SEARCH_BASE_URL } from '@/constants/api';
+import { NODE_ENV } from '@/constants/api';
 import { NO_IMAGE_ASSET } from '@/constants/asset';
 
 interface Props {
@@ -16,6 +16,7 @@ interface Props {
 
 function StoresSpotlightSlider({ stores }: Props) {
     const theme = useTheme();
+    const searchUrl = useSelector((state) => state.redirects.data[NODE_ENV].xibit.search_url);
 
     const handleClickItem = (store: StoresSpotlight) => {
         if (NODE_ENV === 'production') {
@@ -23,7 +24,7 @@ function StoresSpotlightSlider({ stores }: Props) {
             return;
         }
 
-        const parts = SEARCH_BASE_URL.split('//');
+        const parts = searchUrl.split('//');
         window.open(`${parts[0]}//${store.url}.${parts[1]}`, '_blank');
     };
 

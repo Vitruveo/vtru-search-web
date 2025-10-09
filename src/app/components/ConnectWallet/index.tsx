@@ -16,15 +16,26 @@ const sizes = {
         width: 260,
         height: 60,
     },
+    small: {
+        fontSize: '0.9rem',
+        width: 110,
+        height: 25,
+    },
 };
 
 interface Props {
-    size?: 'regular' | 'large';
+    size?: 'regular' | 'large' | 'small';
     rounded?: boolean;
     showChain?: boolean;
+    showWallet?: boolean;
 }
 
-export default function ConnectWallet({ size = 'regular', rounded = false, showChain = true }: Props) {
+export default function ConnectWallet({
+    size = 'regular',
+    rounded = false,
+    showChain = true,
+    showWallet = true,
+}: Props) {
     const theme = useTheme();
 
     const buttonStyle = {
@@ -64,26 +75,28 @@ export default function ConnectWallet({ size = 'regular', rounded = false, showC
                             </Button>
                         ) : !connected ? (
                             <Button sx={buttonStyle} onClick={openConnectModal}>
-                                Connect Wallet
+                                Connect {showWallet ? 'Wallet' : ''}
                             </Button>
                         ) : (
-                            <Box display={'flex'} gap={2} alignItems={'center'}>
-                                <Box onClick={openChainModal}>
-                                    {showChain && chain?.hasIcon && chain?.iconUrl && (
-                                        <Image
-                                            src={chain.iconUrl}
-                                            alt={chain.name || 'Chain icon'}
-                                            width={40}
-                                            height={40}
-                                            layout={'fixed'}
-                                            style={{ cursor: 'pointer' }}
-                                        />
-                                    )}
-                                </Box>
+                            <>
+                                {showChain && chain?.hasIcon && chain?.iconUrl && (
+                                    <Box display={'flex'} gap={2} alignItems={'center'}>
+                                        <Box onClick={openChainModal}>
+                                            <Image
+                                                src={chain.iconUrl}
+                                                alt={chain.name || 'Chain icon'}
+                                                width={40}
+                                                height={40}
+                                                layout={'fixed'}
+                                                style={{ cursor: 'pointer' }}
+                                            />
+                                        </Box>
+                                    </Box>
+                                )}
                                 <Button sx={buttonStyle} onClick={handleDisconnect}>
                                     Disconnect
                                 </Button>
-                            </Box>
+                            </>
                         )}
                     </div>
                 );

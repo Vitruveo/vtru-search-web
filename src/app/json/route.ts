@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 
-import { API_BASE_URL, STORE_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, NODE_ENV } from '@/constants/api';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { ASSET_STORAGE_URL, GENERAL_STORAGE_URL } from '@/constants/aws';
 
 function parseQueryParams(searchParams: URLSearchParams) {
@@ -90,6 +91,12 @@ export async function GET(req: Request) {
             query: { 'assetMetadata.taxonomy.formData.nudity': { $in: ['no'] } },
         }),
     ]);
+
+    const fetchData = async () => {
+        const rowData = await axios.get(REDIRECTS_JSON);
+        return rowData.data[NODE_ENV].xibit.store_url;
+    };
+    const STORE_BASE_URL = await fetchData();
 
     const data = {
         recentlySold: recentlySold.data.data.map(multiplyPriceBy100),

@@ -1,13 +1,17 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
 
-import { API_BASE_URL, SLIDESHOW_BASE_URL } from '@/constants/api';
+import { API_BASE_URL, NODE_ENV } from '@/constants/api';
 import { GENERAL_STORAGE_URL } from '@/constants/aws';
 import { XMLBuilder } from 'fast-xml-parser';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 
 export async function GET() {
     try {
         const stacks = await axios.get(`${API_BASE_URL}/creators/public/stacks`);
+        const redirects = await axios.get(REDIRECTS_JSON);
+        const VITRUVEO_URL = redirects.data.common.vitruveo.base_url;
+        const SLIDESHOW_BASE_URL = redirects.data[NODE_ENV].xibit.slideshow_url;
 
         const data = {
             config: {
@@ -29,7 +33,7 @@ export async function GET() {
             rss: {
                 channel: {
                     title: 'VITRUVEO - Search',
-                    link: 'https://vitruveo.xyz/',
+                    link: VITRUVEO_URL,
                     description: 'VITRUVEO is a platform for creators to share their work with the world.',
                     language: 'en-US',
                 },

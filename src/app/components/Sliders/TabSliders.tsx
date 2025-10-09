@@ -6,7 +6,7 @@ import SpotlightSlider from './Spotlight';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { changeActiveSlider } from '@/features/customizer/slice';
 import { actions } from '@/features/assets/slice';
-import { IconEye } from '@tabler/icons-react';
+import { IconEye, IconX } from '@tabler/icons-react';
 import ArtistsSpotlight from './ArtistsSpotlight';
 import { useI18n } from '@/app/hooks/useI18n';
 
@@ -29,6 +29,7 @@ export default function TabSliders() {
     const showLastSold = lastSold.length >= spotlightMinLength && !hidden?.recentlySold;
 
     const [tabValue, setTabValue] = useState(activeSlider);
+    const [hideAlltabs, setHideAllTabs] = useState(false);
 
     useEffect(() => {
         const isLoading = spotlightLoading || lastSoldLoading || artistSpotlightLoading;
@@ -62,57 +63,76 @@ export default function TabSliders() {
     if (!showSpotlight && !showArtistSpotlight && !showLastSold) return null;
 
     return (
-        <Box
-            sx={{ width: lgUp && !isFilterHidden && isSidebarOpen ? 'calc(100vw - 350px)' : 'calc(100vw - 40px)' }}
-            minHeight={500}
-        >
-            <TabContext value={tabValue}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <TabList
-                        onChange={(_e, value) => {
-                            setTabValue(value);
-                            dispatch(changeActiveSlider(value));
-                        }}
-                        variant="scrollable"
-                        scrollButtons="auto"
-                    >
-                        {showSpotlight && (
-                            <Tab
-                                label={<Label label={language['search.tabSliders.artworkSpotlight'] as string} />}
-                                value="1"
+        <>
+            {!hideAlltabs && (
+                <Box
+                    sx={{
+                        width: lgUp && !isFilterHidden && isSidebarOpen ? 'calc(100vw - 350px)' : 'calc(100vw - 40px)',
+                    }}
+                    minHeight={388}
+                >
+                    <TabContext value={tabValue}>
+                        <Box
+                            display={'flex'}
+                            justifyContent={'space-between'}
+                            sx={{ borderBottom: 1, borderColor: 'divider' }}
+                        >
+                            <TabList
+                                onChange={(_e, value) => {
+                                    setTabValue(value);
+                                    dispatch(changeActiveSlider(value));
+                                }}
+                                variant="scrollable"
+                                scrollButtons="auto"
+                            >
+                                {showSpotlight && (
+                                    <Tab
+                                        label={
+                                            <Label label={language['search.tabSliders.artworkSpotlight'] as string} />
+                                        }
+                                        value="1"
+                                    />
+                                )}
+                                {showArtistSpotlight && (
+                                    <Tab
+                                        label={
+                                            <Label label={language['search.tabSliders.artistSpotlight'] as string} />
+                                        }
+                                        value="2"
+                                    />
+                                )}
+                                {showLastSold && (
+                                    <Tab
+                                        label={<Label label={language['search.tabSliders.recentlySold'] as string} />}
+                                        value="3"
+                                    />
+                                )}
+                            </TabList>
+                            <IconX
+                                style={{ marginTop: 12, marginRight: 10, cursor: 'pointer' }}
+                                color="#FF0066"
+                                onClick={() => setHideAllTabs((prev) => !prev)}
                             />
+                        </Box>
+                        {showSpotlight && (
+                            <TabPanel value="1">
+                                <SpotlightSlider />
+                            </TabPanel>
                         )}
                         {showArtistSpotlight && (
-                            <Tab
-                                label={<Label label={language['search.tabSliders.artistSpotlight'] as string} />}
-                                value="2"
-                            />
+                            <TabPanel value="2">
+                                <ArtistsSpotlight />
+                            </TabPanel>
                         )}
                         {showLastSold && (
-                            <Tab
-                                label={<Label label={language['search.tabSliders.recentlySold'] as string} />}
-                                value="3"
-                            />
+                            <TabPanel value="3">
+                                <RecentlySoldSlider />
+                            </TabPanel>
                         )}
-                    </TabList>
+                    </TabContext>
                 </Box>
-                {showSpotlight && (
-                    <TabPanel value="1">
-                        <SpotlightSlider />
-                    </TabPanel>
-                )}
-                {showArtistSpotlight && (
-                    <TabPanel value="2">
-                        <ArtistsSpotlight />
-                    </TabPanel>
-                )}
-                {showLastSold && (
-                    <TabPanel value="3">
-                        <RecentlySoldSlider />
-                    </TabPanel>
-                )}
-            </TabContext>
-        </Box>
+            )}
+        </>
     );
 }
 

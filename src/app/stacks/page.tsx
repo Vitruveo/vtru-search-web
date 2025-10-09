@@ -1,16 +1,19 @@
 'use client';
-import { SingleValue } from 'react-select';
-import StackList from '../components/Stacks/stacksGrid/StacksList';
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { SingleValue } from 'react-select';
+import { useTheme } from '@mui/material/styles';
+import { Box, Theme, useMediaQuery } from '@mui/material';
+import StackList from '../components/Stacks/stacksGrid/StacksList';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { actions } from '@/features/stacks';
-import { SEARCH_BASE_URL } from '@/constants/api';
+import { actions as actionSystemStatus } from '@/features/system-status';
+import { actions as actionRedirects } from '@/features/redirects';
+import { NODE_ENV } from '@/constants/api';
 import PageContainer from '../components/Container/PageContainer';
 import { useI18n } from '../hooks/useI18n';
 import StyleElements from '../components/Stacks/components/StyleElements';
-import { Box, Theme, useMediaQuery } from '@mui/material';
 import Header from '../components/Header';
-import { useTheme } from '@mui/material/styles';
+import BannerSystemStatus from '../components/Banner/systemStatusStacks';
 import { STORES_STORAGE_URL } from '@/constants/aws';
 
 const Stacks = () => {
@@ -19,10 +22,11 @@ const Stacks = () => {
     const theme = useTheme();
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
     const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
-    const logo = useSelector((state) => state.stores.currentDomain?.organization?.formats?.logo?.square?.path);
 
+    const logo = useSelector((state) => state.stores.currentDomain?.organization?.formats?.logo?.square?.path);
     const stacks = useSelector((state) => state.stacks.data);
     const hiddenElement = useSelector((state) => state.customizer.hiddenStack);
+    const searchUrl = useSelector((state) => state.redirects.data[NODE_ENV].xibit.search_url);
 
     const [selectValues, setSelectValues] = useState({
         search: '',
@@ -34,6 +38,8 @@ const Stacks = () => {
     useEffect(() => {
         dispatch(actions.loadStacks());
         dispatch(actions.loadStacksSpotlight());
+        dispatch(actionSystemStatus.loadSystemStatus());
+        dispatch(actionRedirects.loadRedirects());
     }, []);
 
     const optionsForSelectPage = useMemo(() => {
@@ -64,7 +70,7 @@ const Stacks = () => {
         setSelectValues((prev) => ({ ...prev, search: e!.target.value }));
     }, []);
 
-    const handleCurateStack = () => window.open(`${SEARCH_BASE_URL}?groupByCreator=no&assets`, '_blank');
+    const handleCurateStack = () => window.open(`${searchUrl}?groupByCreator=no&assets`, '_blank');
 
     const isInIframe = window.self !== window.top;
 
@@ -79,6 +85,7 @@ const Stacks = () => {
                         ]}
                     />
                 )}
+                <BannerSystemStatus />
                 <StackList
                     data={{ stacks, selectValues, optionsForSelectPage, hiddenElement }}
                     actions={{ onChangeSort, onChangePage, onChangeLimit, handleCurateStack, onChangeSearch }}

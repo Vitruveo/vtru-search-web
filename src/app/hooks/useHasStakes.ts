@@ -1,21 +1,23 @@
 import { JsonRpcProvider, Contract, Wallet } from 'ethers';
 
-import { WEB3_NETWORK_RPC_ADDRESS, WEB3_PRIVATE_KEY } from '@/constants/web3';
+import { WEB3_PRIVATE_KEY } from '@/constants/web3';
+import { NODE_ENV } from '@/constants/api';
 import schema from '../../services/web3/contracts.json';
-
-const provider = new JsonRpcProvider(WEB3_NETWORK_RPC_ADDRESS);
-const signer = new Wallet(WEB3_PRIVATE_KEY, provider);
-
-const getCreatorVaultByAddress = (vaultAddress: string) => new Contract(vaultAddress, schema.abi.CreatorVault, signer);
+import { useSelector } from '@/store/hooks';
 
 const mapper = new Map();
 
 export const useHasStakes = (vaultAddress: string | null) => {
+    const web3NetworkRpc = useSelector((state) => state.redirects.data[NODE_ENV].vitruveo.web3_network_rpc);
     if (!vaultAddress) return false;
 
     if (mapper.has(vaultAddress)) {
         return mapper.get(vaultAddress);
     }
+
+    const provider = new JsonRpcProvider(web3NetworkRpc);
+    const signer = new Wallet(WEB3_PRIVATE_KEY, provider);
+    const getCreatorVaultByAddress = (value: string) => new Contract(value, schema.abi.CreatorVault, signer);
 
     const creatorVault = getCreatorVaultByAddress(vaultAddress);
 

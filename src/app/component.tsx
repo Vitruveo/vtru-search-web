@@ -13,8 +13,11 @@ import AssetsList from './components/Assets/assetsGrid/AssetsList';
 import PageContainer from './components/Container/PageContainer';
 import AppCard from './components/Shared/AppCard';
 import Header from './components/Header';
+import BannerSystemStatus from './components/Banner/systemStatusSearch';
 import { actions, initialState } from '@/features/filters/slice';
 import { actions as actionsAssets } from '@/features/assets/slice';
+import { actions as actionsRedirects } from '@/features/redirects/slice';
+import { actions as actionsSystemStatus } from '@/features/system-status/slice';
 import { extractObjects } from '@/utils/extractObjects';
 import StyleElements from './components/Assets/components/StyleElements';
 import { STORES_STORAGE_URL } from '@/constants/aws';
@@ -60,6 +63,11 @@ const Search = () => {
     const sort_sold = searchParams.get('sort_sold');
     const sort_order = searchParams.get('sort_order');
     const creatorId = searchParams.get('creatorId');
+
+    useEffect(() => {
+        dispatch(actionsRedirects.loadRedirects());
+        dispatch(actionsSystemStatus.loadSystemStatus());
+    }, []);
 
     useEffect(() => {
         if (isValidSubdomain && subdomain) return;
@@ -201,6 +209,7 @@ const Search = () => {
                 <AppCard>
                     <AssetsSidebar />
                     <Box flexGrow={1}>
+                        <BannerSystemStatus />
                         <AssetsList isBlockLoader={!!isValidSubdomain && !!subdomain} />
                     </Box>
                 </AppCard>

@@ -64,10 +64,6 @@ const Filters = () => {
     const [taxonomyFilters, setTaxonomyFilters] = useState<number>();
     const [creatorsFilters, setCreatorsFilters] = useState<number>();
     const [isIncludeSold, setIsIncludeSold] = useState<boolean>(false);
-    const [checkedLicenseType, setCheckedLicenseType] = useState<{ nft: boolean; print: boolean }>({
-        nft: false,
-        print: false,
-    });
     const [hasBts, setHasBts] = useState<boolean>(false);
 
     const theme = useTheme();
@@ -79,7 +75,6 @@ const Filters = () => {
     const values = useSelector((state) => state.filters);
     const { tags, maxPrice, sort } = useSelector((state) => state.assets);
     const { wallets } = useSelector((state) => state.filters.portfolio);
-    const licensedChecked = useSelector((state) => state.filters.licenseChecked);
     const { artworks: storesFilters, organization } = useSelector((state) => state.stores.currentDomain || {});
     const path = organization?.formats.logo.horizontal?.path;
 
@@ -127,10 +122,6 @@ const Filters = () => {
                 values.taxonomy.objectType.includes('digitalart') && 'digitalart',
             ].filter(Boolean) as string[]
         );
-        setCheckedLicenseType({
-            nft: values.licenseChecked.nft.includes('yes'),
-            print: values.licenseChecked.print.includes('yes'),
-        });
     }, [values.context, values.taxonomy, values.creators, values.shortCuts, values.licenseChecked]);
 
     useEffect(() => {
@@ -256,16 +247,6 @@ const Filters = () => {
         }
     };
 
-    const handleChangeLicenseType = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { checked, value } = event.target;
-        setCheckedLicenseType({
-            ...checkedLicenseType,
-            [value]: checked,
-        });
-        generateQueryParam(`licenseChecked_${value}`, checked ? 'yes' : '');
-        dispatch(actions.changeLicenseChecked({ ...licensedChecked, [value]: checked ? ['yes'] : [''] }));
-    };
-
     const onCloseClick = () => {
         dispatch(actionsLayout.toggleSidebar());
     };
@@ -290,7 +271,7 @@ const Filters = () => {
                 p={1}
                 pb={2}
                 mt={1}
-                height="81vh"
+                height="92vh"
                 overflow="auto"
                 sx={{
                     '::-webkit-scrollbar-thumb': {
@@ -320,19 +301,7 @@ const Filters = () => {
 
                 <FormGroup sx={{ display: 'flex', flexDirection: 'column', marginLeft: '5.5%' }}>
                     <Typography variant="h4">Filters</Typography>
-                    <Box display={'flex'}>
-                        <FormControlLabel
-                            value="nft"
-                            control={<Checkbox checked={checkedLicenseType.nft} onChange={handleChangeLicenseType} />}
-                            label="Digital Assets"
-                        />
-                        <FormControlLabel
-                            value="print"
-                            control={<Checkbox checked={checkedLicenseType.print} onChange={handleChangeLicenseType} />}
-                            label="Printed Art"
-                        />
-                    </Box>
-                    <Divider sx={{ width: '90%' }} />
+
                     <Box display="flex">
                         <FormControlLabel
                             control={<Checkbox onChange={handleChangeNudity} checked={isHideNuditychecked} />}

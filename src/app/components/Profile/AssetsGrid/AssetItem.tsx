@@ -1,14 +1,15 @@
+import React, { useState } from 'react';
 import { ShowAnimation } from '@/animations';
 import { Asset } from '@/features/assets/types';
 import { Box, CardContent, Grid, Typography } from '@mui/material';
-import React from 'react';
 import BlankCard from '../../Shared/BlankCard';
 import { MediaRenderer } from '../../Assets/components/MediaRenderer';
 import { useTheme } from '@mui/material/styles';
 import { ASSET_STORAGE_URL } from '@/constants/aws';
 import '../../Assets/assetsGrid/AssetScroll.css';
-import { SEARCH_BASE_URL } from '@/constants/api';
+import { NODE_ENV } from '@/constants/api';
 import { NO_IMAGE_ASSET } from '@/constants/asset';
+import { useSelector } from '@/store/hooks';
 
 interface Props {
     asset: Asset;
@@ -17,9 +18,10 @@ interface Props {
 
 const AssetItemMain = ({ asset, username }: Props) => {
     const theme = useTheme();
+    const searchUrl = useSelector((state) => state.redirects.data[NODE_ENV].xibit.search_url);
 
     const handleClick = () => {
-        window.open(`${SEARCH_BASE_URL}/${username}/${asset._id}`, '_blank');
+        window.open(`${searchUrl}/${username}/${asset._id}`, '_blank');
     };
 
     return (

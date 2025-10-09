@@ -1,6 +1,8 @@
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import Image from 'next/image';
+import cookie from 'cookiejs';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useToggle } from '@/app/hooks/useToggle';
-import { SEARCH_BASE_URL, STORE_BASE_URL } from '@/constants/api';
 import { actions } from '@/features/assets';
 import { Asset } from '@/features/assets/types';
 import { actions as actionsFilters } from '@/features/filters/slice';
@@ -9,8 +11,6 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { getAssetPrice, isAssetAvailableLicenses } from '@/utils/assets';
 import generateQueryParam from '@/utils/generateQueryParam';
 import { hasAssetsInURL } from '@/utils/url-assets';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import cookie from 'cookiejs';
 import {
     Badge,
     Box,
@@ -20,14 +20,15 @@ import {
     Pagination,
     Skeleton,
     Switch,
+    Tab,
+    Tabs,
     Typography,
     useMediaQuery,
 } from '@mui/material';
 import { Theme, useTheme } from '@mui/material/styles';
 import { IconArrowBarToLeft, IconArrowBarToRight, IconCopy, IconFilter } from '@tabler/icons-react';
-import Image from 'next/image';
 import emptyCart from 'public/images/products/empty-shopping-cart.svg';
-import Select, { SingleValue } from 'react-select';
+import Select, { SingleValue, MultiValue } from 'react-select';
 import TabSliders from '../../Sliders/TabSliders';
 import { DrawerAsset } from '../components/DrawerAsset';
 import DrawerStack from '../components/DrawerStack/DrawerStack';
@@ -37,31 +38,57 @@ import { AssetItem } from './AssetItem';
 import './AssetScroll.css';
 import Banner from '../../Banner';
 import CreatorSection from '../components/CreatorSection';
+import { NODE_ENV } from '@/constants/api';
 
 interface Props {
     isBlockLoader: boolean;
 }
 
 const AssetsList = ({ isBlockLoader }: Props) => {
-    const { language } = useI18n();
-    const optionsForSelectSort = [
-        { value: 'latest', label: language['search.select.sort.option.latest'] as string },
-        { value: 'priceHighToLow', label: language['search.select.sort.option.priceHighToLow'] as string },
-        { value: 'priceLowToHigh', label: language['search.select.sort.option.priceLowToHigh'] as string },
-        { value: 'creatorAZ', label: language['search.select.sort.option.creatorAZ'] as string },
-        { value: 'creatorZA', label: language['search.select.sort.option.creatorZA'] as string },
-        { value: 'consignNewToOld', label: language['search.select.sort.option.consignDateNewToOld'] as string },
-        { value: 'consignOldToNew', label: language['search.select.sort.option.consignDateOldToNew'] as string },
-    ];
-
-    const optionsForSelectGrouped = [
-        { value: 'no', label: language['search.select.grouped.option.ungrouped'] as string },
-        { value: 'all', label: language['search.select.grouped.option.grouped'] as string },
-        { value: 'noSales', label: language['search.select.grouped.option.groupedNoSales'] as string },
-    ];
-
     const dispatch = useDispatch();
     const theme = useTheme();
+    const { language } = useI18n();
+    const redirectsState = useSelector((state) => state.redirects.data);
+    const redirects = {
+        store: redirectsState[NODE_ENV].xibit.store_url,
+        search: redirectsState[NODE_ENV].xibit.search_url,
+    };
+
+    const optionsForSelectSort = [
+        {
+            label: 'Sort',
+            options: [
+                { value: 'latest', label: language['search.select.sort.option.latest'] as string },
+                { value: 'priceHighToLow', label: language['search.select.sort.option.priceHighToLow'] as string },
+                { value: 'priceLowToHigh', label: language['search.select.sort.option.priceLowToHigh'] as string },
+                { value: 'creatorAZ', label: language['search.select.sort.option.creatorAZ'] as string },
+                { value: 'creatorZA', label: language['search.select.sort.option.creatorZA'] as string },
+                {
+                    value: 'consignNewToOld',
+                    label: language['search.select.sort.option.consignDateNewToOld'] as string,
+                },
+                {
+                    value: 'consignOldToNew',
+                    label: language['search.select.sort.option.consignDateOldToNew'] as string,
+                },
+            ],
+        },
+        {
+            label: 'Artists',
+            options: [
+                { value: 'no', label: language['search.select.grouped.option.ungrouped'] as string },
+                { value: 'all', label: language['search.select.grouped.option.grouped'] as string },
+                { value: 'noSales', label: language['search.select.grouped.option.groupedNoSales'] as string },
+            ],
+        },
+    ];
+    const valueToGroupAux: Record<string, string> = {};
+    optionsForSelectSort.forEach((group) => {
+        group.options.forEach((option) => {
+            valueToGroupAux[option.value] = group.label;
+        });
+    });
+
     const params = new URLSearchParams(window.location.search);
 
     const grid = params.get('grid');
@@ -74,8 +101,12 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
     const [assetView, setAssetView] = useState<any>();
     const [totalFiltersApplied, setTotalFiltersApplied] = useState<number>();
-    const [sortOrder, setSortOrder] = useState<string>('latest');
-    const [groupByCreator, setGroupByCreator] = useState<string>('no');
+    const [selectedOptions, setSelectedOptions] = useState<MultiValue<{ value: string; label: string }>>([]);
+    const [checkedLicenseType, setCheckedLicenseType] = useState<{ nft: boolean; print: boolean }>({
+        nft: false,
+        print: false,
+    });
+    const [selectedTab, setSelectedTab] = useState<string>('nft');
     const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
@@ -162,10 +193,6 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     }, [grid, video, slideshow]);
 
     useEffect(() => {
-        if (grid || video || slideshow) setGroupByCreator('no');
-    }, []);
-
-    useEffect(() => {
         handleScrollToTop();
     }, [currentPage]);
 
@@ -175,18 +202,6 @@ const AssetsList = ({ isBlockLoader }: Props) => {
 
         if (currentPage > totalPage) dispatch(actions.setCurrentPage(totalPage));
     }, [totalPage]);
-
-    useEffect(() => {
-        if (grid || video || slideshow) return;
-
-        setSortOrder(sort.order);
-    }, [sort]);
-
-    useEffect(() => {
-        if (grid || video || slideshow) return;
-
-        setGroupByCreator(hasIncludesGroup.active);
-    }, [hasIncludesGroup.active]);
 
     const openAssetDrawer = (asset: Asset) => {
         setAssetView(asset);
@@ -240,19 +255,54 @@ const AssetsList = ({ isBlockLoader }: Props) => {
         dispatch(actionsFilters.reset({ maxPrice }));
     };
 
-    const handleChangeSelectSortOrder = (
-        e: SingleValue<{
+    const handleChangeSelect = (
+        e: MultiValue<{
             value: string;
             label: string;
         }>
     ) => {
-        setSortOrder(e?.value || '');
+        const groupMap = new Map<string, { value: string; label: string }>();
+        e.forEach((selected) => {
+            const groupLabel = valueToGroupAux[selected.value];
+            groupMap.set(groupLabel, selected);
+        });
+
+        const newSelected = Array.from(groupMap.values());
+        setSelectedOptions(newSelected);
+
+        groupMap.forEach((selected, groupLabel) => {
+            if (groupLabel === optionsForSelectSort[0].label) {
+                handleChangeSelectSortOrder(selected);
+            }
+            if (groupLabel === optionsForSelectSort[1].label) {
+                handleChangeSelectGroupByCreator(selected);
+            }
+        });
+
+        if (newSelected.length === 0) {
+            handleChangeSelectSortOrder({
+                value: 'latest',
+                label: language['search.select.sort.option.latest'] as string,
+            });
+            handleChangeSelectGroupByCreator({
+                value: 'all',
+                label: language['search.select.grouped.option.grouped'] as string,
+            });
+        }
+    };
+
+    const handleChangeSelectSortOrder = (
+        e?: SingleValue<{
+            value: string;
+            label: string;
+        }>
+    ) => {
         generateQueryParam('sort_order', e?.value || '');
         dispatch(actions.setSort({ order: e?.value || '', sold: sort.sold === 'yes' ? 'yes' : 'no' }));
     };
 
     const handleChangeSelectGroupByCreator = (
-        e: SingleValue<{
+        e?: SingleValue<{
             value: string;
             label: string;
         }>
@@ -260,7 +310,6 @@ const AssetsList = ({ isBlockLoader }: Props) => {
         const value = e?.value || '';
 
         dispatch(actionsFilters.clearTabNavigation());
-        setGroupByCreator(value);
         generateQueryParam('groupByCreator', value);
 
         if (e?.value !== 'no') {
@@ -319,167 +368,73 @@ const AssetsList = ({ isBlockLoader }: Props) => {
     const isInIframe = window.self !== window.top;
     const hasIncludesGroupActive = hasIncludesGroup.active === 'all' || hasIncludesGroup.active === 'noSales';
 
+    const handleChangeLicenseType = (_event: React.SyntheticEvent, newValue: string) => {
+        const checked = !checkedLicenseType[newValue as 'nft' | 'print'];
+        setSelectedTab(newValue);
+        setCheckedLicenseType({
+            nft: newValue === 'nft',
+            print: newValue === 'print',
+        });
+
+        generateQueryParam('licenseChecked_nft', '');
+        generateQueryParam('licenseChecked_print', '');
+        generateQueryParam(`licenseChecked_${newValue}`, checked ? 'yes' : '');
+
+        dispatch(
+            actionsFilters.changeLicenseChecked({
+                nft: newValue === 'nft' ? ['yes'] : [''],
+                print: newValue === 'print' ? ['yes'] : [''],
+            })
+        );
+    };
+
     return (
         <Box>
-            {!isHiddenFilter && (
-                <Box>
-                    <IconButton
-                        size="small"
-                        sx={{ padding: 0, color: theme.palette.grey[300], paddingLeft: '18.5px' }}
-                        aria-label="menu"
-                        onClick={onMenuClick}
-                    >
-                        {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
-                    </IconButton>
-                </Box>
-            )}
+            <Box display={'flex'} alignItems={'center'}>
+                {!isHiddenFilter && (
+                    <Box>
+                        <IconButton
+                            size="small"
+                            sx={{ padding: 0, color: theme.palette.grey[300], paddingLeft: '18.5px', paddingTop: 0.5 }}
+                            aria-label="menu"
+                            onClick={onMenuClick}
+                        >
+                            {isSidebarOpen ? <IconArrowBarToLeft /> : <IconArrowBarToRight />}
+                        </IconButton>
+                    </Box>
+                )}
+
+                <Tabs
+                    value={selectedTab}
+                    onChange={handleChangeLicenseType}
+                    variant="fullWidth"
+                    sx={{ width: '94%', marginInline: 'auto' }}
+                    orientation={smUp ? 'horizontal' : 'vertical'}
+                >
+                    <Tab label="Digital Collectible Art" value="nft" sx={{ fontSize: '1.5rem' }} />
+                    <Tab label="Print-on-Demand Art" value="print" sx={{ fontSize: '1.5rem' }} />
+                </Tabs>
+            </Box>
 
             <DrawerAsset assetView={assetView} drawerOpen={assetDrawer.isActive} onClose={onAssetDrawerClose} />
 
             <DrawerStack drawerStackOpen={drawerStack.isActive} onClose={drawerStack.deactivate} />
 
-            {!isHidden?.order && (
-                <Box
-                    display={'flex'}
-                    flexDirection={smUp ? 'row' : 'column'}
-                    alignItems={smUp ? 'center' : 'flex-end'}
-                    justifyContent={'space-between'}
-                    mb={3}
-                    mt={2}
-                    paddingInline={3}
-                >
-                    {!isBlockLoader && (
-                        <CreatorSection
-                            hasCurated={hasCurated}
-                            creatorId={creatorId}
-                            returnToPageOne={returnToPageOne}
-                        />
-                    )}
-                    <Box
-                        display={'flex'}
-                        alignItems={smUp ? 'center' : 'flex-end'}
-                        flexDirection={!smUp ? 'column-reverse' : 'row'}
-                        gap={smUp ? 'unset' : 2}
-                    >
-                        {curateStack.isActive && (
-                            <Box display="flex" alignItems="center" gap={1}>
-                                <Button variant="contained" onClick={handleUnselectAll}>
-                                    {language['search.assetList.curateStack.deselectAll'] as string}
-                                </Button>
-                                <Button variant="contained" onClick={handleSelectAll}>
-                                    {language['search.assetList.curateStack.selectAll'] as string}
-                                </Button>
-                                <Box sx={{ cursor: 'pointer' }} onClick={drawerStack.activate}>
-                                    {lgUp && (
-                                        <Box display="flex" alignItems="center" gap={2}>
-                                            <Button variant="contained" fullWidth>
-                                                {curateStacks.length}{' '}
-                                                {language['search.assetList.curateStack.selected'] as string}
-                                            </Button>
-                                        </Box>
-                                    )}
-                                    {!lgUp && (
-                                        <Badge
-                                            badgeContent={curateStacks.length}
-                                            color="primary"
-                                            style={{ marginLeft: 2 }}
-                                        >
-                                            <IconCopy width={20} color={iconColor} />
-                                        </Badge>
-                                    )}
-                                </Box>
-                            </Box>
-                        )}
-
-                        <Box display="flex" alignItems="center">
-                            {!lgUp && (
-                                <IconButton
-                                    sx={{ marginLeft: 0, paddingLeft: 0 }}
-                                    size="small"
-                                    aria-label="menu"
-                                    onClick={onMenuClick}
-                                >
-                                    <IconFilter />
-                                </IconButton>
-                            )}
-                            {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
-                            {!isBlockLoader && (
-                                <>
-                                    <Switch onChange={handleChangeCurateStack} checked={curateStack.isActive} />
-                                    <Box display={'flex'} gap={3}>
-                                        <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
-                                            {language['search.assetList.curateStack'] as string}
-                                        </Typography>
-                                        <Typography
-                                            variant={lgUp ? 'h5' : 'inherit'}
-                                            noWrap
-                                            color={theme.palette.primary.main}
-                                            sx={{ cursor: 'pointer' }}
-                                            onClick={() => {
-                                                window.open(`${SEARCH_BASE_URL}/stacks`, '_blank');
-                                            }}
-                                        >
-                                            View Stacks
-                                        </Typography>
-                                    </Box>
-                                </>
-                            )}
-                        </Box>
-                    </Box>
-                </Box>
-            )}
-
-            <Grid
-                container
-                spacing={3}
-                padding={3}
-                pt={2}
-                sx={{
-                    overflow: 'auto',
-                    maxHeight:
-                        isHidden?.order && isHidden?.header
-                            ? '105vh'
-                            : isHidden?.order || isHidden?.header
-                              ? '95vh'
-                              : '85vh',
-                    justifyContent: 'flex-end',
-                }}
+            <Box
+                display={'flex'}
+                flexDirection={smUp ? 'row' : 'column'}
+                alignItems={'center'}
+                justifyContent={'space-between'}
+                mt={2.8}
+                mb={2}
             >
-                {isBlockLoader && (
-                    <Grid item xs={12}>
-                        <Banner
-                            data={{
-                                path: stores?.organization?.formats?.banner?.path,
-                                description: stores?.organization?.description,
-                                name: stores?.organization?.name,
-                            }}
-                        />
-                    </Grid>
-                )}
-                <Grid
-                    item
-                    xs={12}
-                    style={{
-                        paddingTop: 0,
-                    }}
-                >
-                    {(currentPage === 1 || currentPage === 0) &&
-                        !grid &&
-                        !video &&
-                        !slideshow &&
-                        !creatorId &&
-                        !portfolioWallets &&
-                        tabNavigation.assets?.length <= 0 &&
-                        tabNavigation.artists?.length <= 0 && <TabSliders />}
-                </Grid>
-
                 <Grid item xs={12} paddingInline={3}>
                     {!isHidden?.pageNavigation && (
                         <Box
                             display={'flex'}
-                            gap={1}
-                            flexDirection={lgUp ? 'row' : 'column'}
                             justifyContent={'space-between'}
+                            gap={4}
+                            flexDirection={lgUp ? 'row' : 'column'}
                             flexWrap={'wrap'}
                         >
                             {!isHidden?.order ? (
@@ -492,15 +447,20 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                 >
                                     <Box maxWidth={350} display="flex" flexDirection="row" alignItems="center" gap={1}>
                                         <Typography variant="h5">{language['search.order.sort'] as string}:</Typography>
-                                        <Select
-                                            placeholder="Sort"
+                                        <Select<{ label: string; value: string }, true>
+                                            isMulti
+                                            controlShouldRenderValue
                                             options={optionsForSelectSort}
-                                            value={optionsForSelectSort.find((option) => option.value === sortOrder)}
-                                            onChange={(e) => handleChangeSelectSortOrder(e)}
+                                            onChange={handleChangeSelect}
+                                            hideSelectedOptions={false}
+                                            value={selectedOptions}
+                                            isSearchable={false}
                                             styles={{
                                                 control: (base, state) => ({
                                                     ...base,
-                                                    width: '230px',
+                                                    minWidth: '240px',
+                                                    maxHeight: '200px',
+                                                    overflow: 'auto',
                                                     borderColor: state.isFocused
                                                         ? theme.palette.primary.main
                                                         : theme.palette.grey[200],
@@ -514,78 +474,46 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                                     color: theme.palette.text.primary,
                                                     backgroundColor: theme.palette.background.paper,
                                                 }),
-                                                menuList: (base) => ({
-                                                    ...base,
-                                                    '::-webkit-scrollbar-thumb': {
-                                                        backgroundColor: theme.palette.primary.main,
-                                                        borderRadius: '4px',
-                                                    },
-                                                }),
-                                                singleValue: (base) => ({
-                                                    ...base,
-                                                    color: theme.palette.text.primary,
-                                                }),
+                                                multiValue: (base, { data }) => {
+                                                    const artistsValues = optionsForSelectSort[1].options.map(
+                                                        (option) => option.value
+                                                    );
+                                                    if (artistsValues.includes(data?.value || '')) {
+                                                        return {
+                                                            ...base,
+                                                            display: 'none',
+                                                        };
+                                                    }
+                                                    return { ...base, backgroundColor: theme.palette.action.selected };
+                                                },
+                                                multiValueLabel: (base, { data }) => {
+                                                    const artistsValues = optionsForSelectSort[1].options.map(
+                                                        (option) => option.value
+                                                    );
+                                                    if (artistsValues.includes(data?.value || '')) {
+                                                        return {
+                                                            ...base,
+                                                            display: 'none',
+                                                        };
+                                                    }
+                                                    return {
+                                                        ...base,
+                                                        color: theme.palette.text.primary,
+                                                    };
+                                                },
                                                 option: (base, state) => ({
                                                     ...base,
                                                     color: theme.palette.text.primary,
-                                                    backgroundColor: state.isFocused
-                                                        ? theme.palette.action.hover
-                                                        : 'transparent',
-                                                    '&:hover': { backgroundColor: theme.palette.action.hover },
-                                                }),
-                                                input: (base) => ({
-                                                    ...base,
-                                                    color: theme.palette.text.primary,
-                                                }),
-                                            }}
-                                        />
-                                    </Box>
-                                    <Box display="flex" flexDirection="row" maxWidth={350} alignItems="center" gap={1}>
-                                        <Typography variant="h5">
-                                            {language['search.order.artists'] as string}:
-                                        </Typography>
-                                        <Select
-                                            placeholder="Artists"
-                                            options={optionsForSelectGrouped}
-                                            value={optionsForSelectGrouped.find(
-                                                (option) => option.value === groupByCreator
-                                            )}
-                                            onChange={(e) => handleChangeSelectGroupByCreator(e)}
-                                            styles={{
-                                                control: (base, state) => ({
-                                                    ...base,
-                                                    width: '180px',
-                                                    borderColor: state.isFocused
+                                                    backgroundColor: state.isSelected
                                                         ? theme.palette.primary.main
-                                                        : theme.palette.grey[200],
-                                                    backgroundColor: theme.palette.background.paper,
-                                                    boxShadow: theme.palette.primary.main,
-                                                    '&:hover': { borderColor: theme.palette.primary.main },
-                                                }),
-                                                menu: (base) => ({
-                                                    ...base,
-                                                    zIndex: 1000,
-                                                    color: theme.palette.text.primary,
-                                                    backgroundColor: theme.palette.background.paper,
-                                                }),
-                                                menuList: (base) => ({
-                                                    ...base,
-                                                    '::-webkit-scrollbar-thumb': {
-                                                        backgroundColor: theme.palette.primary.main,
-                                                        borderRadius: '4px',
+                                                        : state.isFocused
+                                                          ? theme.palette.action.hover
+                                                          : 'transparent',
+                                                    '&:hover': {
+                                                        backgroundColor: state.isSelected
+                                                            ? theme.palette.primary.main
+                                                            : theme.palette.action.hover,
                                                     },
-                                                }),
-                                                singleValue: (base) => ({
-                                                    ...base,
-                                                    color: theme.palette.text.primary,
-                                                }),
-                                                option: (base, state) => ({
-                                                    ...base,
-                                                    color: theme.palette.text.primary,
-                                                    backgroundColor: state.isFocused
-                                                        ? theme.palette.action.hover
-                                                        : 'transparent',
-                                                    '&:hover': { backgroundColor: theme.palette.action.hover },
                                                 }),
                                                 input: (base) => ({
                                                     ...base,
@@ -616,6 +544,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                         { value: 150, label: 150 },
                                         { value: 200, label: 200 },
                                     ]}
+                                    isSearchable={false}
                                     value={{ value: limit, label: limit }}
                                     onChange={(e) => dispatch(actions.setLimit(e?.value || 25))}
                                     styles={{
@@ -665,6 +594,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                     options={optionsForSelect}
                                     value={currentPage > 1 ? { value: currentPage, label: currentPage } : null}
                                     onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
+                                    isSearchable={false}
                                     styles={{
                                         control: (base, state) => ({
                                             ...base,
@@ -712,6 +642,136 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     )}
                 </Grid>
 
+                {!isHidden?.order && (
+                    <Box
+                        display={'flex'}
+                        gap={4}
+                        flexDirection={smUp ? 'row' : 'column'}
+                        alignItems={smUp ? 'center' : 'flex-end'}
+                        justifyContent={'space-between'}
+                        mb={3}
+                        mt={2}
+                        paddingInline={3}
+                    >
+                        {!isBlockLoader && (
+                            <CreatorSection
+                                hasCurated={hasCurated}
+                                creatorId={creatorId}
+                                returnToPageOne={returnToPageOne}
+                            />
+                        )}
+                        <Box
+                            display={'flex'}
+                            flexDirection={!smUp ? 'column-reverse' : 'row'}
+                            gap={smUp ? 'unset' : 2}
+                            mt={1}
+                        >
+                            {curateStack.isActive && (
+                                <Box display="flex" gap={1}>
+                                    <Button
+                                        variant="outlined"
+                                        onClick={handleUnselectAll}
+                                        sx={{ whiteSpace: 'nowrap' }}
+                                    >
+                                        {language['search.assetList.curateStack.deselectAll'] as string}
+                                    </Button>
+                                    <Button variant="outlined" onClick={handleSelectAll} sx={{ whiteSpace: 'nowrap' }}>
+                                        {language['search.assetList.curateStack.selectAll'] as string}
+                                    </Button>
+                                    <Box sx={{ cursor: 'pointer' }} onClick={drawerStack.activate}>
+                                        {lgUp && (
+                                            <Box>
+                                                <Button variant="contained" fullWidth sx={{ whiteSpace: 'nowrap' }}>
+                                                    <span>{curateStacks.length}</span>
+                                                    <span style={{ marginLeft: 8 }}>
+                                                        {language['search.assetList.curateStack.selected'] as string}
+                                                    </span>
+                                                </Button>
+                                            </Box>
+                                        )}
+                                        {!lgUp && (
+                                            <Badge
+                                                badgeContent={curateStacks.length}
+                                                color="primary"
+                                                style={{ marginLeft: 2 }}
+                                            >
+                                                <IconCopy width={20} color={iconColor} />
+                                            </Badge>
+                                        )}
+                                    </Box>
+                                </Box>
+                            )}
+
+                            <Box display="flex" alignItems="center">
+                                {!lgUp && (
+                                    <IconButton
+                                        sx={{ marginLeft: 0, paddingLeft: 0 }}
+                                        size="small"
+                                        aria-label="menu"
+                                        onClick={onMenuClick}
+                                    >
+                                        <IconFilter />
+                                    </IconButton>
+                                )}
+                                {!lgUp && <NumberOfFilters value={totalFiltersApplied} onClick={openSideBar} />}
+                                {!isBlockLoader && (
+                                    <>
+                                        <Switch onChange={handleChangeCurateStack} checked={curateStack.isActive} />
+                                        <Typography variant={lgUp ? 'h5' : 'inherit'} noWrap>
+                                            {language['search.assetList.curateStack'] as string}
+                                        </Typography>
+                                    </>
+                                )}
+                            </Box>
+                        </Box>
+                    </Box>
+                )}
+            </Box>
+
+            <Grid
+                container
+                spacing={3}
+                padding={3}
+                pt={2}
+                sx={{
+                    overflow: 'auto',
+                    maxHeight:
+                        isHidden?.order && isHidden?.header
+                            ? '105vh'
+                            : isHidden?.order || isHidden?.header
+                              ? '95vh'
+                              : '85vh',
+                    justifyContent: 'flex-end',
+                }}
+            >
+                {isBlockLoader && (
+                    <Grid item xs={12}>
+                        <Banner
+                            data={{
+                                path: stores?.organization?.formats?.banner?.path,
+                                description: stores?.organization?.description,
+                                name: stores?.organization?.name,
+                            }}
+                        />
+                    </Grid>
+                )}
+                <Grid
+                    item
+                    xs={12}
+                    style={{
+                        paddingTop: 0,
+                    }}
+                >
+                    {(currentPage === 1 || currentPage === 0) &&
+                        !grid &&
+                        !video &&
+                        !slideshow &&
+                        !creatorId &&
+                        !portfolioWallets &&
+                        tabNavigation.assets?.length <= 0 &&
+                        tabNavigation.artists?.length <= 0 && <TabSliders />}
+                </Grid>
+
                 {isBlockLoader && (
                     <Box display={'flex'} width={'100%'} justifyContent={'start'} paddingInline={3} paddingBlock={2}>
                         <CreatorSection
@@ -722,18 +782,8 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     </Box>
                 )}
 
-                {!isBlockLoader && <Grid item xs={12} mr={4} mb={4}></Grid>}
-
                 {!isHidden?.assets && (
-                    <Grid
-                        container
-                        rowGap={hasIncludesGroupActive ? 2 : 2.85}
-                        columnGap={hasIncludesGroupActive ? 6 : 3}
-                        overflow={'hidden'}
-                        display={'flex'}
-                        justifyContent={'center'}
-                        margin={'0 1.5%'}
-                    >
+                    <Grid container overflow={'hidden'} display={'flex'} justifyContent={'center'} margin={'0.5% 1.5%'}>
                         {isLoading ? (
                             <div
                                 style={{
@@ -767,7 +817,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                     gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
                                     gap: hasIncludesGroupActive ? '90px' : 30,
                                     paddingTop: hasIncludesGroupActive ? '24px' : '0',
-                                    paddingBottom: 40,
+                                    paddingBottom: '40px',
                                 }}
                             >
                                 {activeAssets.map((asset) => (
@@ -784,7 +834,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                         handleClickImage={() => {
                                             if (isInIframe) {
                                                 window.open(
-                                                    `${STORE_BASE_URL}/${asset.creator?.username}/${asset._id}`
+                                                    `${redirects.store}/${asset.creator?.username}/${asset._id}`
                                                 );
 
                                                 return;
@@ -857,7 +907,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                             handleClickImage={() => {
                                                 if (isInIframe) {
                                                     window.open(
-                                                        `${STORE_BASE_URL}/${asset.creator?.username}/${asset._id}`
+                                                        `${redirects.store}/${asset.creator?.username}/${asset._id}`
                                                     );
 
                                                     return;
@@ -959,7 +1009,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                             justifyContent="flex-end"
                             width="100%"
                             mr={4}
-                            mb={lgUp ? 4 : 12}
+                            mb={smUp ? 16 : 21}
                         >
                             <Button
                                 variant="contained"

@@ -1,16 +1,24 @@
 import { useEffect, useState } from 'react';
-import { Contract } from 'ethers';
+import { Contract, Wallet } from 'ethers';
 
 import schema from '../../services/web3/contracts.json';
 import { getContractAddress, signer } from '@/services/web3';
 import { BigNumber } from '@ethersproject/bignumber';
 
-const licenseRegistry = new Contract(getContractAddress('LicenseRegistry'), schema.abi.LicenseRegistry, signer);
-
 export const useAssetLicenses = (assetKey: string | null) => {
+    const [signerInstance, setSignerInstance] = useState<Wallet>();
     const [licenses, setLicenses] = useState<{ available: boolean; credits: number } | null>(null);
+    const licenseRegistry = new Contract(
+        getContractAddress('LicenseRegistry'),
+        schema.abi.LicenseRegistry,
+        signerInstance
+    );
 
     useEffect(() => {
+        const fetchSigner = async () => {
+            const wallet = await signer();
+            setSignerInstance(wallet);
+        };
         if (assetKey) {
             licenseRegistry
                 .getAvailableLicense(assetKey, 1, 1)
@@ -37,7 +45,8 @@ export const useAssetLicenses = (assetKey: string | null) => {
                     });
                 });
         }
-    }, [assetKey]);
+        fetchSigner();
+    }, [assetKey, signerInstance]);
 
     return licenses;
 };
