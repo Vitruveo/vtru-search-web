@@ -148,7 +148,7 @@ const BuyVUSDModal = ({ isOpen, onClose, data, actions }: Props) => {
                     </Typography>
                     <Box display={'flex'} alignItems={'center'}>
                         <ConnectWallet size={'large'} rounded />
-                        <IconButton aria-label="close" onClick={onClose} sx={{ color: 'white' }}>
+                        <IconButton onClick={onClose} sx={{ color: 'white' }}>
                             <IconX size={smUp ? '4vh' : '3vh'} />
                         </IconButton>
                     </Box>

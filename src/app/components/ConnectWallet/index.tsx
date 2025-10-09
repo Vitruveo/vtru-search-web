@@ -78,7 +78,7 @@ export default function ConnectWallet({
                                 Connect {showWallet ? 'Wallet' : ''}
                             </Button>
                         ) : (
-                            <>
+                            <Box display={'flex'} gap={2}>
                                 {showChain && chain?.hasIcon && chain?.iconUrl && (
                                     <Box display={'flex'} gap={2} alignItems={'center'}>
                                         <Box onClick={openChainModal}>
@@ -96,7 +96,7 @@ export default function ConnectWallet({
                                 <Button sx={buttonStyle} onClick={handleDisconnect}>
                                     Disconnect
                                 </Button>
-                            </>
+                            </Box>
                         )}
                     </div>
                 );
