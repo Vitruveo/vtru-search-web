@@ -1,5 +1,10 @@
 import { Box, Button, CircularProgress, Link, Modal, Typography } from '@mui/material';
-import { IconCreativeCommonsBy, IconCreativeCommonsNc, IconCreativeCommonsNd } from '@tabler/icons-react';
+import {
+    IconCreativeCommons,
+    IconCreativeCommonsBy,
+    IconCreativeCommonsNc,
+    IconCreativeCommonsNd,
+} from '@tabler/icons-react';
 
 interface Props {
     isOpen: boolean;
@@ -27,36 +32,17 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                 p={2}
                 bgcolor={'background.paper'}
             >
-                <Typography variant="h2">Terms of use to Download</Typography>
-                <Box
-                    display={'flex'}
-                    justifyContent={'space-between'}
-                    alignItems={'center'}
-                    width={'100%'}
-                    mt={2}
-                    mb={2}
-                    pl={2}
-                    pr={3}
-                >
-                    <Typography variant="h6">
-                        Canonical URL:{' '}
-                        <Link
-                            href="https://creativecommons.org/licenses/by-nc-nd/4.0/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            https://creativecommons.org/licenses/by-nc-nd/4.0/
-                        </Link>
-                    </Typography>
-                    <Typography variant="h6">
-                        <Link
-                            href="https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode.en"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            See the legal code
-                        </Link>
-                    </Typography>
+                <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
+                    <Typography variant="h2">Digital Collectible Art Licensing </Typography>
+                    <Box display={'flex'} alignItems={'center'} gap={1} mt={2} mb={2}>
+                        <IconCreativeCommons />
+                        <IconCreativeCommonsBy />
+                        <IconCreativeCommonsNc />
+                        <IconCreativeCommonsNd />
+                        <Typography variant="h4" fontWeight={'bold'}>
+                            CC BY-NC-ND 4.0
+                        </Typography>
+                    </Box>
                 </Box>
                 <Box
                     sx={{
@@ -71,16 +57,19 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                     }}
                     display={'flex'}
                     flexDirection={'column'}
-                    gap={8}
+                    gap={3}
                     width={'50vw'}
                     height={'70vh'}
                     p={4}
                 >
+                    <Box display={'flex'} justifyContent={'center'}>
+                        <Typography variant="h4">Attribution-NonCommercial-NoDerivatives 4.0 International</Typography>
+                    </Box>
                     <Box>
                         <Typography variant="h4" fontWeight={'bold'}>
                             You are free to:
                         </Typography>
-                        <Box display={'flex'} flexDirection={'column'} gap={6} mt={4}>
+                        <Box display={'flex'} flexDirection={'column'} gap={3} mt={2}>
                             <Typography variant="h6" pl={6}>
                                 <strong>Share</strong> — copy and redistribute the material in any medium or format
                             </Typography>
@@ -93,9 +82,9 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                         <Typography variant="h4" fontWeight={'bold'}>
                             Under the following terms:
                         </Typography>
-                        <Box display={'flex'} flexDirection={'column'} mt={2}>
+                        <Box display={'flex'} flexDirection={'column'}>
                             <Box display={'flex'} alignItems={'center'} gap={2} pl={6}>
-                                <IconCreativeCommonsBy size={135} />
+                                <IconCreativeCommonsBy size={100} />
                                 <Typography variant="h6">
                                     <strong>Attribution</strong> — You must give{' '}
                                     <Link
@@ -117,8 +106,8 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                                     licensor endorses you or your use.
                                 </Typography>
                             </Box>
-                            <Box display={'flex'} alignItems={'center'} gap={2} pl={6} mb={4}>
-                                <IconCreativeCommonsNc size={60} />
+                            <Box display={'flex'} alignItems={'center'} gap={2} pl={6} mb={3}>
+                                <IconCreativeCommonsNc size={45} />
                                 <Typography variant="h6">
                                     <strong>NonCommercial</strong> — You may not use the material for{' '}
                                     <Link
@@ -132,7 +121,7 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                                 </Typography>
                             </Box>
                             <Box display={'flex'} alignItems={'center'} gap={2} pl={6}>
-                                <IconCreativeCommonsNd size={68} />{' '}
+                                <IconCreativeCommonsNd size={52} />{' '}
                                 <Typography variant="h6">
                                     <strong>NoDerivatives</strong> — If you{' '}
                                     <Link
@@ -146,7 +135,7 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                                 </Typography>
                             </Box>
                             <Box display={'flex'} alignItems={'center'} gap={2} pl={6}>
-                                <IconCreativeCommonsNd size={100} style={{ opacity: 0 }} />{' '}
+                                <IconCreativeCommonsNd size={70} style={{ opacity: 0 }} />{' '}
                                 <Typography variant="h6">
                                     <strong>No additional restrictions</strong> — You may not apply legal terms or{' '}
                                     <Link
@@ -165,7 +154,7 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                         <Typography variant="h4" fontWeight={'bold'}>
                             Notices:
                         </Typography>
-                        <Box display={'flex'} flexDirection={'column'} gap={6} mt={4}>
+                        <Box display={'flex'} flexDirection={'column'} gap={3} mt={2}>
                             <Typography variant="h6" pl={6}>
                                 You do not have to comply with the license for elements of the material in the public
                                 domain or where your use is permitted by an applicable{' '}
@@ -192,9 +181,30 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                             </Typography>
                         </Box>
                     </Box>
+                    <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} width={'100%'}>
+                        <Typography variant="h6">
+                            Canonical URL:{' '}
+                            <Link
+                                href="https://creativecommons.org/licenses/by-nc-nd/4.0/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                https://creativecommons.org/licenses/by-nc-nd/4.0/
+                            </Link>
+                        </Typography>
+                        <Typography variant="h6">
+                            <Link
+                                href="https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode.en"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                See the legal code
+                            </Link>
+                        </Typography>
+                    </Box>
                 </Box>
                 <Box display={'flex'} gap={4} marginTop={2} width={'100%'} justifyContent={'end'}>
-                    <Button variant="outlined" color="primary" onClick={onClose}>
+                    <Button variant="outlined" color="primary" onClick={onClose} sx={{ borderRadius: 0 }}>
                         Cancel
                     </Button>
                     <Button
@@ -202,7 +212,7 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                         color="primary"
                         onClick={downloadMedia}
                         disabled={loading}
-                        sx={{ minWidth: 260 }}
+                        sx={{ minWidth: 260, borderRadius: 0 }}
                     >
                         {!loading ? 'Accept terms and Download Media' : <CircularProgress size={20} />}
                     </Button>
