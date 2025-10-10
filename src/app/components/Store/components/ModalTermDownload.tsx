@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, Link, Modal, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Link, Modal, Theme, Typography, useMediaQuery } from '@mui/material';
 import {
     IconCreativeCommons,
     IconCreativeCommonsBy,
@@ -18,6 +18,7 @@ interface Props {
 }
 
 export default function ModalTermDownload({ isOpen, onClose, actions, data }: Props) {
+    const smUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('sm'));
     const { downloadMedia } = actions;
     const { loading } = data;
 
@@ -27,10 +28,11 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                 display={'flex'}
                 flexDirection={'column'}
                 alignItems={'center'}
-                width={'50vw'}
-                height={'70vh'}
+                width={smUp ? '50vw' : '90vw'}
+                height={smUp ? '70vh' : '90vh'}
                 p={2}
                 bgcolor={'background.paper'}
+                border={'1px solid #FF0066'}
             >
                 <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
                     <Typography variant="h2">Digital Collectible Art Licensing </Typography>
@@ -58,8 +60,8 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                     display={'flex'}
                     flexDirection={'column'}
                     gap={3}
-                    width={'50vw'}
-                    height={'70vh'}
+                    width={smUp ? '50vw' : '90vw'}
+                    height={smUp ? '70vh' : '90vh'}
                     p={4}
                 >
                     <Box display={'flex'} justifyContent={'center'}>
@@ -70,21 +72,21 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                             You are free to:
                         </Typography>
                         <Box display={'flex'} flexDirection={'column'} gap={3} mt={2}>
-                            <Typography variant="h6" pl={6}>
+                            <Typography variant="h6" pl={smUp ? 6 : 2}>
                                 <strong>Share</strong> — copy and redistribute the material in any medium or format
                             </Typography>
-                            <Typography variant="h6" pl={6}>
+                            <Typography variant="h6" pl={smUp ? 6 : 2}>
                                 The licensor cannot revoke these freedoms as long as you follow the license terms.
                             </Typography>
                         </Box>
                     </Box>
                     <Box>
-                        <Typography variant="h4" fontWeight={'bold'}>
+                        <Typography variant="h4" fontWeight={'bold'} mb={2}>
                             Under the following terms:
                         </Typography>
                         <Box display={'flex'} flexDirection={'column'}>
-                            <Box display={'flex'} alignItems={'center'} gap={2} pl={6}>
-                                <IconCreativeCommonsBy size={100} />
+                            <Box display={'flex'} alignItems={'center'} gap={2} pl={smUp ? 6 : 2} mb={2}>
+                                {smUp && <IconCreativeCommonsBy size={100} />}
                                 <Typography variant="h6">
                                     <strong>Attribution</strong> — You must give{' '}
                                     <Link
@@ -106,8 +108,8 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                                     licensor endorses you or your use.
                                 </Typography>
                             </Box>
-                            <Box display={'flex'} alignItems={'center'} gap={2} pl={6} mb={3}>
-                                <IconCreativeCommonsNc size={45} />
+                            <Box display={'flex'} alignItems={'center'} gap={2} pl={smUp ? 6 : 2} mb={3}>
+                                {smUp && <IconCreativeCommonsNc size={40} />}
                                 <Typography variant="h6">
                                     <strong>NonCommercial</strong> — You may not use the material for{' '}
                                     <Link
@@ -120,8 +122,8 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                                     .
                                 </Typography>
                             </Box>
-                            <Box display={'flex'} alignItems={'center'} gap={2} pl={6}>
-                                <IconCreativeCommonsNd size={52} />{' '}
+                            <Box display={'flex'} alignItems={'center'} gap={2} pl={smUp ? 6 : 2}>
+                                {smUp && <IconCreativeCommonsNd size={52} />}{' '}
                                 <Typography variant="h6">
                                     <strong>NoDerivatives</strong> — If you{' '}
                                     <Link
@@ -134,8 +136,8 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                                     the material, you may not distribute the modified material.
                                 </Typography>
                             </Box>
-                            <Box display={'flex'} alignItems={'center'} gap={2} pl={6}>
-                                <IconCreativeCommonsNd size={70} style={{ opacity: 0 }} />{' '}
+                            <Box display={'flex'} alignItems={'center'} gap={2} pl={smUp ? 6 : 2}>
+                                {smUp && <IconCreativeCommonsNd size={70} style={{ opacity: 0 }} />}{' '}
                                 <Typography variant="h6">
                                     <strong>No additional restrictions</strong> — You may not apply legal terms or{' '}
                                     <Link
@@ -155,7 +157,7 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                             Notices:
                         </Typography>
                         <Box display={'flex'} flexDirection={'column'} gap={3} mt={2}>
-                            <Typography variant="h6" pl={6}>
+                            <Typography variant="h6" pl={smUp ? 6 : 2}>
                                 You do not have to comply with the license for elements of the material in the public
                                 domain or where your use is permitted by an applicable{' '}
                                 <Link
@@ -167,7 +169,7 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                                 </Link>
                                 .
                             </Typography>
-                            <Typography variant="h6" pl={6}>
+                            <Typography variant="h6" pl={smUp ? 6 : 2}>
                                 No warranties are given. The license may not give you all of the permissions necessary
                                 for your intended use. For example, other rights such as{' '}
                                 <Link
@@ -181,7 +183,14 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                             </Typography>
                         </Box>
                     </Box>
-                    <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} width={'100%'}>
+                    <Box
+                        display={'flex'}
+                        flexDirection={smUp ? 'row' : 'column'}
+                        gap={2}
+                        justifyContent={'space-between'}
+                        alignItems={'center'}
+                        width={'100%'}
+                    >
                         <Typography variant="h6">
                             Canonical URL:{' '}
                             <Link
@@ -214,7 +223,7 @@ export default function ModalTermDownload({ isOpen, onClose, actions, data }: Pr
                         disabled={loading}
                         sx={{ minWidth: 260, borderRadius: 0 }}
                     >
-                        {!loading ? 'Accept terms and Download Media' : <CircularProgress size={20} />}
+                        {!loading ? 'Accept Terms and Download Media' : <CircularProgress size={20} />}
                     </Button>
                 </Box>
             </Box>
