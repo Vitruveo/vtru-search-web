@@ -12,6 +12,7 @@ interface Props {
     size: 'small' | 'medium' | 'large';
     openInNewTab?: boolean;
     iconSpacing?: 'small' | 'large';
+    returnToPageOne?: () => void;
 }
 
 const fontSizes = {
@@ -20,7 +21,14 @@ const fontSizes = {
     large: '1.4rem',
 };
 
-const Username = ({ username, vaultAdress, size, openInNewTab = false, iconSpacing = 'large' }: Props) => {
+const Username = ({
+    username,
+    vaultAdress,
+    size,
+    openInNewTab = false,
+    iconSpacing = 'large',
+    returnToPageOne = () => {},
+}: Props) => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const [hasStakes, setHasStakes] = useState(false);
@@ -59,7 +67,14 @@ const Username = ({ username, vaultAdress, size, openInNewTab = false, iconSpaci
                 textOverflow="ellipsis"
                 href={openInNewTab ? `${searchUrl}?name=${username}` : ''}
                 underline="none"
-                onClick={onClick}
+                onClick={
+                    openInNewTab
+                        ? onClick
+                        : (e) => {
+                              e.preventDefault();
+                              returnToPageOne();
+                          }
+                }
                 fontSize={fontSizes[size]}
                 target={openInNewTab ? '_blank' : '_self'}
             >

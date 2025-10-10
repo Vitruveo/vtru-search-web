@@ -195,7 +195,7 @@ export default function Activity({ listing, mintAdress }: ActivityProps) {
                                     </Tooltip>
                                 )}
                                 {item.title === 'Licensed' && (
-                                    <ConnectWallet showChain={false} size="small" showWallet={false} />
+                                    <ConnectWallet showChain={false} size="small" showWallet={false} canWrap={false} />
                                 )}
                             </Box>
                         ))
