@@ -34,6 +34,7 @@ const CreatorSection = ({ hasCurated, creatorId, returnToPageOne }: Props) => {
                             }
                             vaultAdress={null}
                             size="large"
+                            returnToPageOne={returnToPageOne}
                         />
                     )}
                     {hasIncludesGroup.name && (
@@ -62,6 +63,7 @@ const CreatorSection = ({ hasCurated, creatorId, returnToPageOne }: Props) => {
                                 variant="h6"
                                 color="primary"
                                 sx={{
+                                    whiteSpace: 'nowrap',
                                     textDecoration: 'underline',
                                     cursor: 'pointer',
                                     fontSize: 14,
