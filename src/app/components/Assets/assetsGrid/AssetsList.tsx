@@ -106,7 +106,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
         nft: false,
         print: false,
     });
-    const [selectedTab, setSelectedTab] = useState<string>('nft');
+    const [selectedTab, setSelectedTab] = useState<string>('print');
     const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
@@ -411,8 +411,8 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     sx={{ width: '94%', marginInline: 'auto' }}
                     orientation={smUp ? 'horizontal' : 'vertical'}
                 >
-                    <Tab label="Digital Collectible Art" value="nft" sx={{ fontSize: '1.5rem' }} />
                     <Tab label="Print-on-Demand Art" value="print" sx={{ fontSize: '1.5rem' }} />
+                    <Tab label="Digital Collectible Art" value="nft" sx={{ fontSize: '1.5rem' }} />
                 </Tabs>
             </Box>
 
