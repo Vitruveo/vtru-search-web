@@ -19,6 +19,7 @@ export default function TabSliders() {
     const isFilterHidden = useSelector((state) => state.customizer.hidden?.filter);
     const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
     const hidden = useSelector((state) => state.customizer.hidden);
+    const isPrintOnDemandSection = useSelector((state) => state.filters.licenseChecked.print)[0] === 'yes';
     const lgUp = useMediaQuery((mediaQuery: Theme) => mediaQuery.breakpoints.up('lg'));
 
     const { spotlight, spotlightLoading, lastSold, lastSoldLoading, artistSpotlight, artistSpotlightLoading } =
@@ -26,7 +27,7 @@ export default function TabSliders() {
 
     const showSpotlight = spotlight.length >= spotlightMinLength && !hidden?.spotlight;
     const showArtistSpotlight = artistSpotlight.length >= spotlightMinLength && !hidden?.artistSpotlight;
-    const showLastSold = lastSold.length >= spotlightMinLength && !hidden?.recentlySold;
+    const showLastSold = lastSold.length >= spotlightMinLength && !hidden?.recentlySold && !isPrintOnDemandSection;
 
     const [tabValue, setTabValue] = useState(activeSlider);
     const [hideAlltabs, setHideAllTabs] = useState(false);
@@ -58,6 +59,7 @@ export default function TabSliders() {
         spotlightLoading,
         lastSoldLoading,
         artistSpotlightLoading,
+        isPrintOnDemandSection,
     ]);
 
     if (!showSpotlight && !showArtistSpotlight && !showLastSold) return null;

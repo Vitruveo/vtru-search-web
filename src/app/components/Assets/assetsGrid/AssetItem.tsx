@@ -39,6 +39,7 @@ const AssetItemMain = ({
     const theme = useTheme();
     const [isHovered, setIsHovered] = useState(false);
     const [showFanEffect, setShowFanEffect] = useState(false);
+    const isPrintOnDemandSection = useSelector((state) => state.filters.licenseChecked.print)[0] === 'yes';
     const optionIncludeGroup = useSelector((state) => state.assets.groupByCreator.active);
     const isHiddenCardDetail = useSelector((state) => state.customizer.hidden?.cardDetail);
 
@@ -142,26 +143,28 @@ const AssetItemMain = ({
                             </Stack>
 
                             <Stack flexDirection="row" justifyContent="space-between" alignItems="end">
-                                <Box>
-                                    {!isAvailable && (
+                                {!isPrintOnDemandSection && (
+                                    <Box>
+                                        {!isAvailable && (
+                                            <Typography
+                                                variant="h6"
+                                                overflow="hidden"
+                                                whiteSpace="nowrap"
+                                                textOverflow="ellipsis"
+                                            >
+                                                Last Sold
+                                            </Typography>
+                                        )}
                                         <Typography
                                             variant="h6"
                                             overflow="hidden"
                                             whiteSpace="nowrap"
                                             textOverflow="ellipsis"
                                         >
-                                            Last Sold
+                                            {price}
                                         </Typography>
-                                    )}
-                                    <Typography
-                                        variant="h6"
-                                        overflow="hidden"
-                                        whiteSpace="nowrap"
-                                        textOverflow="ellipsis"
-                                    >
-                                        {price}
-                                    </Typography>
-                                </Box>
+                                    </Box>
+                                )}
                                 <Typography
                                     title={price}
                                     variant="h6"
@@ -172,7 +175,7 @@ const AssetItemMain = ({
                                 >
                                     {variant == 'blocked' ? 'Blocked' : ''}
                                 </Typography>
-                                {!isAvailable && (
+                                {!isAvailable && !isPrintOnDemandSection && (
                                     <Paper
                                         sx={{
                                             backgroundColor: 'red',
