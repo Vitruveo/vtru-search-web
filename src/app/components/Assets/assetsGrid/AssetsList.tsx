@@ -408,11 +408,19 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     value={selectedTab}
                     onChange={handleChangeLicenseType}
                     variant="fullWidth"
-                    sx={{ width: '94%', marginInline: 'auto' }}
+                    sx={{ width: '94%', marginInline: 'auto', '& .MuiTabs-indicator': { height: '6px' } }}
                     orientation={smUp ? 'horizontal' : 'vertical'}
                 >
-                    <Tab label="Print-on-Demand Art" value="print" sx={{ fontSize: '1.5rem' }} />
-                    <Tab label="Digital Collectible Art" value="nft" sx={{ fontSize: '1.5rem' }} />
+                    <Tab
+                        label="Print-on-Demand Art"
+                        value="print"
+                        sx={{ fontSize: '2.2rem', fontWeight: 600, color: '#444' }}
+                    />
+                    <Tab
+                        label="Digital Collectible Art"
+                        value="nft"
+                        sx={{ fontSize: '2.2rem', fontWeight: 600, color: '#444' }}
+                    />
                 </Tabs>
             </Box>
 
