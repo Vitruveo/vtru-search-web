@@ -482,33 +482,14 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                                     color: theme.palette.text.primary,
                                                     backgroundColor: theme.palette.background.paper,
                                                 }),
-                                                multiValue: (base, { data }) => {
-                                                    const artistsValues = optionsForSelectSort[1].options.map(
-                                                        (option) => option.value
-                                                    );
-                                                    if (artistsValues.includes(data?.value || '')) {
-                                                        return {
-                                                            ...base,
-                                                            display: 'none',
-                                                        };
-                                                    }
-                                                    return { ...base, backgroundColor: theme.palette.action.selected };
-                                                },
-                                                multiValueLabel: (base, { data }) => {
-                                                    const artistsValues = optionsForSelectSort[1].options.map(
-                                                        (option) => option.value
-                                                    );
-                                                    if (artistsValues.includes(data?.value || '')) {
-                                                        return {
-                                                            ...base,
-                                                            display: 'none',
-                                                        };
-                                                    }
-                                                    return {
-                                                        ...base,
-                                                        color: theme.palette.text.primary,
-                                                    };
-                                                },
+                                                multiValue: (base) => ({
+                                                    ...base,
+                                                    backgroundColor: theme.palette.action.selected,
+                                                }),
+                                                multiValueLabel: (base) => ({
+                                                    ...base,
+                                                    color: theme.palette.text.primary,
+                                                }),
                                                 option: (base, state) => ({
                                                     ...base,
                                                     color: theme.palette.text.primary,
@@ -598,7 +579,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                     }}
                                 />
                                 <Select
-                                    placeholder="Select"
+                                    placeholder="Page"
                                     options={optionsForSelect}
                                     value={currentPage > 1 ? { value: currentPage, label: currentPage } : null}
                                     onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}
