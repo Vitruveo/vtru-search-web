@@ -108,9 +108,9 @@ export const assetsSlice = createSlice({
         setError: (state, action) => {
             state.error = action.payload;
         },
-        setVideoId: (state, action: PayloadAction<string>) => {},
-        setSlideshowId: (state, action: PayloadAction<string>) => {},
-        setTabNavigation: (state, action: PayloadAction<string>) => {},
+        setVideoId: (_state, _action: PayloadAction<string>) => {},
+        setSlideshowId: (_state, _action: PayloadAction<string>) => {},
+        setTabNavigation: (_state, _action: PayloadAction<string>) => {},
         setVideoUrl: (state, action: PayloadAction<string>) => {
             state.video = action.payload;
         },
@@ -175,7 +175,7 @@ export const assetsSlice = createSlice({
             state.sort = action.payload.sort;
             if (action.payload.persistStoresSort) state.storesSort = action.payload.sort;
         },
-        generateSlideshow: (state, action: PayloadAction<GenerateSlideshowParams>) => {},
+        generateSlideshow: (_state, _action: PayloadAction<GenerateSlideshowParams>) => {},
         setSlideshow: (state, action: PayloadAction<string>) => {
             state.slideshow = action.payload;
         },

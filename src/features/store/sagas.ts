@@ -49,10 +49,28 @@ function* getStoreLastAssets({ payload }: PayloadAction<{ id: string }>) {
     yield put(actions.finishLastAssetsLoading());
 }
 
+function* updateDigitalCollectibleDownload(
+    action: PayloadAction<{ assetId: string; digital: Asset['digitalCollectibleDownload'] }>
+) {
+    try {
+        const { assetId, digital } = action.payload;
+        yield call(axios.post, `${API_BASE_URL}/assets/store/${assetId}/digitalCollectibleDownload`, {
+            wallet: digital?.[0]?.wallet,
+            date: digital?.[0]?.date,
+            isTermAccepted: digital?.[0]?.isTermAccepted,
+            licenseType: digital?.[0]?.licenseType,
+        });
+    } catch (error) {
+        // Handle error
+    }
+}
+
 export default function* storeSagas() {
     yield all([
         takeEvery(actions.getAssetRequest.type, getStoreAsset),
         takeEvery(actions.getCreatorRequest.type, getStoreCreator),
         takeEvery(actions.getLastAssetsRequest.type, getStoreLastAssets),
+
+        takeEvery(actions.setDigitalCollectibleDownload.type, updateDigitalCollectibleDownload),
     ]);
 }

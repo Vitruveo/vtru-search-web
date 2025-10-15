@@ -29,14 +29,10 @@ const initialParams: Record<string, string> = {};
 const initialFilters: Record<string, any> = {};
 
 const fixedShortcuts = new Map([
-    ['animation', { key: 'taxonomy_category', value: ['video'] }],
     ['photography', { key: 'taxonomy_category', value: ['photography'] }],
-    ['digitalArt', { key: 'taxonomy_objectType', value: ['digitalart'] }],
-    ['physicalArt', { key: 'taxonomy_objectType', value: ['physicalart'] }],
     ['hasBTS', { key: 'hasBts', value: ['yes'] }],
     ['hideAI', { key: 'taxonomy_aiGeneration', value: ['partial', 'none'] }],
     ['hideNudity', { key: 'taxonomy_nudity', value: ['no'] }],
-    ['includeSold', { key: 'sort_sold', value: ['yes'] }],
 ]);
 
 const Search = () => {

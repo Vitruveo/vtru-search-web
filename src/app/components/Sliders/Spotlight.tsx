@@ -17,6 +17,7 @@ function SpotlightSlider() {
     const { subdomain } = useDomainContext();
     const stores = useSelector((state) => state.stores.currentDomain);
     const assets = useSelector((state) => state.assets.spotlight);
+    const isPrintOnDemandSection = useSelector((state) => state.filters.licenseChecked.print)[0] === 'yes';
     const theme = useTheme();
     const redirectsState = useSelector((state) => state.redirects.data);
     const redirects = {
@@ -96,16 +97,18 @@ function SpotlightSlider() {
                                 <Box sx={{ width: '100%' }}>
                                     <Username username={creatorName} vaultAdress={vaultAddress} size="small" />
                                 </Box>
-                                <Stack mt={2}>
-                                    <Typography
-                                        variant="h6"
-                                        overflow="hidden"
-                                        whiteSpace="nowrap"
-                                        textOverflow="ellipsis"
-                                    >
-                                        {price}
-                                    </Typography>
-                                </Stack>
+                                {!isPrintOnDemandSection && (
+                                    <Stack mt={2}>
+                                        <Typography
+                                            variant="h6"
+                                            overflow="hidden"
+                                            whiteSpace="nowrap"
+                                            textOverflow="ellipsis"
+                                        >
+                                            {price}
+                                        </Typography>
+                                    </Stack>
+                                )}
                             </CardContent>
                         </Box>
                     );

@@ -5,6 +5,7 @@ import { AssetState } from './types';
 export const initialState: AssetState = {
     asset: {} as Asset,
     loading: false,
+    loadingDigitalCollectibleDownload: false,
     creatorAvatar: '',
     creatorLoading: false,
     lastAssets: [],
@@ -25,6 +26,12 @@ export const storeSlice = createSlice({
         finishLoading: (state) => {
             state.loading = false;
         },
+        startLoadingDigitalCollectibleDownload: (state) => {
+            state.loadingDigitalCollectibleDownload = true;
+        },
+        finishLoadingDigitalCollectibleDownload: (state) => {
+            state.loadingDigitalCollectibleDownload = false;
+        },
         startCreatorLoading: (state) => {
             state.creatorLoading = true;
         },
@@ -39,6 +46,15 @@ export const storeSlice = createSlice({
         },
         setAsset: (state, action: PayloadAction<AssetState['asset']>) => {
             state.asset = action.payload;
+        },
+        setDigitalCollectibleDownload: (
+            state,
+            action: PayloadAction<{ assetId: string; digital: Asset['digitalCollectibleDownload'] }>
+        ) => {
+            state.asset.digitalCollectibleDownload = [
+                ...(state.asset.digitalCollectibleDownload || []),
+                ...(action.payload.digital || []),
+            ];
         },
         setCreatorAvatar: (state, action: PayloadAction<string>) => {
             state.creatorAvatar = action.payload;

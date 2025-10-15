@@ -50,20 +50,14 @@ import { useDebounce } from '@/app/hooks/useDebounce';
 const Filters = () => {
     const params = new URLSearchParams(window.location.search);
 
-    const grid = params.get('grid');
-    const slideshow = params.get('slideshow');
-    const video = params.get('video');
-
     const [priceValue, setPriceValue] = useState<{ min: number; max: number }>();
     const [isHideNuditychecked, setIsHideNudityChecked] = useState(false);
     const [isHideAIchecked, setIsHideAIChecked] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-    const [selectedObjectTypes, setSelectedObjectTypes] = useState<string[]>([]);
 
     const [contextFilters, setContextFilters] = useState<number>();
     const [taxonomyFilters, setTaxonomyFilters] = useState<number>();
     const [creatorsFilters, setCreatorsFilters] = useState<number>();
-    const [isIncludeSold, setIsIncludeSold] = useState<boolean>(false);
     const [hasBts, setHasBts] = useState<boolean>(false);
 
     const theme = useTheme();
@@ -73,7 +67,7 @@ const Filters = () => {
     const debouncePriceValue = useDebounce({ value: priceValue, delay: 500 });
 
     const values = useSelector((state) => state.filters);
-    const { tags, maxPrice, sort } = useSelector((state) => state.assets);
+    const { tags, maxPrice } = useSelector((state) => state.assets);
     const { wallets } = useSelector((state) => state.filters.portfolio);
     const { artworks: storesFilters, organization } = useSelector((state) => state.stores.currentDomain || {});
     const path = organization?.formats.logo.horizontal?.path;
@@ -83,12 +77,6 @@ const Filters = () => {
             return Array.isArray(arrayfield) ? acc + arrayfield.length : acc;
         }, 0);
     };
-
-    useEffect(() => {
-        if (grid || video || slideshow) return;
-
-        setIsIncludeSold(sort.sold === 'yes' ? true : false);
-    }, [sort]);
 
     useEffect(() => {
         setHasBts(values.hasBts === 'yes' ? true : false);
@@ -114,12 +102,6 @@ const Filters = () => {
             [
                 values.taxonomy.category.includes('photography') && 'photography',
                 values.taxonomy.category.includes('video') && 'video',
-            ].filter(Boolean) as string[]
-        );
-        setSelectedObjectTypes(
-            [
-                values.taxonomy.objectType.includes('physicalart') && 'physicalart',
-                values.taxonomy.objectType.includes('digitalart') && 'digitalart',
             ].filter(Boolean) as string[]
         );
     }, [values.context, values.taxonomy, values.creators, values.shortCuts, values.licenseChecked]);
@@ -198,14 +180,6 @@ const Filters = () => {
             })
         );
     };
-    const handleChangePhysicalArt = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const updatedObjectTypes = event.target.checked
-            ? [...selectedObjectTypes, 'physicalart']
-            : selectedObjectTypes.filter((type) => type !== 'physicalart');
-        setSelectedObjectTypes(updatedObjectTypes);
-        syncFiltersWithUrl(updatedObjectTypes, 'taxonomy_objectType');
-        dispatch(actions.change({ key: 'taxonomy', value: { objectType: updatedObjectTypes } }));
-    };
     const handleChangePhotography = (event: React.ChangeEvent<HTMLInputElement>) => {
         const updatedCategories = event.target.checked
             ? [...selectedCategories, 'photography']
@@ -213,27 +187,6 @@ const Filters = () => {
         setSelectedCategories(updatedCategories);
         syncFiltersWithUrl(updatedCategories, 'taxonomy_category');
         dispatch(actions.change({ key: 'taxonomy', value: { category: updatedCategories } }));
-    };
-    const handleChangeAnimation = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const updatedCategories = event.target.checked
-            ? [...selectedCategories, 'video']
-            : selectedCategories.filter((type) => type !== 'video');
-        setSelectedCategories(updatedCategories);
-        syncFiltersWithUrl(updatedCategories, 'taxonomy_category');
-        dispatch(actions.change({ key: 'taxonomy', value: { category: updatedCategories } }));
-    };
-    const handleChangeDigitalArt = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const updatedObjectTypes = event.target.checked
-            ? [...selectedObjectTypes, 'digitalart']
-            : selectedObjectTypes.filter((type) => type !== 'digitalart');
-        setSelectedObjectTypes(updatedObjectTypes);
-        syncFiltersWithUrl(updatedObjectTypes, 'taxonomy_objectType');
-        dispatch(actions.change({ key: 'taxonomy', value: { objectType: updatedObjectTypes } }));
-    };
-    const handleChangeIsIncludeSold = () => {
-        setIsIncludeSold(!isIncludeSold);
-        generateQueryParam('sort_sold', isIncludeSold ? 'no' : 'yes');
-        dispatch(actionsAssets.setSort({ order: sort.order, sold: isIncludeSold ? 'no' : 'yes' }));
     };
     const handleChangeHasBTS = () => {
         setHasBts(!hasBts);
@@ -319,7 +272,6 @@ const Filters = () => {
                             }}
                         />
                     </Box>
-
                     <Box display="flex">
                         <FormControlLabel
                             control={
@@ -335,56 +287,6 @@ const Filters = () => {
                             }}
                         />
                         <FormControlLabel
-                            control={
-                                <Checkbox
-                                    onChange={handleChangeAnimation}
-                                    checked={selectedCategories.includes('video')}
-                                />
-                            }
-                            label={language['search.assetFilter.shortcut.animation'] as string}
-                            sx={{
-                                width: '50%',
-                            }}
-                        />
-                    </Box>
-                    <Box display="flex">
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    onChange={handleChangePhysicalArt}
-                                    checked={selectedObjectTypes.includes('physicalart')}
-                                />
-                            }
-                            label={language['search.assetFilter.shortcut.physicalArt'] as string}
-                            sx={{
-                                width: '50%',
-                                mr: '10%',
-                            }}
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    onChange={handleChangeDigitalArt}
-                                    checked={selectedObjectTypes.includes('digitalart')}
-                                />
-                            }
-                            label={language['search.assetFilter.shortcut.digitalArt'] as string}
-                            sx={{
-                                width: '50%',
-                            }}
-                        />
-                    </Box>
-                    <Box display="flex">
-                        <FormControlLabel
-                            control={<Checkbox onChange={handleChangeIsIncludeSold} checked={isIncludeSold} />}
-                            label={language['search.assetFilter.shortcut.includeSold'] as string}
-                            sx={{
-                                whiteSpace: 'nowrap',
-                                width: '50%',
-                                mr: '9%',
-                            }}
-                        />
-                        <FormControlLabel
                             control={<Checkbox onChange={handleChangeHasBTS} checked={hasBts} />}
                             label={language['search.assetFilter.shortcut.hasBTS'] as string}
                             sx={{
@@ -393,7 +295,6 @@ const Filters = () => {
                         />
                     </Box>
                 </FormGroup>
-
                 <AssetFilterAccordion title="Price">
                     <Box>
                         <Typography fontSize="0.85rem" fontWeight="700" mb={1}>

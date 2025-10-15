@@ -106,7 +106,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
         nft: false,
         print: false,
     });
-    const [selectedTab, setSelectedTab] = useState<string>('nft');
+    const [selectedTab, setSelectedTab] = useState<string>('print');
     const topRef = useRef<HTMLDivElement>(null);
 
     const assetDrawer = useToggle();
@@ -408,11 +408,23 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     value={selectedTab}
                     onChange={handleChangeLicenseType}
                     variant="fullWidth"
-                    sx={{ width: '94%', marginInline: 'auto' }}
+                    sx={{
+                        width: '94%',
+                        marginInline: 'auto',
+                        '& .MuiTabs-indicator': { height: '6px' },
+                    }}
                     orientation={smUp ? 'horizontal' : 'vertical'}
                 >
-                    <Tab label="Digital Collectible Art" value="nft" sx={{ fontSize: '1.5rem' }} />
-                    <Tab label="Print-on-Demand Art" value="print" sx={{ fontSize: '1.5rem' }} />
+                    <Tab
+                        label="Print-on-Demand Art"
+                        value="print"
+                        sx={{ fontSize: smUp ? '2.2rem' : '1.5rem', fontWeight: smUp ? 600 : 'inherit', color: '#444' }}
+                    />
+                    <Tab
+                        label="Digital Collectible Art"
+                        value="nft"
+                        sx={{ fontSize: smUp ? '2.2rem' : '1.5rem', fontWeight: smUp ? 600 : 'inherit', color: '#444' }}
+                    />
                 </Tabs>
             </Box>
 
@@ -433,7 +445,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                         <Box
                             display={'flex'}
                             justifyContent={'space-between'}
-                            gap={4}
+                            gap={11}
                             flexDirection={lgUp ? 'row' : 'column'}
                             flexWrap={'wrap'}
                         >
@@ -458,7 +470,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                             styles={{
                                                 control: (base, state) => ({
                                                     ...base,
-                                                    minWidth: '240px',
+                                                    minWidth: smUp ? '365px' : '240px',
                                                     maxHeight: '200px',
                                                     overflow: 'auto',
                                                     borderColor: state.isFocused
@@ -474,33 +486,14 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                                     color: theme.palette.text.primary,
                                                     backgroundColor: theme.palette.background.paper,
                                                 }),
-                                                multiValue: (base, { data }) => {
-                                                    const artistsValues = optionsForSelectSort[1].options.map(
-                                                        (option) => option.value
-                                                    );
-                                                    if (artistsValues.includes(data?.value || '')) {
-                                                        return {
-                                                            ...base,
-                                                            display: 'none',
-                                                        };
-                                                    }
-                                                    return { ...base, backgroundColor: theme.palette.action.selected };
-                                                },
-                                                multiValueLabel: (base, { data }) => {
-                                                    const artistsValues = optionsForSelectSort[1].options.map(
-                                                        (option) => option.value
-                                                    );
-                                                    if (artistsValues.includes(data?.value || '')) {
-                                                        return {
-                                                            ...base,
-                                                            display: 'none',
-                                                        };
-                                                    }
-                                                    return {
-                                                        ...base,
-                                                        color: theme.palette.text.primary,
-                                                    };
-                                                },
+                                                multiValue: (base) => ({
+                                                    ...base,
+                                                    backgroundColor: theme.palette.action.selected,
+                                                }),
+                                                multiValueLabel: (base) => ({
+                                                    ...base,
+                                                    color: theme.palette.text.primary,
+                                                }),
                                                 option: (base, state) => ({
                                                     ...base,
                                                     color: theme.palette.text.primary,
@@ -590,7 +583,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                     }}
                                 />
                                 <Select
-                                    placeholder="Select"
+                                    placeholder="Page"
                                     options={optionsForSelect}
                                     value={currentPage > 1 ? { value: currentPage, label: currentPage } : null}
                                     onChange={(e) => dispatch(actions.setCurrentPage(e?.value || 1))}

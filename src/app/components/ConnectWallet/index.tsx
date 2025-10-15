@@ -28,6 +28,7 @@ interface Props {
     rounded?: boolean;
     showChain?: boolean;
     showWallet?: boolean;
+    canWrap?: boolean;
 }
 
 export default function ConnectWallet({
@@ -35,6 +36,7 @@ export default function ConnectWallet({
     rounded = false,
     showChain = true,
     showWallet = true,
+    canWrap = true,
 }: Props) {
     const theme = useTheme();
 
@@ -45,6 +47,7 @@ export default function ConnectWallet({
             background: theme.palette.primary.main,
         },
         lineHeight: '1.5',
+        whiteSpace: canWrap ? 'normal' : 'nowrap',
         borderRadius: rounded ? 2 : 0,
         ...sizes[size],
     };
@@ -78,7 +81,7 @@ export default function ConnectWallet({
                                 Connect {showWallet ? 'Wallet' : ''}
                             </Button>
                         ) : (
-                            <>
+                            <Box display={'flex'} gap={2}>
                                 {showChain && chain?.hasIcon && chain?.iconUrl && (
                                     <Box display={'flex'} gap={2} alignItems={'center'}>
                                         <Box onClick={openChainModal}>
@@ -96,7 +99,7 @@ export default function ConnectWallet({
                                 <Button sx={buttonStyle} onClick={handleDisconnect}>
                                     Disconnect
                                 </Button>
-                            </>
+                            </Box>
                         )}
                     </div>
                 );

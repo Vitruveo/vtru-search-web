@@ -5,6 +5,7 @@ export interface AssetState {
     creatorLoading: boolean;
     lastAssetsLoading: boolean;
     asset: Asset;
+    loadingDigitalCollectibleDownload: boolean;
     creatorAvatar: string;
     lastAssets: LastAssets[];
     error: string | null;
