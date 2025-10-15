@@ -54,7 +54,7 @@ function* updateDigitalCollectibleDownload(
 ) {
     try {
         const { assetId, digital } = action.payload;
-        yield call(axios.post, `${API_BASE_URL}/assets/store/${assetId}/digitalCollectibleDownload`, {
+        yield call(axios.post, `${API_BASE_URL}/assets/public/${assetId}/digitalCollectibleDownload`, {
             wallet: digital?.[0]?.wallet,
             date: digital?.[0]?.date,
             isTermAccepted: digital?.[0]?.isTermAccepted,
