@@ -408,18 +408,22 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                     value={selectedTab}
                     onChange={handleChangeLicenseType}
                     variant="fullWidth"
-                    sx={{ width: '94%', marginInline: 'auto', '& .MuiTabs-indicator': { height: '6px' } }}
+                    sx={{
+                        width: '94%',
+                        marginInline: 'auto',
+                        '& .MuiTabs-indicator': { height: '6px' },
+                    }}
                     orientation={smUp ? 'horizontal' : 'vertical'}
                 >
                     <Tab
                         label="Print-on-Demand Art"
                         value="print"
-                        sx={{ fontSize: '2.2rem', fontWeight: 600, color: '#444' }}
+                        sx={{ fontSize: smUp ? '2.2rem' : '1.5rem', fontWeight: smUp ? 600 : 'inherit', color: '#444' }}
                     />
                     <Tab
                         label="Digital Collectible Art"
                         value="nft"
-                        sx={{ fontSize: '2.2rem', fontWeight: 600, color: '#444' }}
+                        sx={{ fontSize: smUp ? '2.2rem' : '1.5rem', fontWeight: smUp ? 600 : 'inherit', color: '#444' }}
                     />
                 </Tabs>
             </Box>
@@ -441,7 +445,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                         <Box
                             display={'flex'}
                             justifyContent={'space-between'}
-                            gap={4}
+                            gap={11}
                             flexDirection={lgUp ? 'row' : 'column'}
                             flexWrap={'wrap'}
                         >
@@ -466,7 +470,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                             styles={{
                                                 control: (base, state) => ({
                                                     ...base,
-                                                    minWidth: '240px',
+                                                    minWidth: smUp ? '365px' : '240px',
                                                     maxHeight: '200px',
                                                     overflow: 'auto',
                                                     borderColor: state.isFocused
