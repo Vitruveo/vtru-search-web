@@ -467,6 +467,7 @@ const AssetsList = ({ isBlockLoader }: Props) => {
                                             hideSelectedOptions={false}
                                             value={selectedOptions}
                                             isSearchable={false}
+                                            components={{ ClearIndicator: () => null }}
                                             styles={{
                                                 control: (base, state) => ({
                                                     ...base,
