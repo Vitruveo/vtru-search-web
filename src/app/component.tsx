@@ -210,20 +210,22 @@ const Search = () => {
                     </Box>
                 </AppCard>
             </PageContainer>
-            <Box
-                display={isInIframe ? 'none' : 'inherit'}
-                position={'fixed'}
-                top={lgUp ? 21 : smUp ? 17 : 13}
-                right={-5}
-                bgcolor={theme.palette.grey[100]}
-                width={lgUp || smUp ? 85 : 77}
-                zIndex={9999}
-            >
-                <StyleElements
-                    initialHidden={appearanceContent?.hideElements}
-                    isPersonalizedStore={!!isValidSubdomain && !!subdomain}
-                />
-            </Box>
+            {smUp && (
+                <Box
+                    display={isInIframe ? 'none' : 'inherit'}
+                    position={'fixed'}
+                    top={lgUp ? 21 : smUp ? 17 : 13}
+                    right={-5}
+                    bgcolor={theme.palette.grey[100]}
+                    width={lgUp || smUp ? 85 : 77}
+                    zIndex={9999}
+                >
+                    <StyleElements
+                        initialHidden={appearanceContent?.hideElements}
+                        isPersonalizedStore={!!isValidSubdomain && !!subdomain}
+                    />
+                </Box>
+            )}
 
             {isValidSubdomain && subdomain && status === 'pending' && <WatherMark />}
         </div>

@@ -161,9 +161,11 @@ const Header = ({
                     {paused && <Typography variant="h3">⚠️ Store currently undergoing maintenance</Typography>}
                 </Box>
                 {!lgDown && showProjects && <AllProjectsMenu />}
-                <IconButton sx={{ marginRight: hasSettings ? 8.5 : 0 }} size="small" onClick={handleOpen}>
-                    <IconMenu2 width={29} height={29} />
-                </IconButton>
+                {smUp && (
+                    <IconButton sx={{ marginRight: hasSettings ? 8.5 : 0 }} size="small" onClick={handleOpen}>
+                        <IconMenu2 width={29} height={29} />
+                    </IconButton>
+                )}
                 <Menu
                     open={Boolean(anchorEl)}
                     anchorEl={anchorEl}
